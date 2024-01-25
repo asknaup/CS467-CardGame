@@ -1,7 +1,7 @@
 {
-  "name": "CS467-CardGame",
+  "name": "cs467-cardgame",
   "version": "1.0.0",
-  "description": "",
+  "description": "npm init -y",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
