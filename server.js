@@ -15,7 +15,10 @@ app.engine('handlebars', exphbs.engine(
 app.set('view engine', 'handlebars');
 
 app.get('/', (req, res) => {
-  //res.send('Hello, World!');
+  res.send('Hello, World!');
+});
+
+app.get('/game_page', (req, res) => {
   res.render('game_page')
 });
 
