@@ -15,7 +15,8 @@ app.engine('handlebars', exphbs.engine(
 ));
 
 app.set('view engine', 'handlebars');
-
+const path = require('path');
+app.use(express.static(path.join(__dirname, 'public')));
 /*
 ROUTES
 */
@@ -33,31 +34,31 @@ app.get('/collection', (req, res) => {
 });
 
 app.get('/current-deck-page/index', (req, res) => {
-  res.render('index')
+  res.render('current-deck-page/index')
 });
 
 app.get('/game-generation-page/index', (req, res) => {
-  res.render('index')
+  res.render('game-generation-page/index')
 });
 
 app.get('/look-at-games-page/index', (req, res) => {
-  res.render('index')
+  res.render('look-at-games-page/index')
 });
 
 app.get('/new-user-page/index', (req, res) => {
-  res.render('index')
+  res.render('new-user-page/index')
 });
 
 app.get('/reset-password-page/index', (req, res) => {
-  res.render('index')
+  res.render('reset-password-page/index')
 });
 
 app.get('/user-profile-page/index', (req, res) => {
-  res.render('index')
+  res.render('user-profile-page/index')
 });
 
 app.get('/welcome-page/index', (req, res) => {
-  res.render('index')
+  res.render('welcome-page-portal/index')
 });
 
 app.listen(port, () => {
