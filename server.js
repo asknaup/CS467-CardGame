@@ -25,10 +25,6 @@ app.get('/', (req, res) => {
   res.send('Hello, World!');
 });
 
-app.get('/game_page', (req, res) => {
-  res.render('game_page')
-});
-
 app.get('/collection', (req, res) => {
   res.render('collection', {title: 'heelo', message: 'world 123'});
 });
