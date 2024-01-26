@@ -57,7 +57,7 @@ app.get('/user-profile-page/index', (req, res) => {
   res.render('user-profile-page/index')
 });
 
-app.get('/welcome-page/index', (req, res) => {
+app.get('/welcome-page-portal/index', (req, res) => {
   res.render('welcome-page-portal/index')
 });
 
