@@ -3,11 +3,13 @@
 const express = require('express');             // Commonjs standard
 const exphbs = require('express-handlebars');
 const app = express();                          // Routing 
+const bodyParser = require('body-parser');
 const port = 3000;
 
 var db = require('./database/db-connector');
 
 app.use(express.static('style'));               // For css
+app.use(bodyParser.json())
 
 app.engine('handlebars', exphbs.engine(                  
   { extname: "hbs",
@@ -24,7 +26,8 @@ ROUTES
 */
 
 app.get('/', (req, res) => {
-  res.send('Hello, World!');
+  // res.send('Hello, World!');
+  res.render('welcome-page-portal/index')
 });
 
 app.get('/collection', (req, res) => {
@@ -55,9 +58,24 @@ app.get('/user-profile-page/index', (req, res) => {
   res.render('user-profile-page/index')
 });
 
-app.get('/welcome-page-portal/index', (req, res) => {
-  res.render('welcome-page-portal/index')
+app.post('/add-user-ajax', function (req, res) {
+  let data = req.body;
+  console.log();
+
+  query = "INSERT INTO user_creds (username, pwd) VALUES (?, ?)";
+
+  db.pool.query(query, [data.username, data.password], function(error, rows, fields){
+    console.log(JSON.stringify(rows));
+    if (error) {
+      console.log(error)
+      res.sendStatus(400);
+    }
+  })
 });
+
+// app.get('/welcome-page-portal/index', (req, res) => {
+//   res.render('welcome-page-portal/index')
+// });
 
 app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);

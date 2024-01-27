@@ -9,11 +9,17 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS card_spell;
 DROP TABLE IF EXISTS card_creature;
-DROP TABLE IF EXISTS cards;
 DROP TABLE IF EXISTS card_instance;
+DROP TABLE IF EXISTS cards;
 DROP TABLE IF EXISTS game;
 DROP TABLE IF EXISTS user_profile;
 DROP TABLE IF EXISTS user_creds;
+
+
+-- -----------------------------------------------------
+-- DROP TRIGGERS
+-- -----------------------------------------------------
+DROP TRIGGER IF EXISTS new_user;
 
 -- -----------------------------------------------------
 -- Create User Credentials Table 
@@ -24,7 +30,7 @@ CREATE TABLE IF NOT EXISTS user_creds (
     user_id INT UNIQUE NOT NULL AUTO_INCREMENT,
     username VARCHAR(50) UNIQUE NOT NULL,
     pwd VARCHAR(50) NOT NULL,   -- hashed
-    account_status INT NOT NULL, -- 0 = not active, 1=activated, 2=suspended
+    account_status INT NOT NULL DEFAULT 1, -- 0 = not active, 1=activated, 2=suspended
     PRIMARY KEY (user_id)
 );
 
@@ -46,8 +52,24 @@ CREATE TABLE IF NOT EXISTS user_profile (
     FOREIGN KEY (user_id)
         REFERENCES user_creds(user_id)
         -- ON DELETE SET DELETE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (username)
+        REFERENCES user_creds(username)
         ON UPDATE CASCADE
 );
+
+-- Will trigger when user has created profile
+DELIMITER $$
+CREATE TRIGGER new_user AFTER INSERT ON user_creds
+    FOR EACH ROW
+        BEGIN
+            -- Insert corresponding record
+            INSERT INTO user_profile (user_id, username) VALUES
+                (NEW.user_id, NEW.username);
+        END $$
+
+-- reset delim
+DELIMITER ;
 
 -- -----------------------------------------------------
 -- Create User Game Table 
