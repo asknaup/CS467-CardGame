@@ -27,10 +27,6 @@ app.get('/', (req, res) => {
   res.send('Hello, World!');
 });
 
-app.get('/game_page', (req, res) => {
-  res.render('game_page')
-});
-
 app.get('/collection', (req, res) => {
   res.render('collection', {title: 'heelo', message: 'world 123'});
 });
@@ -59,7 +55,7 @@ app.get('/user-profile-page/index', (req, res) => {
   res.render('user-profile-page/index')
 });
 
-app.get('/welcome-page/index', (req, res) => {
+app.get('/welcome-page-portal/index', (req, res) => {
   res.render('welcome-page-portal/index')
 });
 
