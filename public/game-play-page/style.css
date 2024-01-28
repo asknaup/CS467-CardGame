@@ -286,7 +286,7 @@
 #minotaur-card-1 {
   position: absolute;
   top: 250px;
-  left: 500px;
+  left: 450px;
   height:20%;
   width:10%;
 }
@@ -294,7 +294,7 @@
 #minotaur-card-2 {
   position: absolute;
   top: 250px;
-  left: 650px;
+  left: 600px;
   height:20%;
   width:10%;
 }
@@ -302,7 +302,7 @@
 #minotaur-card-3 {
   position: absolute;
   top: 250px;
-  left: 800px;
+  left: 750px;
   height:20%;
   width:10%;
 }
@@ -310,9 +310,19 @@
 #minotaur-card-4 {
   position: absolute;
   top: 250px;
-  left: 950px;
+  left: 900px;
   height:20%;
   width:10%;
+}
+
+#cards-in-hand-1{
+  position: absolute;
+  top: 250px;
+  left: 1100px;
+  height:30%;
+  width:15%;
+  font-weight:bolder;
+  font-size:30px;
 }
 
 #card-count-2 {
@@ -342,7 +352,7 @@
 #urza-card-1 {
   position: absolute;
   top: 525px;
-  left: 500px;
+  left: 450px;
   height:20%;
   width:10%;
 }
@@ -350,7 +360,7 @@
 #urza-card-2 {
   position: absolute;
   top: 525px;
-  left: 650px;
+  left: 600px;
   height:20%;
   width:10%;
 }
@@ -358,7 +368,7 @@
 #urza-card-3 {
   position: absolute;
   top: 525px;
-  left: 800px;
+  left: 750px;
   height:20%;
   width:10%;
 }
@@ -366,9 +376,17 @@
 #urza-card-4 {
   position: absolute;
   top: 525px;
-  left: 950px;
+  left: 900px;
   height:20%;
   width:10%;
+}
+
+#cards-in-hand-2{
+  position: absolute;
+  top: 400px;
+  left: 1100px;
+  height:35%;
+  width:20%;
 }
 
 
