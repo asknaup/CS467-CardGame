@@ -59,6 +59,10 @@ app.get('/welcome-page-portal/index', (req, res) => {
   res.render('welcome-page-portal/index')
 });
 
+app.get('/game-play-page/index', (req, res) => {
+  res.render('game-play-page/index')
+});
+
 app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
 });
