@@ -30,3 +30,7 @@ addUserForm.addEventListener("submit", function (e) {
     window.location.href = 'user-profile-page/index.handlebars';
     // addRow(inputUsername, inputPassword);
 });
+
+addRow = (data) => {
+    let currentTable = document.getElementById("addUser")
+}
