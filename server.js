@@ -63,6 +63,10 @@ app.get('/game-play-page/index', (req, res) => {
   res.render('game-play-page/index')
 });
 
+app.get('/generate-card-page/index', (req, res) => {
+  res.render('generate-card-page/index')
+});
+
 app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
 });
