@@ -6,29 +6,22 @@ const app = express();                          // Routing
 const port = 3000;
 
 var db = require('./database/db-connector');
-
-app.use(express.static('style'));               // For css
+var dbFunctions = require('./database/db-functions');
 
 app.engine('handlebars', exphbs.engine(                  
-  { extname: "hbs",
-    defaultLayout: false,
-    layoutsDir: "views/layouts/"
-  }
-));
+  { extname: "hbs", defaultLayout: false, layoutsDir: "views/layouts/"}
+  ));
 
 app.set('view engine', 'handlebars');
 const path = require('path');
 app.use(express.static(path.join(__dirname, 'public')));
+
 /*
 ROUTES
 */
 
 app.get('/', (req, res) => {
-  res.send('Hello, World!');
-});
-
-app.get('/collection', (req, res) => {
-  res.render('collection', {title: 'heelo', message: 'world 123'});
+  res.render('welcome-page-portal/index');
 });
 
 app.get('/current-deck-page/index', (req, res) => {
@@ -70,3 +63,30 @@ app.get('/generate-card-page/index', (req, res) => {
 app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
 });
+
+// POST ROUTES
+
+app.post('/new-user-page/index', async (req, res) => {
+  try {
+    await dbFunctions.insertNewUserIntoDB(
+      {username: req.query.username,
+       password: req.query.password,
+       email: req.query.email
+      });
+  res.render('user-profile-page/index', {
+    username: req.query.username,
+    collection: 'new to add collection'
+  });
+}
+  catch(err) {
+    res.send(`Something went wrong : (${err}`);
+  }
+});
+
+/* app.post('generate-card-page/index'), async (req, res) => {
+  try {
+    await dbFunctions.
+  }
+}
+
+*/
