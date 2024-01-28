@@ -8,11 +8,11 @@ You will need to be connected to the OSU vpn Cisco Anyconnect
 to access the database information.
 
 To download necessary node modules:
-npm init -y
-npm install express
-npm install express-handlebars
-npm install nodemon        
-npm install mysql2
+<p>npm init -y</p>
+<p>npm install express</p>
+<p>npm install express-handlebars</p>
+<p>npm install nodemon        </p>
+<p>npm install mysql2</p>
 
 Make sure you are running Node version v20.11
 node -v
