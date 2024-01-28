@@ -1,4 +1,4 @@
-const db = require('db-connector');
+const db = require('./db-connector');
 
 // pool.query parameters, 1st is sql query string, 2nd is optional list of params, third is (err, result) object
 
