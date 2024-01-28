@@ -1,15 +1,18 @@
 # CS467-CardGame
 
-npm init -y
+Welcome to our card generation game:
 
-npm install express
+To run the project type: 'node server.js' into your terminal
 
-npm install express-handlebars
+You will need to be connected to the OSU vpn Cisco Anyconnect
+to access the database information.
 
-npm install nodemon         // auto update node server on changes
+To download necessary node modules:
+<p>npm init -y</p>
+<p>npm install express</p>
+<p>npm install express-handlebars</p>
+<p>npm install nodemon        </p>
+<p>npm install mysql2</p>
 
 Make sure you are running Node version v20.11
 node -v
-
-to run:
-node server.js
