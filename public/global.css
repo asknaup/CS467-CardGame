@@ -1,0 +1,282 @@
+@import url("https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css");
+@import url("https://fonts.googleapis.com/css?family=Inter:400,700,italic");
+* {
+  -webkit-font-smoothing: antialiased;
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0px;
+  height: 100%;
+}
+/* a blue color as a generic focus style */
+button:focus-visible {
+  outline: 2px solid #4a90e2 !important;
+  outline: -webkit-focus-ring-color auto 5px !important;
+}
+a {
+  text-decoration: none;
+}
+
+/* used to be: .desktop { */
+.desktop {
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  /* used to be: .desktop .overlap-wrapper { */
+  .desktop .overlap-wrapper {
+    background-color: #ffffff;
+    overflow: hidden;
+    width: 1440px;
+    height: 1024px;
+  }
+  
+  /* used to be: .desktop .overlap { */
+  .desktop .overlap {
+    position: relative;
+    width: 1442px;
+    height: 1024px;
+  }
+  
+   /* used to be: .desktop .group { */
+  .desktop .group {
+    position: absolute;
+    width: 1442px;
+    height: 1024px;
+    top: 0;
+    left: 0;
+  }
+  
+  /* used to be: .desktop .overlap-group { */
+  .desktop .overlap-group {
+    position: absolute;
+    width: 1440px;
+    height: 944px;
+    top: 80px;
+    left: 0;
+    background-color: #f7dbc6;
+  }
+  
+  /* used to be:  .desktop  .overlap-group-wrapper { */
+  .desktop .overlap-group-wrapper {
+    position: absolute;
+    width: 649px;
+    height: 68px;
+    top: 61px;
+    left: 701px;
+  }
+  
+  /* used to be:  .desktop  .div { */
+  .desktop .div {
+    position: relative;
+    width: 647px;
+    height: 68px;
+    background-image: url(./img/rectangle-13.svg);
+    background-size: 100% 100%;
+  }
+  
+   /* used to be:  .desktop  .text-wrapper { */
+  .desktop .text-wrapper {
+    position: absolute;
+    top: 15px;
+    left: 29px;
+    opacity: 0.35;
+    font-family: "Inter", Helvetica;
+    font-weight: 400;
+    color: #000000;
+    font-size: 32px;
+    letter-spacing: 0;
+    line-height: normal;
+  }
+  
+   /* used to be:  .desktop  .div-wrapper { */
+  .desktop .div-wrapper {
+    position: absolute;
+    width: 649px;
+    height: 68px;
+    top: 312px;
+    left: 701px;
+  }
+  
+   /* used to be:  .desktop  .group-2 { */
+  .desktop .group-2 {
+    position: absolute;
+    width: 649px;
+    height: 152px;
+    top: 143px;
+    left: 701px;
+  }
+  
+   /* used to be:  .desktop  .overlap-2 { */
+  .desktop .overlap-2 {
+    position: absolute;
+    width: 647px;
+    height: 68px;
+    top: 0;
+    left: 0;
+    background-image: url(./img/rectangle-13.svg);
+    background-size: 100% 100%;
+  }
+  
+  /* used to be:  .desktop  .group-3 { */
+  .desktop .group-3 {
+    position: absolute;
+    width: 649px;
+    height: 68px;
+    top: 84px;
+    left: 0;
+  }
+  
+  /* used to be:  .desktop  .rectangle { */
+  .desktop .rectangle {
+    position: absolute;
+    width: 647px;
+    height: 68px;
+    top: 0;
+    left: 0;
+  }
+  
+  /* used to be:  .desktop  .text-wrapper-2 { */
+  .desktop .text-wrapper-2 {
+    position: absolute;
+    top: 7px;
+    left: 787px;
+    font-family: "Inter", Helvetica;
+    font-weight: 700;
+    color: #000000;
+    font-size: 40px;
+    letter-spacing: 0;
+    line-height: normal;
+    white-space: nowrap;
+  }
+  
+  /* used to be:  .desktop .rectangle-2{ */
+    .desktop .top-bar{
+        position: absolute;
+        width: 1440px;
+        height: 80px;
+        top: 0;
+        left: 0;
+        background-color: #ffb47e;
+        box-shadow: 0px 4px 4px #00000040;
+      }
+  
+  /* used to be:  .desktop .p { */
+  .desktop .application-title {
+    position: absolute;
+    top: 20px;
+    left: 24px;
+    font-family: "Inter", Helvetica;
+    font-weight: 700;
+    color: #000000;
+    font-size: 32px;
+    letter-spacing: 0;
+    line-height: normal;
+  }
+  
+  /* used to be:  .desktop .img { */
+    .desktop .play-button {
+        position: absolute;
+        width: 95px;
+        height: 51px;
+        top: 19px;
+        left: 1068px;
+      }
+  
+  /*used to be:   .desktop .rectangle-3 { */
+    .desktop .trade-button {
+        position: absolute;
+        width: 95px;
+        height: 51px;
+        top: 19px;
+        left: 954px;
+      }
+  
+  /*used to be:  .desktop .rectangle-4 { */
+  .desktop .make-button {
+    position: absolute;
+    width: 95px;
+    height: 51px;
+    top: 19px;
+    left: 840px;
+  }
+  
+  /*used to be:  .desktop .rectangle-5 { */
+    .desktop .collect-button{
+        position: absolute;
+        width: 95px;
+        height: 51px;
+        top: 19px;
+        left: 726px;
+      }
+      
+  /* used to be: .desktop .text-wrapper-3 { */
+  .desktop .play-button-text {
+    position: absolute;
+    top: 31px;
+    left: 1099px;
+    font-family: "Inter", Helvetica;
+    font-weight: 700;
+    color: #000000;
+    font-size: 16px;
+    letter-spacing: 0;
+    line-height: normal;
+    white-space: nowrap;
+  }
+  
+  /* used to be:  .desktop .text-wrapper-4 { */
+  .desktop .trade-button-text{
+    position: absolute;
+    top: 30px;
+    left: 979px;
+    font-family: "Inter", Helvetica;
+    font-weight: 700;
+    color: #000000;
+    font-size: 16px;
+    letter-spacing: 0;
+    line-height: normal;
+    white-space: nowrap;
+  }
+  
+  /* used to be:  .desktop .text-wrapper-5 { */
+  .desktop .make-button-text{
+    position: absolute;
+    top: 31px;
+    left: 866px;
+    font-family: "Inter", Helvetica;
+    font-weight: 700;
+    color: #000000;
+    font-size: 16px;
+    letter-spacing: 0;
+    line-height: normal;
+    white-space: nowrap;
+  }
+  
+
+  /*used to be: .desktop .text-wrapper-6 { */
+  .desktop .collect-button-text{
+    position: absolute;
+    top: 30px;
+    left: 746px;
+    font-family: "Inter", Helvetica;
+    font-weight: 700;
+    color: #000000;
+    font-size: 16px;
+    letter-spacing: 0;
+    line-height: normal;
+    white-space: nowrap;
+  }
+  
+  /*used to be: .desktop .group-4{ */
+  .desktop .user-logo {
+    position: absolute;
+    width: 84px;
+    height: 84px;
+    top: 0;
+    left: 1349px;
+  }
+  
