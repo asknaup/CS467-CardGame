@@ -27,7 +27,7 @@ addUserForm.addEventListener("submit", function (e) {
 
     xhttp.send(JSON.stringify(data))
 
-    window.location.href = 'user-profile-page/index.handlebars';
+    window.location.href = '/user-profile-page/index';
     // addRow(inputUsername, inputPassword);
 });
 

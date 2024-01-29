@@ -9,6 +9,7 @@ const port = 3000;
 var db = require('./database/db-connector');
 
 app.use(express.static('style'));               // For css
+app.use(bodyParser.json());
 
 app.engine('handlebars', exphbs.engine(                  
   { extname: "hbs", defaultLayout: false, layoutsDir: "views/layouts/"}
