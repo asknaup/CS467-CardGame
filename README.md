@@ -14,7 +14,5 @@ To download necessary node modules:
 <p>npm install nodemon        </p>
 <p>npm install mysql2</p>
 
-npm install mysql2
-
 Make sure you are running Node version v20.11
 node -v
