@@ -1,4 +1,4 @@
-.desktop .group-5 {
+.group-5 {
   position: absolute;
   width: 435px;
   height: 641px;
@@ -6,7 +6,7 @@
   left: 109px;
 }
 
-.desktop .group-6 {
+.group-6 {
   position: absolute;
   width: 414px;
   height: 72px;
@@ -14,7 +14,7 @@
   left: 115px;
 }
 
-.desktop .group-wrapper {
+.group-wrapper {
   position: absolute;
   width: 309px;
   height: 39px;
@@ -23,16 +23,16 @@
   box-shadow: 0px 4px 4px #00000040, 0px 4px 4px #00000040, 0px 4px 4px #00000040, 0px 4px 4px #00000040;
 }
 
-.desktop .group-7 {
+.group-7 {
   height: 39px;
 }
 
-.desktop .group-8 {
+.group-8 {
   width: 311px;
   height: 39px;
 }
 
-.desktop .overlap-group-2 {
+.overlap-group-2 {
   position: relative;
   width: 309px;
   height: 39px;
@@ -40,7 +40,7 @@
   border-radius: 81px;
 }
 
-.desktop .text-wrapper-7 {
+.text-wrapper-7 {
   position: absolute;
   top: 7px;
   left: 100px;
