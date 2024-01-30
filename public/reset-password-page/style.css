@@ -1,0 +1,164 @@
+
+.reset-password-page .rectangle-b {
+  position: absolute;
+  width: 695px;
+  height: 562px;
+  top: 271px;
+  left: 372px;
+  background-color: #fc7411;
+  border-radius: 75px;
+  box-shadow: 0px 4px 4px #00000040, 0px 4px 4px #00000040, 0px 4px 4px #00000040, 0px 4px 4px #00000040,
+    0px 4px 4px #00000040;
+}
+
+.reset-password-page .text-wrapper-b {
+  top: 284px;
+  left: 438px;
+  position: absolute;
+  width: 583px;
+  font-family: "Inter", Helvetica;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 40px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.reset-password-page .text-wrapper-c {
+  position: absolute;
+  width: 583px;
+  top: 418px;
+  left: 438px;
+  font-family: "Inter", Helvetica;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 40px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.reset-password-page .text-wrapper-d {
+  position: absolute;
+  width: 583px;
+  top: 552px;
+  left: 438px;
+  font-family: "Inter", Helvetica;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 40px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.reset-password-page .text-wrapper-e {
+  top: 675px;
+  left: 433px;
+  position: absolute;
+  width: 583px;
+  font-family: "Inter", Helvetica;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 40px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.reset-password-page .group-b {
+  position: absolute;
+  width: 583px;
+  height: 197px;
+  top: 345px;
+  left: 433px;
+}
+
+.reset-password-page .rectangle-c {
+  position: absolute;
+  width: 583px;
+  height: 60px;
+  top: 0;
+  left: 0;
+  background-color: #ffe2b8;
+}
+
+.reset-password-page .rectangle-d {
+  position: absolute;
+  width: 583px;
+  height: 60px;
+  top: 137px;
+  left: 0;
+  background-color: #ffe2b8;
+}
+
+.reset-password-page .group-c {
+  position: absolute;
+  width: 583px;
+  height: 198px;
+  top: 601px;
+  left: 433px;
+}
+
+.reset-password-page .rectangle-e {
+  position: absolute;
+  width: 583px;
+  height: 60px;
+  top: 138px;
+  left: 0;
+  background-color: #ffe2b8;
+}
+
+.reset-password-page .text-wrapper-f {
+  position: absolute;
+  width: 759px;
+  top: 151px;
+  left: 340px;
+  font-family: "Inter", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 64px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.reset-password-page .overlap-group-wrapper-a {
+  position: absolute;
+  width: 167px;
+  height: 40px;
+  top: 908px;
+  left: 637px;
+}
+
+.reset-password-page .overlap-group-a {
+  position: relative;
+  width: 165px;
+  height: 40px;
+  background-color: #ff6b00;
+  box-shadow: 0px 4px 4px #00000040, 0px 4px 4px #00000040, 0px 4px 4px #00000040, 0px 4px 4px #00000040,
+    0px 4px 4px #00000040, 0px 4px 4px #00000040;
+}
+
+.reset-password-page .text-wrapper-g {
+  position: absolute;
+  top: 8px;
+  left: 43px;
+  font-family: "Inter", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 20px;
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.reset-password-page .information-icon {
+  position: absolute;
+  width: 51px;
+  height: 50px;
+  top: 418px;
+  left: 847px;
+  object-fit: cover;
+}
+
+
+
+

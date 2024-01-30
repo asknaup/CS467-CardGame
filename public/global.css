@@ -206,7 +206,7 @@ a {
   }
   
   /*used to be:  .desktop .rectangle-5 { */
-    .desktop .collect-button{
+  .desktop .collect-button{
         position: absolute;
         width: 95px;
         height: 51px;
