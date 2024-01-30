@@ -19,7 +19,7 @@ a {
 }
 
 /* used to be: .desktop { */
-.desktop {
+.desktop-a {
     background-color: #ffffff;
     display: flex;
     flex-direction: row;
@@ -28,7 +28,7 @@ a {
   }
   
   /* used to be: .desktop .overlap-wrapper { */
-  .desktop .overlap-wrapper {
+  .desktop-a .overlap-wrapper-a {
     background-color: #ffffff;
     overflow: hidden;
     width: 1440px;
@@ -36,14 +36,14 @@ a {
   }
   
   /* used to be: .desktop .overlap { */
-  .desktop .overlap {
+  .desktop-a .overlap-a {
     position: relative;
     width: 1442px;
     height: 1024px;
   }
   
    /* used to be: .desktop .group { */
-  .desktop .group {
+  .desktop-a .group-a {
     position: absolute;
     width: 1442px;
     height: 1024px;
@@ -52,7 +52,7 @@ a {
   }
   
   /* used to be: .desktop .overlap-group { */
-  .desktop .overlap-group {
+  .desktop-a .overlap-group-a {
     position: absolute;
     width: 1440px;
     height: 944px;
@@ -62,7 +62,7 @@ a {
   }
   
   /* used to be:  .desktop  .overlap-group-wrapper { */
-  .desktop .overlap-group-wrapper {
+  .desktop-a .overlap-group-wrapper-a {
     position: absolute;
     width: 649px;
     height: 68px;
@@ -71,7 +71,7 @@ a {
   }
   
   /* used to be:  .desktop  .div { */
-  .desktop .div {
+  .desktop-a .div-a {
     position: relative;
     width: 647px;
     height: 68px;
@@ -80,7 +80,7 @@ a {
   }
   
    /* used to be:  .desktop  .text-wrapper { */
-  .desktop .text-wrapper {
+  .desktop-a .text-wrapper-a {
     position: absolute;
     top: 15px;
     left: 29px;
@@ -94,7 +94,7 @@ a {
   }
   
    /* used to be:  .desktop  .div-wrapper { */
-  .desktop .div-wrapper {
+  .desktop-a .div-wrapper-a {
     position: absolute;
     width: 649px;
     height: 68px;
@@ -103,7 +103,7 @@ a {
   }
   
    /* used to be:  .desktop  .group-2 { */
-  .desktop .group-2 {
+  .desktop-a .group-b {
     position: absolute;
     width: 649px;
     height: 152px;
@@ -112,7 +112,7 @@ a {
   }
   
    /* used to be:  .desktop  .overlap-2 { */
-  .desktop .overlap-2 {
+  .desktop-a .overlap-b {
     position: absolute;
     width: 647px;
     height: 68px;
@@ -123,7 +123,7 @@ a {
   }
   
   /* used to be:  .desktop  .group-3 { */
-  .desktop .group-3 {
+  .desktop-a .group-c {
     position: absolute;
     width: 649px;
     height: 68px;
@@ -132,7 +132,7 @@ a {
   }
   
   /* used to be:  .desktop  .rectangle { */
-  .desktop .rectangle {
+  .desktop-a .rectangle-a {
     position: absolute;
     width: 647px;
     height: 68px;
@@ -141,7 +141,7 @@ a {
   }
   
   /* used to be:  .desktop  .text-wrapper-2 { */
-  .desktop .text-wrapper-2 {
+  .desktop-a .text-wrapper-b {
     position: absolute;
     top: 7px;
     left: 787px;
@@ -155,7 +155,7 @@ a {
   }
   
   /* used to be:  .desktop .rectangle-2{ */
-    .desktop .top-bar{
+  .desktop-a .top-bar{
         position: absolute;
         width: 1440px;
         height: 80px;
@@ -166,7 +166,7 @@ a {
       }
   
   /* used to be:  .desktop .p { */
-  .desktop .application-title {
+  .desktop-a .application-title {
     position: absolute;
     top: 20px;
     left: 24px;
@@ -179,7 +179,7 @@ a {
   }
   
   /* used to be:  .desktop .img { */
-    .desktop .play-button {
+  .desktop-a .play-button {
         position: absolute;
         width: 95px;
         height: 51px;
@@ -188,7 +188,7 @@ a {
       }
   
   /*used to be:   .desktop .rectangle-3 { */
-    .desktop .trade-button {
+  .desktop-a .trade-button {
         position: absolute;
         width: 95px;
         height: 51px;
@@ -197,7 +197,7 @@ a {
       }
   
   /*used to be:  .desktop .rectangle-4 { */
-  .desktop .make-button {
+  .desktop-a .make-button {
     position: absolute;
     width: 95px;
     height: 51px;
@@ -206,7 +206,7 @@ a {
   }
   
   /*used to be:  .desktop .rectangle-5 { */
-  .desktop .collect-button{
+.desktop-a .collect-button{
         position: absolute;
         width: 95px;
         height: 51px;
@@ -215,7 +215,7 @@ a {
       }
       
   /* used to be: .desktop .text-wrapper-3 { */
-  .desktop .play-button-text {
+.desktop-a .play-button-text {
     position: absolute;
     top: 31px;
     left: 1099px;
@@ -229,7 +229,7 @@ a {
   }
   
   /* used to be:  .desktop .text-wrapper-4 { */
-  .desktop .trade-button-text{
+  .desktop-a .trade-button-text{
     position: absolute;
     top: 30px;
     left: 979px;
@@ -243,7 +243,7 @@ a {
   }
   
   /* used to be:  .desktop .text-wrapper-5 { */
-  .desktop .make-button-text{
+  .desktop-a .make-button-text{
     position: absolute;
     top: 31px;
     left: 866px;
@@ -258,7 +258,7 @@ a {
   
 
   /*used to be: .desktop .text-wrapper-6 { */
-  .desktop .collect-button-text{
+  .desktop-a .collect-button-text{
     position: absolute;
     top: 30px;
     left: 746px;
@@ -272,7 +272,7 @@ a {
   }
   
   /*used to be: .desktop .group-4{ */
-  .desktop .user-logo {
+  .desktop-a .user-logo {
     position: absolute;
     width: 84px;
     height: 84px;
