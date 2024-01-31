@@ -27,29 +27,13 @@ a {
     width: 100%;
   }
   
-  /* used to be: .desktop .overlap-wrapper { */
-  .desktop-a .overlap-wrapper-a {
-    background-color: #ffffff;
-    overflow: hidden;
-    width: 1440px;
-    height: 1024px;
-  }
-  
   /* used to be: .desktop .overlap { */
   .desktop-a .overlap-a {
     position: relative;
     width: 1442px;
     height: 1024px;
   }
-  
-   /* used to be: .desktop .group { */
-  .desktop-a .group-a {
-    position: absolute;
-    width: 1442px;
-    height: 1024px;
-    top: 0;
-    left: 0;
-  }
+
   
   /* used to be: .desktop .overlap-group { */
   .desktop-a .overlap-group-a {
@@ -61,98 +45,6 @@ a {
     background-color: #f7dbc6;
   }
   
-  /* used to be:  .desktop  .overlap-group-wrapper { */
-  .desktop-a .overlap-group-wrapper-a {
-    position: absolute;
-    width: 649px;
-    height: 68px;
-    top: 61px;
-    left: 701px;
-  }
-  
-  /* used to be:  .desktop  .div { */
-  .desktop-a .div-a {
-    position: relative;
-    width: 647px;
-    height: 68px;
-    background-image: url(./img/rectangle-13.svg);
-    background-size: 100% 100%;
-  }
-  
-   /* used to be:  .desktop  .text-wrapper { */
-  .desktop-a .text-wrapper-a {
-    position: absolute;
-    top: 15px;
-    left: 29px;
-    opacity: 0.35;
-    font-family: "Inter", Helvetica;
-    font-weight: 400;
-    color: #000000;
-    font-size: 32px;
-    letter-spacing: 0;
-    line-height: normal;
-  }
-  
-   /* used to be:  .desktop  .div-wrapper { */
-  .desktop-a .div-wrapper-a {
-    position: absolute;
-    width: 649px;
-    height: 68px;
-    top: 312px;
-    left: 701px;
-  }
-  
-   /* used to be:  .desktop  .group-2 { */
-  .desktop-a .group-b {
-    position: absolute;
-    width: 649px;
-    height: 152px;
-    top: 143px;
-    left: 701px;
-  }
-  
-   /* used to be:  .desktop  .overlap-2 { */
-  .desktop-a .overlap-b {
-    position: absolute;
-    width: 647px;
-    height: 68px;
-    top: 0;
-    left: 0;
-    background-image: url(./img/rectangle-13.svg);
-    background-size: 100% 100%;
-  }
-  
-  /* used to be:  .desktop  .group-3 { */
-  .desktop-a .group-c {
-    position: absolute;
-    width: 649px;
-    height: 68px;
-    top: 84px;
-    left: 0;
-  }
-  
-  /* used to be:  .desktop  .rectangle { */
-  .desktop-a .rectangle-a {
-    position: absolute;
-    width: 647px;
-    height: 68px;
-    top: 0;
-    left: 0;
-  }
-  
-  /* used to be:  .desktop  .text-wrapper-2 { */
-  .desktop-a .text-wrapper-b {
-    position: absolute;
-    top: 7px;
-    left: 787px;
-    font-family: "Inter", Helvetica;
-    font-weight: 700;
-    color: #000000;
-    font-size: 40px;
-    letter-spacing: 0;
-    line-height: normal;
-    white-space: nowrap;
-  }
   
   /* used to be:  .desktop .rectangle-2{ */
   .desktop-a .top-bar{
@@ -163,7 +55,7 @@ a {
         left: 0;
         background-color: #ffb47e;
         box-shadow: 0px 4px 4px #00000040;
-      }
+  }
   
   /* used to be:  .desktop .p { */
   .desktop-a .application-title {
