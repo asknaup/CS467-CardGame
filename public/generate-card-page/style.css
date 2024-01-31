@@ -1,4 +1,4 @@
-.group-6 {
+#game-name-title {
   position: absolute;
   width: 414px;
   height: 72px;
@@ -6,7 +6,7 @@
   left: 115px;
 }
 
-.group-wrapper {
+.deck-sign-shadow {
   position: absolute;
   width: 309px;
   height: 39px;
@@ -15,7 +15,7 @@
   box-shadow: 0px 4px 4px #00000040, 0px 4px 4px #00000040, 0px 4px 4px #00000040, 0px 4px 4px #00000040;
 }
 
-.overlap-group-2 {
+.deck-name-sign{
   position: relative;
   width: 309px;
   height: 39px;
@@ -23,7 +23,7 @@
   border-radius: 81px;
 }
 
-.text-wrapper-7 {
+.deck-name-text {
   position: absolute;
   top: 7px;
   left: 100px;
