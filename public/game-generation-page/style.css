@@ -142,7 +142,7 @@
   line-height: normal;
 }
 
-.desktop .img {
+.desktop .play-menu-button {
   position: absolute;
   width: 95px;
   height: 51px;
@@ -150,7 +150,7 @@
   left: 1068px;
 }
 
-.desktop .top-menu-button-box {
+.desktop .trade-menu-button {
   position: absolute;
   width: 95px;
   height: 51px;
@@ -158,7 +158,7 @@
   left: 954px;
 }
 
-.desktop .rectangle-4 {
+.desktop .make-menu-button {
   position: absolute;
   width: 95px;
   height: 51px;
@@ -166,7 +166,7 @@
   left: 840px;
 }
 
-.desktop .rectangle-5 {
+.desktop .collect-menu-button {
   position: absolute;
   width: 95px;
   height: 51px;
