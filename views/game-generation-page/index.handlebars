@@ -1,97 +1,110 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="globals.css" />
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <div class="desktop">
-      <div class="overlap-wrapper">
-        <div class="overlap">
-          <div class="group">
-            <div class="overlap-group">
-              <div class="overlap-group-wrapper">
-                <div class="div"><div class="text-wrapper">Concepts</div></div>
-              </div>
-              <div class="div-wrapper">
-                <div class="div"><div class="text-wrapper">Style</div></div>
-              </div>
-              <div class="group-2">
-                <div class="overlap-2"><div class="text-wrapper">Mechanics</div></div>
-                <div class="group-3">
-                  <div class="div">
-                    <img class="rectangle" src="img/rectangle-13.svg" />
-                    <img class="rectangle" src="img/rectangle-13.svg" />
-                    <div class="text-wrapper">Abilities</div>
-                  </div>
-                </div>
-              </div>
-              <div class="text-wrapper-2">Game Generation Inputs</div>
-            </div>
-            <div class="rectangle-2"></div>
-          </div>
-          <p class="p">Online Trading Card Game Maker</p>
 
-          {{!-- BUTTON: Play --}}
-          <button id="play-button-ggp"class="play-menu-button" type="button">Play</button>
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="globals.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
 
-          {{!-- BUTTON: Trade --}}
-          <button id="trade-button-ggp"class="trade-menu-button" type="button">Trade</button>
+<body>
+  <div class="desktop">
+    <div class="overlap-wrapper">
+      <div class="overlap">
+        <div class="group">
+          <div class="overlap-group">
 
-          {{!-- BUTTON: Make --}}
-          <button id="make-button-ggp"class="make-menu-button" type="button">Make</button>
+            {{!-- INPUT: "Concepts"--}}
+            <input class="user-inputs" type="text" id="concepts-input-ggp" placeholder="Type Concepts">
 
-          {{!-- BUTTON: Collect --}}
-          <button id="collect-button-ggp"class="collect-menu-button" type="button">Collect</button>
-          
-          {{!-- User Profile icon
-          TO-DO: Reference global.css, consider using icon library and styling buttons accordingly 
-          --}}
-          <img class="group-4" src="img/group-2.png" />
+            {{!-- INPUT: "Mechanics"--}}
+            <input class="user-inputs" type="text" id="concepts-input-ggp" placeholder="Type Mechanics"
+              style="margin-top: 10px;">
 
-          <img class="group-5" src="img/group-10.png" />
-          <img class="group-6" src="img/group-6.png" />
-          <div class="group-wrapper">
-            <div class="group-7">
-              <div class="group-8">
-                <div class="overlap-group-2"><div class="text-wrapper-7">Deck Name</div></div>
-              </div>
-            </div>
+            {{!-- INPUT: "Abilities"--}}
+            <input class="user-inputs" type="text" id="concepts-input-ggp" placeholder="Type Abilities"
+              style="margin-top: 10px;">
+              
+            {{!-- INPUT: "Style"--}}
+            <input class="user-inputs" type="text" id="concepts-input-ggp" placeholder="Type Style"
+              style="margin-top: 10px;">
+
+            <div class="text-wrapper-2">Game Generation Inputs</div>
           </div>
-          <div class="group-9">
-            <div class="group-7">
-              <div class="group-8">
-                <div class="overlap-group-2"><div class="text-wrapper-8">View Current Rule Iteration</div></div>
-              </div>
-            </div>
-          </div>
-          <div class="group-10">
-            <div class="group-7">
-              <div class="group-8">
-                <div class="overlap-group-2"><p class="text-wrapper-9">Browse Cards in Current Deck</p></div>
-              </div>
-            </div>
-          </div>
-          <div class="group-11">
-            <div class="group-7">
-              <div class="group-12">
-                <div class="overlap-group-3"><div class="text-wrapper-10">Help</div></div>
-              </div>
-            </div>
-          </div>
-          <img class="group-13" src="img/group-4.png" />
-          <img class="group-14" src="img/group-12.png" />
-          <img class="group-15" src="img/group-13.png" />
-          <img class="group-16" src="img/group-11.png" />
-          <img class="group-17" src="img/group-5.png" />
-          <img class="group-18" src="img/group-14.png" />
-          <img class="group-19" src="img/group-15.png" />
-          <img class="group-20" src="img/group-3.png" />
-          <p class="text-wrapper-11">Card No. X out of Y</p>
-          <div class="text-wrapper-12">Card Name</div>
+          <div class="rectangle-2"></div>
         </div>
+        <p class="p">Online Trading Card Game Maker</p>
+
+        {{!-- BUTTON: "Play" --}}
+        <button id="play-button-ggp" class="play-menu-button" type="button">Play</button>
+
+        {{!-- BUTTON: "Trade" --}}
+        <button id="trade-button-ggp" class="trade-menu-button" type="button">Trade</button>
+
+        {{!-- BUTTON: "Make" --}}
+        <button id="make-button-ggp" class="make-menu-button" type="button">Make</button>
+
+        {{!-- BUTTON: "Collect" --}}
+        <button id="collect-button-ggp" class="collect-menu-button" type="button">Collect</button>
+
+        {{!-- BUTTON: User Profile icon
+        TO-DO: Reference global.css, consider using icon library and styling buttons accordingly
+        --}}
+        <img id="user-button-ggp" class="group-4" src="img/group-2.png" />
+
+        <img class="group-5" src="img/group-10.png" />
+
+        {{!-- HANDLEBARS: "Game Name"--}}
+        <img id="game-name-hbs-ggp" class="group-6" src="img/group-6.png" />
+
+        <div class="group-wrapper">
+          <div class="group-8">
+
+            {{!-- HANDLEBARS: "Deck Name"--}}
+            <div id="deck-name-hbs-ggp" class="overlap-group-2">
+              <div class="text-wrapper-7">Deck Name</div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="group-9">
+          <div class="group-8">
+            <div class="overlap-group-2">
+              <div class="text-wrapper-8">View Current Rule Iteration</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="group-10">
+          <div class="group-8">
+            <div class="overlap-group-2">
+              <p class="text-wrapper-9">Browse Cards in Current Deck</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="group-11">
+          <div class="group-12">
+            <div class="overlap-group-3">
+              <div class="text-wrapper-10">Help</div>
+            </div>
+          </div>
+        </div>
+
+        <img class="group-13" src="img/group-4.png" />
+        <img class="group-14" src="img/group-12.png" />
+        <img class="group-15" src="img/group-13.png" />
+        <img class="group-16" src="img/group-11.png" />
+        <img class="group-17" src="img/group-5.png" />
+        <img class="group-18" src="img/group-14.png" />
+        <img class="group-19" src="img/group-15.png" />
+        <img class="group-20" src="img/group-3.png" />
+        <p class="text-wrapper-11">Card No. X out of Y</p>
+        <div class="text-wrapper-12">Card Name</div>
       </div>
     </div>
-  </body>
+  </div>
+</body>
+
 </html>

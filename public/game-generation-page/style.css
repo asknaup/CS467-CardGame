@@ -1,3 +1,12 @@
+.user-inputs {
+  width: 500px;
+  height: 80px;
+  background-color: #ff9378;
+  font-size: x-large;
+  margin-left: 775px;
+  margin-top: 70px;  /* Adjust this value */
+}
+
 .desktop {
   background-color: #ffffff;
   display: flex;
@@ -36,22 +45,6 @@
   background-color: #f7dbc6;
 }
 
-.desktop .overlap-group-wrapper {
-  position: absolute;
-  width: 649px;
-  height: 68px;
-  top: 61px;
-  left: 701px;
-}
-
-.desktop .div {
-  position: relative;
-  width: 647px;
-  height: 68px;
-  background-image: url(./img/rectangle-13.svg);
-  background-size: 100% 100%;
-}
-
 .desktop .text-wrapper {
   position: absolute;
   top: 15px;
@@ -73,13 +66,13 @@
   left: 701px;
 }
 
-.desktop .group-2 {
+/* .desktop .group-2 {
   position: absolute;
   width: 649px;
   height: 152px;
   top: 143px;
   left: 701px;
-}
+} */
 
 .desktop .overlap-2 {
   position: absolute;
@@ -257,10 +250,6 @@
   top: 171px;
   left: 168px;
   box-shadow: 0px 4px 4px #00000040, 0px 4px 4px #00000040, 0px 4px 4px #00000040, 0px 4px 4px #00000040;
-}
-
-.desktop .group-7 {
-  height: 39px;
 }
 
 .desktop .group-8 {
