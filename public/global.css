@@ -172,3 +172,35 @@ a {
     left: 1349px;
   }
   
+  
+.desktop-a .play-menu-button {
+  position: absolute;
+  width: 95px;
+  height: 51px;
+  top: 19px;
+  left: 1068px;
+}
+
+.desktop-a .trade-menu-button {
+  position: absolute;
+  width: 95px;
+  height: 51px;
+  top: 19px;
+  left: 954px;
+}
+
+.desktop-a .make-menu-button {
+  position: absolute;
+  width: 95px;
+  height: 51px;
+  top: 19px;
+  left: 840px;
+}
+
+.desktop-a .collect-menu-button {
+  position: absolute;
+  width: 95px;
+  height: 51px;
+  top: 19px;
+  left: 726px;
+}
