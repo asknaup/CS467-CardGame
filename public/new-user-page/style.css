@@ -140,4 +140,9 @@
   width: 350px;
 }
 
-
+.new-user-div #submit{
+  position: relative;
+  top:100px;
+  height: 25px;
+  width:100px;
+}

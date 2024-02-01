@@ -139,4 +139,9 @@
   width: 350px;
 }
 
-
+.reset-password-div #submit{
+  position: relative;
+  top:100px;
+  height: 25px;
+  width:100px;
+}
