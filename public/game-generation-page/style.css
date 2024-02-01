@@ -28,14 +28,6 @@
   height: 1024px;
 }
 
-.desktop .group {
-  position: absolute;
-  width: 1442px;
-  height: 1024px;
-  top: 0;
-  left: 0;
-}
-
 .desktop .overlap-group {
   position: absolute;
   width: 1440px;
@@ -65,14 +57,6 @@
   top: 312px;
   left: 701px;
 }
-
-/* .desktop .group-2 {
-  position: absolute;
-  width: 649px;
-  height: 152px;
-  top: 143px;
-  left: 701px;
-} */
 
 .desktop .overlap-2 {
   position: absolute;
@@ -113,7 +97,7 @@
   white-space: nowrap;
 }
 
-.desktop .rectangle-2 {
+.desktop .menu-bar {
   position: absolute;
   width: 1440px;
   height: 80px;
@@ -252,6 +236,16 @@
   box-shadow: 0px 4px 4px #00000040, 0px 4px 4px #00000040, 0px 4px 4px #00000040, 0px 4px 4px #00000040;
 }
 
+.desktop .center-buttons {
+  position: absolute;
+  width: 200px;
+  height: 50px;
+  font-size: larger;
+  top:650px;
+  left:650px;
+  margin-top: 70px;  /* Adjust this value */
+}
+
 .desktop .group-8 {
   width: 311px;
   height: 39px;
@@ -357,12 +351,14 @@
   line-height: normal;
 }
 
-.desktop .group-13 {
-  position: absolute;
-  width: 132px;
-  height: 55px;
-  top: 967px;
-  left: 338px;
+.desktop .bottom-buttons {
+  position: relative;
+  width: 140px;
+  height: 50px;
+  font-size: larger;
+  margin-left: 150px;
+  margin-top: 925px;  /* Adjust this value */
+  z-index: 1;
 }
 
 .desktop .group-14 {
@@ -397,28 +393,23 @@
   left: 0;
 }
 
-.desktop .group-18 {
+.desktop .create-buttons {
   position: absolute;
-  width: 207px;
-  height: 46px;
-  top: 497px;
-  left: 952px;
+  width: 200px;
+  height: 50px;
+  font-size: larger;
+  top:500px;
+  left:950px;
+  margin-top: 70px;  /* Adjust this value */
 }
 
-.desktop .group-19 {
-  position: absolute;
-  width: 207px;
-  height: 46px;
-  top: 552px;
-  left: 952px;
-}
-
-.desktop .group-20 {
+.desktop .delete-button {
   position: absolute;
   width: 273px;
   height: 64px;
   top: 958px;
   left: 1155px;
+  font-size: x-large;
 }
 
 .desktop .text-wrapper-11 {
