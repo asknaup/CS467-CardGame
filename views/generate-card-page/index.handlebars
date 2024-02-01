@@ -42,34 +42,44 @@
         </div>
       
       <div id="generate-card-title-top">
-            <p>Click On Card</p>
+            <p>Click Here</p>
       </div>
       <img id="deck-1" src="img/deck-top-view.jpg" />
       <div id="generate-card-title-bottom">
-          <p>To Generate A New One</p>
+          <p>To Generate This Card</p>
       </div>
-      <div id="AI-prompt-title">
-          <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Enter Description For AI 
+
+      <p id="card-preview-title">Card Preview</p>
+      <div class="card-preview">
+          <div id="img-placeholder"> After Hitting Submit
+              <br>
+              Generated Image 
+              <br>
+              Goes Here
+          </div>
+      </div>
+      <p id="AI-prompt-title"> Enter Description For AI 
              <br>
               To Generate A New Card Image
-              </p>
-      </div>
+      </p>
+      {{!-- INPUT: "Reset Password Form Info"
+          Route: app.post() to db--}}
+      <form class="form-ai-image" method="POST" action="">
+          <input type="text" name="input-ai-image" id="input-ai-image">
+          <input id="submit" type="submit">
+      </form> <!-- end of form -->
+
       <div id="credits">
-        <p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbspStats Left:4
+        <p> Stats Left:4
           <br>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbspHealth Stat: 2
+          Health Stat: 2
           <br>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbspAttack Stat: 2
+          Attack Stat: 2
           <br>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbspDefense Stat: 2
+          Defense Stat: 2
         </p>
       </div>
-      <div id="prompt"></div>
-      <div id="faded-prompt-text">
-          <p>
-                Type Description For Image ...
-          </p>
-      </div>
+
       <div class="health-stat">
           <button id="health-stat-minus" > - </button>
             <p id="health-stat-text"> health-stat </p>

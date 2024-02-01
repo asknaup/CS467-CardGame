@@ -38,15 +38,15 @@
 
 #generate-card-title-top{
   position: absolute;
-  top: 350px;
-  left: 175px;
+  top: 375px;
+  left: 200px;
   font-weight:bolder;
   font-size:30px;
 }
 
 #generate-card-title-bottom{
   position: absolute;
-  top: 625px;
+  top: 650px;
   left: 125px;
   font-weight:bolder;
   font-size:30px;
@@ -54,57 +54,80 @@
 
 #deck-1 {
   position: absolute;
-  top: 400px;
+  top: 425px;
   left: 200px;
   height:28%;
   width:10%;
 }
 
-#AI-prompt-title{
+#card-preview-title{
   position: absolute;
-  top: 225px;
-  left: 900px;
+  top: 375px;
+  left: 500px;
   font-weight:bolder;
   font-size:30px;
 }
 
-#faded-prompt-text{
+.card-preview{
   position: absolute;
-  top: 325px;
-  left: 920px;
-  font-weight:bolder;
-  color:gray;
+  top: 425px;
+  left: 500px;
+  background-color: #f6f2f2;
+  height: 205px;
+  width: 155px;
+  border-radius: 5px;
 }
 
-#prompt {
+.card-preview #img-placeholder{
+  position: relative;
+  top: 15px;
+  height: 100px;
+  border: #000000;
+  border-style: solid;
+  border-width: 2px;
+  font-weight:bolder;
+  font-size: 14px;
+  padding: 10px;
+  margin: 5px;
+}
+
+#AI-prompt-title{
   position: absolute;
-  width: 400px;
-  height: 350px;
+  top: 225px;
+  left: 850px;
+  font-weight:bolder;
+  font-size:30px;
+}
+
+
+.form-ai-image{
+  position: absolute;
   top: 300px;
-  left: 900px;
-  background-color: #f6f2f2;
-  box-shadow: 0px 4px 4px #00000040, 0px 4px 4px #00000040, 0px 4px 4px #00000040, 0px 4px 4px #00000040,
-    0px 4px 4px #00000040;
+  left: 850px;
+}
+
+.form-ai-image #input-ai-image{
+  width:500px;
 }
 
 #credits{
   position: absolute;
   width: 250px;
   height: 80px;
-  top: 300px;
-  left: 550px;
+  top: 400px;
+  left: 950px;
   background-color: #f6f2f2;
   border-radius: 5px;
   font-weight: bolder;
   font-size:20px;
-  padding-left:30px;
+  padding-left:60px;
 }
 
 .health-stat {
   position: absolute;
   display: block;
-  top: 400px;
-  left: 550px;
+  top: 500px;
+  left: 950px;
   margin: 0px;
 
 }
@@ -147,8 +170,8 @@
 .attack-stat {
   position: absolute;
   display: block;
-  top: 450px;
-  left: 550px;
+  top: 550px;
+  left: 950px;
   margin: 0px;
 
 }
@@ -190,8 +213,8 @@
 .defense-stat {
   position: absolute;
   display: block;
-  top: 500px;
-  left: 550px;
+  top: 600px;
+  left: 950px;
   margin: 0px;
 
 }
