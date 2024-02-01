@@ -6,36 +6,37 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="desktop-a">
-      <div class="overlap-a">
-          <div class="overlap-group-a"></div>
-          <div class="top-bar"></div>
-        <p class="application-title">Online Trading Card Game Maker</p>
-      </div> <!-- class="overlap-a" -->
-      
-      {{!-- BUTTON: "Play"
-            Route: Link to look-at-games-page + app.get() (prompt asking if they'd like to play current game selected
-            or
-            browse games)
-            --}}
-      <button id="play-button-ggp" class="play-menu-button" type="button">Play</button>
+    <div class="base-layout">
+        <div class="overlap-a">
+            <div class="overlap-group-a"></div>
+            <div class="top-bar"></div>
+          <p class="application-title">Online Trading Card Game Maker</p>
+        </div> <!-- class="overlap-a" -->
+        
+        {{!-- BUTTON: "Play"
+              Route: Link to look-at-games-page + app.get() (prompt asking if they'd like to play current game selected
+              or
+              browse games)
+              --}}
+        <button id="play-button-ggp" class="play-menu-button" type="button">Play</button>
 
-      {{!-- BUTTON: "Trade"
-            Route: Link to trade-page (Need to create)
-            --}}
-      <button id="trade-button-ggp" class="trade-menu-button" type="button">Trade</button>
+        {{!-- BUTTON: "Trade"
+              Route: Link to trade-page (Need to create)
+              --}}
+        <button id="trade-button-ggp" class="trade-menu-button" type="button">Trade</button>
 
-      {{!-- BUTTON: "Make"
-            Route: Link to game-generation-page--}}
-      <button id="make-button-ggp" class="make-menu-button" type="button">Make</button>
+        {{!-- BUTTON: "Make"
+              Route: Link to game-generation-page--}}
+        <button id="make-button-ggp" class="make-menu-button" type="button">Make</button>
 
-      {{!-- BUTTON: "Collect"
-            Route: Link to collect-page (Need to create) --}}
-      <button id="collect-button-ggp" class="collect-menu-button" type="button">Collect</button>
-        <img class="user-logo" src="img/group-2.png" />
-  </div> <!-- class="desktop-a" -->
+        {{!-- BUTTON: "Collect"
+              Route: Link to collect-page (Need to create) --}}
+        <button id="collect-button-ggp" class="collect-menu-button" type="button">Collect</button>
+         <img class="user-logo" src="img/group-2.png" />
+    </div> <!-- class="base-layout -->
 
-    <div class="generate-card-page">
+  
+  <div class="generate-card-page">
         <div class="deck-sign-shadow">
               <div class="deck-name-sign"><div class="deck-name-text">Deck Name</div></div>
         </div>
@@ -69,36 +70,23 @@
                 Type Description For Image ...
           </p>
       </div>
-      <div id="health-stat">
-          <p>&nbsp;&nbsp;&nbsp;health-stat</p>
+      <div class="health-stat">
+          <button id="health-stat-minus" > - </button>
+            <p id="health-stat-text"> health-stat </p>
+          <button id="health-stat-plus" > + </button>
       </div>
-      <div id="health-stat-plus">
-          <p>&nbsp;+</p>
+      <div class="attack-stat">
+          <button id="attack-stat-minus"> - </button>
+          <p id="attack-stat-text"> attack-stat </p>
+          <button id="attack-stat-plus" > + </button>
       </div>
-      <div id="health-stat-minus">
-        <p>&nbsp;-</p>
+      <div class="defense-stat">
+          <button id="defense-stat-minus" > - </button>
+          <p id="defense-stat-text">defense-stat</p>
+          <button id="defense-stat-plus" > + </button>
       </div>
-      <div id="attack-stat">
-        <p>&nbsp;&nbsp;&nbsp;attack-stat</p>
-      </div>
-      <div id="attack-stat-plus">
-        <p>&nbsp;+</p>
-      </div>
-      <div id="attack-stat-minus">
-        <p>&nbsp;-</p>
-      </div>
-      <div id="defense-stat">
-          <p>&nbsp;&nbsp;&nbsp;defense-stat</p>
-      </div>
-      <div id="defense-stat-plus">
-          <p>&nbsp;+</p>
-      </div>
-      <div id="defense-stat-minus">
-          <p>&nbsp;-</p>
-      </div>
+
       <img id="game-name-title" src="img/group-6.png" />
-
     </div> <!-- class="generate-card-page" -->
-
   </body>
 </html>

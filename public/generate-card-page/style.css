@@ -91,117 +91,142 @@
   position: absolute;
   width: 250px;
   height: 80px;
-  top: 375px;
+  top: 300px;
   left: 550px;
   background-color: #f6f2f2;
+  border-radius: 5px;
   font-weight: bolder;
   font-size:20px;
+  padding-left:30px;
 }
 
-#health-stat{
+.health-stat {
   position: absolute;
-  width: 150px;
-  height: 25px;
+  display: block;
+  top: 400px;
+  left: 550px;
+  margin: 0px;
+
+}
+
+#health-stat-text {
+  display: block;
+  width: 250px;
+  height: 30px;
+  background-color: #ec6767;
+  font-weight: bolder;
+  font-size:20px;
+  margin: 0px;
+  padding-left: 80px;
+  padding-top: 5px;
+  border-radius: 5px;
+
+}
+
+.health-stat #health-stat-minus{
+  position: relative;
+  top: 30px;
+  right: 75px;
+  width: 50px;
+  height: 30px;
+  font-weight: bolder;
+  font-size:25px;
+}
+
+.health-stat #health-stat-plus{
+  position: relative;
+  bottom: 30px;
+  left: 275px;
+  width: 50px;
+  height: 30px;
+  font-weight: bolder;
+  font-size:25px;
+}
+
+
+.attack-stat {
+  position: absolute;
+  display: block;
+  top: 450px;
+  left: 550px;
+  margin: 0px;
+
+}
+
+#attack-stat-text {
+  display: block;
+  width: 250px;
+  height: 30px;
+  background-color: #ec6767;
+  font-weight: bolder;
+  font-size:20px;
+  margin: 0px;
+  padding-left: 80px;
+  padding-top: 5px;
+  border-radius: 5px;
+}
+
+.attack-stat #attack-stat-minus{
+  position: relative;
+  top: 30px;
+  right: 75px;
+  width: 50px;
+  height: 30px;
+  font-weight: bolder;
+  font-size:25px;
+}
+
+.attack-stat #attack-stat-plus{
+  position: relative;
+  bottom: 30px;
+  left: 275px;
+  width: 50px;
+  height: 30px;
+  font-weight: bolder;
+  font-size:25px;
+}
+
+
+.defense-stat {
+  position: absolute;
+  display: block;
   top: 500px;
-  left: 600px;
-  background-color: #f6f2f2;
-  border-radius: 81px;
+  left: 550px;
+  margin: 0px;
+
+}
+
+#defense-stat-text {
+  display: block;
+  width: 250px;
+  height: 30px;
+  background-color: #ec6767;
   font-weight: bolder;
   font-size:20px;
+  margin: 0px;
+  padding-left: 80px;
+  padding-top: 5px;
+  border-radius: 5px;
 }
 
-#health-stat-plus{
-position: absolute;
-width: 25px;
-height: 25px;
-top: 500px;
-left: 775px;
-background-color: #f6f2f2;
-border-radius: 81px;
-font-weight: bolder;
-font-size:25px;
-}
-
-#health-stat-minus{
-position: absolute;
-width: 25px;
-height: 25px;
-top: 500px;
-left: 550px;
-background-color: #f6f2f2;
-border-radius: 81px;
-font-weight: bolder;
-font-size:25px;
-}
-
-#attack-stat{
-  position: absolute;
-  width: 150px;
-  height: 25px;
-  top: 550px;
-  left: 600px;
-  background-color: #f6f2f2;
-  border-radius: 81px;
+.defense-stat #defense-stat-minus{
+  position: relative;
+  top: 30px;
+  right: 75px;
+  width: 50px;
+  height: 30px;
   font-weight: bolder;
-  font-size:20px;
+  font-size:25px;
 }
 
-#attack-stat-plus{
-position: absolute;
-width: 25px;
-height: 25px;
-top: 550px;
-left: 775px;
-background-color: #f6f2f2;
-border-radius: 81px;
-font-weight: bolder;
-font-size:25px;
-}
-
-#attack-stat-minus{
-position: absolute;
-width: 25px;
-height: 25px;
-top: 550px;
-left: 550px;
-background-color: #f6f2f2;
-border-radius: 81px;
-font-weight: bolder;
-font-size:25px;
-}
-
-#defense-stat{
-  position: absolute;
-  width: 150px;
-  height: 25px;
-  top: 600px;
-  left: 600px;
-  background-color: #f6f2f2;
-  border-radius: 81px;
+.defense-stat #defense-stat-plus{
+  position: relative;
+  bottom: 30px;
+  left: 275px;
+  width: 50px;
+  height: 30px;
   font-weight: bolder;
-  font-size:20px;
+  font-size:25px;
 }
 
-#defense-stat-plus{
-position: absolute;
-width: 25px;
-height: 25px;
-top: 600px;
-left: 775px;
-background-color: #f6f2f2;
-border-radius: 81px;
-font-weight: bolder;
-font-size:25px;
-}
 
-#defense-stat-minus{
-position: absolute;
-width: 25px;
-height: 25px;
-top: 600px;
-left: 550px;
-background-color: #f6f2f2;
-border-radius: 81px;
-font-weight: bolder;
-font-size:25px;
-}
