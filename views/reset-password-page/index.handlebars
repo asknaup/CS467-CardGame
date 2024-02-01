@@ -40,6 +40,9 @@
             Reset Password
         </h1>
        <div class="reset-password-div">
+          {{!-- INPUT: "Reset Password Form Info"
+          Route: app.post() to db
+          --}}
           <form class="reset-password-form" method="POST" action="">
             <div class="text-wrapper-2">
                 <label class="label-username" for="input-username">
@@ -65,7 +68,10 @@
                   <input type="text" name="input-email" id="input-email">
                 </label>
             </div>
-          </form>
+            <div>
+              <input id="submit" type="submit">
+            </div>
+          </form> <!-- end of form -->
       </div> <!-- class="reset-password-div" -->
 
 
