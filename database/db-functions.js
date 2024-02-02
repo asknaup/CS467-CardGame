@@ -14,10 +14,7 @@ function insertNewUserIntoDB(username, password, email) {
                 reject(err);
             } else {
                 resolve(result);
-            }
-        });
-    });
-}
+            } }); }); }
 
 function getUserId(username, password) {
     return new Promise((resolve, reject) => {
@@ -28,11 +25,7 @@ function getUserId(username, password) {
                 reject(err);
             } else {
                 resolve(result);
-            }
-        });
-    });
-}
-
+            } }); }); }
 
 function getUserProfileInfo(user_id) {
     return new Promise((resolve, reject) => {
@@ -43,10 +36,18 @@ function getUserProfileInfo(user_id) {
                 reject(err);
             } else {
                 resolve(result);
-            }
-        });
-    });
-}
+            } }); }); }
+
+function insertNewGameIntoGames({params}) {
+    return new Promise ((resolve, reject) => {
+        const sql = 'INSERT INTO ... '                                // Games Database
+        const vals = params
+        db.pool.query(sql, vals, (err, result) => {
+            if (err) {
+                reject(err);                } else {
+                    resolve(result);
+                } }); }); }
+
 
 function confirmUserExists(username, password) {
     return new Promise (
@@ -65,6 +66,8 @@ function createCard({params}) {
             } } ); }
 
 
+
 module.exports.insertNewUserIntoDB = insertNewUserIntoDB;
 module.exports.getUserProfileInfo = getUserProfileInfo;
 module.exports.getUserId = getUserId;
+module.exports.insertNewGameIntoGames = insertNewGameIntoGames;
