@@ -7,8 +7,9 @@ const bodyParser = require('body-parser');
 const port = 3000;
 
 var db = require('./database/db-connector');
+var dbFunc = require('./database/db-functions')
 
-app.use(express.static('style'));               // For css
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.engine('handlebars', exphbs.engine(                  
@@ -31,6 +32,18 @@ app.get('/current-deck-page/index', (req, res) => {
   res.render('current-deck-page/index')
 });
 
+app.get('/welcome-page-portal/index', (req, res) => {
+  res.render('welcome-page-portal/index')
+});
+
+app.get('/user-profile-page/index', async (req, res) => {
+    const val = await dbFunc.getUserProfileInfo(req.body.newUserName, req.body.inputNewPassword)
+    console.log(val.user_id);
+    res.render('user-profile-page/index', {
+    user_id: val
+  })
+});
+
 app.get('/game-generation-page/index', (req, res) => {
   res.render('game-generation-page/index')
 });
@@ -47,25 +60,6 @@ app.get('/reset-password-page/index', (req, res) => {
   res.render('reset-password-page/index')
 });
 
-app.get('/user-profile-page/index', (req, res) => {
-  res.render('user-profile-page/index')
-});
-
-app.post('/add-user-ajax', function (req, res) {
-  let data = req.body;
-  console.log();
-
-  query = "INSERT INTO user_creds (username, pwd) VALUES (?, ?)";
-
-  db.pool.query(query, [data.username, data.password], function(error, rows, fields){
-    console.log(JSON.stringify(rows));
-    if (error) {
-      console.log(error)
-      res.sendStatus(400);
-    }
-  })
-});
-
 app.get('/game-play-page/index', (req, res) => {
   res.render('game-play-page/index')
 });
@@ -80,27 +74,24 @@ app.listen(port, () => {
 
 // POST ROUTES
 
-app.post('/new-user-page/index', async (req, res) => {
+app.post('/user-profile-page/index', async (req, res) => {
+  //console.log("hello", req.body);
   try {
-    await dbFunctions.insertNewUserIntoDB(
-      {username: req.query.username,
-       password: req.query.password,
-       email: req.query.email
-      });
-  res.render('user-profile-page/index', {
-    username: req.query.username,
-    collection: 'new to add collection'
-  });
-}
+      await dbFunc.insertNewUserIntoDB(req.body.newUserName, req.body.inputNewPassword, req.body.inputEmail);
+      const user_id = await dbFunc.getUserId(req.body.newUserName, req.body.inputNewPassword);
+      //console.log(JSON.stringify(user_id[0]));
+      const val = await dbFunc.getUserProfileInfo(user_id[0].user_id);
+      //console.log(val[0].game_count);
+      res.render('user-profile-page/index', {
+        user_id: req.body.newUserName, game_count: val[0].game_count,
+        wins: val[0].wins, losses: val[0].losses
+    });
+  }
   catch(err) {
     res.send(`Something went wrong : (${err}`);
   }
 });
 
-/* app.post('generate-card-page/index'), async (req, res) => {
-  try {
-    await dbFunctions.
-  }
-}
 
-*/
+
+

@@ -3,7 +3,6 @@ let addUserForm = document.getElementById('addUser');
 addUserForm.addEventListener("submit", function (e) {
     e.preventDefault();
 
-
     let inputUsername = document.getElementById('usn');
     let inputPassword = document.getElementById('pwd');
 
