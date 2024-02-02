@@ -10,209 +10,180 @@
 <body>
   <div class="current-deck-page">
     <div class="overlap-wrapper">
-      <div class="overlap">
-        <div class="group">
-          <div class="overlap-group">
-            <div class="div">
-              {{!-- Card Library Title --}}
-              <div class="text-wrapper">Card Library</div>
 
-              {{!-- Card Library Instructions --}}
-              <p class="p">Drag desired card left to deck</p>
+      <div class="user-instructions">
+        {{!-- Card Library Title --}}
+        <div class="text-wrapper">Card Library</div>
 
-            </div>
-          </div>
+        {{!-- Card Library Instructions --}}
+        <p class="p">Drag desired card left to deck</p>
+      </div>
 
-          {{!-- Top Menu Bar --}}
-          <div class="menu-bar"></div>
+      {{!-- Top Menu Bar --}}
+      <div class="menu-bar"></div>
 
-        </div>
+      {{!-- Web App Title --}}
+      <p class="text-wrapper-2">Online Trading Card Game Maker</p>
 
-        {{!-- Web App Title --}}
-        <p class="text-wrapper-2">Online Trading Card Game Maker</p>
+      {{!-- BUTTON: User icon
+      Route: Link to user-profile-page
+      --}}
+      <img id="user-button-cdp" class="img" src="img/group-2.png" />
 
-        {{!-- BUTTON: User icon
-        Route: Link to user-profile-page
-        --}}
-        <img id="user-button-cdp" class="img" src="img/group-2.png" />
+      {{!-- HANDLEBARS: "Current Card Image"
+      Route: App.get() from db for display, app.get() + app.delete() for swapping out from library to deck and vice
+      versa
+      --}}
+      <img id="current-card-cdp" class="group-2" src="img/group-10.png" />
 
-        {{!-- HANDLEBARS: "Current Card Image"
-        Route: App.get() from db for display, app.get() + app.delete() for swapping out from library to deck and vice
-        versa
-        --}}
-        <img id="current-card-cdp" class="group-2" src="img/group-10.png" />
-
-
+      <div class="image-grid">
         {{!-- HANDLEBARS: "Card Image 1"
         Route: App.get() from db for display, app.get() + app.delete() for swapping out from library to deck and vice
         versa
         --}}
-        <img class="group-3" src="img/group-35.png" />
+        <img class="library-card" src="img/group-35.png" />
 
         {{!-- HANDLEBARS: "Card Image 2"
         Route: App.get() from db for display, app.get() + app.delete() for swapping out from library to deck and vice
         versa
         --}}
-        <img class="group-4" src="img/group-35.png" />
+        <img class="library-card" src="img/group-35.png"/>
 
         {{!-- HANDLEBARS: "Card Image 3"
         Route: App.get() from db for display, app.get() + app.delete() for swapping out from library to deck and vice
         versa
         --}}
-        <img class="group-5" src="img/group-35.png" />
+        <img class="library-card" src="img/group-35.png" />
 
         {{!-- HANDLEBARS: "Card Image 4"
         Route: App.get() from db for display, app.get() + app.delete() for swapping out from library to deck and vice
         versa
         --}}
-        <img class="group-6" src="img/group-35.png" />
+        <img class="library-card" src="img/group-35.png" style="margin-top: 20px;"/>
 
         {{!-- HANDLEBARS: "Card Image 5"
         Route: App.get() from db for display, app.get() + app.delete() for swapping out from library to deck and vice
         versa
         --}}
-        <img class="group-7" src="img/group-35.png" />
+        <img class="library-card" src="img/group-35.png" style="margin-top: 20px;"/>
 
         {{!-- HANDLEBARS: "Card Image 6"
         Route: App.get() from db for display, app.get() + app.delete() for swapping out from library to deck and vice
         versa
         --}}
-        <img class="group-8" src="img/group-35.png" />
-
-        {{!-- HANDLEBARS: "Deck Name"
-        Route: App.get() from db
-        --}}
-        <img class="group-9" src="img/group-6.png" />
-
-        {{!-- BUTTON: "Generate Cards"
-        Route: App.post() to db --}}
-        <div id="gen-cards-cdp" class="group-wrapper">
-          <div class="div-wrapper">
-            <div class="overlap-group-wrapper">
-              <div class="overlap-group-2">
-                <div class="text-wrapper-3">Generate Cards</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {{!-- HANDLEBARS: "Card No."
-        Route: App.get() from db --}}
-        <p id="cardno-hbs-cdp" class="text-wrapper-4">Card No. X out of Y</p>
-
-        {{!-- HANDBLEBARS: "Card Name"
-        Route: App.get() from db
-        --}}
-        <div id="cardna-hbs-cdp" class="text-wrapper-5">Card Name</div>
-
-        <div class="group-10">
-          <div class="overlap-2">
-            <div class="group-11"></div>
-            <div class="group-12">
-
-              {{!-- BUTTON: "Make"
-              Route: Link to game-generation-page
-              --}}
-              <div class="group-13">
-                <div class="overlap-group-3">
-                  <div class="text-wrapper-6">Make</div>
-                </div>
-              </div>
-
-              {{!-- BUTTON: "Collect"
-              Route: Link to collect-page (Need to create)
-              --}}
-              <div class="text-wrapper-7">Collect</div>
-
-              {{!-- BUTTON: "Trade"
-              Route: Link to trade-page (Need to create)
-              --}}
-              <div class="group-14">
-                <div class="group-15">
-                  <div class="overlap-group-3">
-                    <div class="text-wrapper-8">Trade</div>
-                  </div>
-                </div>
-              </div>
-
-              {{!-- BUTTON: "Play"
-              Route: Link to look-at-games-page + app.get() (prompt asking if they'd like to play current game selected
-              or
-              browse games)
-              --}}
-              <div class="group-16">
-                <div class="group-15">
-                  <div class="overlap-group-3">
-                    <div class="text-wrapper-9">Play</div>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </div>
-
-        {{!-- BUTTON: "Library Right"
-        Route: App.get() from db
-        --}}
-        <img id="library-right-cdp" class="pngwing" src="img/pngwing-9.png" />
-
-        {{!-- BUTTON: "Library Left"
-        Route: App.get() from db
-        --}}
-        <img id="library-left-cdp" class="pngwing-2" src="img/pngwing-10.png" />
-
-        {{!-- BUTTON: "Deck Right"
-        Route: App.get() from db
-        --}}
-        <img id="deck-right-cdp" class="pngwing-3" src="img/pngwing-9.png" />
-
-        {{!-- BUTTON: "Deck Left"
-        Route: App.get() from db
-        --}}
-        <img id="deck-left-cdp" class="pngwing-4" src="img/pngwing-10.png" />
-
-        {{!-- Static user instruction --}}
-        <div class="text-wrapper-10">Scroll Deck</div>
-        <div class="text-wrapper-11">Scroll Library</div>
-
-        {{!-- HANDLEBARS: "Card Name 1"
-        Route: App.get() from db for display, app.get() + app.delete() for swapping out from library to deck and vice
-        versa
-        --}}
-        <div id="cname-hbs-cdp-1" class="text-wrapper-12">Card Name 1</div>
-
-        {{!-- HANDLEBARS: "Card Name 2"
-        Route: App.get() from db for display, app.get() + app.delete() for swapping out from library to deck and vice
-        versa
-        --}}
-        <div id="cname-hbs-cdp-2" class="text-wrapper-13">Card Name 2</div>
-
-        {{!-- HANDLEBARS: "Card Name 3"
-        Route: App.get() from db for display, app.get() + app.delete() for swapping out from library to deck and vice
-        versa
-        --}}
-        <div id="cname-hbs-cdp-3" class="text-wrapper-14">Card Name 3</div>
-
-        {{!-- HANDLEBARS: "Card Name 4"
-        Route: App.get() from db for display, app.get() + app.delete() for swapping out from library to deck and vice
-        versa
-        --}}
-        <div id="cname-hbs-cdp-4" class="text-wrapper-15">Card Name 4</div>
-
-        {{!-- HANDLEBARS: "Card Name 5"
-        Route: App.get() from db for display, app.get() + app.delete() for swapping out from library to deck and vice
-        versa
-        --}}
-        <div id="cname-hbs-cdp-5" class="text-wrapper-16">Card Name 5</div>
-
-        {{!-- HANDLEBARS: "Card Name 6"
-        Route: App.get() from db for display, app.get() + app.delete() for swapping out from library to deck and vice
-        versa
-        --}}
-        <div id="cname-hbs-cdp-6" class="text-wrapper-17">Card Name 6</div>
-
+        <img class="library-card" src="img/group-35.png" style="margin-top: 20px;"/>
       </div>
+
+
+      {{!-- HANDLEBARS: "Deck Name"
+      Route: App.get() from db
+      --}}
+      <img class="group-9" src="img/group-6.png" />
+
+      {{!-- BUTTON: "Generate Cards"
+      Route: App.post() to db 
+      --}}
+      <button id="gen-cards-cdp" class="gen-cards-button" type="button">Generate Cards</button>
+
+      {{!-- HANDLEBARS: "Card No."
+      Route: App.get() from db --}}
+      <p id="cardno-hbs-cdp" class="text-wrapper-4">Card No. X out of Y</p>
+
+      {{!-- HANDBLEBARS: "Card Name"
+      Route: App.get() from db
+      --}}
+      <div id="cardna-hbs-cdp" class="text-wrapper-5">Card Name</div>
+
+      {{!-- BUTTON: "Play"
+      Route: Link to look-at-games-page + app.get() (prompt asking if they'd like to play current game selected or
+      browse games)
+      --}}
+      <button id="play-button-cdp" class="play-menu-button" type="button">Play</button>
+
+      {{!-- BUTTON: "Trade"
+      Route: Link to trade-page (Need to create)
+      --}}
+      <button id="trade-button-cdp" class="trade-menu-button" type="button">Trade</button>
+
+      {{!-- BUTTON: "Make"
+      Route: Link to game-generation-page
+      --}}
+      <button id="make-button-cdp" class="make-menu-button" type="button">Make</button>
+
+      {{!-- BUTTON: "Collect"
+      Route: Link to collect-page (Need to create)
+      --}}
+      <button id="collect-button-cdp" class="collect-menu-button" type="button">Collect</button>
+
+      {{!-- BUTTON: User Profile icon
+      Route: App.get() and link to user-profile-page
+      TO-DO: Reference global.css, consider using icon library and styling buttons accordingly
+      Route: Link to user-profile-page
+      --}}
+      <img id="user-button-cdp" class="user-icon" src="img/group-2.png" />
+
+      {{!-- BUTTON: "Library Right"
+      Route: App.get() from db
+      --}}
+
+      <button id="library-right-cdp" class="library-right" type="button">&#8594</button>
+
+      {{!-- BUTTON: "Library Left"
+      Route: App.get() from db
+      --}}
+      <button id="library-left-cdp" class="library-left" type="button">&#8592</button>
+
+      {{!-- BUTTON: "Deck Right"
+      Route: App.get() from db
+      --}}
+      <button id="deck-right-cdp" class="deck-right" type="button">&#8594</button>
+
+      {{!-- BUTTON: "Deck Left"
+      Route: App.get() from db
+      --}}
+      <button id="deck-left-cdp" class="deck-left" type="button">&#8592</button>
+
+      {{!-- Static user instruction --}}
+      <div class="text-wrapper-10">Scroll Deck</div>
+      <div class="text-wrapper-11">Scroll Library</div>
+
+      {{!-- HANDLEBARS: "Card Name 1"
+      Route: App.get() from db for display, app.get() + app.delete() for swapping out from library to deck and vice
+      versa
+      --}}
+      <div id="cname-hbs-cdp-1" class="text-wrapper-12">Card Name 1</div>
+
+      {{!-- HANDLEBARS: "Card Name 2"
+      Route: App.get() from db for display, app.get() + app.delete() for swapping out from library to deck and vice
+      versa
+      --}}
+      <div id="cname-hbs-cdp-2" class="text-wrapper-13">Card Name 2</div>
+
+      {{!-- HANDLEBARS: "Card Name 3"
+      Route: App.get() from db for display, app.get() + app.delete() for swapping out from library to deck and vice
+      versa
+      --}}
+      <div id="cname-hbs-cdp-3" class="text-wrapper-14">Card Name 3</div>
+
+      {{!-- HANDLEBARS: "Card Name 4"
+      Route: App.get() from db for display, app.get() + app.delete() for swapping out from library to deck and vice
+      versa
+      --}}
+      <div id="cname-hbs-cdp-4" class="text-wrapper-15">Card Name 4</div>
+
+      {{!-- HANDLEBARS: "Card Name 5"
+      Route: App.get() from db for display, app.get() + app.delete() for swapping out from library to deck and vice
+      versa
+      --}}
+      <div id="cname-hbs-cdp-5" class="text-wrapper-16">Card Name 5</div>
+
+      {{!-- HANDLEBARS: "Card Name 6"
+      Route: App.get() from db for display, app.get() + app.delete() for swapping out from library to deck and vice
+      versa
+      --}}
+      <div id="cname-hbs-cdp-6" class="text-wrapper-17">Card Name 6</div>
+
+
     </div>
   </div>
 </body>
