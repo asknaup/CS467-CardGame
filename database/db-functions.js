@@ -19,6 +19,35 @@ function insertNewUserIntoDB(username, password, email) {
     });
 }
 
+function getUserId(username, password) {
+    return new Promise((resolve, reject) => {
+        const sql = `SELECT user_id FROM user_creds WHERE username = ? and pwd = ?`;
+        const val = [username, password];
+        db.pool.query(sql, val, (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+}
+
+
+function getUserProfileInfo(user_id) {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT game_count, wins, losses FROM user_profile WHERE user_id = ?'
+        const val = [user_id]
+        db.pool.query(sql, val, (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+}
+
 function confirmUserExists(username, password) {
     return new Promise (
         (resolve, reject) => {
@@ -36,6 +65,6 @@ function createCard({params}) {
             } } ); }
 
 
-
-
 module.exports.insertNewUserIntoDB = insertNewUserIntoDB;
+module.exports.getUserProfileInfo = getUserProfileInfo;
+module.exports.getUserId = getUserId;
