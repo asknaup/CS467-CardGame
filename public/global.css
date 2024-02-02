@@ -36,7 +36,7 @@ a {
 
   
   /* used to be: .desktop .overlap-group { */
-  .base-layout .overlap-group-a {
+  .base-layout .background {
     position: absolute;
     width: 1440px;
     height: 944px;
