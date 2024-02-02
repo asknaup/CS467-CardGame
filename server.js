@@ -51,21 +51,6 @@ app.get('/user-profile-page/index', (req, res) => {
   res.render('user-profile-page/index')
 });
 
-app.post('/add-user-ajax', function (req, res) {
-  let data = req.body;
-  console.log();
-
-  query = "INSERT INTO user_creds (username, pwd) VALUES (?, ?)";
-
-  db.pool.query(query, [data.username, data.password], function(error, rows, fields){
-    console.log(JSON.stringify(rows));
-    if (error) {
-      console.log(error)
-      res.sendStatus(400);
-    }
-  })
-});
-
 app.get('/game-play-page/index', (req, res) => {
   res.render('game-play-page/index')
 });
@@ -96,6 +81,20 @@ app.post('/new-user-page/index', async (req, res) => {
     res.send(`Something went wrong : (${err}`);
   }
 });
+
+app.post('/add-user-ajax', function (req, res) {
+  let data = req.body;
+  console.log();
+  query = "INSERT INTO user_creds (username, pwd) VALUES (?, ?)";
+  db.pool.query(query, [data.username, data.password], function(error, rows, fields){
+    console.log(JSON.stringify(rows));
+    if (error) {
+      console.log(error);
+      res.sendStatus(400);
+    }
+  })
+});
+
 
 /* app.post('generate-card-page/index'), async (req, res) => {
   try {
