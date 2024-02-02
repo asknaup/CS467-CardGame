@@ -7,8 +7,9 @@ const bodyParser = require('body-parser');
 const port = 3000;
 
 var db = require('./database/db-connector');
+var dbFunc = require('./database/db-functions')
 
-app.use(express.static('style'));               // For css
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.engine('handlebars', exphbs.engine(                  
@@ -65,22 +66,23 @@ app.listen(port, () => {
 
 // POST ROUTES
 
-app.post('/new-user-page/index', async (req, res) => {
+app.post('/new-user-page/new-user-action', async (req, res) => {
+  console.log("hello", req.body);
   try {
-    await dbFunctions.insertNewUserIntoDB(
-      {username: req.query.username,
-       password: req.query.password,
-       email: req.query.email
-      });
+    await dbFunc.insertNewUserIntoDB(
+      req.body.newUserName,
+       req.body.inputNewPassword,
+       req.body.inputEmail
+      );
   res.render('user-profile-page/index', {
-    username: req.query.username,
-    collection: 'new to add collection'
   });
 }
   catch(err) {
     res.send(`Something went wrong : (${err}`);
   }
 });
+
+
 
 app.post('/add-user-ajax', function (req, res) {
   let data = req.body;
@@ -103,3 +105,6 @@ app.post('/add-user-ajax', function (req, res) {
 }
 
 */
+
+
+
