@@ -16,13 +16,11 @@
         {{!-- BUTTON: "Play"
               Route: Link to look-at-games-page + app.get() (prompt asking if they'd like to play current game selected
               or
-              browse games)
-              --}}
+              browse games)--}}
         <button id="play-button-ggp" class="play-menu-button" type="button">Play</button>
 
         {{!-- BUTTON: "Trade"
-              Route: Link to trade-page (Need to create)
-              --}}
+              Route: Link to trade-page (Need to create)--}}
         <button id="trade-button-ggp" class="trade-menu-button" type="button">Trade</button>
 
         {{!-- BUTTON: "Make"
@@ -34,7 +32,6 @@
         <button id="collect-button-ggp" class="collect-menu-button" type="button">Collect</button>
          <img class="user-logo" src="img/group-2.png" />
     </div> <!-- class="base-layout -->
-
   
   <div class="generate-card-page">
         <div class="deck-sign-shadow">
@@ -62,8 +59,8 @@
              <br>
               To Generate A New Card Image
       </p>
-      {{!-- INPUT: "Reset Password Form Info"
-          Route: app.post() to db--}}
+      {{!-- INPUT: "Enter Description For AI To Generate Image"
+          after clicking submit button send to ChatGpt--}}
       <form class="form-ai-image" method="POST" action="">
           <input type="text" name="input-ai-image" id="input-ai-image">
           <input id="submit" type="submit">
