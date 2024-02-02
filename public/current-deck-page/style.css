@@ -7,39 +7,51 @@
 }
 
 .current-deck-page .overlap-wrapper {
-  background-color: #ffffff;
-  width: 1440px;
-  height: 1024px;
-}
-
-.current-deck-page .overlap {
-  position: relative;
-  height: 1024px;
-}
-
-.current-deck-page .group {
-  position: absolute;
-  width: 1440px;
-  height: 1024px;
-  top: 0;
-  left: 0;
-}
-
-.current-deck-page .overlap-group {
-  position: absolute;
-  width: 1440px;
-  height: 944px;
-  top: 80px;
-  left: 0;
   background-color: #f7dbc6;
+  width: 1440px;
+  height: 1024px;
+  position: absolute;
 }
 
-.current-deck-page .div {
+.current-deck-page .user-instructions {
   position: relative;
   width: 343px;
   height: 85px;
   top: 22px;
   left: 879px;
+  margin-top: 70px;
+}
+
+.current-deck-page .play-menu-button {
+  position: absolute;
+  width: 95px;
+  height: 51px;
+  top: 19px;
+  left: 1068px;
+}
+
+.current-deck-page .trade-menu-button {
+  position: absolute;
+  width: 95px;
+  height: 51px;
+  top: 19px;
+  left: 954px;
+}
+
+.current-deck-page .make-menu-button {
+  position: absolute;
+  width: 95px;
+  height: 51px;
+  top: 19px;
+  left: 840px;
+}
+
+.current-deck-page .collect-menu-button {
+  position: absolute;
+  width: 95px;
+  height: 51px;
+  top: 19px;
+  left: 726px;
 }
 
 .current-deck-page .text-wrapper {
@@ -105,52 +117,25 @@
   left: 109px;
 }
 
-.current-deck-page .group-3 {
+.current-deck-page .user-icon {
   position: absolute;
-  width: 234px;
-  height: 330px;
-  top: 222px;
-  left: 666px;
+  width: 84px;
+  height: 84px;
+  top: 0;
+  left: 1349px;
 }
 
-.current-deck-page .group-4 {
-  position: absolute;
-  width: 234px;
+.current-deck-page .library-card {
+  width: 230px;
   height: 330px;
-  top: 222px;
-  left: 932px;
 }
 
-.current-deck-page .group-5 {
-  position: absolute;
-  width: 234px;
-  height: 330px;
-  top: 218px;
-  left: 1198px;
-}
-
-.current-deck-page .group-6 {
-  position: absolute;
-  width: 234px;
-  height: 330px;
-  top: 588px;
-  left: 669px;
-}
-
-.current-deck-page .group-7 {
-  position: absolute;
-  width: 234px;
-  height: 330px;
-  top: 588px;
-  left: 932px;
-}
-
-.current-deck-page .group-8 {
-  position: absolute;
-  width: 234px;
-  height: 330px;
-  top: 588px;
-  left: 1195px;
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  margin-top: 70px;
+  margin-left: 625px;
 }
 
 .current-deck-page .group-9 {
@@ -161,30 +146,16 @@
   left: 115px;
 }
 
-.current-deck-page .group-wrapper {
+.current-deck-page .gen-cards-button {
   position: absolute;
   width: 309px;
   height: 39px;
   top: 171px;
   left: 168px;
   box-shadow: 0px 4px 4px #00000040, 0px 4px 4px #00000040, 0px 4px 4px #00000040, 0px 4px 4px #00000040;
-}
-
-.current-deck-page .div-wrapper {
-  height: 39px;
-}
-
-.current-deck-page .overlap-group-wrapper {
-  width: 311px;
-  height: 39px;
-}
-
-.current-deck-page .overlap-group-2 {
-  position: relative;
-  width: 309px;
-  height: 39px;
   background-color: #f0a3a3;
   border-radius: 81px;
+  font-size:larger;
 }
 
 .current-deck-page .text-wrapper-3 {
@@ -234,12 +205,6 @@
   height: 40px;
   top: 24px;
   left: 746px;
-}
-
-.current-deck-page .overlap-2 {
-  position: relative;
-  width: 443px;
-  height: 40px;
 }
 
 .current-deck-page .group-11 {
@@ -351,39 +316,39 @@
   white-space: nowrap;
 }
 
-.current-deck-page .pngwing {
+.current-deck-page .library-right {
   left: 1235px;
   position: absolute;
   width: 84px;
-  height: 80px;
-  top: 914px;
+  height: 40px;
+  top: 930px;
   object-fit: cover;
 }
 
-.current-deck-page .pngwing-2 {
+.current-deck-page .library-left {
   left: 819px;
   position: absolute;
   width: 84px;
-  height: 80px;
-  top: 914px;
+  height: 40px;
+  top: 930px;
   object-fit: cover;
 }
 
-.current-deck-page .pngwing-3 {
+.current-deck-page .deck-right {
   left: 451px;
   position: absolute;
   width: 84px;
-  height: 80px;
-  top: 914px;
+  height: 40px;
+  top: 930px;
   object-fit: cover;
 }
 
-.current-deck-page .pngwing-4 {
+.current-deck-page .deck-left {
   left: 109px;
   position: absolute;
   width: 84px;
-  height: 80px;
-  top: 914px;
+  height: 40px;
+  top: 930px;
   object-fit: cover;
 }
 

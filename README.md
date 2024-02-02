@@ -13,6 +13,7 @@ To download necessary node modules:
 <p>npm install express-handlebars</p>
 <p>npm install nodemon        </p>
 <p>npm install mysql2</p>
+<p>npm install body-parser</p>
 
 Make sure you are running Node version v20.11
 node -v
