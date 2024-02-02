@@ -93,7 +93,7 @@ app.post('/user-profile-page/index', async (req, res) => {
   }
 });
 
-app.post('/generatecardpage', (req, res) => {
+app.post('/generateCardPage', (req, res) => {
   try {
       const stuff = cardGen.generateAiForCard(req.body.inputAiImage);
       console.log(stuff[0], stuff[1]);
