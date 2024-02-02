@@ -3,76 +3,83 @@
 
 <head>
   <meta charset="utf-8" />
-  <link rel="stylesheet" href="globals.css" />
+  <link rel="stylesheet" href="../global.css" />
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-  <div class="new-user-page">
-    <div class="overlap-wrapper">
-      <div class="overlap">
-        <div class="group">
-          <div class="rectangle"></div>
-          <div class="div"></div>
-        </div>
-        <p class="text-wrapper">Online Trading Card Game Maker</p>
-        <img class="img" src="img/group-2.png" />
-        <div class="rectangle-2"></div>
-        <form class="text-font" id="addUser" action="/user-profile-page/index" method="post">
-          <div class="text-wrapper-2">Enter Username</div>
-          <div class="text-wrapper-3">Enter Password</div>
-          <div class="text-wrapper-4">Repeat Password</div>
-          <div class="text-wrapper-5">Enter Email</div>
-          <div class="group-2">
-            <div class="rectangle-3"></div>
-            <div class="rectangle-4"></div>
-          </div>
-          <div class="text-wrapper-6">Welcome New User!</div>
-          
-          <div class="overlap-group-wrapper">
-              <input class="btn" type="submit" value="SUBMIT">
-          </div>
-          {{!-- <div class="overlap-group">
-            <div class="text-wrapper-7">SUBMIT</div>
-          </div> --}}
-          {{!-- </input> --}}
-          <div class="group-8">
-            <input class="rectangle-3" id="usn" type="text" placeholder="Username" required></input>
-            <input class="rectangle-5" id="pwd" type="password" placeholder="Password" required></input>
-          </div>
-        </form>
-        <script src="/js/addUser.js"></script>
-        <img class="information-icon" src="img/information-icon-must-have-iconset-visualpharm-26-1.png" />
-        <div class="div-wrapper">
-          <div class="overlap-2">
-            <div class="group-3"></div>
-            <div class="group-4">
-              <div class="group-5">
-                <div class="overlap-group-2">
-                  <div class="text-wrapper-8">Make</div>
-                </div>
-              </div>
-              <div class="text-wrapper-9">Collect</div>
-              <div class="group-wrapper">
-                <div class="group-6">
-                  <div class="overlap-group-2">
-                    <div class="text-wrapper-10">Trade</div>
-                  </div>
-                </div>
-              </div>
-              <div class="group-7">
-                <div class="group-6">
-                  <div class="overlap-group-2">
-                    <div class="text-wrapper-11">Play</div>
-                  </div>
-                </div>
-              </div>
+    <div class="base-layout">
+        <div class="overlap-a">
+            <div class="overlap-group-a"></div>
+            <div class="top-bar"></div>
+          <p class="application-title">Online Trading Card Game Maker</p>
+        </div> <!-- class="overlap-a" -->
+        
+        {{!-- BUTTON: "Play"
+              Route: Link to look-at-games-page + app.get() (prompt asking if they'd like to play current game selected
+              or
+              browse games)
+              --}}
+        <button id="play-button-ggp" class="play-menu-button" type="button">Play</button>
+
+        {{!-- BUTTON: "Trade"
+              Route: Link to trade-page (Need to create)
+              --}}
+        <button id="trade-button-ggp" class="trade-menu-button" type="button">Trade</button>
+
+        {{!-- BUTTON: "Make"
+              Route: Link to game-generation-page--}}
+        <button id="make-button-ggp" class="make-menu-button" type="button">Make</button>
+
+        {{!-- BUTTON: "Collect"
+              Route: Link to collect-page (Need to create) --}}
+        <button id="collect-button-ggp" class="collect-menu-button" type="button">Collect</button>
+         <img class="user-logo" src="img/group-2.png" />
+    </div> <!-- class="base-layout -->
+
+    
+
+<div class="new-user-page">
+      <h1 class="new-user-title">
+            Welcome New User!
+        </h1>
+       <div class="new-user-div">
+        {{!-- INPUT: "New User Form Info"
+          Route: app.post() to db
+          --}}
+          <form class="new-user-form" method="POST" action="">
+            <div class="text-wrapper-2">
+                <label class="label-new-username" for="input-new-username">
+                   Username
+                  <input type="text" name="input-new-username" id="input-new-username">
+                </label>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+            <div class="text-wrapper-3">
+                <label class="label-new-password" for="input-new-password">
+                   New Password
+                  <input type="text" name="input-new-password" id="input-new-password">
+                </label>
+            </div>
+            <div class="text-wrapper-4">
+                <label class="label-repeat-password" for="repeat-new-password"> 
+                  Repeat New Password
+                  <input type="text" name="input-repeat-password" id="input-repeat-password">
+                </label>
+            </div>
+            <div class="text-wrapper-5">
+                <label class="label-email" for="input-email">
+                   Enter Email
+                  <input type="text" name="input-email" id="input-email">
+                </label>
+            </div>
+            <div>
+              <input id="submit" type="submit">
+            </div>
+          </form> <!-- end of form -->
+      </div> <!-- class="reset-password-div" -->
+
+  </div>  <!-- class="new-user-page -->
+
 </body>
 
 </html>
