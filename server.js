@@ -36,15 +36,13 @@ app.get('/welcome-page-portal/index', (req, res) => {
   res.render('welcome-page-portal/index')
 });
 
-
-/*app.get('/user-profile-page/index', async (req, res) => {
+app.get('/user-profile-page/index', async (req, res) => {
     const val = await dbFunc.getUserProfileInfo(req.body.newUserName, req.body.inputNewPassword)
     console.log(val.user_id);
     res.render('user-profile-page/index', {
     user_id: val
   })
 });
-*/
 
 app.get('/game-generation-page/index', (req, res) => {
   res.render('game-generation-page/index')
@@ -85,7 +83,8 @@ app.post('/user-profile-page/index', async (req, res) => {
       const val = await dbFunc.getUserProfileInfo(user_id[0].user_id);
       //console.log(val[0].game_count);
       res.render('user-profile-page/index', {
-        user_id: req.body.newUserName
+        user_id: req.body.newUserName, game_count: val[0].game_count,
+        wins: val[0].wins, losses: val[0].losses
     });
   }
   catch(err) {
@@ -93,13 +92,6 @@ app.post('/user-profile-page/index', async (req, res) => {
   }
 });
 
-/* app.post('generate-card-page/index'), async (req, res) => {
-  try {
-    await dbFunctions.
-  }
-}
-
-*/
 
 
 
