@@ -12,32 +12,35 @@
     <div class="overlap-wrapper">
       <div class="overlap">
         <div class="overlap-group">
+          <form action="gameGenerationPageAction" method="post"> 
+          {{!-- INPUT: "Concepts" Route: app.post() to db --}}
+          <input id="conceptsInputGgp" class="user-inputs" type="text" placeholder="Type Concepts">
 
-          {{!-- INPUT: "Concepts"
-          Route: app.post() to db
-          --}}
-          <input id="concepts-input-ggp" class="user-inputs" type="text" placeholder="Type Concepts">
-
-          {{!-- INPUT: "Mechanics"
-          Route: app.post() to db
-          --}}
-          <input id="mechanics-input-ggp" class="user-inputs" type="text" placeholder="Type Mechanics"
+          {{!-- INPUT: "Mechanics" Route: app.post() to db --}}
+          <input id="mechanicsInputGgp" class="user-inputs" type="text" placeholder="Type Mechanics"
             style="margin-top: 10px;">
 
-          {{!-- INPUT: "Abilities"
-          Route: app.post() to db
-          --}}
-          <input id="abilities-input-ggp" class="user-inputs" type="text" placeholder="Type Abilities"
+          {{!-- INPUT: "Abilities" Route: app.post() to db --}}
+          <input id="abilitiesInputGgp" class="user-inputs" type="text" placeholder="Type Abilities"
             style="margin-top: 10px;">
 
-          {{!-- INPUT: "Style"
-          Route: app.post() to db
-          --}}
-          <input id="style-input-ggp" class="user-inputs" type="text" placeholder="Type Style"
+          {{!-- INPUT: "Style" Route: app.post() to db --}}
+          <input id="styleInputGgp" class="user-inputs" type="text" placeholder="Type Style"
             style="margin-top: 10px;">
-
+          {{!-- BUTTON: "Generate New Game" 
+        Route: App.post() to db
+        --}}
+        <button id="gen-game-button-ggp" class="create-buttons" type="button">Generate New Game</button>
+        {{!-- BUTTON: "Update Game" 
+        Route: App.put() to db
+        --}}
+        <button id="upd-game-button-ggp" class="create-buttons" type="submit" style="margin-top: 10px;">Update
+          Game</button>
+          </form>
           {{!-- Input Field Title --}}
           <div class="text-wrapper-2">Game Generation Inputs</div>
+
+
         </div>
 
         {{!-- Top Menu Bar --}}
@@ -124,17 +127,6 @@
         Route: App.post() to db
         --}}
         <button id="save-game-button-ggp" class="bottom-buttons" type="button" style="margin-left: 10px;">Save
-          Game</button>
-
-        {{!-- BUTTON: "Generate New Game" 
-        Route: App.post() to db
-        --}}
-        <button id="gen-game-button-ggp" class="create-buttons" type="button">Generate New Game</button>
-
-        {{!-- BUTTON: "Update Game" 
-        Route: App.put() to db
-        --}}
-        <button id="upd-game-button-ggp" class="create-buttons" type="button" style="margin-top: 10px;">Update
           Game</button>
 
         {{!-- BUTTON: "Help" 

@@ -6,8 +6,9 @@ const app = express();                          // Routing
 const bodyParser = require('body-parser');
 const port = 3000;
 
-var db = require('./database/db-connector');
-var dbFunc = require('./database/db-functions')
+const db = require('./database/db-connector');
+const dbFunc = require('./database/db-functions')
+const cardGen = require('./database/card-gen');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -67,7 +68,7 @@ app.get('/game-play-page/index', (req, res) => {
 app.get('/generate-card-page/index', (req, res) => {
   res.render('generate-card-page/index')
 });
-
+ 
 app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
 });
@@ -92,6 +93,26 @@ app.post('/user-profile-page/index', async (req, res) => {
   }
 });
 
+app.post('/generatecardpage', (req, res) => {
+  try {
+      const stuff = cardGen.generateAiForCard(req.body.inputAiImage);
+      console.log(stuff[0], stuff[1]);
+      res.render('generate-card-page/index', {
+          animal: stuff[1],
+          attr: stuff[2] 
+      });
+  } catch(err) {
+      console.error('Error:', err);
+      res.send(`Something went wrong: ${err}`);
+  }
+});
 
+/* app.post('/gameGenerationPageAction', async(req, res) => {
+  try { 
+    await dbFunc.insertNewGameIntoGames(req.body); 
+    const game = 
 
+  }
+}
+*/
 
