@@ -62,19 +62,19 @@ app.get('/lookatGames', (req, res) => {
 });
 
 app.get('/new-user-page/index', (req, res) => {
-  res.render('new-user-page/index')
+  res.render('newUser')
 });
 
 app.get('/reset-password-page/index', (req, res) => {
-  res.render('reset-password-page/index')
+  res.render('resetPW')
 });
 
 app.get('/game-play-page/index', (req, res) => {
-  res.render('game-play-page/index')
+  res.render('gamePlayPage')
 });
 
 app.get('/generate-card-page/index', (req, res) => {
-  res.render('generate-card-page/index')
+  res.render('cardGenPage')
 });
 
 app.listen(port, () => {
