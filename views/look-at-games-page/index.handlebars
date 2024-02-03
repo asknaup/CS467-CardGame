@@ -1,71 +1,114 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="globals.css" />
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <div class="look-at-games-page">
-      <div class="overlap-wrapper">
-        <div class="overlap">
-          <div class="group">
-            <div class="rectangle"></div>
-            <div class="div"></div>
-          </div>
-          <p class="text-wrapper">Online Trading Card Game Maker</p>
-          <img class="img" src="img/group-2.png" />
-          <div class="group-wrapper">
-            <div class="group-2">
-              <div class="overlap-group-wrapper">
-                <div class="overlap-group"><div class="text-wrapper-2">All Games</div></div>
-              </div>
-              <div class="div-wrapper">
-                <div class="overlap-2"><div class="text-wrapper-3">User Games</div></div>
-              </div>
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="globals.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="look-at-games-page">
+
+    <div class="overlap-wrapper">
+
+      <div class="overlap">
+
+        <div class="menu-bar"></div>
+
+        <div class="rectangle">
+
+
+
+          <div class="display-container">
+            <div class="box">
+              <p class="box-attributes">Game Name</p>
+              <img class="box-attributes" src="your_image_url.jpg" alt="Game Image" style="margin-top: 100px;">
+              <button class="box-attributes" style="margin-top: 200px;">Rule Set</button>
+              <output class="box-attributes" style="margin-top: 50px;">Deck Name</output>
+            </div>
+
+            <div class="box">
+              <p class="box-attributes">Game Name</p>
+              <img class="box-attributes" src="your_image_url.jpg" alt="Game Image" style="margin-top: 100px;">
+              <button class="box-attributes" style="margin-top: 200px;">Rule Set</button>
+              <output class="box-attributes" style="margin-top: 50px;">Deck Name</output>
+            </div>
+
+            <div class="box">
+              <p class="box-attributes">Game Name</p>
+              <img class="box-attributes" src="your_image_url.jpg" alt="Game Image" style="margin-top: 100px;">
+              <button class="box-attributes" style="margin-top: 200px;">Rule Set</button>
+              <output class="box-attributes" style="margin-top: 50px;">Deck Name</output>
             </div>
           </div>
-          <img class="rectangle-2" src="img/rectangle-17-2.png" />
-          <div class="text-wrapper-4">Ruleset</div>
-          <div class="text-wrapper-5">Game Name</div>
-          <img class="rectangle-3" src="img/rectangle-17-1.png" />
-          <div class="text-wrapper-6">Ruleset</div>
-          <div class="text-wrapper-7">Game Name</div>
-          <img class="rectangle-4" src="img/rectangle-17.png" />
-          <div class="text-wrapper-8">Ruleset</div>
-          <div class="text-wrapper-9">Deck Name</div>
-          <div class="text-wrapper-10">Deck Name</div>
-          <div class="text-wrapper-11">Deck Name</div>
-          <div class="text-wrapper-12">Game Name</div>
-          <img class="pngwing" src="img/pngwing-4.png" />
-          <img class="pngwing-2" src="img/pngwing-4.png" />
-          <img class="pngwing-3" src="img/pngwing-4.png" />
-          <img class="pngwing-4" src="img/pngwing-6.png" />
-          <img class="pngwing-5" src="img/pngwing-6.png" />
-          <img class="pngwing-6" src="img/pngwing-6.png" />
-          <div class="group-3">
-            <div class="overlap-3">
-              <div class="group-4"></div>
-              <div class="group-5">
-                <div class="group-6">
-                  <div class="overlap-group-2"><div class="text-wrapper-13">Make</div></div>
-                </div>
-                <div class="text-wrapper-14">Collect</div>
-                <div class="group-7">
-                  <div class="group-8">
-                    <div class="overlap-group-2"><div class="text-wrapper-15">Trade</div></div>
-                  </div>
-                </div>
-                <div class="group-9">
-                  <div class="group-8">
-                    <div class="overlap-group-3"><div class="text-wrapper-16">Play</div></div>
-                  </div>
-                </div>
-              </div>
+
+          {{!-- BUTTON: "rightScroll"
+          Route: App.get() from db
+          --}}
+          <button id="deck-right-lagp" class="scroll" type="button" >&#8592</button>
+
+          {{!-- BUTTON: "leftScroll"
+          Route: App.get() from db
+          --}}
+          <button id="deck-left-lagp" class="scroll" type="button" style="margin-left: 1400px;">&#8594</button>
+
+
+        </div>
+
+        <p class="text-wrapper">Online Trading Card Game Maker</p>
+
+        <img class="img" src="img/group-2.png" />
+
+        <div class="group-wrapper">
+          <div class="group-2">
+
+            {{!-- BUTTON: "allGames"
+            Route: Link to look-at-games-page --}}
+            <div class="overlap-group-wrapper">
+              <button id="allGames" class="button" type="button">All Games</button>
             </div>
+
+            {{!-- BUTTON: "userGames"
+            Route: App.get() from db and filter according to user --}}
+            <div class="div-wrapper">
+              <button id="userGames" class="button" type="button" style="margin-left: 100px;">User Games</button>
+            </div>
+
           </div>
         </div>
+
+        {{!-- BUTTON: "Play"
+        Route: Link to look-at-games-page + app.get() (prompt asking if they'd like to play current game selected or
+        browse games)
+        --}}
+        <button id="play-button-lagp" class="play-menu-button" type="button">Play</button>
+
+        {{!-- BUTTON: "Trade"
+        Route: Link to trade-page (Need to create)
+        --}}
+        <button id="trade-button-lagp" class="trade-menu-button" type="button">Trade</button>
+
+        {{!-- BUTTON: "Make"
+        Route: Link to game-generation-page
+        --}}
+        <button id="make-button-lagp" class="make-menu-button" type="button">Make</button>
+
+        {{!-- BUTTON: "Collect"
+        Route: Link to collect-page (Need to create)
+        --}}
+        <button id="collect-button-lagp" class="collect-menu-button" type="button">Collect</button>
+
+        {{!-- BUTTON: User Profile icon
+        Route: App.get() and link to user-profile-page
+        TO-DO: Reference global.css, consider using icon library and styling buttons accordingly
+        Route: Link to user-profile-page
+        --}}
+        <img id="user-button-lagp" class="user-icon" src="img/group-2.png" />
       </div>
     </div>
-  </body>
+
+  </div>
+</body>
+
 </html>
