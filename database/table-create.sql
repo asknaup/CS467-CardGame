@@ -11,7 +11,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 DROP TABLE IF EXISTS moves;
 DROP TABLE IF EXISTS card_spell;
 DROP TABLE IF EXISTS card_creature;
-DROP TABLE IF EXISTS card_instance;
+DROP TABLE IF EXISTS cardInstance;
 
 -- Tables with foreign keys
 DROP TABLE IF EXISTS decks;
@@ -23,7 +23,8 @@ DROP TABLE IF EXISTS user_creds;
 -- -----------------------------------------------------
 -- DROP TRIGGERS
 -- -----------------------------------------------------
-DROP TRIGGER IF EXISTS new_user;
+DROP TRIGGER IF EXISTS newUser;
+DROP TRIGGER IF EXISTS newCard;
 
 -- -----------------------------------------------------
 -- Create User Credentials Table 
@@ -62,7 +63,7 @@ CREATE TABLE IF NOT EXISTS user_profile (
 
 -- Will trigger when user has created profile
 DELIMITER $$
-CREATE TRIGGER new_user AFTER INSERT ON user_creds
+CREATE TRIGGER newUser AFTER INSERT ON user_creds
     FOR EACH ROW
         BEGIN
             -- Insert corresponding record
@@ -99,39 +100,52 @@ ALTER TABLE game AUTO_INCREMENT=501;
 DROP TABLE IF EXISTS cards;
 
 CREATE TABLE IF NOT EXISTS cards (
-    card_id INT UNIQUE NOT NULL AUTO_INCREMENT,
-    card_name VARCHAR(500) NOT NULL,
-    card_type VARCHAR(50) NOT NULL,
+    cardId INT UNIQUE NOT NULL AUTO_INCREMENT,
+    cardName VARCHAR(500) NOT NULL,
+    cardType VARCHAR(50) NOT NULL,
     rarity INT NOT NULL,
     max_available INT NOT NULL,
 
-    PRIMARY KEY (card_id)
+    PRIMARY KEY (cardId)
 );
 
 ALTER TABLE cards AUTO_INCREMENT=1;
 -- -----------------------------------------------------
 -- Create Card Instance Table
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS card_instance;
+DROP TABLE IF EXISTS cardInstance;
 
-CREATE TABLE IF NOT EXISTS card_instance (
-    card_instance_id INT UNIQUE NOT NULL AUTO_INCREMENT,
-    card_id INT NOT NULL,
-    owner_user_id INT NOT NULL,
+CREATE TABLE IF NOT EXISTS cardInstance (
+    cardInstanceId INT UNIQUE NOT NULL AUTO_INCREMENT,
+    cardId INT NOT NULL,
+    ownerUserId INT NOT NULL,
     
-    PRIMARY KEY (card_instance_id, card_id) ,
-    INDEX (card_id),
-    FOREIGN KEY (owner_user_id)
+    PRIMARY KEY (cardInstanceId, cardId) ,
+    INDEX (cardId),
+    FOREIGN KEY (ownerUserId)
         REFERENCES user_profile(user_id)
         ON DELETE CASCADE
         ON UPDATE CASCADE,
-    FOREIGN KEY (card_id)
-        REFERENCES cards(card_id)
+    FOREIGN KEY (cardId)
+        REFERENCES cards(cardId)
             ON DELETE CASCADE
             ON UPDATE CASCADE
 );
 
-ALTER TABLE card_instance AUTO_INCREMENT=5000;
+ALTER TABLE cardInstance AUTO_INCREMENT=5000;
+
+-- Will trigger when user has created a new card
+-- DELIMITER $$
+-- CREATE TRIGGER newCard AFTER INSERT ON cards
+--     FOR EACH ROW
+--         BEGIN
+--             -- Insert corresponding record
+--             INSERT INTO cardInstance (cardId) VALUES
+--                 (NEW.cardId);
+--         END $$
+
+-- -- reset delim
+-- DELIMITER ;
 
 -- -----------------------------------------------------
 -- Create Card Creature table
@@ -139,13 +153,13 @@ ALTER TABLE card_instance AUTO_INCREMENT=5000;
 DROP TABLE IF EXISTS card_creature;
 
 CREATE TABLE IF NOT EXISTS card_creature (
-    card_id INT UNIQUE NOT NULL,
+    cardId INT UNIQUE NOT NULL,
     hp INT DEFAULT NULL,
     attack INT DEFAULT NULL,
 
-    PRIMARY KEY (card_id),
-    FOREIGN KEY (card_id)
-        REFERENCES cards(card_id)
+    PRIMARY KEY (cardId),
+    FOREIGN KEY (cardId)
+        REFERENCES cards(cardId)
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
@@ -157,13 +171,13 @@ CREATE TABLE IF NOT EXISTS card_creature (
 DROP TABLE IF EXISTS card_spell;
 
 CREATE TABLE IF NOT EXISTS card_spell (
-    card_id INT UNIQUE NOT NULL,
+    cardId INT UNIQUE NOT NULL,
     spell_ability VARCHAR(500) NOT NULL,
     health_regen INT DEFAULT NULL,
 
-    PRIMARY KEY (card_id),
-    FOREIGN KEY (card_id)
-        REFERENCES cards(card_id)
+    PRIMARY KEY (cardId),
+    FOREIGN KEY (cardId)
+        REFERENCES cards(cardId)
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
@@ -183,7 +197,7 @@ CREATE TABLE IF NOT EXISTS decks (
 
     PRIMARY KEY (deckId),
     FOREIGN KEY (playerId) REFERENCES user_profile(user_id),
-    FOREIGN KEY (cardId) REFERENCES cards(card_id)
+    FOREIGN KEY (cardId) REFERENCES cards(cardId)
 );
 
 ALTER TABLE decks AUTO_INCREMENT=7000;
@@ -212,7 +226,7 @@ ALTER TABLE moves AUTO_INCREMENT=1;
 CREATE INDEX idx_username ON user_creds(username);
 CREATE INDEX idx_userId ON user_profile(user_id);
 CREATE INDEX idx_gameId ON game(gameId);
-CREATE INDEX idx_cardId ON card_instance(card_id);
+CREATE INDEX idx_cardId ON cardInstance(cardId);
 CREATE INDEX idx_playerId ON decks(playerId);
 CREATE INDEX idx_gameId ON moves(gameId);
 CREATE INDEX idx_playerId ON moves(playerId);

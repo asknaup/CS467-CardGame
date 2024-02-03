@@ -11,6 +11,7 @@ To download necessary node modules:
 <p>npm init -y</p>
 <p>npm install express</p>
 <p>npm install express-handlebars</p>
+<p>npm install express-session</p>
 <p>npm install nodemon        </p>
 <p>npm install mysql2</p>
 <p>npm install body-parser</p>
