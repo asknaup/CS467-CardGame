@@ -74,26 +74,20 @@ app.listen(port, () => {
 });
 
 // POST ROUTES
-
 app.post('/user-profile-page/index', async (req, res) => {
-  //console.log("hello", req.body);
   try {
-      await dbFunc.insertNewUserIntoDB(req.body.newUserName, req.body.inputNewPassword, req.body.inputEmail);
-      const user_id = await dbFunc.getUserId(req.body.newUserName, req.body.inputNewPassword);
-      //console.log(JSON.stringify(user_id[0]));
+      await dbFunc.insertNewUserIntoDB(req.body.inputUserName, req.body.inputNewPassword, req.body.inputEmail);
+      const user_id = await dbFunc.getUserId(req.body.inputUserName, req.body.inputNewPassword);
       const val = await dbFunc.getUserProfileInfo(user_id[0].user_id);
-      //console.log(val[0].game_count);
       res.render('user-profile-page/index', {
-        user_id: req.body.newUserName, game_count: val[0].game_count,
+        user_id: req.body.inputUserName, game_count: val[0].game_count,
         wins: val[0].wins, losses: val[0].losses
-    });
-  }
-  catch(err) {
+    }); 
+  } catch(err) {
     res.send(`Something went wrong : (${err}`);
-  }
-});
+  } });
 
-app.post('/generateCardPage', (req, res) => {
+app.post('/generate-card-page/index', (req, res) => {
   try {
       const stuff = cardGen.generateAiForCard(req.body.inputAiImage);
       console.log(stuff[0], stuff[1]);
@@ -104,8 +98,7 @@ app.post('/generateCardPage', (req, res) => {
   } catch(err) {
       console.error('Error:', err);
       res.send(`Something went wrong: ${err}`);
-  }
-});
+  } });
 
 /* app.post('/gameGenerationPageAction', async(req, res) => {
   try { 
