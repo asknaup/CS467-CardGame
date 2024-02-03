@@ -29,7 +29,7 @@
 }
 
 .desktop .overlap-group {
-  position: absolute;
+  position: relative;
   width: 1440px;
   height: 944px;
   top: 80px;
@@ -203,7 +203,7 @@
   white-space: nowrap;
 }
 
-.desktop .group-4 {
+.desktop .user-icon {
   position: absolute;
   width: 84px;
   height: 84px;

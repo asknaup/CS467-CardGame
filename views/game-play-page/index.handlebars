@@ -8,19 +8,21 @@
   <body>
     <div class="base-layout">
         <div class="overlap-a">
-            <div class="overlap-group-a"></div>
             <div class="top-bar"></div>
+            <div class="background"></div>
           <p class="application-title">Online Trading Card Game Maker</p>
         </div> <!-- class="overlap-a" -->
         
         {{!-- BUTTON: "Play"
               Route: Link to look-at-games-page + app.get() (prompt asking if they'd like to play current game selected
               or
-              browse games)--}}
+              browse games)
+              --}}
         <button id="play-button-ggp" class="play-menu-button" type="button">Play</button>
 
         {{!-- BUTTON: "Trade"
-              Route: Link to trade-page (Need to create)--}}
+              Route: Link to trade-page (Need to create)
+              --}}
         <button id="trade-button-ggp" class="trade-menu-button" type="button">Trade</button>
 
         {{!-- BUTTON: "Make"
@@ -33,13 +35,16 @@
          <img class="user-logo" src="img/group-2.png" />
     </div> <!-- class="base-layout -->
 
-
     <div id="card-count-1">
         <p>9/20</p>
     </div>
     {{!-- HANDLEBARS: "Next card to draw"
         Route: App.get() from db
         --}}
+    <!--Actually it might make more sense to get all the cards of a 
+        current deck from the database at once.
+        So instead maybe it's drawing the next card locally? Not Sure?
+     -->
     <img id="deck-1" src="img/deck-top-view.jpg" />
     <div id="deck-name-1">
       <p>Deck Name: 
