@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../global.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="base-layout">
+        <div class="overlap-a">
+            <div class="top-bar"></div>
+            <div class="background"></div>
+          <p class="application-title">Online Trading Card Game Maker</p>
+        </div> <!-- class="overlap-a" -->
+        
+        {{!-- BUTTON: "Play"
+              Route: Link to look-at-games-page + app.get() (prompt asking if they'd like to play current game selected
+              or
+              browse games)
+              --}}
+        <button id="play-button-ggp" class="play-menu-button" type="button">Play</button>
+
+        {{!-- BUTTON: "Trade"
+              Route: Link to trade-page (Need to create)
+              --}}
+        <button id="trade-button-ggp" class="trade-menu-button" type="button">Trade</button>
+
+        {{!-- BUTTON: "Make"
+              Route: Link to game-generation-page--}}
+        <button id="make-button-ggp" class="make-menu-button" type="button">Make</button>
+
+        {{!-- BUTTON: "Collect"
+              Route: Link to collect-page (Need to create) --}}
+        <button id="collect-button-ggp" class="collect-menu-button" type="button">Collect</button>
+         <img class="user-logo" src="img/group-2.png" />
+    </div> <!-- class="base-layout -->
+  
+  <div class="generate-card-page">
+        <div class="deck-sign-shadow">
+              <div class="deck-name-sign"><div class="deck-name-text">Deck Name</div></div>
+        </div>
+      
+      <div id="generate-card-title-top">
+            <p>Click Here</p>
+      </div>
+      {{!-- INPUT: "Send the newly generated card to db"
+          Route: app.post() to db --}}
+      <img id="deck-1" src="img/deck-top-view.jpg" />
+      <div id="generate-card-title-bottom">
+          <p>To Generate This Card</p>
+      </div>
+
+      <p id="card-preview-title">Card Preview</p>
+      <div class="card-preview">
+          <div id="img-placeholder"> After Hitting Submit
+              <br>
+              Generated Image 
+              <br>
+              Goes Here
+          </div>
+      </div>
+      <p id="AI-prompt-title"> Enter Description For AI 
+             <br>
+              To Generate A New Card Image
+      </p>
+      {{!-- INPUT: "Enter Description For AI To Generate Image"
+          after clicking submit button send to ChatGpt--}}
+      <form class="form-ai-image" method="POST" action="/generate-card-page/index">
+          <input type="text" name="inputAiImage" id="inputAiImage">
+          <input id="submit" type="submit">
+      </form> <!-- end of form -->
+
+      <div id="credits">
+        <p> Stats Left:4
+          {{ animal }}
+          <br>
+          Health Stat: 2
+          <br>
+          Attack Stat: 2
+          <br>
+          Defense Stat: 2
+        </p>
+      </div>
+
+      <div class="health-stat">
+          <button id="health-stat-minus" > - </button>
+            <p id="health-stat-text"> health-stat </p>
+          <button id="health-stat-plus" > + </button>
+      </div>
+      <div class="attack-stat">
+          <button id="attack-stat-minus"> - </button>
+          <p id="attack-stat-text"> attack-stat </p>
+          <button id="attack-stat-plus" > + </button>
+      </div>
+      <div class="defense-stat">
+          <button id="defense-stat-minus" > - </button>
+          <p id="defense-stat-text">defense-stat</p>
+          <button id="defense-stat-plus" > + </button>
+      </div>
+
+      <img id="game-name-title" src="img/group-6.png" />
+    </div> <!-- class="generate-card-page" -->
+  </body>
+</html>

@@ -1,0 +1,138 @@
+#game-name-title {
+  position: absolute;
+  width: 414px;
+  height: 72px;
+  top: 94px;
+  left: 115px;
+}
+
+#card-count-1 {
+  position: absolute;
+  top: 325px;
+  left: 25px;
+  font-weight:bolder;
+  font-size:30px;
+}
+
+#deck-1 {
+  position: absolute;
+  top: 250px;
+  left: 100px;
+  height:28%;
+  width:10%;
+}
+
+#deck-name-1 {
+  position: absolute;
+  top: 325px;
+  left: 260px;
+  font-weight:bolder;
+  font-size:25px;
+}
+
+#minotaur-card-1 {
+  position: absolute;
+  top: 250px;
+  left: 440px;
+  height:28%;
+  width:10%;
+}
+
+#minotaur-card-2 {
+  position: absolute;
+  top: 250px;
+  left: 600px;
+  height:28%;
+  width:10%;
+}
+
+#minotaur-card-3 {
+  position: absolute;
+  top: 250px;
+  left: 760px;
+  height:28%;
+  width:10%;
+}
+
+#minotaur-card-4 {
+  position: absolute;
+  top: 250px;
+  left: 920px;
+  height:28%;
+  width:10%;
+}
+
+#cards-in-hand-1{
+  position: absolute;
+  top: 250px;
+  left: 1100px;
+  height:30%;
+  width:15%;
+  font-weight:bolder;
+  font-size:30px;
+}
+
+#card-count-2 {
+  position: absolute;
+  top: 600px;
+  left: 25px;
+  font-weight:bolder;
+  font-size:30px;
+}
+
+#deck-2 {
+  position: absolute;
+  top: 525px;
+  left: 100px;
+  height:28%;
+  width:10%;
+}
+
+#deck-name-2 {
+  position: absolute;
+  top: 600px;
+  left: 260px;
+  font-weight:bolder;
+  font-size:25px;
+}
+
+#urza-card-1 {
+  position: absolute;
+  top: 525px;
+  left: 440px;
+  height:28%;
+  width:10%;
+}
+
+#urza-card-2 {
+  position: absolute;
+  top: 525px;
+  left: 600px;
+  height:28%;
+  width:10%;
+}
+
+#urza-card-3 {
+  position: absolute;
+  top: 525px;
+  left: 760px;
+  height:28%;
+  width:10%;
+}
+
+#urza-card-4 {
+  position: absolute;
+  top: 525px;
+  left: 920px;
+  height:28%;
+  width:10%;
+}
+
+#cards-in-hand-2{
+  position: absolute;
+  top: 400px;
+  left: 1100px;
+  height:35%;
+  width:20%;
+}
+

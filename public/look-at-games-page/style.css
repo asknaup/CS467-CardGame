@@ -1,0 +1,481 @@
+.look-at-games-page {
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+}
+
+.look-at-games-page .display-container {
+  margin-left: 165px;
+  display: flex;
+  margin-top: 250px;
+}
+
+.look-at-games-page .box {
+  width: 350px;
+  height: 650px;
+  border: 2px solid black;
+  margin-right: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 50px;
+  font-size: x-large;
+}
+
+.look-at-games-page .button {
+
+  width: 300px;
+  height: 50px;
+  background-color: #3498db;
+  margin-bottom: 15px;
+  box-shadow: 0px 4px 4px #00000040, 0px 4px 4px #00000040, 0px 4px 4px #00000040, 0px 4px 4px #00000040;
+  background-color: #f0a3a3;
+  border-radius: 81px;
+  font-size: larger;
+
+}
+
+.look-at-games-page .play-menu-button {
+  position: absolute;
+  width: 95px;
+  height: 51px;
+  top: 19px;
+  left: 1068px;
+}
+
+.look-at-games-page .trade-menu-button {
+  position: absolute;
+  width: 95px;
+  height: 51px;
+  top: 19px;
+  left: 954px;
+}
+
+.look-at-games-page .make-menu-button {
+  position: absolute;
+  width: 95px;
+  height: 51px;
+  top: 19px;
+  left: 840px;
+}
+
+.look-at-games-page .user-icon {
+  position: absolute;
+  width: 84px;
+  height: 84px;
+  top: 0;
+  left: 1349px;
+}
+
+.look-at-games-page .collect-menu-button {
+  position: absolute;
+  width: 95px;
+  height: 51px;
+  top: 19px;
+  left: 726px;
+}
+
+.look-at-games-page .overlap-wrapper {
+  width: 1440px;
+  height: 1024px;
+}
+
+.look-at-games-page .overlap {
+  position: relative;
+  height: 1024px;
+}
+
+.look-at-games-page .group {
+  position: absolute;
+  width: 1440px;
+  height: 1024px;
+  top: 0;
+  left: 0;
+}
+
+.look-at-games-page .rectangle {
+  position: absolute;
+  width: 1440px;
+  height: 944px;
+  top: 80px;
+  left: 0;
+  background-color: #f7dbc6;
+}
+
+.look-at-games-page .menu-bar {
+  position: absolute;
+  width: 1440px;
+  height: 80px;
+  top: 0;
+  left: 0;
+  background-color: #ffb47e;
+  box-shadow: 0px 4px 4px #00000040;
+}
+
+.look-at-games-page .text-wrapper {
+  position: absolute;
+  top: 20px;
+  left: 24px;
+  font-family: "Inter", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 32px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.look-at-games-page .img {
+  position: absolute;
+  width: 84px;
+  height: 84px;
+  top: 0;
+  left: 1349px;
+}
+
+.look-at-games-page .group-wrapper {
+  position: absolute;
+  width: 372px;
+  height: 40px;
+  top: 117px;
+  left: 24px;
+}
+
+.look-at-games-page .group-2 {
+  position: relative;
+  height: 40px;
+}
+
+.look-at-games-page .overlap-group-wrapper {
+  position: absolute;
+  width: 167px;
+  height: 40px;
+  top: 0;
+  left: 0;
+}
+
+.look-at-games-page .overlap-group {
+  width: 165px;
+  background-color: #ff6b00;
+  position: relative;
+  height: 40px;
+  box-shadow: 0px 4px 4px #00000040, 0px 4px 4px #00000040, 0px 4px 4px #00000040, 0px 4px 4px #00000040,
+    0px 4px 4px #00000040, 0px 4px 4px #00000040;
+}
+
+.look-at-games-page .text-wrapper-2 {
+  position: absolute;
+  top: 8px;
+  left: 33px;
+  font-family: "Inter", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 20px;
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.look-at-games-page .div-wrapper {
+  position: absolute;
+  width: 167px;
+  height: 40px;
+  top: 0;
+  left: 207px;
+}
+
+.look-at-games-page .overlap-2 {
+  position: relative;
+  width: 165px;
+  height: 40px;
+  box-shadow: 0px 4px 4px #00000040, 0px 4px 4px #00000040, 0px 4px 4px #00000040, 0px 4px 4px #00000040,
+    0px 4px 4px #00000040, 0px 4px 4px #00000040;
+  background: linear-gradient(180deg, rgb(255, 107.1, 0) 0%, rgba(255, 107.1, 0, 0) 100%);
+}
+
+.look-at-games-page .text-wrapper-3 {
+  position: absolute;
+  top: 8px;
+  left: 23px;
+  font-family: "Inter", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 20px;
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.look-at-games-page .rectangle-2 {
+  position: absolute;
+  width: 309px;
+  height: 495px;
+  top: 305px;
+  left: 99px;
+  object-fit: cover;
+}
+
+.look-at-games-page .text-wrapper-4 {
+  top: 832px;
+  left: 194px;
+  position: absolute;
+  font-family: "Inter", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 32px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.look-at-games-page .text-wrapper-5 {
+  position: absolute;
+  top: 249px;
+  left: 159px;
+  font-family: "Inter", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 32px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.look-at-games-page .rectangle-3 {
+  top: 305px;
+  left: 566px;
+  position: absolute;
+  width: 309px;
+  height: 495px;
+  object-fit: cover;
+}
+
+.look-at-games-page .text-wrapper-6 {
+  top: 839px;
+  left: 656px;
+  position: absolute;
+  font-family: "Inter", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 32px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.look-at-games-page .text-wrapper-7 {
+  left: 621px;
+  position: absolute;
+  top: 249px;
+  font-family: "Inter", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 32px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.look-at-games-page .rectangle-4 {
+  top: 308px;
+  left: 1033px;
+  position: absolute;
+  width: 309px;
+  height: 495px;
+  object-fit: cover;
+}
+
+.look-at-games-page .descriptors {
+  top: 842px;
+  left: 1134px;
+  position: absolute;
+  font-family: "Inter", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 32px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.look-at-games-page .pngwing {
+  left: 381px;
+  position: absolute;
+  width: 84px;
+  height: 80px;
+  top: 512px;
+  object-fit: cover;
+}
+
+.look-at-games-page .pngwing-2 {
+  left: 843px;
+  position: absolute;
+  width: 84px;
+  height: 80px;
+  top: 512px;
+  object-fit: cover;
+}
+
+.look-at-games-page .pngwing-3 {
+  left: 1311px;
+  position: absolute;
+  width: 84px;
+  height: 80px;
+  top: 512px;
+  object-fit: cover;
+}
+
+.look-at-games-page .pngwing-4 {
+  left: 39px;
+  position: absolute;
+  width: 84px;
+  height: 80px;
+  top: 512px;
+  object-fit: cover;
+}
+
+.look-at-games-page .pngwing-5 {
+  left: 513px;
+  position: absolute;
+  width: 84px;
+  height: 80px;
+  top: 512px;
+  object-fit: cover;
+}
+
+.look-at-games-page .pngwing-6 {
+  left: 982px;
+  position: absolute;
+  width: 84px;
+  height: 80px;
+  top: 512px;
+  object-fit: cover;
+}
+
+.look-at-games-page .group-3 {
+  position: absolute;
+  width: 441px;
+  height: 40px;
+  top: 21px;
+  left: 716px;
+}
+
+.look-at-games-page .overlap-3 {
+  position: relative;
+  width: 443px;
+  height: 40px;
+}
+
+.look-at-games-page .group-4 {
+  position: absolute;
+  width: 87px;
+  height: 40px;
+  top: 0;
+  left: 0;
+  background-color: #fc7411;
+  box-shadow: 0px 4px 4px #00000040, 0px 4px 4px #00000040, 0px 4px 4px #00000040, 0px 4px 4px #00000040,
+    0px 4px 4px #00000040, 0px 4px 4px #00000040;
+}
+
+.look-at-games-page .group-5 {
+  position: absolute;
+  width: 427px;
+  height: 40px;
+  top: 0;
+  left: 16px;
+}
+
+.look-at-games-page .group-6 {
+  position: absolute;
+  width: 89px;
+  height: 40px;
+  top: 0;
+  left: 102px;
+}
+
+.look-at-games-page .overlap-group-2 {
+  position: relative;
+  width: 87px;
+  height: 40px;
+  background-color: #fc7411;
+  box-shadow: 0px 4px 4px #00000040, 0px 4px 4px #00000040, 0px 4px 4px #00000040, 0px 4px 4px #00000040,
+    0px 4px 4px #00000040, 0px 4px 4px #00000040;
+}
+
+.look-at-games-page .text-wrapper-13 {
+  position: absolute;
+  top: 11px;
+  left: 22px;
+  font-family: "Inter", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 16px;
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.look-at-games-page .text-wrapper-14 {
+  position: absolute;
+  top: 11px;
+  left: 0;
+  font-family: "Inter", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 16px;
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.look-at-games-page .group-7 {
+  position: absolute;
+  width: 87px;
+  height: 40px;
+  top: 0;
+  left: 220px;
+}
+
+.look-at-games-page .group-8 {
+  width: 89px;
+  height: 40px;
+}
+
+.look-at-games-page .text-wrapper-15 {
+  position: absolute;
+  top: 11px;
+  left: 21px;
+  font-family: "Inter", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 16px;
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.look-at-games-page .group-9 {
+  position: absolute;
+  width: 87px;
+  height: 40px;
+  top: 0;
+  left: 338px;
+}
+
+.look-at-games-page .overlap-group-3 {
+  width: 87px;
+  background: linear-gradient(180deg, rgb(252.88, 116.6, 17.91) 0%, rgba(252.88, 116.6, 17.91, 0) 100%);
+  position: relative;
+  height: 40px;
+  box-shadow: 0px 4px 4px #00000040, 0px 4px 4px #00000040, 0px 4px 4px #00000040, 0px 4px 4px #00000040,
+    0px 4px 4px #00000040, 0px 4px 4px #00000040;
+}
+
+.look-at-games-page .text-wrapper-16 {
+  position: absolute;
+  top: 10px;
+  left: 27px;
+  font-family: "Inter", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 16px;
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+}

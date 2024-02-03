@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="globals.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="welcome-page-portal">
+    <div class="overlap-wrapper">
+      <div class="overlap">
+
+        <div class="rectangle"></div>
+        <div class="menu-bar"></div>
+
+        <p class="text-wrapper">Online Trading Card Game Maker</p>
+
+        <img class="img" src="img/group-2.png" />
+
+        <div class="rectangle-2"></div>
+
+        <div class="hello-please-log-in">Hello!<br />Please log-in</div>
+
+        <div class="group-2">
+          {{!-- INPUT: "Username"
+          Route: App.put() to db, App.get() from db to verify --}}
+          <input id="usernameWpp" class="rectangle-3" type="text" placeholder="Username" style="margin-top: 10px;">
+
+          {{!-- INPUT: "Password"
+          Route: App.put() to db, App.get() from db to verify --}}
+          <input id="passwordWpp" class="rectangle-4" type="text" placeholder="Password" style="margin-top: 10px;">
+        </div>
+
+        {{!-- BUTTON: "Browse Games"
+        Route: Link to look-at-games-page --}}
+        <div class="overlap-group-wrapper">
+          <button id="browseGamesWpp" class="text-wrapper-4" type="button">Browse Games</button>
+        </div>
+
+        {{!-- BUTTON: "New User"
+        Route: Link to new-user-page --}}
+        <div class="primary-button">
+          <button id="newuserWpp" class="newUser" type="button">New User?</button>
+        </div>
+
+        {{!-- BUTTON: "Login"
+        Route: Link to user-profile-page, App.get() from db --}}
+        <button id="loginWpp" class="text-wrapper-5" type="button">Login</button>
+
+
+        {{!-- BUTTON: "Reset PW"
+        Route: Link to reset password page
+        --}}
+        <button id="resetpwWpp" class="text-wrapper-6" type="button">Reset Password</button>
+
+        {{!-- BUTTON: "Play"
+        Route: Link to look-at-games-page + app.get() (prompt asking if they'd like to play current game selected or
+        browse games)
+        --}}
+        <button id="play-button-wpp" class="play-menu-button" type="button">Play</button>
+
+        {{!-- BUTTON: "Trade"
+        Route: Link to trade-page (Need to create)
+        --}}
+        <button id="trade-button-wpp" class="trade-menu-button" type="button">Trade</button>
+
+        {{!-- BUTTON: "Make"
+        Route: Link to game-generation-page
+        --}}
+        <button id="make-button-wpp" class="make-menu-button" type="button">Make</button>
+
+        {{!-- BUTTON: "Collect"
+        Route: Link to collect-page (Need to create)
+        --}}
+        <button id="collect-button-wpp" class="collect-menu-button" type="button">Collect</button>
+
+        {{!-- BUTTON: User Profile icon
+        Route: App.get() and link to user-profile-page
+        TO-DO: Reference global.css, consider using icon library and styling buttons accordingly
+        Route: Link to user-profile-page
+        --}}
+        <img id="user-button-wpp" class="user-icon" src="img/group-2.png" />
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
