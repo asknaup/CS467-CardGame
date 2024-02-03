@@ -3,8 +3,9 @@
 
 <head>
   <meta charset="utf-8" />
-  <link rel="stylesheet" href="globals.css" />
-  <link rel="stylesheet" href="style.css" />
+  {{!-- <link rel="stylesheet" href="globals.css" /> --}}
+  {{!-- <link rel="stylesheet" href="style.css" /> --}}
+  <link rel="stylesheet" href="/welcome-page-portal/style.css" />
 </head>
 
 <body>
@@ -22,17 +23,17 @@
         <div class="rectangle-2"></div>
 
         <div class="hello-please-log-in">Hello!<br />Please log-in</div>
+        <form class="loginUser" method="POST" action="/user-profile-page/index">
+          <div class="group-2">
+            {{!-- INPUT: "Username"
+            Route: App.put() to db, App.get() from db to verify --}}
+            <input id="usernameWpp" class="rectangle-3" type="text" placeholder="Username" style="margin-top: 10px;">
 
-        <div class="group-2">
-          {{!-- INPUT: "Username"
-          Route: App.put() to db, App.get() from db to verify --}}
-          <input id="usernameWpp" class="rectangle-3" type="text" placeholder="Username" style="margin-top: 10px;">
-
-          {{!-- INPUT: "Password"
-          Route: App.put() to db, App.get() from db to verify --}}
-          <input id="passwordWpp" class="rectangle-4" type="text" placeholder="Password" style="margin-top: 10px;">
-        </div>
-
+            {{!-- INPUT: "Password"
+            Route: App.put() to db, App.get() from db to verify --}}
+            <input id="passwordWpp" class="rectangle-4" type="text" placeholder="Password" style="margin-top: 10px;">
+          </div>
+        </form>
         {{!-- BUTTON: "Browse Games"
         Route: Link to look-at-games-page --}}
         <div class="overlap-group-wrapper">
