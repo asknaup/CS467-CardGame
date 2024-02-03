@@ -42,7 +42,7 @@ app.get('/current-deck-page/index', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  res.render('welcome-page-portal/index')
+  res.render('welcomePagePortal')
 });
 
 app.get('/user-profile-page/index', async (req, res) => {
