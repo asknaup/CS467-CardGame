@@ -3,8 +3,7 @@
 
 <head>
   <meta charset="utf-8" />
-  <link rel="stylesheet" href="globals.css" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="/game-generation-page/style.css" />
 </head>
 
 <body>
@@ -12,30 +11,30 @@
     <div class="overlap-wrapper">
       <div class="overlap">
         <div class="overlap-group">
-          <form action="gameGenerationPageAction" method="post"> 
-          {{!-- INPUT: "Concepts" Route: app.post() to db --}}
-          <input id="conceptsInputGgp" class="user-inputs" type="text" placeholder="Type Concepts">
+          <form action="gameGenerationPageAction" method="post">
+            {{!-- INPUT: "Concepts" Route: app.post() to db --}}
+            <input id="conceptsInputGgp" class="user-inputs" type="text" placeholder="Type Concepts">
 
-          {{!-- INPUT: "Mechanics" Route: app.post() to db --}}
-          <input id="mechanicsInputGgp" class="user-inputs" type="text" placeholder="Type Mechanics"
-            style="margin-top: 10px;">
+            {{!-- INPUT: "Mechanics" Route: app.post() to db --}}
+            <input id="mechanicsInputGgp" class="user-inputs" type="text" placeholder="Type Mechanics"
+              style="margin-top: 10px;">
 
-          {{!-- INPUT: "Abilities" Route: app.post() to db --}}
-          <input id="abilitiesInputGgp" class="user-inputs" type="text" placeholder="Type Abilities"
-            style="margin-top: 10px;">
+            {{!-- INPUT: "Abilities" Route: app.post() to db --}}
+            <input id="abilitiesInputGgp" class="user-inputs" type="text" placeholder="Type Abilities"
+              style="margin-top: 10px;">
 
-          {{!-- INPUT: "Style" Route: app.post() to db --}}
-          <input id="styleInputGgp" class="user-inputs" type="text" placeholder="Type Style"
-            style="margin-top: 10px;">
-          {{!-- BUTTON: "Generate New Game" 
-        Route: App.post() to db
-        --}}
-        <button id="gen-game-button-ggp" class="create-buttons" type="button">Generate New Game</button>
-        {{!-- BUTTON: "Update Game" 
-        Route: App.put() to db
-        --}}
-        <button id="upd-game-button-ggp" class="create-buttons" type="submit" style="margin-top: 10px;">Update
-          Game</button>
+            {{!-- INPUT: "Style" Route: app.post() to db --}}
+            <input id="styleInputGgp" class="user-inputs" type="text" placeholder="Type Style"
+              style="margin-top: 10px;">
+            {{!-- BUTTON: "Generate New Game"
+            Route: App.post() to db
+            --}}
+            <button id="gen-game-button-ggp" class="create-buttons" type="button">Generate New Game</button>
+            {{!-- BUTTON: "Update Game"
+            Route: App.put() to db
+            --}}
+            <button id="upd-game-button-ggp" class="create-buttons" type="submit" style="margin-top: 10px;">Update
+              Game</button>
           </form>
           {{!-- Input Field Title --}}
           <div class="text-wrapper-2">Game Generation Inputs</div>
@@ -111,52 +110,52 @@
         <button id="new-deck-button-ggp" class="bottom-buttons" type="button" style="margin-left: 10px;">New
           Deck</button>
 
-        {{!-- BUTTON: "Change Deck" 
+        {{!-- BUTTON: "Change Deck"
         Route: App.get() from db
         --}}
         <button id="change-deck-button-ggp" class="bottom-buttons" type="button" style="margin-left: 10px;">Change
           Deck</button>
 
-        {{!-- BUTTON: "Change Games" 
+        {{!-- BUTTON: "Change Games"
         Route: Link to look-at-games page
         --}}
         <button id="change-games-button-ggp" class="bottom-buttons" type="button" style="margin-left: 10px;">Change
           Games</button>
 
-        {{!-- BUTTON: "Save Game" 
+        {{!-- BUTTON: "Save Game"
         Route: App.post() to db
         --}}
         <button id="save-game-button-ggp" class="bottom-buttons" type="button" style="margin-left: 10px;">Save
           Game</button>
 
-        {{!-- BUTTON: "Help" 
-        Route: Linkt to Help page (Ned to create) 
+        {{!-- BUTTON: "Help"
+        Route: Linkt to Help page (Ned to create)
         --}}
         <button id="view-rules-button-ggp" class="center-buttons" type="button">Help</button>
 
-        {{!-- BUTTON: "Browse Cards in Deck" 
+        {{!-- BUTTON: "Browse Cards in Deck"
         Route: Link to current-deck-page
         --}}
         <button id="browse-cards-button-ggp" class="center-buttons" type="button" style="margin-top: 175px;">Browse
           Cards in Deck
         </button>
 
-        {{!-- BUTTON: "View Rules" 
-        Route: App.get() from db 
+        {{!-- BUTTON: "View Rules"
+        Route: App.get() from db
         --}}
         <button id="help-button-ggp" class="center-buttons" type="button" style="margin-top: 10px;">View Rules</button>
 
-        {{!-- BUTTON: "Delete Game" 
+        {{!-- BUTTON: "Delete Game"
         Route: App.delete() from db
         --}}
         <button id="del-game-button-ggp" class="delete-button" type="button">Delete Game</button>
 
-        {{!-- HANDLEBARS: "Card No. X out of Y" 
+        {{!-- HANDLEBARS: "Card No. X out of Y"
         Route: App.get() from db
         --}}
         <p id="cardno-hbs-ggp" class="text-wrapper-11">Card No. X out of Y</p>
 
-        {{!-- HANDLEBARS: "Card Name" 
+        {{!-- HANDLEBARS: "Card Name"
         Route: App.get() from db
         --}}
         <div id="card-name-hbs-ggp" class="text-wrapper-12">Card Name</div>
