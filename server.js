@@ -41,7 +41,7 @@ app.get('/current-deck-page/index', (req, res) => {
   res.render('current-deck-page/index')
 });
 
-app.get('/welcome-page-portal/index', (req, res) => {
+app.get('/', (req, res) => {
   res.render('welcome-page-portal/index')
 });
 
@@ -57,7 +57,7 @@ app.get('/gameGenPage', (req, res) => {
   res.render('gameGenPage')
 });
 
-app.get('/', (req, res) => {
+app.get('/lookatGames', (req, res) => {
   res.render('lookatGames')
 });
 
