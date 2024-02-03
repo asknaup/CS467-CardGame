@@ -29,7 +29,7 @@
 }
 
 .desktop .overlap-group {
-  position: absolute;
+  position: relative;
   width: 1440px;
   height: 944px;
   top: 80px;

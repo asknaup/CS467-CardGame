@@ -65,13 +65,14 @@
       </p>
       {{!-- INPUT: "Enter Description For AI To Generate Image"
           after clicking submit button send to ChatGpt--}}
-      <form class="form-ai-image" method="POST" action="">
-          <input type="text" name="input-ai-image" id="input-ai-image">
+      <form class="form-ai-image" method="POST" action="/generate-card-page/index">
+          <input type="text" name="inputAiImage" id="inputAiImage">
           <input id="submit" type="submit">
       </form> <!-- end of form -->
 
       <div id="credits">
         <p> Stats Left:4
+          {{ animal }}
           <br>
           Health Stat: 2
           <br>
