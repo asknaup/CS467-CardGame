@@ -2,6 +2,7 @@
 
 const express = require('express');             // Commonjs standard
 const exphbs = require('express-handlebars');
+const session = require('express-session');     // Session control to save variables once a user logs in
 const app = express();                          // Routing 
 const bodyParser = require('body-parser');
 const port = 3000;
@@ -14,6 +15,11 @@ const cardGen = require('./database/card-gen');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(session({
+  secret: 'secret-key',
+  resave: false,
+  saveUninitialized: false
+}))
 
 app.engine('handlebars', exphbs.engine(
   { extname: "hbs", defaultLayout: false, layoutsDir: "views/layouts/" }
@@ -35,8 +41,8 @@ app.get('/current-deck-page/index', (req, res) => {
   res.render('current-deck-page/index')
 });
 
-app.get('/welcome-page-portal/index', (req, res) => {
-  res.render('welcome-page-portal/index')
+app.get('/', (req, res) => {
+  res.render('welcomePagePortal')
 });
 
 app.get('/user-profile-page/index', async (req, res) => {
@@ -50,42 +56,68 @@ app.get('/gameGenPage', (req, res) => {
   res.render('gameGenPage')
 });
 
-app.get('/', (req, res) => {
+app.get('/lookatGames', (req, res) => {
   res.render('lookatGames')
 });
 
 app.get('/new-user-page/index', (req, res) => {
-  res.render('new-user-page/index')
+  res.render('newUser')
 });
 
 app.get('/reset-password-page/index', (req, res) => {
-  res.render('reset-password-page/index')
+  res.render('resetPW')
 });
 
 app.get('/game-play-page/index', (req, res) => {
-  res.render('game-play-page/index')
+  res.render('gamePlayPage')
 });
 
 app.get('/generate-card-page/index', (req, res) => {
-  res.render('generate-card-page/index')
+  res.render('cardGenPage')
 });
 
 app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
 });
 
-// POST ROUTES
+// POST ROUTES 
+// app.post('/user-profile-page/index', async (req, res) => {
+//   try {
+//     await dbFunc.insertNewUserIntoDB(req.body.inputUserName, req.body.inputNewPassword, req.body.inputEmail);
+//     const user_id = await dbFunc.getUserId(req.body.inputUserName, req.body.inputNewPassword);
+//     const val = await dbFunc.getUserProfileInfo(user_id[0].user_id);
+//     res.render('user-profile-page/index', {
+//       user_id: req.body.inputUserName, game_count: val[0].game_count,
+//       wins: val[0].wins, losses: val[0].losses
+//     });
+//   } catch (err) {
+//     res.send(`Something went wrong : (${err}`);
+//   }
+// });
+
 app.post('/user-profile-page/index', async (req, res) => {
   try {
-    await dbFunc.insertNewUserIntoDB(req.body.inputUserName, req.body.inputNewPassword, req.body.inputEmail);
-    const user_id = await dbFunc.getUserId(req.body.inputUserName, req.body.inputNewPassword);
-    const val = await dbFunc.getUserProfileInfo(user_id[0].user_id);
+    const user_id = await dbFunc.insertNewUser(req.body.inputUserName, req.body.inputNewPassword, req.body.inputEmail);
+    const userProfile = await dbFunc.getUserProfileInfo(user_id);
+
+    if (user_id) {
+      // save relevant user information in the session
+      req.session.user = {
+        userId: user_id,
+        username: req.body.inputUserName,
+        game_count: userProfile[0].game_count,
+        wins: userProfile[0].wins,
+        losses: userProfile[0].losses
+      };
+      console.log(req.session.user);
+    }
+    
     res.render('user-profile-page/index', {
-      user_id: req.body.inputUserName, game_count: val[0].game_count,
-      wins: val[0].wins, losses: val[0].losses
+      user_id: req.body.inputUserName, game_count: userProfile[0].game_count,
+      wins: userProfile[0].wins, losses: userProfile[0].losses
     });
   } catch (err) {
-    res.send(`Something went wrong : (${err}`);
+    res.send(`Something went wrong : (${err})`);
   }
 });
 

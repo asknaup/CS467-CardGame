@@ -79,16 +79,16 @@
   position: relative;
   display: block;
   width: 12em;
-  margin-right: .5em;
-  padding-top: 1.5em;
+  margin-top: 15px;
+  margin-bottom: 5px;
 }
 
 
-.reset-password-div #input-username {
+.reset-password-div #inputUserName {
   display: block;
-  position: relative;
-  top: .5em;
   width: 350px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .reset-password-div .label-new-password {
@@ -100,11 +100,11 @@
 }
 
 
-.reset-password-div #input-new-password {
+.reset-password-div #inputNewPassword {
   display: block;
-  position: relative;
-  top: .5em;
   width: 350px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .reset-password-div .label-repeat-password {
@@ -116,11 +116,11 @@
 }
 
 
-.reset-password-div #input-repeat-password {
+.reset-password-div #inputRepeatPassword {
   display: block;
-  position: relative;
-  top: .5em;
   width: 350px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .reset-password-div .label-email {
@@ -132,11 +132,11 @@
 }
 
 
-.reset-password-div #input-email {
+.reset-password-div #inputEmail {
   display: block;
-  position: relative;
-  top: .5em;
   width: 350px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .reset-password-div #submit{
