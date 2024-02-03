@@ -7,14 +7,18 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- DROP TABLES
 -- -----------------------------------------------------
+-- Tables with no foreign keys
+DROP TABLE IF EXISTS moves;
 DROP TABLE IF EXISTS card_spell;
 DROP TABLE IF EXISTS card_creature;
 DROP TABLE IF EXISTS card_instance;
-DROP TABLE IF EXISTS cards;
+
+-- Tables with foreign keys
+DROP TABLE IF EXISTS decks;
 DROP TABLE IF EXISTS game;
+DROP TABLE IF EXISTS cards;
 DROP TABLE IF EXISTS user_profile;
 DROP TABLE IF EXISTS user_creds;
-
 
 -- -----------------------------------------------------
 -- DROP TRIGGERS
@@ -44,7 +48,7 @@ DROP TABLE IF EXISTS user_profile;
 
 CREATE TABLE IF NOT EXISTS user_profile (
     user_id INT UNIQUE NOT NULL,
-    username VARCHAR(50) UNIQUE NOT NULL,
+    username VARCHAR(255) UNIQUE NOT NULL,
     game_count INT DEFAULT 0,
     wins INT DEFAULT 0,
     losses INT DEFAULT 0,
@@ -53,9 +57,6 @@ CREATE TABLE IF NOT EXISTS user_profile (
     FOREIGN KEY (user_id)
         REFERENCES user_creds(user_id)
         -- ON DELETE SET DELETE
-        ON UPDATE CASCADE,
-    FOREIGN KEY (username)
-        REFERENCES user_creds(username)
         ON UPDATE CASCADE
 );
 
@@ -78,16 +79,16 @@ DELIMITER ;
 DROP TABLE IF EXISTS game;
 
 CREATE TABLE IF NOT EXISTS game (
-    game_id INT UNIQUE NOT NULL AUTO_INCREMENT,
-    player_id INT UNIQUE NOT NULL,
-    game_date DATE,
-    winner_id INT DEFAULT 0,
-    loser_id INT DEFAULT 0,
-    PRIMARY KEY (game_id) ,
-    FOREIGN KEY (player_id)
-        REFERENCES user_profile (user_id)
+    gameId INT UNIQUE NOT NULL AUTO_INCREMENT,
+    startTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    endTime TIMESTAMP NULL,
+    winnerId INT,
+
+    PRIMARY KEY (gameId),
+    FOREIGN KEY (winnerId)
+        REFERENCES user_profile(user_id)
         -- ON DELETE SET NULL
-        ON UPDATE CASCADE
+        -- ON UPDATE CASCADE
 );
 
 ALTER TABLE game AUTO_INCREMENT=501;
@@ -145,13 +146,13 @@ CREATE TABLE IF NOT EXISTS card_creature (
     PRIMARY KEY (card_id),
     FOREIGN KEY (card_id)
         REFERENCES cards(card_id)
-    --     ON DELETE CASCADE
+        ON DELETE CASCADE
         ON UPDATE CASCADE
 );
 
 
 -- -----------------------------------------------------
--- Create games table
+-- Create card spell table
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS card_spell;
 
@@ -163,11 +164,58 @@ CREATE TABLE IF NOT EXISTS card_spell (
     PRIMARY KEY (card_id),
     FOREIGN KEY (card_id)
         REFERENCES cards(card_id)
-    --     ON DELETE CASCADE
-    --     ON UPDATE CASCADE
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
 
 
+
+-- -----------------------------------------------------
+-- Create deck table
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS decks;
+
+CREATE TABLE IF NOT EXISTS decks (
+    deckId INT AUTO_INCREMENT,
+    playerId INT NOT NULL,
+    cardId INT,
+    quantity INT,
+
+    PRIMARY KEY (deckId),
+    FOREIGN KEY (playerId) REFERENCES user_profile(user_id),
+    FOREIGN KEY (cardId) REFERENCES cards(card_id)
+);
+
+ALTER TABLE decks AUTO_INCREMENT=7000;
+-- -----------------------------------------------------
+-- Create moves table
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS moves;
+
+CREATE TABLE IF NOT EXISTS moves (
+    moveId INT AUTO_INCREMENT,
+    gameId INT,
+    playerId INT,
+    roundNumber INT,
+    moveDetails VARCHAR(255),
+
+    PRIMARY KEY (moveId),
+    FOREIGN KEY (gameId) REFERENCES game(gameId),
+    FOREIGN KEY (playerId) REFERENCES user_profile(user_id)
+);
+
+ALTER TABLE moves AUTO_INCREMENT=1;
+
+-- -----------------------------------------------------
+-- CREATE INDEX VALUES FOR FASTER QUERIES
+-- -----------------------------------------------------
+CREATE INDEX idx_username ON user_creds(username);
+CREATE INDEX idx_userId ON user_profile(user_id);
+CREATE INDEX idx_gameId ON game(gameId);
+CREATE INDEX idx_cardId ON card_instance(card_id);
+CREATE INDEX idx_playerId ON decks(playerId);
+CREATE INDEX idx_gameId ON moves(gameId);
+CREATE INDEX idx_playerId ON moves(playerId);
 
 -- -----------------------------------------------------
 SET SQL_MODE=@OLD_SQL_MODE;
