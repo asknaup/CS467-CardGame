@@ -35,8 +35,8 @@ app.get('/current-deck-page/index', (req, res) => {
   res.render('current-deck-page/index')
 });
 
-app.get('/welcome-page-portal/index', (req, res) => {
-  res.render('welcome-page-portal/index')
+app.get('/', (req, res) => {
+  res.render('welcomePagePortal')
 });
 
 app.get('/user-profile-page/index', async (req, res) => {
