@@ -85,7 +85,7 @@
 }
 
 
-.new-user-div #newUserName {
+.new-user-div #inputUserName {
   display: block;
   position: relative;
   top: .5em;
