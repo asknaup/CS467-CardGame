@@ -3,6 +3,7 @@
 const express = require('express');             // Commonjs standard
 const exphbs = require('express-handlebars');
 const session = require('express-session');     // Session control to save variables once a user logs in
+// const bcrypt = require('bcrypt');               // Encryption
 const app = express();                          // Routing 
 const bodyParser = require('body-parser');
 const port = 3000;
@@ -31,14 +32,14 @@ app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
 
 // Serve static file from public directory
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static('public'));
 
 /*
 ROUTES
 */
 
 app.get('/current-deck-page/index', (req, res) => {
-  res.render('current-deck-page/index')
+  res.render('currentDeck')
 });
 
 app.get('/', (req, res) => {
@@ -52,6 +53,7 @@ app.get('/welcomePagePortal', (req, res) => {
 app.get('/user-profile-page/index', async (req, res) => {
     const val = await dbFunc.getUserProfileInfo(req.body.inputUserName, req.body.inputNewPassword)
     res.render('user-profile-page/index', {
+    'userProfile', {
     user_id: val
   })
 });
@@ -101,20 +103,7 @@ app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
 });
 
-// POST ROUTES 
-// app.post('/user-profile-page/index', async (req, res) => {
-//   try {
-//     await dbFunc.insertNewUserIntoDB(req.body.inputUserName, req.body.inputNewPassword, req.body.inputEmail);
-//     const user_id = await dbFunc.getUserId(req.body.inputUserName, req.body.inputNewPassword);
-//     const val = await dbFunc.getUserProfileInfo(user_id[0].user_id);
-//     res.render('user-profile-page/index', {
-//       user_id: req.body.inputUserName, game_count: val[0].game_count,
-//       wins: val[0].wins, losses: val[0].losses
-//     });
-//   } catch (err) {
-//     res.send(`Something went wrong : (${err}`);
-//   }
-// });
+// POST ROUTES
 
 app.post('/userProfile', async (req, res) => {
   try {
@@ -126,7 +115,7 @@ app.post('/userProfile', async (req, res) => {
       req.session.user = {
         userId: user_id,
         username: req.body.inputUserName,
-        game_count: userProfile[0].game_count,
+        gameCount: userProfile[0].game_count,
         wins: userProfile[0].wins,
         losses: userProfile[0].losses
       };
