@@ -4,6 +4,7 @@ const express = require('express');             // Commonjs standard
 const exphbs = require('express-handlebars');
 const session = require('express-session');     // Session control to save variables once a user logs in
 // const bcrypt = require('bcrypt');               // Encryption
+const router = new require('express').Router();
 const app = express();                          // Routing 
 const bodyParser = require('body-parser');
 const port = 3000;
@@ -37,7 +38,8 @@ app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
 
 // Serve static file from public directory
-app.use(express.static('public'));
+// app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')))
 
 /*
 ROUTES
@@ -150,7 +152,6 @@ app.post('/login', async (req, res) => {
         userId: user.userId,
         username: user.username
       };
-
       res.redirect('/userProfile/' + req.session.user.username);
     } else {
       // Authentication failed, return results stating so
@@ -159,7 +160,7 @@ app.post('/login', async (req, res) => {
       });
     }
   } catch (err) {
-    res.send(`Something went wrong : (${err})`);
+    res.send(`Something went wrong: ${err}`);
   }
 });
 

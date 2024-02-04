@@ -3,13 +3,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {{!-- <title>{{pageTitle}}</title> --}}
-  <link rel="stylesheet" type="text/css" href="/public/global.css">
-  {{{head}}}
+    <link rel="stylesheet" type="text/css" href="public/global.css">
+    {{{head}}}
 </head>
 <body>
     <header class="navbar">
-        {{!-- <h1>{{pageTitle}}</h1> --}}
         {{#if showLogoutButton}}
             {{> logoutButton}} <!-- Include the logout button partial -->
         {{/if}}
@@ -27,7 +25,7 @@
     </main>
 
     <footer>
-        <!-- footer content -->
+        {{{footer}}}<!-- footer content -->
     </footer>
 
     <!-- Add your script includes here -->
