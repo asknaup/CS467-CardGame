@@ -2,12 +2,12 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <link rel="stylesheet" href="globals.css" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="/welcome-page-portal/style.css" />
 </head>
 <body>
   <div class="welcomePagePortal">
         <div class="hello-please-log-in">Hello!<br />Please log-in</div>
+
         <form action="userProfile" method="'get">
           <div class="group-2">
             {{!-- INPUT: "Username" Route: App.put() to db, App.get() from db to verify --}}
@@ -26,10 +26,9 @@
           {{!-- BUTTON: "Reset PW" Route: Link to reset password page --}}
           <button id="resetpwWpp" class="text-wrapper-6" type="button">Reset Password</button>
 
-          </form>
-
-          {{!-- BUTTON: "Browse Games" Route: Link to look-at-games-page --}}
-          <button id="browseGamesWpp" class="text-wrapper-4" type="button">Browse Games</button>
+        </form>
+        {{!-- BUTTON: "Browse Games" Route: Link to look-at-games-page --}}
+        <button id="browseGamesWpp" class="text-wrapper-4" type="button">Browse Games</button>
 
           <img id="user-button-wpp" class="user-icon" src="img/group-2.png" />
   </div>
