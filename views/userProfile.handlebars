@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, intial-scale=1.0">
+  <title>{{user.username}}'s Profile</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div>
+    <h1>{{username}}'s Profile</h1>
+    <div>
+      <button id="userGames" type="button">Browse User Games</button>
+      <button id="userDecks" type="button">Browse User Decks</button>
+      <button id="currentGame" type="button">Current Game</button>
+      <button id="currentDeck" type="button">Current Deck</button>
+      <br>
+      <output>Cards Owned: {{username}}</output> {{!-- TODO --}}
+      <output>W/L Ratio: {{wl}}</output>
+      <output>User Since: {{username}}</output> {{!-- TODO --}}
+    </div>
+  </div>
+</body>
+
+</html>
