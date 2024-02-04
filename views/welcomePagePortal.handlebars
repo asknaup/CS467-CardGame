@@ -12,26 +12,26 @@
 <body>
 
   <div>
-      <div id="input-form">
-        <h2>Login</h2>
-        <form class="loginUser" method="POST" action="/login">
-          <label for="usernameWpp">Username:</label>
-          <input id="usernameWpp" name="usernameWpp" type="text" placeholder="Username">
-          <label for="passwordWpp">Password:</label>
-          <input id="passwordWpp" name="passwordWpp" type="text" placeholder="Password">
-          {{#if error}}
-          <p id="error">{{error}}</p>
-          {{/if}}
-          <button id="loginWpp" type="submit">Login</button>
-        </form>
-      </div>
+    <div id="input-form">
+      <h2>Login</h2>
+      <form class="loginUser" method="POST" action="/login">
+        <label for="usernameWpp">Username:</label>
+        <input id="usernameWpp" name="usernameWpp" type="text" placeholder="Username">
+        <label for="passwordWpp">Password:</label>
+        <input id="passwordWpp" name="passwordWpp" type="text" placeholder="Password">
+        {{#if error}}
+        <p id="error">{{error}}</p>
+        {{/if}}
+        <button id="loginWpp" type="submit">Login</button></a>
+      </form>
+    </div>
 
-      <div class="bottomButtonsMain">
-        <button id="newuserWpp" class="newUser" type="button">New User?</button>
-        <button id="browseGamesWpp" type="button">Browse Games</button>
-      </div>
+    <div class="bottomButtonsMain">
+      <a><button id="newuserWpp" class="newUser" type="button">New User?</button></a>
+      <a><button id="browseGamesWpp" type="button">Browse Games</button></a>
+    </div>
 
-      <br>
+    <br>
   </div>
 
 </body>
