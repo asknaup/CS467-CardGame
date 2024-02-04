@@ -4,8 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {{!-- <title>{{pageTitle}}</title> --}}
-    <link rel="stylesheet" type="text/css" href="/public/global.css">
+    <link rel="stylesheet" type="text/css" href="public/global.css">
     {{{head}}}
 </head>
 
@@ -14,11 +13,12 @@
     <h1>Online Trading Card Game Maker</h1>
 
     <header class="navbar">
-        {{!-- <h1>{{pageTitle}}</h1> --}}
+        <div>
         {{#if showLogoutButton}}
         {{> logoutButton}} <!-- Include the logout button partial -->
         {{/if}}
-
+        </div>
+        
         <div>
             <button type="button">Play</button>
             <button type="button">Trade</button>
@@ -33,7 +33,7 @@
     </main>
 
     <footer>
-        <!-- footer content -->
+        {{{footer}}}<!-- footer content -->
     </footer>
 
     <!-- Add your script includes here -->
