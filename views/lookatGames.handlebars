@@ -16,43 +16,54 @@
         </tr>
       </thead>
       <tbody id="matrixBody">
-        <!-- Matrix content will be dynamically added here -->
+        <!-- Matrix content dynamically added here -->
       </tbody>
     </table>
 
     <script>
-      // Example JavaScript to dynamically populate the matrix
+      // Populate matrix dynamically with image JSON, Game Name and Rule Set.
       document.addEventListener("DOMContentLoaded", function () {
-        // Replace this with the actual number of rows you want
+
+        const numberOfColumns = 4
+
+        // Replace with len(db_return)/numberOfColumns
         const numberOfRows = 5;
 
         // Get the matrix body element
         const matrixBody = document.getElementById("matrixBody");
 
-        // Loop to create rows
+        // Create rows
         for (let i = 1; i <= numberOfRows; i++) {
-          // Create a new row
+
           const row = document.createElement("tr");
 
-          // Create cells for each column
-          for (let j = 1; j <= 4; j++) {
-            const cell = document.createElement("td");
+          // Create cells 
+          for (let j = 1; j <= numberOfColumns; j++) {
+            let cell = document.createElement("td");
 
-            // Add text content
-            const textContent = document.createTextNode(`Row ${i}, Column ${j}`);
-            cell.appendChild(textContent);
+            // Build matrix with content
+            // Requires connection to db ***
+            let gameName = document.createTextNode(`Game Name ${i}`);
+            let ruleSet = document.createTextNode(`Rule Set ${j}`);
 
+            let lineBreak = document.createElement('br');
 
-            // Add image element
-            const img = document.createElement("img");
-            img.src = `https://placekitten.com/100/100?image=${i * j}`; // Example image URL
-            cell.appendChild(img);
+            cell.appendChild(gameName);
+            cell.appendChild(lineBreak);
 
-            // Append the cell to the row
+            const gameImg = document.createElement("img");
+          
+            gameImg.src = `https://placekitten.com/100/100?image=${i * j}`; // Example image URL
+            cell.appendChild(lineBreak);
+
+            cell.append(ruleSet);
+            cell.appendChild(gameImg);
+
+            // Append cell to row
             row.appendChild(cell);
           }
 
-          // Append the row to the matrix body
+          // Append row to matrix body
           matrixBody.appendChild(row);
         }
       });
