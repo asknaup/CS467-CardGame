@@ -42,7 +42,7 @@ app.get('/current-deck-page/index', (req, res) => {
   res.render('currentDeck')
 });
 
-app.get('/', (req, res) => {
+app.get('/welcomePagePortal', (req, res) => {
   res.render('welcomePagePortal')
 });
 
@@ -50,13 +50,14 @@ app.get('/welcomePagePortal', (req, res) => {
   res.render('welcomePagePortal');
 });
 
-app.get('/user-profile-page/index', async (req, res) => {
-    const val = await dbFunc.getUserProfileInfo(req.body.inputUserName, req.body.inputNewPassword)
-    res.render('user-profile-page/index', {
-    'userProfile', {
-    user_id: val
-  })
-});
+// Below code was throwing me a merge conflict so I commented it out - Artem 2/3/24
+// app.get('/user-profile-page/index', async (req, res) => {
+//     const val = await dbFunc.getUserProfileInfo(req.body.inputUserName, req.body.inputNewPassword)
+//     res.render('user-profile-page/index', {
+//     'userProfile', {
+//     user_id: val
+//   })
+// });
 
 app.get('/userProfile', async (req, res) => {
   /// ERROR HANDLING IF USER NOT IN DB
