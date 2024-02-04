@@ -98,7 +98,7 @@ app.get('/browseGames', (req, res) => {
 });
 
 app.get('/newUser', (req, res) => {
-  res.render('newUser', { showLogoutButton: true })
+  res.render('newUser', { showLogoutButton: false, showLoginButton: true })
 });
 
 app.get('/resetPW', (req, res) => {
@@ -134,19 +134,27 @@ app.listen(port, () => {
 app.post('/newUser', async (req, res) => {
   try {
     const user_id = await dbFunc.insertNewUser(req.body.inputUserName, req.body.inputNewPassword, req.body.inputEmail);
-    const userProfile = await dbFunc.getUserProfileInfo(user_id);
+
+    console.log(user_id);
     if (user_id) {          
       // save relevant user information in the session
       req.session.user = {
-        userId: user_id, username: req.body.inputUserName, gameCount: userProfile[0].game_count,
-        wins: userProfile[0].wins, losses: userProfile[0].losses
+        userId: user_id, 
+        username: req.body.inputUserName
       };
-      // console.log(req.session.user);
-    } res.redirect('userProfile', {
-      showLogoutButton: true
-    });
+    } 
+    res.redirect('/userProfile/' + req.session.user.username);
   } catch (err) {
-    res.send(`Something went wrong : (${err})`);
+    console.log(err);
+
+    if (err.code === 'ER_DUP_ENTRY') {
+      res.render("newUser", {
+        usnError: 'Username already in use. Please try another.'
+      })
+    } else {
+      // Handle other errors if needed
+      res.send(`Something went wrong : (${err})`);
+    }
   }
 });
 
@@ -181,7 +189,7 @@ app.post('/cardGenPage', (req, res) => {
       showLogoutButton: true
     });
   } catch (err) {
-    console.error('Error:', err);
+    console.log('Error:', err);
     res.send(`Something went wrong: ${err}`);
   }
 });

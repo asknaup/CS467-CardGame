@@ -118,8 +118,7 @@ table {
   margin-top: 75px;
 }
 
-th,
-td {
+th, td {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: left;
