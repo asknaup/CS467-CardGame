@@ -2,41 +2,35 @@
 <html>
 <head>
   <meta charset="utf-8" />
-<<<<<<< HEAD
   <link rel="stylesheet" href="global.css" />
-=======
-  <link rel="stylesheet" href="/welcome-page-portal/style.css" />
->>>>>>> ecde66f037b0974f781e71ec6a9270a1fa2e8d8d
 </head>
 <body>
   <div class="welcomePagePortal">
         <div class="hello-please-log-in">Hello!<br />Please log-in</div>
 
         <form action="userProfile" method="'get">
-        <div class="group-2">
-          {{!-- INPUT: "Username"
-          Route: App.put() to db, App.get() from db to verify --}}
-          <input id="inputUserName" class="rectangle-3" type="text" placeholder="Username" style="margin-top: 10px;">
+          <div class="group-2">
+            {{!-- INPUT: "Username" Route: App.put() to db, App.get() from db to verify --}}
+            <input id="inputUserName" class="rectangle-3" type="text" placeholder="Username" style="margin-top: 10px;">
 
-          {{!-- INPUT: "Password"
-          Route: App.put() to db, App.get() from db to verify --}}
-          <input id="inputNewPassword" class="rectangle-4" type="text" placeholder="Password" style="margin-top: 10px;">
-        </div>        
-        {{!-- BUTTON: "New User" Route: Link to new-user-page --}}
-        <button id="loginWpp" class="text-wrapper-5" type="submit">Login</button>
+            {{!-- INPUT: "Password" Route: App.put() to db, App.get() from db to verify --}}
+            <input id="inputNewPassword" class="rectangle-4" type="text" placeholder="Password" style="margin-top: 10px;">
+          </div>        
+          {{!-- BUTTON: "New User" Route: Link to new-user-page --}}
+          <button id="loginWpp" class="text-wrapper-5" type="submit">Login</button>
     
-        {{!-- BUTTON: "Login"
-        Route: Link to user-profile-page, App.get() from db --}}
-        <button id="newuserWpp" class="newUser" type="button">New User?</button>
+          {{!-- BUTTON: "Login"
+          Route: Link to user-profile-page, App.get() from db --}}
+          <button id="newuserWpp" class="newUser" type="button">New User?</button>
 
-        {{!-- BUTTON: "Reset PW" Route: Link to reset password page --}}
-        <button id="resetpwWpp" class="text-wrapper-6" type="button">Reset Password</button>
+          {{!-- BUTTON: "Reset PW" Route: Link to reset password page --}}
+          <button id="resetpwWpp" class="text-wrapper-6" type="button">Reset Password</button>
 
         </form>
         {{!-- BUTTON: "Browse Games" Route: Link to look-at-games-page --}}
         <button id="browseGamesWpp" class="text-wrapper-4" type="button">Browse Games</button>
 
-        <img id="user-button-wpp" class="user-icon" src="img/group-2.png" />
+          <img id="user-button-wpp" class="user-icon" src="img/group-2.png" />
   </div>
 </body>
 
