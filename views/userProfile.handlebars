@@ -10,15 +10,13 @@
 </head>
 
 <body>
-  <main>
     <h1>{{username}}'s Profile</h1>
     <div>
-      <button type="button">Browse User Games</button>
-      <button type="button">Browse User Decks</button>
-      <button type="button">Current Game</button>
-      <button type="button">Current Deck</button>
+      <a href="/browseGames"><button type="button">Browse User Games</button></a>
+      <a href="/userDeck/{{username}}"><button type="button">Browse User Decks</button></a>
+      <a href="/browseGames"><button type="button">Current Game</button></a>
+      <a href="/currentDeck"><button type="button">Current Deck</button></a>
     </div>
-  </main>
 </body>
 
 </html>

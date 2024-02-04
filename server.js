@@ -65,7 +65,7 @@ app.get('/userProfile/:username', async (req, res) => {
   }
 });
 
-app.get('/currentDeck', (req, res) => {
+app.get('/userDeck/:username', (req, res) => {
   res.render('currentDeck')
 });
 
@@ -77,7 +77,7 @@ app.get('/currentDeck', (req, res) => {
   res.render('currentDeck')
 });
 
-app.get('/lookatGames', (req, res) => {
+app.get('/browseGames', (req, res) => {
   res.render('lookatGames')
 });
 
