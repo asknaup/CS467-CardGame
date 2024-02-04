@@ -3,8 +3,6 @@
 
 <head>
   <meta charset="utf-8" />
-  {{!-- <link rel="stylesheet" href="globals.css" /> --}}
-  {{!-- <link rel="stylesheet" href="style.css" /> --}}
   <link rel="stylesheet" href="/welcome-page-portal/style.css" />
 </head>
 
@@ -23,39 +21,39 @@
         <div class="rectangle-2"></div>
 
         <div class="hello-please-log-in">Hello!<br />Please log-in</div>
-        <form class="loginUser" method="POST" action="/user-profile-page/index">
+        <form class="loginUser" method="POST" action="/login">
           <div class="group-2">
             {{!-- INPUT: "Username"
             Route: App.put() to db, App.get() from db to verify --}}
-            <input id="usernameWpp" class="rectangle-3" type="text" placeholder="Username" style="margin-top: 10px;">
+            <input id="usernameWpp" name = "usernameWpp" class="rectangle-3" type="text" placeholder="Username" style="margin-top: 10px;">
 
             {{!-- INPUT: "Password"
             Route: App.put() to db, App.get() from db to verify --}}
-            <input id="passwordWpp" class="rectangle-4" type="text" placeholder="Password" style="margin-top: 10px;">
+            <input id="passwordWpp" name="passwordWpp" class="rectangle-4" type="text" placeholder="Password" style="margin-top: 10px;">
           </div>
+          {{!-- BUTTON: "Browse Games"
+          Route: Link to look-at-games-page --}}
+          <div class="overlap-group-wrapper">
+            <button id="browseGamesWpp" class="text-wrapper-4" type="button">Browse Games</button>
+          </div>
+
+          {{!-- BUTTON: "New User"
+          Route: Link to new-user-page --}}
+          <div class="primary-button">
+            <button id="newuserWpp" class="newUser" type="button">New User?</button>
+          </div>
+
+          {{!-- BUTTON: "Login"
+          Route: Link to user-profile-page, App.get() from db --}}
+          <button id="loginWpp" class="text-wrapper-5" type="submit">Login</button>
+
+
+          {{!-- BUTTON: "Reset PW"
+          Route: Link to reset password page
+          --}}
+          <button id="resetpwWpp" class="text-wrapper-6" type="button">Reset Password</button>
+
         </form>
-        {{!-- BUTTON: "Browse Games"
-        Route: Link to look-at-games-page --}}
-        <div class="overlap-group-wrapper">
-          <button id="browseGamesWpp" class="text-wrapper-4" type="button">Browse Games</button>
-        </div>
-
-        {{!-- BUTTON: "New User"
-        Route: Link to new-user-page --}}
-        <div class="primary-button">
-          <button id="newuserWpp" class="newUser" type="button">New User?</button>
-        </div>
-
-        {{!-- BUTTON: "Login"
-        Route: Link to user-profile-page, App.get() from db --}}
-        <button id="loginWpp" class="text-wrapper-5" type="button">Login</button>
-
-
-        {{!-- BUTTON: "Reset PW"
-        Route: Link to reset password page
-        --}}
-        <button id="resetpwWpp" class="text-wrapper-6" type="button">Reset Password</button>
-
         {{!-- BUTTON: "Play"
         Route: Link to look-at-games-page + app.get() (prompt asking if they'd like to play current game selected or
         browse games)

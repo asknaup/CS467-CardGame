@@ -3,6 +3,7 @@
 const express = require('express');             // Commonjs standard
 const exphbs = require('express-handlebars');
 const session = require('express-session');     // Session control to save variables once a user logs in
+// const bcrypt = require('bcrypt');               // Encryption
 const app = express();                          // Routing 
 const bodyParser = require('body-parser');
 const port = 3000;
@@ -38,7 +39,7 @@ ROUTES
 */
 
 app.get('/current-deck-page/index', (req, res) => {
-  res.render('current-deck-page/index')
+  res.render('currentDeck')
 });
 
 app.get('/', (req, res) => {
@@ -48,7 +49,7 @@ app.get('/', (req, res) => {
 app.get('/user-profile-page/index', async (req, res) => {
   const val = await dbFunc.getUserProfileInfo(req.body.newUserName, req.body.inputNewPassword)
   console.log(val.user_id);
-  res.render('user-profile-page/index', {
+  res.render('userProfile', {
     user_id: val
   })
 });
@@ -62,19 +63,19 @@ app.get('/lookatGames', (req, res) => {
 });
 
 app.get('/new-user-page/index', (req, res) => {
-  res.render('new-user-page/index')
+  res.render('newUser')
 });
 
 app.get('/reset-password-page/index', (req, res) => {
-  res.render('reset-password-page/index')
+  res.render('resetPW')
 });
 
 app.get('/game-play-page/index', (req, res) => {
-  res.render('game-play-page/index')
+  res.render('gamePlayPage')
 });
 
 app.get('/generate-card-page/index', (req, res) => {
-  res.render('generate-card-page/index')
+  res.render('cardGenPage')
 });
 
 app.listen(port, () => {
@@ -82,20 +83,6 @@ app.listen(port, () => {
 });
 
 // POST ROUTES 
-// app.post('/user-profile-page/index', async (req, res) => {
-//   try {
-//     await dbFunc.insertNewUserIntoDB(req.body.inputUserName, req.body.inputNewPassword, req.body.inputEmail);
-//     const user_id = await dbFunc.getUserId(req.body.inputUserName, req.body.inputNewPassword);
-//     const val = await dbFunc.getUserProfileInfo(user_id[0].user_id);
-//     res.render('user-profile-page/index', {
-//       user_id: req.body.inputUserName, game_count: val[0].game_count,
-//       wins: val[0].wins, losses: val[0].losses
-//     });
-//   } catch (err) {
-//     res.send(`Something went wrong : (${err}`);
-//   }
-// });
-
 app.post('/user-profile-page/index', async (req, res) => {
   try {
     const user_id = await dbFunc.insertNewUser(req.body.inputUserName, req.body.inputNewPassword, req.body.inputEmail);
@@ -106,17 +93,32 @@ app.post('/user-profile-page/index', async (req, res) => {
       req.session.user = {
         userId: user_id,
         username: req.body.inputUserName,
-        game_count: userProfile[0].game_count,
+        gameCount: userProfile[0].game_count,
         wins: userProfile[0].wins,
         losses: userProfile[0].losses
       };
       console.log(req.session.user);
     }
     
-    res.render('user-profile-page/index', {
+    res.render('userProfile', {
       user_id: req.body.inputUserName, game_count: userProfile[0].game_count,
       wins: userProfile[0].wins, losses: userProfile[0].losses
     });
+  } catch (err) {
+    res.send(`Something went wrong : (${err})`);
+  }
+});
+
+app.post('/login', async (req, res) => {
+  try {
+    const username = req.body.usernameWpp;
+    const enteredPassword = req.body.passwordWpp;
+
+    const user = await dbFunc.authenticateUser(username, enteredPassword);
+    console.log('Passwords Match:', user ? 'Yes' : 'No');
+
+    console.log(user);
+
   } catch (err) {
     res.send(`Something went wrong : (${err})`);
   }
@@ -126,7 +128,7 @@ app.post('/generate-card-page/index', (req, res) => {
   try {
     const stuff = cardGen.generateAiForCard(req.body.inputAiImage);
     console.log(stuff[0], stuff[1]);
-    res.render('generate-card-page/index', {
+    res.render('cardGenPage', {
       animal: stuff[1],
       attr: stuff[2]
     });
