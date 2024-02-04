@@ -82,15 +82,15 @@ app.get('/newUser', (req, res) => {
   res.render('newUser')
 });
 
-app.get('/resetPassword', (req, res) => {
+app.get('/resetPW', (req, res) => {
   res.render('resetPW')
 });
 
-app.get('/playGame', (req, res) => {
+app.get('/gamePlayPage', (req, res) => {
   res.render('gamePlayPage')
 });
 
-app.get('/generateCard', (req, res) => {
+app.get('/cardGenPage', (req, res) => {
   res.render('cardGenPage')
 });
 
