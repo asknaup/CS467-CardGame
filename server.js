@@ -45,11 +45,27 @@ app.get('/', (req, res) => {
   res.render('welcomePagePortal')
 });
 
+app.get('/welcomePagePortal', (req, res) => {
+  res.render('welcomePagePortal');
+});
+
 app.get('/user-profile-page/index', async (req, res) => {
     const val = await dbFunc.getUserProfileInfo(req.body.inputUserName, req.body.inputNewPassword)
     res.render('user-profile-page/index', {
     user_id: val
   })
+});
+
+app.get('/userProfile', async (req, res) => {
+  /// ERROR HANDLING IF USER NOT IN DB
+  const val = await dbFunc.getUserId(req.body.inputUserName, req.body.inputNewPassword)
+  console.log(val);
+  const more = await dbFunc.getUserProfileInfo(val)
+  console.log(val[0]);
+  res.render('userProfile', {
+  user_id: val,
+  statusbar: more
+})
 });
 
 app.get('/gameGenPage', (req, res) => {
@@ -60,19 +76,24 @@ app.get('/lookatGames', (req, res) => {
   res.render('lookatGames')
 });
 
-app.get('/new-user-page/index', (req, res) => {
-  res.render('newUser')
-});
-
-app.get('/reset-password-page/index', (req, res) => {
+app.get('/resetPW', (req, res) => {
+  /// User_id / Password needed
   res.render('resetPW')
 });
 
-app.get('/game-play-page/index', (req, res) => {
+app.get('/newUserPage', (req, res) => {
+  res.render('newUser')
+});
+
+app.get('/resetPasswordPage', (req, res) => {
+  res.render('resetPW')
+});
+
+app.get('/gamePlayPage', (req, res) => {
   res.render('gamePlayPage')
 });
 
-app.get('/generate-card-page/index', (req, res) => {
+app.get('/generateCardPage', (req, res) => {
   res.render('cardGenPage')
 });
 
@@ -95,7 +116,7 @@ app.listen(port, () => {
 //   }
 // });
 
-app.post('/user-profile-page/index', async (req, res) => {
+app.post('/userProfile', async (req, res) => {
   try {
     const user_id = await dbFunc.insertNewUser(req.body.inputUserName, req.body.inputNewPassword, req.body.inputEmail);
     const userProfile = await dbFunc.getUserProfileInfo(user_id);
@@ -112,7 +133,7 @@ app.post('/user-profile-page/index', async (req, res) => {
       console.log(req.session.user);
     }
     
-    res.render('user-profile-page/index', {
+    res.render('userProfile', {
       user_id: req.body.inputUserName, game_count: userProfile[0].game_count,
       wins: userProfile[0].wins, losses: userProfile[0].losses
     });
@@ -121,11 +142,11 @@ app.post('/user-profile-page/index', async (req, res) => {
   }
 });
 
-app.post('/generate-card-page/index', (req, res) => {
+app.post('/generateCardPage', (req, res) => {
   try {
     const stuff = cardGen.generateAiForCard(req.body.inputAiImage);
     console.log(stuff[0], stuff[1]);
-    res.render('generate-card-page/index', {
+    res.render('generateCardPage/index', {
       animal: stuff[1],
       attr: stuff[2]
     });
