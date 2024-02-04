@@ -41,7 +41,7 @@ app.get('/current-deck-page/index', (req, res) => {
   res.render('current-deck-page/index')
 });
 
-app.get('/', (req, res) => {
+app.get('/welcomePagePortal', (req, res) => {
   res.render('welcomePagePortal')
 });
 
