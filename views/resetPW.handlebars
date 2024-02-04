@@ -6,74 +6,32 @@
     <link rel="stylesheet" href="/reset-password-page/style.css" />
   </head>
   <body>
-    <div class="base-layout">
-        <div class="overlap-a">
-            <div class="top-bar"></div>
-            <div class="background"></div>
-          <p class="application-title">Online Trading Card Game Maker</p>
-        </div> <!-- class="overlap-a" -->
-        
-        {{!-- BUTTON: "Play"
-              Route: Link to look-at-games-page + app.get() (prompt asking if they'd like to play current game selected
-              or
-              browse games)
-              --}}
-        <button id="play-button-ggp" class="play-menu-button" type="button">Play</button>
-
-        {{!-- BUTTON: "Trade"
-              Route: Link to trade-page (Need to create)
-              --}}
-        <button id="trade-button-ggp" class="trade-menu-button" type="button">Trade</button>
-
-        {{!-- BUTTON: "Make"
-              Route: Link to game-generation-page--}}
-        <button id="make-button-ggp" class="make-menu-button" type="button">Make</button>
-
-        {{!-- BUTTON: "Collect"
-              Route: Link to collect-page (Need to create) --}}
-        <button id="collect-button-ggp" class="collect-menu-button" type="button">Collect</button>
-         <img class="user-logo" src="img/group-2.png" />
-    </div> <!-- class="base-layout -->
-
-
     <div class="reset-password-page">
         <h1 class="reset-password-title">
             Reset Password
         </h1>
        <div class="reset-password-div">
-          {{!-- INPUT: "Reset Password Form Info"
-          Route: app.post() to db
-          --}}
+          {{!-- INPUT: "Reset Password Form Info" Route: app.post() to db --}}
           <form class="reset-password-form" method="POST" action="">
-            <div class="text-wrapper-2">
-                <label class="label-username" for="input-username">
-                   Username
-                  <input type="text" name="input-username" id="inputUserName">
-                </label>
-            </div>
-            <div class="text-wrapper-3">
-                <label class="label-new-password" for="input-new-password">
-                   New Password
-                  <input type="text" name="input-new-password" id="inputNewPassword">
-                </label>
-            </div>
-            <div class="text-wrapper-4">
-                <label class="label-repeat-password" for="repeat-new-password"> 
-                  Repeat New Password
-                  <input type="text" name="input-repeat-password" id="inputRepeatPassword">
-                </label>
-            </div>
-            <div class="text-wrapper-5">
-                <label class="label-email" for="input-email">
-                   Enter Email
-                  <input type="text" name="input-email" id="inputEmail">
-                </label>
-            </div>
-            <div>
-              <input id="submit" type="submit">
-            </div>
-          </form> <!-- end of form -->
-      </div> <!-- class="reset-password-div" -->
+            <label class="label-username" for="input-username">
+                Username
+              <input type="text" name="input-username" id="inputUserName">
+            </label>
+            <label class="label-new-password" for="input-new-password">
+                New Password
+              <input type="text" name="input-new-password" id="inputNewPassword">
+            </label>
+            <label class="label-repeat-password" for="repeat-new-password"> 
+              Repeat New Password
+              <input type="text" name="input-repeat-password" id="inputRepeatPassword">
+            </label>
+            <label class="label-email" for="input-email">
+                Enter Email
+              <input type="text" name="input-email" id="inputEmail">
+            </label>
+            <input id="submit" type="submit">
+          </form> <!-- end of form -->    
+        </div>      
     </div> <!-- class="reset-password-page" -->
   </body>
 </html>
