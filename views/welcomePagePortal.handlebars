@@ -1,33 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, intial-scale=1.0">
-    <title>Welcome Page</title>
-    <link rel="stylesheet" href="styles.css">
-  </head>
-  <body>
-    <div>
-      <div>
-        <h1>Online Trading Card Game Maker</h1>
-        <div id="input-form">
-          <form class="loginUser" method="POST" action="/login">
-            <label for="usernameWpp">Username:</label>
-            <input id="usernameWpp" name="usernameWpp" type="text" placeholder="Username">
 
-            <label for="passwordWpp">Password:</label>
-            <input id="passwordWpp" name="passwordWpp" type="text" placeholder="Password">
-            <button id="loginWpp" class="text-wrapper-5" type="submit">Login</button>
-          </form>
-        </div>
-        <button id="newuserWpp" class="newUser" type="button">New User?</button>
-        <button id="browseGamesWpp" type="button">Browse Games</button>
-        <br>
-        <button id="play-button-wpp" type="button">Play</button>
-        <button id="trade-button-wpp" type="button">Trade</button>
-        <button id="make-button-wpp" type="button">Make</button>
-        <button id="collect-button-wpp" type="button">Collect</button>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, intial-scale=1.0">
+  <title>Welcome Page</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div>
+    <div>
+      <h1>Online Trading Card Game Maker</h1>
+      <div id="input-form">
+        <h2>Login</h2>
+        <form class="loginUser" method="POST" action="/login">
+          <label for="usernameWpp">Username:</label>
+          <input id="usernameWpp" name="usernameWpp" type="text" placeholder="Username">
+          <label for="passwordWpp">Password:</label>
+          <input id="passwordWpp" name="passwordWpp" type="text" placeholder="Password">
+          {{#if error}}
+          <p id="error">{{error}}</p>
+          {{/if}}
+          <button id="loginWpp" type="submit">Login</button>
+        </form>
       </div>
+      <button id="newuserWpp" class="newUser" type="button">New User?</button>
+      <button id="browseGamesWpp" type="button">Browse Games</button>
+      <br>
+      <button id="play-button-wpp" type="button">Play</button>
+      <button id="trade-button-wpp" type="button">Trade</button>
+      <button id="make-button-wpp" type="button">Make</button>
+      <button id="collect-button-wpp" type="button">Collect</button>
     </div>
-  </body> 
+  </div>
+</body>
+
 </html>

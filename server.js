@@ -46,18 +46,25 @@ app.get('/welcomePagePortal', (req, res) => {
   res.render('welcomePagePortal')
 });
 
-app.get('/welcomePagePortal', (req, res) => {
-  res.render('welcomePagePortal');
-});
+// Will change based on user logged in
+app.get('/userProfile/:username', async (req, res) => {
+  const user = req.session.user;
+  console.log('userProdile', user);
+  if (user) {
+    const val = await dbFunc.getUserProfile(user.userId);
+    console.log(val[0]);
 
-app.get('/userProfile', async (req, res) => {
-  /* ERROR HANDLING IF USER NOT IN DB
-  const val = await dbFunc.getUserId(req.body.inputUserName, req.body.inputNewPassword)
-  console.log(val);
-  const more = await dbFunc.getUserProfileInfo(val)
-  console.log(val[0]); */
-  res.render('userProfile', {
-})});
+    res.render('userProfile',{
+      username: user.username,
+      gameCount: val[0].game_count,
+      wl: 0
+    })
+  }
+  // res.render('userProfile')
+  // res.render('userProfile', {
+  //   user_id: val
+  // })
+});
 
 app.get('/gameGenPage', (req, res) => {
   res.render('gameGenPage')
@@ -71,34 +78,41 @@ app.get('/lookatGames', (req, res) => {
   res.render('lookatGames')
 });
 
-app.get('/resetPW', (req, res) => {
-  /// User_id / Password needed
-  res.render('resetPW')
-});
-
-app.get('/newUserPage', (req, res) => {
+app.get('/newUser', (req, res) => {
   res.render('newUser')
 });
 
-app.get('/resetPasswordPage', (req, res) => {
+app.get('/resetPassword', (req, res) => {
   res.render('resetPW')
 });
 
-app.get('/gamePlayPage', (req, res) => {
+app.get('/playGame', (req, res) => {
   res.render('gamePlayPage')
 });
 
-app.get('/cardGenPage', (req, res) => {
+app.get('/generateCard', (req, res) => {
   res.render('cardGenPage')
 });
+
+// Log out
+app.get('/logout', (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      console.error('Error destroying session:', err);
+      res.redirect('/');
+    } else {
+      // Redirect to welcome page
+      res.redirect('/');
+    }
+  })
+})
 
 app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
 });
 
-// POST ROUTES
-
-app.post('/userProfile', async (req, res) => {
+// POST ROUTES 
+app.post('/newUser', async (req, res) => {
   try {
     const user_id = await dbFunc.insertNewUser(req.body.inputUserName, req.body.inputNewPassword, req.body.inputEmail);
     const userProfile = await dbFunc.getUserProfileInfo(user_id);
@@ -124,19 +138,45 @@ app.post('/userProfile', async (req, res) => {
   }
 });
 
-app.post('/generateCardPage', (req, res) => {
+app.post('/login', async (req, res) => {
   try {
-    const stuff = cardGen.generateAiForCard(req.body.inputAiImage);
-    console.log(stuff[0], stuff[1]);
-    res.render('generateCardPage/index', {
-      animal: stuff[1],
-      attr: stuff[2]
-    });
+    const username = req.body.usernameWpp;
+    const enteredPassword = req.body.passwordWpp;
+
+    const user = await dbFunc.authenticateUser(username, enteredPassword);
+
+    if (user) {
+      // If true, return userId and username
+      req.session.user = {
+        userId: user.userId,
+        username: user.username
+      };
+
+      res.redirect('userProfile/' + req.session.user.username);
+    } else {
+      // Authentication failed, return results stating so
+      res.render('welcomePagePortal', {
+        error: 'Invalid credentials. Please try again.'
+      });
+    }
   } catch (err) {
-    console.error('Error:', err);
-    res.send(`Something went wrong: ${err}`);
+    res.send(`Something went wrong : (${err})`);
   }
 });
+
+// app.post('/generate-card-page/index', (req, res) => {
+//   try {
+//     const stuff = cardGen.generateAiForCard(req.body.inputAiImage);
+//     console.log(stuff[0], stuff[1]);
+//     res.render('cardGenPage', {
+//       animal: stuff[1],
+//       attr: stuff[2]
+//     });
+//   } catch (err) {
+//     console.error('Error:', err);
+//     res.send(`Something went wrong: ${err}`);
+//   }
+// });
 
 /* app.post('/gameGenerationPageAction', async(req, res) => {
   try { 

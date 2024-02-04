@@ -1,27 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <meta charset="utf-8" />
-  <link rel="stylesheet" href="global.css" />
+  <meta name="viewport" content="width=device-width, intial-scale=1.0">
+  <title>{{user.username}}'s Profile</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-  <div class="user-profile-page">
-    <div class="button-container">
-      {{!-- BUTTON: "Browse User Games" Route: Route: Link to Collection --> app.get() userGames filtering --}}
-      <button id="userGames" class="button" type="button">Browse User Games</button>
-      <button id="userDecks" class="button" type="button" style="margin-top: 1px;">Browse User Decks</button>
-      <button id="currentGame" class="button" type="button">Current Game</button>
-      <button id="currentDeck" class="button" type="button">Current Deck</button>
-    </div>
-
-    <div class="output-container">
-      {{!-- HANDLEBARS: "Stats" Route: App.get() to db--}}
-      <output id="gamesOwned" class="output-element">Games Owned: {{ user_id.game_count }}</output>
-      <output id="cardsOwned" class="output-element">Cards Owned: DB - HTML </output>
-      <output id="wlRatio" class="output-element">W/L Ratio: {{ user_id.wins }} / {{ user_id.losses }}</output>
-      <output id="userSince" class="output-element">User Since: DB - HTML </output>
+  <div>
+    <h1>{{username}}'s Profile</h1>
+    <div>
+      <button id="userGames" type="button">Browse User Games</button>
+      <button id="userDecks" type="button">Browse User Decks</button>
+      <button id="currentGame" type="button">Current Game</button>
+      <button id="currentDeck" type="button">Current Deck</button>
+      <br>
+      <output>Cards Owned: {{username}}</output> {{!-- TODO --}}
+      <output>W/L Ratio: {{wl}}</output>
+      <output>User Since: {{username}}</output> {{!-- TODO --}}
     </div>
   </div>
 </body>
