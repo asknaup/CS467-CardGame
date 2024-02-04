@@ -39,8 +39,10 @@ button {
 }
 
 .navbar {
-  padding: 8px;
-  justify-content: right;
+  position: fixed;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 #error{
