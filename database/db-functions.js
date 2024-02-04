@@ -85,7 +85,7 @@ function authenticateUser(username, password){
             }
             
             const user = result[0];
-            
+
             // compare passwords 
             // const passwordsMatch = await bcrypt.compare(password, user.pwd);
             const passwordsMatch = password === user.pwd;
@@ -119,7 +119,7 @@ function getUserId(username, password) {
     });
 }
 
-function getUserProfileInfo(user_id) {
+function getUserProfile(user_id) {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT game_count, wins, losses FROM user_profile WHERE user_id = ?'
         const val = [user_id]
@@ -215,7 +215,7 @@ function insertNewGameIntoGames() {
 
 
 module.exports.insertNewUserIntoDB = insertNewUserIntoDB;
-module.exports.getUserProfileInfo = getUserProfileInfo;
+module.exports.getUserProfile = getUserProfile;
 module.exports.getUserId = getUserId;
 module.exports.insertNewGameIntoGames = insertNewGameIntoGames;
 module.exports.insertNewUser = insertNewUser;

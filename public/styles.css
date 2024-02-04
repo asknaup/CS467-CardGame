@@ -36,6 +36,10 @@ button {
     cursor: pointer;
 }
 
+#error{
+    color: red;
+}
+
 #input-form {
     max-width: 300px;
     margin: 20px auto;
