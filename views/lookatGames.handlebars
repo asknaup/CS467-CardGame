@@ -9,151 +9,48 @@
 
 <body>
   <div class="look-at-games-page">
-
     <div class="overlap-wrapper">
-
       <div class="overlap">
-
         <div class="menu-bar"></div>
-
         <div class="rectangle">
-
           <div class="display-container">
             <div class="box">
-              {{!-- HANDLEBARS: "gameName"
-              Route: App.get() from db
-              --}}
               <p id="gameName_1" class="box-attributes">Game Name</p>
-
-              {{!-- HANDLEBARS: "deckImage"
-              Route: App.get() from db
-              --}}
               <img id="deckImage_1" class="box-attributes" src="your_image_url.jpg" alt="Game Image"
                 style="margin-top: 100px;">
-
-              {{!-- BUTTON: "Rule Set"
-              Route: App.get() from db, pop-up
-              --}}
               <button id="ruleSet_1" class="box-attributes" style="margin-top: 200px;">Rule Set</button>
-
-              {{!-- HANDLEBARS: "deckName"
-              Route: App.get() from db
-              --}}
               <output class="box-attributes" style="margin-top: 50px;">Deck Name</output>
-
             </div>
-
             <div class="box">
-              {{!-- HANDLEBARS: "gameName"
-              Route: App.get() from db
-              --}}
               <p id="gameName_1" class="box-attributes">Game Name</p>
-
-              {{!-- HANDLEBARS: "deckImage"
-              Route: App.get() from db
-              --}}
               <img id="deckImage_1" class="box-attributes" src="your_image_url.jpg" alt="Game Image"
                 style="margin-top: 100px;">
-
-              {{!-- BUTTON: "Rule Set"
-              Route: App.get() from db, pop-up
-              --}}
               <button id="ruleSet_2" class="box-attributes" style="margin-top: 200px;">Rule Set</button>
-
-              {{!-- HANDLEBARS: "deckName"
-              Route: App.get() from db
-              --}}
               <output class="box-attributes" style="margin-top: 50px;">Deck Name</output>
-
             </div>
-
             <div class="box">
-              {{!-- HANDLEBARS: "gameName"
-              Route: App.get() from db
-              --}}
               <p id="gameName_1" class="box-attributes">Game Name</p>
-
-              {{!-- HANDLEBARS: "deckImage"
-              Route: App.get() from db
-              --}}
               <img id="deckImage_1" class="box-attributes" src="your_image_url.jpg" alt="Game Image"
                 style="margin-top: 100px;">
-
-              {{!-- BUTTON: "Rule Set"
-              Route: App.get() from db, pop-up
-              --}}
               <button id="ruleSet_3" class="box-attributes" style="margin-top: 200px;">Rule Set</button>
-
-              {{!-- HANDLEBARS: "deckName"
-              Route: App.get() from db
-              --}}
               <output class="box-attributes" style="margin-top: 50px;">Deck Name</output>
-
             </div>
           </div>
-
-          {{!-- BUTTON: "rightScroll"
-          Route: App.get() from db, loop next three
-          --}}
           <button id="deck-right-lagp" class="scroll" type="button">&#8592</button>
-
-          {{!-- BUTTON: "leftScroll"
-          Route: App.get() from db, loop last three
-          --}}
           <button id="deck-left-lagp" class="scroll" type="button" style="margin-left: 1400px;">&#8594</button>
-
-
         </div>
-
         <p class="text-wrapper">Online Trading Card Game Maker</p>
-
         <img class="img" src="img/group-2.png" />
-
         <div class="group-wrapper">
           <div class="group-2">
-
-            {{!-- BUTTON: "allGames"
-            Route: Link to look-at-games-page --}}
             <div class="overlap-group-wrapper">
               <button id="allGames" class="button" type="button">All Games</button>
             </div>
-
-            {{!-- BUTTON: "userGames"
-            Route: App.get() from db and filter according to user --}}
             <div class="div-wrapper">
-              <button id="userGames" class="button" type="button" style="margin-left: 100px;">User Games</button>
+              <button type="button">User Games</button>
             </div>
-
           </div>
         </div>
-
-        {{!-- BUTTON: "Play"
-        Route: Link to look-at-games-page + app.get() (prompt asking if they'd like to play current game selected or
-        browse games)
-        --}}
-        <button id="play-button-lagp" class="play-menu-button" type="button">Play</button>
-
-        {{!-- BUTTON: "Trade"
-        Route: Link to trade-page (Need to create)
-        --}}
-        <button id="trade-button-lagp" class="trade-menu-button" type="button">Trade</button>
-
-        {{!-- BUTTON: "Make"
-        Route: Link to game-generation-page
-        --}}
-        <button id="make-button-lagp" class="make-menu-button" type="button">Make</button>
-
-        {{!-- BUTTON: "Collect"
-        Route: Link to collect-page (Need to create)
-        --}}
-        <button id="collect-button-lagp" class="collect-menu-button" type="button">Collect</button>
-
-        {{!-- BUTTON: User Profile icon
-        Route: App.get() and link to user-profile-page
-        TO-DO: Reference global.css, consider using icon library and styling buttons accordingly
-        Route: Link to user-profile-page
-        --}}
-        <img id="user-button-lagp" class="user-icon" src="img/group-2.png" />
       </div>
     </div>
 

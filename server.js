@@ -20,10 +20,15 @@ app.use(session({
   secret: 'secret-key',
   resave: false,
   saveUninitialized: false
-}))
+}));
 
 app.engine('handlebars', exphbs.engine(
-  { extname: "hbs", defaultLayout: false, layoutsDir: "views/layouts/" }
+  {
+    extname: "handlebars",
+    defaultLayout: 'main',
+    layoutsDir: 'views',
+    partialDir: 'views/partials'
+  }
 ));
 
 app.set('view engine', 'handlebars');
@@ -38,32 +43,28 @@ app.use(express.static('public'));
 ROUTES
 */
 
-app.get('/current-deck-page/index', (req, res) => {
-  res.render('currentDeck')
-});
-
 app.get('/', (req, res) => {
-  res.render('welcomePagePortal')
+  res.render('welcomePagePortal', { showLogoutButton: false })
 });
 
 // Will change based on user logged in
 app.get('/userProfile/:username', async (req, res) => {
   const user = req.session.user;
-  console.log('userProdile', user);
+
   if (user) {
     const val = await dbFunc.getUserProfile(user.userId);
-    console.log(val[0]);
 
-    res.render('userProfile',{
+    res.render('userProfile', {
       username: user.username,
       gameCount: val[0].game_count,
-      wl: 0
+      wl: 0,
+      showLogoutButton: true
     })
   }
-  // res.render('userProfile')
-  // res.render('userProfile', {
-  //   user_id: val
-  // })
+});
+
+app.get('/currentDeck', (req, res) => {
+  res.render('currentDeck')
 });
 
 app.get('/gameGenPage', (req, res) => {
@@ -124,10 +125,8 @@ app.post('/newUser', async (req, res) => {
       };
       console.log(req.session.user);
     }
-    
-    res.render('userProfile', {
-      user_id: req.body.inputUserName, game_count: userProfile[0].game_count,
-      wins: userProfile[0].wins, losses: userProfile[0].losses
+
+    res.redirect('userProfile', {
     });
   } catch (err) {
     res.send(`Something went wrong : (${err})`);
@@ -148,7 +147,7 @@ app.post('/login', async (req, res) => {
         username: user.username
       };
 
-      res.redirect('userProfile/' + req.session.user.username);
+      res.redirect('/userProfile/' + req.session.user.username);
     } else {
       // Authentication failed, return results stating so
       res.render('welcomePagePortal', {
