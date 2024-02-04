@@ -5,11 +5,12 @@ const exphbs = require('express-handlebars');
 const session = require('express-session');     // Session control to save variables once a user logs in
 // const bcrypt = require('bcrypt');               // Encryption
 const router = new require('express').Router();
-const app = express();                          // Routing 
 const bodyParser = require('body-parser');
-const port = 3000;
 const path = require('path');
 const fs = require('fs');
+
+const app = express();                          // Routing 
+const port = 3000;
 
 const db = require('./database/db-connector');
 const dbFunc = require('./database/db-functions')
@@ -49,21 +50,19 @@ app.get('/', (req, res) => {
   res.render('welcomePagePortal', { showLogoutButton: false })
 });
 
+app.get('/welcomePagePortal', (req, res) => {
+  res.render('welcomePagePortal', { showLogoutButton: false })
+});
+
 // Will change based on user logged in
 app.get('/userProfile/:username', async (req, res) => {
   const user = req.session.user;
-
   if (user) {
     const val = await dbFunc.getUserProfile(user.userId);
-
     res.render('userProfile', {
-      username: user.username,
-      gameCount: val[0].game_count,
-      wl: 0,
-      showLogoutButton: true
-    })
-  }
-});
+      username: user.username, gameCount: val[0].game_count,
+      wl: 0, showLogoutButton: true
+    })}});
 
 app.get('/userDeck/:username', (req, res) => {
   res.render('currentDeck')
@@ -106,9 +105,7 @@ app.get('/logout', (req, res) => {
     } else {
       // Redirect to welcome page
       res.redirect('/');
-    }
-  })
-})
+    }})})
 
 app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
@@ -119,64 +116,46 @@ app.post('/newUser', async (req, res) => {
   try {
     const user_id = await dbFunc.insertNewUser(req.body.inputUserName, req.body.inputNewPassword, req.body.inputEmail);
     const userProfile = await dbFunc.getUserProfileInfo(user_id);
-
-    if (user_id) {
-      // save relevant user information in the session
+    if (user_id) {          // save relevant user information in the session
       req.session.user = {
-        userId: user_id,
-        username: req.body.inputUserName,
-        gameCount: userProfile[0].game_count,
-        wins: userProfile[0].wins,
-        losses: userProfile[0].losses
-      };
+        userId: user_id, username: req.body.inputUserName, gameCount: userProfile[0].game_count,
+        wins: userProfile[0].wins, losses: userProfile[0].losses };
       console.log(req.session.user);
-    }
-
-    res.redirect('userProfile', {
+    } res.redirect('userProfile', {
     });
   } catch (err) {
     res.send(`Something went wrong : (${err})`);
-  }
-});
+  }});
 
+  // Is this a post route? Get?
 app.post('/login', async (req, res) => {
   try {
     const username = req.body.usernameWpp;
     const enteredPassword = req.body.passwordWpp;
-
     const user = await dbFunc.authenticateUser(username, enteredPassword);
-
-    if (user) {
-      // If true, return userId and username
-      req.session.user = {
-        userId: user.userId,
-        username: user.username
-      };
+    if (user) {             // If true, return userId and username
+      req.session.user = {userId: user.userId, username: user.username};
       res.redirect('/userProfile/' + req.session.user.username);
-    } else {
-      // Authentication failed, return results stating so
+    } else {                // Authentication failed, return results stating so
       res.render('welcomePagePortal', {
         error: 'Invalid credentials. Please try again.'
-      });
-    }
+      }); }
   } catch (err) {
     res.send(`Something went wrong: ${err}`);
-  }
-});
+}});
 
-// app.post('/generate-card-page/index', (req, res) => {
-//   try {
-//     const stuff = cardGen.generateAiForCard(req.body.inputAiImage);
-//     console.log(stuff[0], stuff[1]);
-//     res.render('cardGenPage', {
-//       animal: stuff[1],
-//       attr: stuff[2]
-//     });
-//   } catch (err) {
-//     console.error('Error:', err);
-//     res.send(`Something went wrong: ${err}`);
-//   }
-// });
+app.post('/cardGenPage', (req, res) => {
+  try {
+     const stuff = cardGen.generateAiForCard(req.body.inputAiImage);
+     console.log(stuff[0], stuff[1]);
+    res.render('cardGenPage', {
+       animal: stuff[1],
+      attr: stuff[2]
+     });
+   } catch (err) {
+     console.error('Error:', err);
+     res.send(`Something went wrong: ${err}`);
+   } });
 
 /* app.post('/gameGenerationPageAction', async(req, res) => {
   try { 
