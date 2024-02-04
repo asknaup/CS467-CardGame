@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="public/global.css">
+    {{{head}}}
+</head>
+
+<body>
+    
+    <h1>Online Trading Card Game Maker</h1>
+
+    <header class="navbar">
+        <div>
+        {{#if showLogoutButton}}
+        {{> logoutButton}} <!-- Include the logout button partial -->
+        {{/if}}
+        </div>
+        
+        <div>
+            <button type="button">Play</button>
+            <button type="button">Trade</button>
+            <button type="button">Make</button>
+            <button type="button">Collect</button>
+
+        </div>
+    </header>
+
+    <main>
+        {{{body}}} <!-- This is where the content of each specific view will be injected -->
+    </main>
+
+    <footer>
+        {{{footer}}}<!-- footer content -->
+    </footer>
+
+    <!-- Add your script includes here -->
+</body>
+
+</html>

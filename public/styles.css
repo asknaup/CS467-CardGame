@@ -1,0 +1,9 @@
+/* Page-Specific CSS Code */
+
+/* main.handlebars */
+.bottomButtonsMain {
+    position: fixed;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+}
