@@ -83,7 +83,7 @@ app.listen(port, () => {
 });
 
 // POST ROUTES 
-app.post('/user-profile-page/index', async (req, res) => {
+app.post('/{req.session.user.username}', async (req, res) => {
   try {
     const user_id = await dbFunc.insertNewUser(req.body.inputUserName, req.body.inputNewPassword, req.body.inputEmail);
     const userProfile = await dbFunc.getUserProfileInfo(user_id);
