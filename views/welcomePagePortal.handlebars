@@ -1,37 +1,33 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <link rel="stylesheet" href="global.css" />
-</head>
-<body>
-  <div class="welcomePagePortal">
-        <div class="hello-please-log-in">Hello!<br />Please log-in</div>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, intial-scale=1.0">
+    <title>Welcome Page</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div>
+      <div>
+        <h1>Online Trading Card Game Maker</h1>
+        <div id="input-form">
+          <form class="loginUser" method="POST" action="/login">
+            <label for="usernameWpp">Username:</label>
+            <input id="usernameWpp" name="usernameWpp" type="text" placeholder="Username">
 
-        <form action="userProfile" method="'get">
-          <div class="group-2">
-            {{!-- INPUT: "Username" Route: App.put() to db, App.get() from db to verify --}}
-            <input id="inputUserName" class="rectangle-3" type="text" placeholder="Username" style="margin-top: 10px;">
-
-            {{!-- INPUT: "Password" Route: App.put() to db, App.get() from db to verify --}}
-            <input id="inputNewPassword" class="rectangle-4" type="text" placeholder="Password" style="margin-top: 10px;">
-          </div>        
-          {{!-- BUTTON: "New User" Route: Link to new-user-page --}}
-          <button id="loginWpp" class="text-wrapper-5" type="submit">Login</button>
-    
-          {{!-- BUTTON: "Login"
-          Route: Link to user-profile-page, App.get() from db --}}
-          <button id="newuserWpp" class="newUser" type="button">New User?</button>
-
-          {{!-- BUTTON: "Reset PW" Route: Link to reset password page --}}
-          <button id="resetpwWpp" class="text-wrapper-6" type="button">Reset Password</button>
-
-        </form>
-        {{!-- BUTTON: "Browse Games" Route: Link to look-at-games-page --}}
-        <button id="browseGamesWpp" class="text-wrapper-4" type="button">Browse Games</button>
-
-          <img id="user-button-wpp" class="user-icon" src="img/group-2.png" />
-  </div>
-</body>
-
+            <label for="passwordWpp">Password:</label>
+            <input id="passwordWpp" name="passwordWpp" type="text" placeholder="Password">
+            <button id="loginWpp" class="text-wrapper-5" type="submit">Login</button>
+          </form>
+        </div>
+        <button id="newuserWpp" class="newUser" type="button">New User?</button>
+        <button id="browseGamesWpp" type="button">Browse Games</button>
+        <br>
+        <button id="play-button-wpp" type="button">Play</button>
+        <button id="trade-button-wpp" type="button">Trade</button>
+        <button id="make-button-wpp" type="button">Make</button>
+        <button id="collect-button-wpp" type="button">Collect</button>
+      </div>
+    </div>
+  </body> 
 </html>
