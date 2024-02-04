@@ -9,6 +9,7 @@ body {
   align-items: center;
   height: 100vh;
   background-color: #f4f4f4;
+  flex-direction: column;
 }
 
 .container {
@@ -39,13 +40,13 @@ button {
 }
 
 .navbar {
-  position: fixed;
-  top: 50px;
+  position: sticky;
+  top: 150px;
   left: 50%;
   transform: translateX(-50%);
 }
 
-#error{
+#error {
   color: red;
 }
 
@@ -56,4 +57,30 @@ button {
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+h1 {
+  margin-bottom: 0;
 }

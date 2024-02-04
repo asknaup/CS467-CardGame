@@ -75,8 +75,8 @@ app.get('/currentDeck', (req, res) => {
   res.render('currentDeck')
 });
 
-app.get('/lookatGames', (req, res) => {
-  res.render('lookatGames')
+app.get('/lookAtGames', (req, res) => {
+  res.render('lookAtGames')
 });
 
 app.get('/newUser', (req, res) => {

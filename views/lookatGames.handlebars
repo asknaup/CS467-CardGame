@@ -8,16 +8,60 @@
 
 <body>
   <div class="look-at-games-page">
-    <div class="box">
-      <p id="gameName_1" class="box-attributes">Game Name</p>
-      <img id="deckImage_1" class="box-attributes" src="your_image_url.jpg" alt="Game Image" style="margin-top: 100px;">
-      <button id="ruleSet_1" class="box-attributes" style="margin-top: 200px;">Rule Set</button>
-      <output class="box-attributes" style="margin-top: 50px;">Deck Name</output>
-    </div>
-    <p class="text-wrapper">Online Trading Card Game Maker</p>
-    <img class="img" src="img/group-2.png" />
+    <title>Look At Games</title>
+
+    <table>
+      <thead>
+        <tr>
+        </tr>
+      </thead>
+      <tbody id="matrixBody">
+        <!-- Matrix content will be dynamically added here -->
+      </tbody>
+    </table>
+
+    <script>
+      // Example JavaScript to dynamically populate the matrix
+      document.addEventListener("DOMContentLoaded", function () {
+        // Replace this with the actual number of rows you want
+        const numberOfRows = 5;
+
+        // Get the matrix body element
+        const matrixBody = document.getElementById("matrixBody");
+
+        // Loop to create rows
+        for (let i = 1; i <= numberOfRows; i++) {
+          // Create a new row
+          const row = document.createElement("tr");
+
+          // Create cells for each column
+          for (let j = 1; j <= 4; j++) {
+            const cell = document.createElement("td");
+
+            // Add text content
+            const textContent = document.createTextNode(`Row ${i}, Column ${j}`);
+            cell.appendChild(textContent);
+
+
+            // Add image element
+            const img = document.createElement("img");
+            img.src = `https://placekitten.com/100/100?image=${i * j}`; // Example image URL
+            cell.appendChild(img);
+
+            // Append the cell to the row
+            row.appendChild(cell);
+          }
+
+          // Append the row to the matrix body
+          matrixBody.appendChild(row);
+        }
+      });
+    </script>
+
   </div>
+
   </div>
+
 </body>
 
 </html>
