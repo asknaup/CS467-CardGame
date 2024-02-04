@@ -38,6 +38,11 @@ button {
   cursor: pointer;
 }
 
+.navbar {
+  padding: 8px;
+  justify-content: right;
+}
+
 #error{
   color: red;
 }
