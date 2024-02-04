@@ -80,16 +80,16 @@
   position: relative;
   display: block;
   width: 12em;
-  margin-right: .5em;
-  padding-top: 1.5em;
+  margin-top: 15px;
+  margin-bottom: 5px;
 }
 
 
-.new-user-div #newUserName {
+.new-user-div #inputUserName {
   display: block;
-  position: relative;
-  top: .5em;
   width: 350px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .new-user-div .label-new-password {
@@ -103,9 +103,9 @@
 
 .new-user-div #inputNewPassword {
   display: block;
-  position: relative;
-  top: .5em;
   width: 350px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .new-user-div .label-repeat-password {
@@ -119,9 +119,9 @@
 
 .new-user-div #inputRepeatPassword {
   display: block;
-  position: relative;
-  top: .5em;
   width: 350px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .new-user-div .label-email {
@@ -135,9 +135,9 @@
 
 .new-user-div #inputEmail {
   display: block;
-  position: relative;
-  top: .5em;
   width: 350px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .new-user-div #submit{
