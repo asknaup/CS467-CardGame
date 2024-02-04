@@ -3,6 +3,7 @@
 const express = require('express');             // Commonjs standard
 const exphbs = require('express-handlebars');
 const session = require('express-session');     // Session control to save variables once a user logs in
+// const bcrypt = require('bcrypt');               // Encryption
 const app = express();                          // Routing 
 const bodyParser = require('body-parser');
 const port = 3000;
@@ -38,65 +39,80 @@ ROUTES
 */
 
 app.get('/current-deck-page/index', (req, res) => {
-  res.render('current-deck-page/index')
+  res.render('currentDeck')
 });
 
-app.get('/', (req, res) => {
+app.get('/welcomePagePortal', (req, res) => {
   res.render('welcomePagePortal')
 });
 
-app.get('/user-profile-page/index', async (req, res) => {
-  const val = await dbFunc.getUserProfileInfo(req.body.newUserName, req.body.inputNewPassword)
-  console.log(val.user_id);
-  res.render('user-profile-page/index', {
-    user_id: val
-  })
+// Will change based on user logged in
+app.get('/userProfile/:username', async (req, res) => {
+  const user = req.session.user;
+  console.log('userProdile', user);
+  if (user) {
+    const val = await dbFunc.getUserProfile(user.userId);
+    console.log(val[0]);
+
+    res.render('userProfile',{
+      username: user.username,
+      gameCount: val[0].game_count,
+      wl: 0
+    })
+  }
+  // res.render('userProfile')
+  // res.render('userProfile', {
+  //   user_id: val
+  // })
 });
 
 app.get('/gameGenPage', (req, res) => {
   res.render('gameGenPage')
 });
 
+app.get('/currentDeck', (req, res) => {
+  res.render('currentDeck')
+});
+
 app.get('/lookatGames', (req, res) => {
   res.render('lookatGames')
 });
 
-app.get('/new-user-page/index', (req, res) => {
+app.get('/newUser', (req, res) => {
   res.render('newUser')
 });
 
-app.get('/reset-password-page/index', (req, res) => {
+app.get('/resetPassword', (req, res) => {
   res.render('resetPW')
 });
 
-app.get('/game-play-page/index', (req, res) => {
+app.get('/playGame', (req, res) => {
   res.render('gamePlayPage')
 });
 
-app.get('/generate-card-page/index', (req, res) => {
+app.get('/generateCard', (req, res) => {
   res.render('cardGenPage')
 });
+
+// Log out
+app.get('/logout', (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      console.error('Error destroying session:', err);
+      res.redirect('/');
+    } else {
+      // Redirect to welcome page
+      res.redirect('/');
+    }
+  })
+})
 
 app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
 });
 
 // POST ROUTES 
-// app.post('/user-profile-page/index', async (req, res) => {
-//   try {
-//     await dbFunc.insertNewUserIntoDB(req.body.inputUserName, req.body.inputNewPassword, req.body.inputEmail);
-//     const user_id = await dbFunc.getUserId(req.body.inputUserName, req.body.inputNewPassword);
-//     const val = await dbFunc.getUserProfileInfo(user_id[0].user_id);
-//     res.render('user-profile-page/index', {
-//       user_id: req.body.inputUserName, game_count: val[0].game_count,
-//       wins: val[0].wins, losses: val[0].losses
-//     });
-//   } catch (err) {
-//     res.send(`Something went wrong : (${err}`);
-//   }
-// });
-
-app.post('/user-profile-page/index', async (req, res) => {
+app.post('/newUser', async (req, res) => {
   try {
     const user_id = await dbFunc.insertNewUser(req.body.inputUserName, req.body.inputNewPassword, req.body.inputEmail);
     const userProfile = await dbFunc.getUserProfileInfo(user_id);
@@ -106,14 +122,14 @@ app.post('/user-profile-page/index', async (req, res) => {
       req.session.user = {
         userId: user_id,
         username: req.body.inputUserName,
-        game_count: userProfile[0].game_count,
+        gameCount: userProfile[0].game_count,
         wins: userProfile[0].wins,
         losses: userProfile[0].losses
       };
       console.log(req.session.user);
     }
     
-    res.render('user-profile-page/index', {
+    res.render('userProfile', {
       user_id: req.body.inputUserName, game_count: userProfile[0].game_count,
       wins: userProfile[0].wins, losses: userProfile[0].losses
     });
@@ -122,19 +138,45 @@ app.post('/user-profile-page/index', async (req, res) => {
   }
 });
 
-app.post('/generate-card-page/index', (req, res) => {
+app.post('/login', async (req, res) => {
   try {
-    const stuff = cardGen.generateAiForCard(req.body.inputAiImage);
-    console.log(stuff[0], stuff[1]);
-    res.render('generate-card-page/index', {
-      animal: stuff[1],
-      attr: stuff[2]
-    });
+    const username = req.body.usernameWpp;
+    const enteredPassword = req.body.passwordWpp;
+
+    const user = await dbFunc.authenticateUser(username, enteredPassword);
+
+    if (user) {
+      // If true, return userId and username
+      req.session.user = {
+        userId: user.userId,
+        username: user.username
+      };
+
+      res.redirect('userProfile/' + req.session.user.username);
+    } else {
+      // Authentication failed, return results stating so
+      res.render('welcomePagePortal', {
+        error: 'Invalid credentials. Please try again.'
+      });
+    }
   } catch (err) {
-    console.error('Error:', err);
-    res.send(`Something went wrong: ${err}`);
+    res.send(`Something went wrong : (${err})`);
   }
 });
+
+// app.post('/generate-card-page/index', (req, res) => {
+//   try {
+//     const stuff = cardGen.generateAiForCard(req.body.inputAiImage);
+//     console.log(stuff[0], stuff[1]);
+//     res.render('cardGenPage', {
+//       animal: stuff[1],
+//       attr: stuff[2]
+//     });
+//   } catch (err) {
+//     console.error('Error:', err);
+//     res.send(`Something went wrong: ${err}`);
+//   }
+// });
 
 /* app.post('/gameGenerationPageAction', async(req, res) => {
   try { 

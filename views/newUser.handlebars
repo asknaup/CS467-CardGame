@@ -4,82 +4,36 @@
 <head>
   <meta charset="utf-8" />
   <link rel="stylesheet" href="../global.css" />
-  <link rel="stylesheet" href="/new-user-page/style.css" />
 </head>
 
 <body>
-    <div class="base-layout">
-        <div class="overlap-a">
-            <div class="top-bar"></div>
-            <div class="background"></div>
-          <p class="application-title">Online Trading Card Game Maker</p>
-        </div> <!-- class="overlap-a" -->
-        
-        {{!-- BUTTON: "Play"
-              Route: Link to look-at-games-page + app.get() (prompt asking if they'd like to play current game selected
-              or
-              browse games)
-              --}}
-        <button id="play-button-ggp" class="play-menu-button" type="button">Play</button>
-
-        {{!-- BUTTON: "Trade"
-              Route: Link to trade-page (Need to create)
-              --}}
-        <button id="trade-button-ggp" class="trade-menu-button" type="button">Trade</button>
-
-        {{!-- BUTTON: "Make"
-              Route: Link to game-generation-page--}}
-        <button id="make-button-ggp" class="make-menu-button" type="button">Make</button>
-
-        {{!-- BUTTON: "Collect"
-              Route: Link to collect-page (Need to create) --}}
-        <button id="collect-button-ggp" class="collect-menu-button" type="button">Collect</button>
-         <img class="user-logo" src="img/group-2.png" />
-    </div> <!-- class="base-layout -->
-
-    
-
-<div class="new-user-page">
+  <div class="new-user-page">
       <h1 class="new-user-title">
             Welcome New User!
         </h1>
        <div class="new-user-div">
-        {{!-- INPUT: "New User Form Info"
-          Route: app.post() to db
-          --}}
-          <form class="new-user-form" method="POST" action="/user-profile-page/index">
-            <div class="text-wrapper-2">
-                <label class="label-new-username" for="label-new-username">
-                   Username
-                </label>
-                  <input type="text" name="inputUserName" id="inputUserName">
-            </div>
-            <div class="text-wrapper-3">
-                <label class="label-new-password" for="input-new-password">
-                   New Password
-                </label>
-                  <input type="text" name="inputNewPassword" id="inputNewPassword">
-            </div>
-            <div class="text-wrapper-4">
-                <label class="label-repeat-password" for="repeat-newpassword"> 
-                  Repeat New Password
-                </label>
-                  <input type="text" name="inputRepeatPassword" id="inputRepeatPassword">
-            </div>
-            <div class="text-wrapper-5">
-                <label class="label-email" for="input-email">
-                   Enter Email
-                 </label>
-                  <input type="text" name="inputEmail" id="inputEmail">
-            </div>
-            <div>
+        {{!-- INPUT: "New User Form Info" Route: app.post() to db --}}
+          <form class="new-user-form" method="POST" action="/userProfile">
+
+            <label class="label-new-username" for="label-new-username">
+                Username
+            </label>
+              <input type="text" name="inputUserName" id="inputUserName">
+            <label class="label-new-password" for="input-new-password">
+                New Password
+            </label>
+              <input type="text" name="inputNewPassword" id="inputNewPassword">
+            <label class="label-repeat-password" for="repeat-newpassword"> 
+              Repeat New Password
+            </label>
+              <input type="text" name="inputRepeatPassword" id="inputRepeatPassword">
+            <label class="label-email" for="input-email">
+                Enter Email
+              </label>
+              <input type="text" name="inputEmail" id="inputEmail">
               <input id="submit" type="submit">
-            </div>
           </form> <!-- end of form -->
-      </div> <!-- class="new-user-div" -->
-
-  </div>  <!-- class="new-user-page -->
-
+        </div>  <!-- class="new-user-page -->
+  </div>
 </body>
-
 </html>
