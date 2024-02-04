@@ -47,53 +47,70 @@ ROUTES
 */
 
 app.get('/', (req, res) => {
-  res.render('welcomePagePortal', { showLogoutButton: false })
-});
-
-app.get('/welcomePagePortal', (req, res) => {
-  res.render('welcomePagePortal', { showLogoutButton: false })
+  // Pull session user
+  const user = req.session.user
+  if (user) {
+    // If user then show homepage
+    res.render('welcomePagePortal', {
+      showLogoutButton: true,
+      showLoginButton: false
+    })
+  } else {
+    // If user loged out, then show login button
+    res.render('welcomePagePortal', {
+      showLogoutButton: false,
+      showLoginButton: true
+    })
+  }
 });
 
 // Will change based on user logged in
+// Might want to be able to view other users
 app.get('/userProfile/:username', async (req, res) => {
+  // Show user logged in user profile
   const user = req.session.user;
   if (user) {
+    // If user is defined, user shown will be loggedin user
     const val = await dbFunc.getUserProfile(user.userId);
     res.render('userProfile', {
-      username: user.username, gameCount: val[0].game_count,
-      wl: 0, showLogoutButton: true
-    })}});
+      username: user.username, 
+      gameCount: val[0].game_count,
+      wl: 0, 
+      showLogoutButton: true
+    })
+  }
+});
 
 app.get('/userDeck/:username', (req, res) => {
-  res.render('currentDeck')
+  res.render('currentDeck', { showLogoutButton: true })
 });
 
 app.get('/gameGenPage', (req, res) => {
-  res.render('gameGenPage')
+  res.render('gameGenPage', { showLogoutButton: true })
 });
 
 app.get('/currentDeck', (req, res) => {
-  res.render('currentDeck')
+  res.render('currentDeck', { showLogoutButton: true })
 });
 
 app.get('/browseGames', (req, res) => {
-  res.render('lookatGames')
+  res.render('lookatGames', { showLogoutButton: true })
 });
 
 app.get('/newUser', (req, res) => {
-  res.render('newUser')
+  res.render('newUser', { showLogoutButton: true })
 });
 
 app.get('/resetPW', (req, res) => {
-  res.render('resetPW')
+  res.render('resetPW', { showLogoutButton: true })
 });
 
 app.get('/gamePlayPage', (req, res) => {
-  res.render('gamePlayPage')
+  res.render('gamePlayPage', { showLogoutButton: true })
 });
 
 app.get('/cardGenPage', (req, res) => {
-  res.render('cardGenPage')
+  res.render('cardGenPage', { showLogoutButton: true })
 });
 
 // Log out
@@ -105,7 +122,9 @@ app.get('/logout', (req, res) => {
     } else {
       // Redirect to welcome page
       res.redirect('/');
-    }})})
+    }
+  })
+})
 
 app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
@@ -116,53 +135,54 @@ app.post('/newUser', async (req, res) => {
   try {
     const user_id = await dbFunc.insertNewUser(req.body.inputUserName, req.body.inputNewPassword, req.body.inputEmail);
     const userProfile = await dbFunc.getUserProfileInfo(user_id);
-    if (user_id) {          // save relevant user information in the session
+    if (user_id) {          
+      // save relevant user information in the session
       req.session.user = {
         userId: user_id, username: req.body.inputUserName, gameCount: userProfile[0].game_count,
-        wins: userProfile[0].wins, losses: userProfile[0].losses };
-      console.log(req.session.user);
+        wins: userProfile[0].wins, losses: userProfile[0].losses
+      };
+      // console.log(req.session.user);
     } res.redirect('userProfile', {
+      showLogoutButton: true
     });
   } catch (err) {
     res.send(`Something went wrong : (${err})`);
-  }});
+  }
+});
 
-  // Is this a post route? Get?
+// Post route to login
 app.post('/login', async (req, res) => {
   try {
     const username = req.body.usernameWpp;
     const enteredPassword = req.body.passwordWpp;
     const user = await dbFunc.authenticateUser(username, enteredPassword);
-    if (user) {             // If true, return userId and username
-      req.session.user = {userId: user.userId, username: user.username};
+    if (user) {
+      // If true, return userId and username
+      req.session.user = { userId: user.userId, username: user.username };
       res.redirect('/userProfile/' + req.session.user.username);
-    } else {                // Authentication failed, return results stating so
+    } else {
+      // Authentication failed, return results stating so
       res.render('welcomePagePortal', {
         error: 'Invalid credentials. Please try again.'
-      }); }
+      });
+    }
   } catch (err) {
     res.send(`Something went wrong: ${err}`);
-}});
+  }
+});
 
 app.post('/cardGenPage', (req, res) => {
   try {
-     const stuff = cardGen.generateAiForCard(req.body.inputAiImage);
-     console.log(stuff[0], stuff[1]);
+    const stuff = cardGen.generateAiForCard(req.body.inputAiImage);
+    console.log(stuff[0], stuff[1]);
     res.render('cardGenPage', {
-       animal: stuff[1],
-      attr: stuff[2]
-     });
-   } catch (err) {
-     console.error('Error:', err);
-     res.send(`Something went wrong: ${err}`);
-   } });
-
-/* app.post('/gameGenerationPageAction', async(req, res) => {
-  try { 
-    await dbFunc.insertNewGameIntoGames(req.body); 
-    const game = 
-
+      animal: stuff[1],
+      attr: stuff[2],
+      showLogoutButton: true
+    });
+  } catch (err) {
+    console.error('Error:', err);
+    res.send(`Something went wrong: ${err}`);
   }
-}
-*/
+});
 
