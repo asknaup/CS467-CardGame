@@ -3,6 +3,7 @@
 const express = require('express');             // Commonjs standard
 const exphbs = require('express-handlebars');
 const session = require('express-session');     // Session control to save variables once a user logs in
+// const bcrypt = require('bcrypt');               // Encryption
 const app = express();                          // Routing 
 const bodyParser = require('body-parser');
 const port = 3000;
@@ -31,26 +32,43 @@ app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
 
 // Serve static file from public directory
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static('public'));
 
 /*
 ROUTES
 */
 
 app.get('/current-deck-page/index', (req, res) => {
-  res.render('current-deck-page/index')
+  res.render('currentDeck')
 });
 
 app.get('/welcomePagePortal', (req, res) => {
   res.render('welcomePagePortal')
 });
 
-app.get('/user-profile-page/index', async (req, res) => {
-  const val = await dbFunc.getUserProfileInfo(req.body.newUserName, req.body.inputNewPassword)
-  console.log(val.user_id);
-  res.render('user-profile-page/index', {
-    user_id: val
-  })
+app.get('/welcomePagePortal', (req, res) => {
+  res.render('welcomePagePortal');
+});
+
+// Below code was throwing me a merge conflict so I commented it out - Artem 2/3/24
+// app.get('/user-profile-page/index', async (req, res) => {
+//     const val = await dbFunc.getUserProfileInfo(req.body.inputUserName, req.body.inputNewPassword)
+//     res.render('user-profile-page/index', {
+//     'userProfile', {
+//     user_id: val
+//   })
+// });
+
+app.get('/userProfile', async (req, res) => {
+  /// ERROR HANDLING IF USER NOT IN DB
+  const val = await dbFunc.getUserId(req.body.inputUserName, req.body.inputNewPassword)
+  console.log(val);
+  const more = await dbFunc.getUserProfileInfo(val)
+  console.log(val[0]);
+  res.render('userProfile', {
+  user_id: val,
+  statusbar: more
+})
 });
 
 app.get('/gameGenPage', (req, res) => {
@@ -61,42 +79,34 @@ app.get('/lookatGames', (req, res) => {
   res.render('lookatGames')
 });
 
-app.get('/new-user-page/index', (req, res) => {
-  res.render('new-user-page/index')
+app.get('/resetPW', (req, res) => {
+  /// User_id / Password needed
+  res.render('resetPW')
 });
 
-app.get('/reset-password-page/index', (req, res) => {
-  res.render('reset-password-page/index')
+app.get('/newUserPage', (req, res) => {
+  res.render('newUser')
 });
 
-app.get('/game-play-page/index', (req, res) => {
-  res.render('game-play-page/index')
+app.get('/resetPasswordPage', (req, res) => {
+  res.render('resetPW')
 });
 
-app.get('/generate-card-page/index', (req, res) => {
-  res.render('generate-card-page/index')
+app.get('/gamePlayPage', (req, res) => {
+  res.render('gamePlayPage')
+});
+
+app.get('/generateCardPage', (req, res) => {
+  res.render('cardGenPage')
 });
 
 app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
 });
 
-// POST ROUTES 
-// app.post('/user-profile-page/index', async (req, res) => {
-//   try {
-//     await dbFunc.insertNewUserIntoDB(req.body.inputUserName, req.body.inputNewPassword, req.body.inputEmail);
-//     const user_id = await dbFunc.getUserId(req.body.inputUserName, req.body.inputNewPassword);
-//     const val = await dbFunc.getUserProfileInfo(user_id[0].user_id);
-//     res.render('user-profile-page/index', {
-//       user_id: req.body.inputUserName, game_count: val[0].game_count,
-//       wins: val[0].wins, losses: val[0].losses
-//     });
-//   } catch (err) {
-//     res.send(`Something went wrong : (${err}`);
-//   }
-// });
+// POST ROUTES
 
-app.post('/user-profile-page/index', async (req, res) => {
+app.post('/userProfile', async (req, res) => {
   try {
     const user_id = await dbFunc.insertNewUser(req.body.inputUserName, req.body.inputNewPassword, req.body.inputEmail);
     const userProfile = await dbFunc.getUserProfileInfo(user_id);
@@ -106,14 +116,14 @@ app.post('/user-profile-page/index', async (req, res) => {
       req.session.user = {
         userId: user_id,
         username: req.body.inputUserName,
-        game_count: userProfile[0].game_count,
+        gameCount: userProfile[0].game_count,
         wins: userProfile[0].wins,
         losses: userProfile[0].losses
       };
       console.log(req.session.user);
     }
     
-    res.render('user-profile-page/index', {
+    res.render('userProfile', {
       user_id: req.body.inputUserName, game_count: userProfile[0].game_count,
       wins: userProfile[0].wins, losses: userProfile[0].losses
     });
@@ -122,11 +132,11 @@ app.post('/user-profile-page/index', async (req, res) => {
   }
 });
 
-app.post('/generate-card-page/index', (req, res) => {
+app.post('/generateCardPage', (req, res) => {
   try {
     const stuff = cardGen.generateAiForCard(req.body.inputAiImage);
     console.log(stuff[0], stuff[1]);
-    res.render('generate-card-page/index', {
+    res.render('generateCardPage/index', {
       animal: stuff[1],
       attr: stuff[2]
     });
