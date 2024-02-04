@@ -72,6 +72,10 @@ app.get('/gameGenPage', (req, res) => {
   res.render('gameGenPage')
 });
 
+app.get('/currentDeck', (req, res) => {
+  res.render('currentDeck')
+});
+
 app.get('/lookatGames', (req, res) => {
   res.render('lookatGames')
 });
@@ -93,7 +97,7 @@ app.get('/gamePlayPage', (req, res) => {
   res.render('gamePlayPage')
 });
 
-app.get('/generateCardPage', (req, res) => {
+app.get('/cardGenPage', (req, res) => {
   res.render('cardGenPage')
 });
 
