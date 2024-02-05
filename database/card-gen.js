@@ -23,8 +23,8 @@ function sendCardToDB(name, type, user) {
                 return;
             }
 
-            const insertQueryCard = 'INSERT INTO cards (card_name, card_type, rarity, max_available) VALUES (?,?,?,?)';
-            const insertQueryCardInstance = 'INSERT INTO card_instance (card_id, owner_user_id) VALUES (?,?)';
+            const insertQueryCard = 'INSERT INTO cards (cardName, cardType, rarity, max_available) VALUES (?,?,?,?)';
+            const insertQueryCardInstance = 'INSERT INTO cardInstance (cardId, ownerUserId) VALUES (?,?)';
             const valuesCard = [name, type, 2, 2];
             const selectQuery = 'SELECT LAST_INSERT_ID() as lastCard';
 
