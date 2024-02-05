@@ -112,16 +112,17 @@ app.listen(port, () => {
 });
 
 // POST ROUTES 
-app.post('/newUser', async (req, res) => {
+app.post('/userProfile', async (req, res) => {
   try {
     const user_id = await dbFunc.insertNewUser(req.body.inputUserName, req.body.inputNewPassword, req.body.inputEmail);
-    const userProfile = await dbFunc.getUserProfileInfo(user_id);
+    const userProfile = await dbFunc.getUserProfile(user_id);
     if (user_id) {          // save relevant user information in the session
       req.session.user = {
-        userId: user_id, username: req.body.inputUserName, gameCount: userProfile[0].game_count,
-        wins: userProfile[0].wins, losses: userProfile[0].losses };
+      userId: user_id, username: req.body.inputUserName, gameCount: userProfile[0].game_count,
+      wins: userProfile[0].wins, losses: userProfile[0].losses };
       console.log(req.session.user);
-    } res.redirect('userProfile', {
+    } 
+    res.render('userProfile', {
     });
   } catch (err) {
     res.send(`Something went wrong : (${err})`);
@@ -135,7 +136,7 @@ app.post('/login', async (req, res) => {
     const user = await dbFunc.authenticateUser(username, enteredPassword);
     if (user) {             // If true, return userId and username
       req.session.user = {userId: user.userId, username: user.username};
-      res.redirect('/userProfile/' + req.session.user.username);
+      res.render('/userProfile/' + req.session.user.username);
     } else {                // Authentication failed, return results stating so
       res.render('welcomePagePortal', {
         error: 'Invalid credentials. Please try again.'
@@ -144,16 +145,25 @@ app.post('/login', async (req, res) => {
     res.send(`Something went wrong: ${err}`);
 }});
 
-app.post('/cardGenPage', (req, res) => {
+app.post('/cardGenPage', async (req, res) => {
   try {
-     const stuff = cardGen.generateAiForCard(req.body.inputAiImage);
-     console.log(stuff[0], stuff[1]);
+    if (req.session.user) {      
+    } else {                // Authentication failed, return results stating so
+      res.render('welcomePagePortal', {
+        error: 'Invalid credentials. Please try again.'
+      }); 
+    }
+    const user = req.session.user;
+    console.log(user
+      );
+    const [attr, animal] = cardGen.generateAiForCard(req.body.inputAiImage);
+    const object1 = await cardGen.sendCardToDB(animal, attr, req.session.user.userId);
     res.render('cardGenPage', {
-       animal: stuff[1],
-      attr: stuff[2]
+      "animal": animal,
+      "attr": attr,
+      "object1": object1
      });
    } catch (err) {
-     console.error('Error:', err);
      res.send(`Something went wrong: ${err}`);
    } });
 

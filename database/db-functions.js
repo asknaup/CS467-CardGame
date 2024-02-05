@@ -2,9 +2,6 @@ const db = require('./db-connector');
 // const bcrypt = require('bcrypt');
 // const saltRounds = 10;
 
-// pool.query parameters; 1st is sql query string, 2nd is optional list of params, third is (err, result) object
-// Async Database access to avoid nested hell
-// Inserts new User with password and email into database
 // *** Must Module.exports at bottom
 
 function insertNewUserIntoDB(username, password, email) {
@@ -175,6 +172,7 @@ function insertNewGameIntoGames() {
         });
     });
 }
+
 
 // function updateGameWinner({ params }) {
 //     // Initialize a new game -> winner has not been decided
