@@ -26,7 +26,7 @@ header {
   list-style: none;
 }
 
-.nav_links li {
+.nav__links li {
   display: inline-block;
   padding: 0px 20px;
 }
@@ -118,8 +118,7 @@ table {
   margin-top: 75px;
 }
 
-th,
-td {
+th, td {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: left;
