@@ -135,17 +135,16 @@ CREATE TABLE IF NOT EXISTS cardInstance (
 ALTER TABLE cardInstance AUTO_INCREMENT=5000;
 
 -- Will trigger when user has created a new card
--- DELIMITER $$
--- CREATE TRIGGER newCard AFTER INSERT ON cards
---     FOR EACH ROW
---         BEGIN
---             -- Insert corresponding record
---             INSERT INTO cardInstance (cardId) VALUES
---                 (NEW.cardId);
---         END $$
-
--- -- reset delim
--- DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER newCard AFTER INSERT ON cards
+    FOR EACH ROW
+        BEGIN
+            -- Insert corresponding record into cardInstance for each user
+            INSERT INTO cardInstance (cardId, ownerUserId)
+            SELECT NEW.cardId, user_id
+            FROM user_profile;
+        END $$
+DELIMITER ;
 
 -- -----------------------------------------------------
 -- Create Card Creature table
