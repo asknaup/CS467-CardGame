@@ -14,6 +14,7 @@ DROP TABLE IF EXISTS card_creature;
 DROP TABLE IF EXISTS cardInstance;
 
 -- Tables with foreign keys
+DROP TABLE IF EXISTS generatedGame;
 DROP TABLE IF EXISTS decks;
 DROP TABLE IF EXISTS game;
 DROP TABLE IF EXISTS cards;
@@ -181,8 +182,6 @@ CREATE TABLE IF NOT EXISTS card_spell (
         ON UPDATE CASCADE
 );
 
-
-
 -- -----------------------------------------------------
 -- Create deck table
 -- -----------------------------------------------------
@@ -218,6 +217,24 @@ CREATE TABLE IF NOT EXISTS moves (
 );
 
 ALTER TABLE moves AUTO_INCREMENT=1;
+
+
+-- -----------------------------------------------------
+-- CREATE INDEX VALUES FOR FASTER QUERIES
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS generatedGame;
+
+CREATE TABLE IF NOT EXISTS generatedGame (
+    gameId INT,
+    imageLocation VARCHAR(1000),
+    ownerId INT,
+    noCards INT,
+    listCards VARCHAR(5000),
+
+    PRIMARY KEY (gameId),
+    FOREIGN KEY (gameId) REFERENCES game(gameId),
+    FOREIGN KEY (ownerId) REFERENCES user_profile(user_id) 
+);
 
 -- -----------------------------------------------------
 -- CREATE INDEX VALUES FOR FASTER QUERIES
