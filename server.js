@@ -131,7 +131,7 @@ app.listen(port, () => {
 });
 
 // POST ROUTES 
-app.post('/newUser', async (req, res) => {
+app.post('/userProfile', async (req, res) => {
   try {
     const user_id = await dbFunc.insertNewUser(req.body.inputUserName, req.body.inputNewPassword, req.body.inputEmail);
 
@@ -164,6 +164,7 @@ app.post('/login', async (req, res) => {
     const username = req.body.usernameWpp;
     const enteredPassword = req.body.passwordWpp;
     const user = await dbFunc.authenticateUser(username, enteredPassword);
+
     if (user) {
       // If true, return userId and username
       req.session.user = { userId: user.userId, username: user.username };
@@ -179,18 +180,35 @@ app.post('/login', async (req, res) => {
   }
 });
 
-app.post('/cardGenPage', (req, res) => {
+app.post('/cardGenPage', async (req, res) => {
   try {
-    const stuff = cardGen.generateAiForCard(req.body.inputAiImage);
-    console.log(stuff[0], stuff[1]);
+
+    if (req.session.user) {      
+    } else {                // Authentication failed, return results stating so
+      res.render('welcomePagePortal', {
+        error: 'Invalid credentials. Please try again.'
+      }); 
+    }
+    const user = req.session.user;
+    console.log(user
+      );
+    const [attr, animal] = cardGen.generateAiForCard(req.body.inputAiImage);
+    const object1 = await cardGen.sendCardToDB(animal, attr, req.session.user.userId);
     res.render('cardGenPage', {
-      animal: stuff[1],
-      attr: stuff[2],
-      showLogoutButton: true
-    });
-  } catch (err) {
-    console.log('Error:', err);
-    res.send(`Something went wrong: ${err}`);
+      "animal": animal,
+      "attr": attr,
+      "object1": object1
+     });
+   } catch (err) {
+     res.send(`Something went wrong: ${err}`);
+   } });
+
+/* app.post('/gameGenerationPageAction', async(req, res) => {
+  try { 
+    await dbFunc.insertNewGameIntoGames(req.body); 
+    const game = 
+
+
   }
 });
 
