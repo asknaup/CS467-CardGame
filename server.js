@@ -134,7 +134,6 @@ app.listen(port, () => {
 app.post('/userProfile', async (req, res) => {
   try {
     const user_id = await dbFunc.insertNewUser(req.body.inputUserName, req.body.inputNewPassword, req.body.inputEmail);
-<<<<<<< HEAD
     const userProfile = await dbFunc.getUserProfile(user_id);
     if (user_id) {          // save relevant user information in the session
       req.session.user = {
@@ -142,20 +141,8 @@ app.post('/userProfile', async (req, res) => {
       wins: userProfile[0].wins, losses: userProfile[0].losses };
       console.log(req.session.user);
     } 
-    res.render('userProfile', {
-    });
-=======
-
-    console.log(user_id);
-    if (user_id) {          
-      // save relevant user information in the session
-      req.session.user = {
-        userId: user_id, 
-        username: req.body.inputUserName
-      };
-    } 
     res.redirect('/userProfile/' + req.session.user.username);
->>>>>>> a6b9783e44c35aa9a3f0aa18499c511592a7f1ca
+
   } catch (err) {
     console.log(err);
 
@@ -176,19 +163,13 @@ app.post('/login', async (req, res) => {
     const username = req.body.usernameWpp;
     const enteredPassword = req.body.passwordWpp;
     const user = await dbFunc.authenticateUser(username, enteredPassword);
-<<<<<<< HEAD
-    if (user) {             // If true, return userId and username
-      req.session.user = {userId: user.userId, username: user.username};
-      res.render('/userProfile/' + req.session.user.username);
-    } else {                // Authentication failed, return results stating so
-=======
     if (user) {
       // If true, return userId and username
       req.session.user = { userId: user.userId, username: user.username };
       res.redirect('/userProfile/' + req.session.user.username);
     } else {
       // Authentication failed, return results stating so
->>>>>>> a6b9783e44c35aa9a3f0aa18499c511592a7f1ca
+
       res.render('welcomePagePortal', {
         error: 'Invalid credentials. Please try again.'
       });
@@ -200,7 +181,6 @@ app.post('/login', async (req, res) => {
 
 app.post('/cardGenPage', async (req, res) => {
   try {
-<<<<<<< HEAD
     if (req.session.user) {      
     } else {                // Authentication failed, return results stating so
       res.render('welcomePagePortal', {
@@ -226,7 +206,7 @@ app.post('/cardGenPage', async (req, res) => {
     await dbFunc.insertNewGameIntoGames(req.body); 
     const game = 
 
-=======
+
     const stuff = cardGen.generateAiForCard(req.body.inputAiImage);
     console.log(stuff[0], stuff[1]);
     res.render('cardGenPage', {
@@ -236,8 +216,4 @@ app.post('/cardGenPage', async (req, res) => {
     });
   } catch (err) {
     console.log('Error:', err);
-    res.send(`Something went wrong: ${err}`);
->>>>>>> a6b9783e44c35aa9a3f0aa18499c511592a7f1ca
-  }
-});
-
+    res.send(`Something went wrong: ${err}`); */
