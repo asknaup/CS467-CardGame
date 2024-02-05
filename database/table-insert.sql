@@ -41,3 +41,63 @@ INSERT INTO cardInstance (cardId, ownerUserId)
 
 INSERT INTO card_creature (cardId, hp, attack)
     VALUES (@lastCardId, 7, 4);
+
+-- Example 3 - spell
+INSERT INTO cards (cardName, cardType, rarity, max_available) VALUES
+    ('Arctic Wind', 'spell', 0, 5);
+
+SET @lastCardId = LAST_INSERT_ID();
+
+INSERT INTO cardInstance (cardId, ownerUserId)
+    SELECT @lastCardId, 1001;
+
+INSERT INTO card_spell (cardId, spell_ability, health_regen)
+    VALUES (@lastCardId, 'Blasts cold wind at opponent or creature.', 10);
+
+-- Example 4 - creature
+INSERT INTO cards (cardName, cardType, rarity, max_available) VALUES
+    ('Woods Spider', 'creature', 0, 15);
+
+SET @lastCardId = LAST_INSERT_ID();
+
+INSERT INTO cardInstance (cardId, ownerUserId)
+    SELECT @lastCardId, 1001;
+
+INSERT INTO card_creature (cardId, hp, attack)
+    VALUES (@lastCardId, 2, 1);
+
+-- Example 5 - spell
+INSERT INTO cards (cardName, cardType, rarity, max_available) VALUES
+    ('Minor-Heal', 'spell', 0, 20);
+
+SET @lastCardId = LAST_INSERT_ID();
+
+INSERT INTO cardInstance (cardId, ownerUserId)
+    SELECT @lastCardId, 1001;
+
+INSERT INTO card_spell (cardId, spell_ability, health_regen)
+    VALUES (@lastCardId, 'Heals self or creature by 1 point', 1);
+
+-- Example 6 - creature
+INSERT INTO cards (cardName, cardType, rarity, max_available) VALUES
+    ('Armored Elephant', 'spell', 0, 20);
+
+SET @lastCardId = LAST_INSERT_ID();
+
+INSERT INTO cardInstance (cardId, ownerUserId)
+    SELECT @lastCardId, 1001;
+
+INSERT INTO card_creature (cardId, hp, attack)
+    VALUES (@lastCardId, 3, 3);
+
+-- Example 7 - creature
+INSERT INTO cards (cardName, cardType, rarity, max_available) VALUES
+    ('Cave Bat', 'creature', 0, 5);
+
+SET @lastCardId = LAST_INSERT_ID();
+
+INSERT INTO cardInstance (cardId, ownerUserId)
+    SELECT @lastCardId, 1001;
+
+INSERT INTO card_creature (cardId, hp, attack)
+    VALUES (@lastCardId, 5, 4);
