@@ -14,6 +14,21 @@ function generateAiForCard(input) {
     return [attr, animal];
 }
 
+function grabCardFromDB(card_id) {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM card WHERE cardId = ?'; // Corrected SQL query
+        db.pool.query(sql, [card_id], (err, result) => {
+            if (err) {
+                reject(err); // Reject with the error if there is one
+            } else {
+                resolve(result); // Resolve with the query result
+            }
+        });
+    });
+}
+
+// update card
+
 function sendCardToDB(name, type, user) {
     // Initialize a new game -> winner has not been decided
     return new Promise((resolve, reject) => {
@@ -23,8 +38,8 @@ function sendCardToDB(name, type, user) {
                 return;
             }
 
-            const insertQueryCard = 'INSERT INTO cards (card_name, card_type, rarity, max_available) VALUES (?,?,?,?)';
-            const insertQueryCardInstance = 'INSERT INTO card_instance (card_id, owner_user_id) VALUES (?,?)';
+            const insertQueryCard = 'INSERT INTO cards (cardName, cardType, rarity, max_available) VALUES (?,?,?,?)';
+            const insertQueryCardInstance = 'INSERT INTO cardInstance (cardId, ownerUserId) VALUES (?,?)';
             const valuesCard = [name, type, 2, 2];
             const selectQuery = 'SELECT LAST_INSERT_ID() as lastCard';
 
