@@ -14,6 +14,19 @@ function generateAiForCard(input) {
     return [attr, animal];
 }
 
+function grabCardFromDB(card_id) {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM card WHERE cardId = ?'; // Corrected SQL query
+        db.pool.query(sql, [card_id], (err, result) => {
+            if (err) {
+                reject(err); // Reject with the error if there is one
+            } else {
+                resolve(result); // Resolve with the query result
+            }
+        });
+    });
+}
+
 function sendCardToDB(name, type, user) {
     // Initialize a new game -> winner has not been decided
     return new Promise((resolve, reject) => {
