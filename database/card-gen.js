@@ -27,6 +27,8 @@ function grabCardFromDB(card_id) {
     });
 }
 
+// update card
+
 function sendCardToDB(name, type, user) {
     // Initialize a new game -> winner has not been decided
     return new Promise((resolve, reject) => {
