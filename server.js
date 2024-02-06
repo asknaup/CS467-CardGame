@@ -15,6 +15,7 @@ const port = 3000;
 const db = require('./database/db-connector');
 const dbFunc = require('./database/db-functions')
 const cardGen = require('./database/card-gen');
+const gameGen = require('./database/game-gen');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -207,20 +208,23 @@ app.post('/cardGenPage', async (req, res) => {
   }
 });
 
-
-/* app.post('/gameGenerationPageAction', async(req, res) => {
-  try { 
-    await dbFunc.insertNewGameIntoGames(req.body); 
-    const game = 
-
-
-    const stuff = cardGen.generateAiForCard(req.body.inputAiImage);
-    console.log(stuff[0], stuff[1]);
-    res.render('cardGenPage', {
-      animal: stuff[1],
-      attr: stuff[2],
-      showLogoutButton: true
-    });
+app.post('/gameGenerationPageAction', async(req, res) => {
+  try {
+    if (req.session.user) {
+      const object2 = await gameGen.sendNewGameToDB(req.session.user.userId, 0, 0, 'tbd');           // (ownerId, listCards, noCards, imageLocation) VALUES (?,?,?,?)';
+      console.log(object2);                     // gameId?
+      res.render('generatedGameView', {
+        object2: object2
+      });
+    } else {
+      // Authentication failed, render 'welcomePagePortal' with an error message
+      res.render('welcomePagePortal', {
+        error: 'Invalid credentials. Please try again.'
+      });
+    }
   } catch (err) {
-    console.log('Error:', err);
-    res.send(`Something went wrong: ${err}`); */
+    // Handle errors that may occur during card generation, database interaction, or rendering
+    res.send(`Something went wrong: ${err}`);
+  }
+});
+
