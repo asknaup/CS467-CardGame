@@ -101,3 +101,63 @@ INSERT INTO cardInstance (cardId, ownerUserId)
 
 INSERT INTO card_creature (cardId, hp, attack)
     VALUES (@lastCardId, 5, 4);
+
+--Example 8 - creature
+INSERT INTO cards (cardName, cardType, rarity, max_available) VALUES
+    ('Flaming Dragon', 'creature', 0, 10);
+
+SET @lastCardId = LAST_INSERT_ID();
+
+INSERT INTO cardInstance (cardId, ownerUserId)
+    SELECT @lastCardId, 1001;
+
+INSERT INTO card_creature (cardId, hp, attack)
+    VALUES (@lastCardId, 5, 9);
+
+--Example 9 - creature
+INSERT INTO cards (cardName, cardType, rarity, max_available) VALUES
+    ('Spiked Turtle', 'creature', 0, 15);
+
+SET @lastCardId = LAST_INSERT_ID();
+
+INSERT INTO cardInstance (cardId, ownerUserId)
+    SELECT @lastCardId, 1001;
+
+INSERT INTO card_creature (cardId, hp, attack)
+    VALUES (@lastCardId, 7, 7);
+
+-- Example 10 - spell
+INSERT INTO cards (cardName, cardType, rarity, max_available) VALUES
+    ('Quick Freeze', 'spell', 0, 20);
+
+SET @lastCardId = LAST_INSERT_ID();
+
+INSERT INTO cardInstance (cardId, ownerUserId)
+    SELECT @lastCardId, 1001;
+
+INSERT INTO card_spell (cardId, spell_ability, health_regen)
+    VALUES (@lastCardId, 'Player can not move for a turn', 0);
+
+-- Example 11 - spell
+INSERT INTO cards (cardName, cardType, rarity, max_available) VALUES
+    ('Poison', 'spell', 0, 10);
+
+SET @lastCardId = LAST_INSERT_ID();
+
+INSERT INTO cardInstance (cardId, ownerUserId)
+    SELECT @lastCardId, 1001;
+
+INSERT INTO card_spell (cardId, spell_ability, health_regen)
+    VALUES (@lastCardId, 'Creature it is applied to loses 1 hp every turn', 0);
+
+-- Example 12 - spell
+INSERT INTO cards (cardName, cardType, rarity, max_available) VALUES
+    ('Cure', 'spell', 0, 10);
+
+SET @lastCardId = LAST_INSERT_ID();
+
+INSERT INTO cardInstance (cardId, ownerUserId)
+    SELECT @lastCardId, 1001;
+
+INSERT INTO card_spell (cardId, spell_ability, health_regen)
+    VALUES (@lastCardId, 'Removes status like poisoned', 0);
