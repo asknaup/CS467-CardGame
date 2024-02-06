@@ -8,38 +8,7 @@
 
 <body>
   <div class="generate-card-page">
-    <div class="deck-sign-shadow">
-      <div class="deck-name-sign">
-        <div class="deck-name-text">Deck Name</div>
-      </div>
-    </div>
-
-    <a href="">
-      <div id="generate-card-title-top">
-        <p>Click Here</p>
-      </div>
-    </a>
-
-    {{!-- INPUT: "Send the newly generated card to db"
-    Route: app.post() to db --}}
-    <img id="deck-1" src="img/deck-top-view.jpg" />
-    <div id="generate-card-title-bottom">
-      <p>To Generate This Card</p>
-    </div>
-
-    <p id="card-preview-title">Card Preview</p>
-    <div class="card-preview">
-      <div id="img-placeholder"> After Hitting Submit
-        <br>
-        Generated Image
-        <br>
-        Goes Here
-      </div>
-    </div>
-    <p id="AI-prompt-title"> Enter Description For AI
-      <br>
-      To Generate A New Card Image
-    </p>
+    
     {{!-- INPUT: "Enter Description For AI To Generate Image"
     after clicking submit button send to ChatGpt--}}
     <form method="POST" action="/cardGenPage">
@@ -48,8 +17,7 @@
     </form> <!-- end of form -->
 
     <div id="credits">
-      <p> Stats Left:4
-        {{ animal }}
+      <p> CardId:    {{ object1 }}
         <br>
         Health Stat: 2
         <br>

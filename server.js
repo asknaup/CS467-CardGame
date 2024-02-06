@@ -113,6 +113,12 @@ app.get('/cardGenPage', (req, res) => {
   res.render('cardGenPage', { showLogoutButton: true })
 });
 
+app.get('/cardViewPage', async (req, res) => {
+  const val = await cardGen.grabCardFromDB(1);             // Hard Coded
+  console.log(val[0]);
+  res.render('cardViewPage', {value: val})
+});
+
 // Log out
 app.get('/logout', (req, res) => {
   req.session.destroy(err => {
@@ -179,28 +185,28 @@ app.post('/login', async (req, res) => {
   }
 });
 
+
 app.post('/cardGenPage', async (req, res) => {
   try {
-    if (req.session.user) {      
-    } else {                // Authentication failed, return results stating so
+    if (req.session.user) {
+      const [attr, animal] = cardGen.generateAiForCard(req.body.inputAiImage);
+      const object1 = await cardGen.sendCardToDB(animal, attr, req.session.user.userId);
+      // console.log(object1);            cardId
+      res.render('cardGenPage', {
+        animal: animal, attr: attr, object1: object1
+      });
+    } else {
+      // Authentication failed, render 'welcomePagePortal' with an error message
       res.render('welcomePagePortal', {
         error: 'Invalid credentials. Please try again.'
-      }); 
+      });
     }
-    const user = req.session.user;
-    console.log(user
-      );
-    const [attr, animal] = cardGen.generateAiForCard(req.body.inputAiImage);
-    const object1 = await cardGen.sendCardToDB(animal, attr, req.session.user.userId);
-    console.log(object1);
-    res.render('cardGenPage', {
-      animal: animal,
-      attr: attr,
-      object1: object1
-     });
-   } catch (err) {
-     res.send(`Something went wrong: ${err}`);
-   } });
+  } catch (err) {
+    // Handle errors that may occur during card generation, database interaction, or rendering
+    res.send(`Something went wrong: ${err}`);
+  }
+});
+
 
 /* app.post('/gameGenerationPageAction', async(req, res) => {
   try { 

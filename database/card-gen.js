@@ -16,7 +16,7 @@ function generateAiForCard(input) {
 
 function grabCardFromDB(card_id) {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM card WHERE cardId = ?'; // Corrected SQL query
+        const sql = 'SELECT * FROM cards WHERE cardId = ?'; // Corrected SQL query
         db.pool.query(sql, [card_id], (err, result) => {
             if (err) {
                 reject(err); // Reject with the error if there is one
@@ -86,3 +86,4 @@ function sendCardToDB(name, type, user) {
 }        
 module.exports.generateAiForCard = generateAiForCard;
 module.exports.sendCardToDB = sendCardToDB;
+module.exports.grabCardFromDB = grabCardFromDB;
