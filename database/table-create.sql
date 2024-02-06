@@ -225,14 +225,13 @@ ALTER TABLE moves AUTO_INCREMENT=1;
 DROP TABLE IF EXISTS generatedGame;
 
 CREATE TABLE IF NOT EXISTS generatedGame (
-    gameId INT,
+    gameId INT AUTO_INCREMENT,
     imageLocation VARCHAR(1000),
     ownerId INT,
     noCards INT,
     listCards VARCHAR(5000),
 
     PRIMARY KEY (gameId),
-    FOREIGN KEY (gameId) REFERENCES game(gameId),
     FOREIGN KEY (ownerId) REFERENCES user_profile(user_id) 
 );
 

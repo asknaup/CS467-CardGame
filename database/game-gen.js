@@ -4,7 +4,7 @@ function generatedGameInfo() {
     return;
 };
 
-function sendNewGameToDB(ownerId, listCards, numCards, imageLocation) {                  // Need DB inputs
+function sendNewGameToDB(gameid, ownerId, listCards, numCards, imageLocation) {                  // Need DB inputs
     // Initialize a new game -> winner has not been decided
     return new Promise((resolve, reject) => {
         db.pool.query('START TRANSACTION', (beginTransactionErr) => {
