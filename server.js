@@ -146,7 +146,9 @@ app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
 });
 
-// POST ROUTES
+
+// POST ROUTES 
+
 app.post('/userProfile', async (req, res) => {
   try {
     const user_id = await dbFunc.insertNewUser(req.body.inputUserName, req.body.inputNewPassword, req.body.inputEmail);
@@ -201,8 +203,9 @@ app.post('/cardGenPage', async (req, res) => {
   try {
     if (req.session.user) {
       const [attr, animal] = cardGen.generateAiForCard(req.body.inputAiImage);
-      const object1 = await cardGen.sendCardToDB(animal, attr, req.session.user.userId);
-      const url = await cardGen.generateImageForCard();
+      const object1 = await cardGen.sendCardToDB(animal, attr, req.session.user.userId);    // returns cardId?
+      const url = await cardGen.generateImageForCard(animal, object1);
+      
       console.log(url);
       // console.log(object1);            cardId
       res.render('cardGenPage', {
