@@ -192,6 +192,8 @@ app.post('/cardGenPage', async (req, res) => {
     if (req.session.user) {
       const [attr, animal] = cardGen.generateAiForCard(req.body.inputAiImage);
       const object1 = await cardGen.sendCardToDB(animal, attr, req.session.user.userId);
+      const url = await cardGen.generateImageForCard();
+      console.log(url);
       // console.log(object1);            cardId
       res.render('cardGenPage', {
         animal: animal, attr: attr, object1: object1

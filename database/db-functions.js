@@ -189,28 +189,42 @@ function insertNewGameIntoGames() {
 //     });
 // }
 
+/*
+function resetDatabase() {
+    return new Promise(
+        (resolve, reject) => {
+            pool.query(
+                fs.readFileSync('./sql/clear.sql').toString(),
+                (err, results) => {
+                    if (err) {
+                        console.log(`ERROR OCCURED\n${err.message}`);
+                        return reject(err);
+                    }
 
-// function confirmUserExists(username, password) {
-//     return new Promise(
-//         (resolve, reject) => {
-//             db.pool.query('SELECT USER WHERE PASSWORD'), (err, result) => {
-//                 if (err) return reject(err);
-//                 return resolve(result);
-//             }
-//         });
-// }
+                    console.log('TABLES DROPPED')
+                    console.log(results);
 
-// function createCard({ params }) {
-//     return new Promise(
-//         (resolve, reject) => {
-//             db.pool.query('INSERT INTO '), (err, result) => {
-//                 if (err) return reject(err);
-//                 return resolve(result);
-//             }
-//         });
-// }
+                    pool.query(
+                        fs.readFileSync('./sql/init.sql').toString(),
+                        (err, results) => {
+                            if (err) {
+                                console.log(`ERROR OCCURED\n${err.message}`);
+                                return reject(err);
+                            }
 
+                            console.log('TABLES CREATED - DATA INITIALIZED');
+                            console.log(results);
 
+                            return resolve(results);
+                        }
+                    );
+                }
+            );
+        }
+    )
+}
+
+*/
 
 module.exports.insertNewUserIntoDB = insertNewUserIntoDB;
 module.exports.getUserProfile = getUserProfile;

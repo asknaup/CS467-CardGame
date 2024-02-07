@@ -1,4 +1,6 @@
 const db = require('./db-connector');
+const OpenAI = require('openai');
+const configFile = require('./config');
 
 // Generate AI things
 
@@ -83,7 +85,25 @@ function sendCardToDB(name, type, user) {
             });
         });
     });
-}        
+}   
+
+async function generateImageForCard() {
+    try {
+        const openai = new OpenAI({ apiKey: configFile.password });
+        const response = await openai.images.generate({
+            model: "dall-e-2",
+            prompt: "a white siamese cat",
+            n: 1,
+            size: "1024x1024",
+          });
+      return response;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
 module.exports.generateAiForCard = generateAiForCard;
+module.exports.generateImageForCard = generateImageForCard;
 module.exports.sendCardToDB = sendCardToDB;
 module.exports.grabCardFromDB = grabCardFromDB;
