@@ -7,31 +7,30 @@
 </head>
 
 <body>
-  <div class="reset-password-page">
-    <h1 class="reset-password-title">
+  <div>
+    <h1 class="container">
       Reset Password
     </h1>
 
-    <div class="reset-password-div">
-      {{!-- INPUT: "Reset Password Form Info" Route: app.post() to db --}}
-      <form class="reset-password-form" method="POST" action="">
-        <label class="label-username" for="input-username">
+    <div id="input-form">
+      <form method="POST" action="">
+        <labelfor="input-username">
           Username
           <input type="text" name="input-username" id="inputUserName">
-        </label>
-        <label class="label-new-password" for="input-new-password">
-          New Password
-          <input type="text" name="input-new-password" id="inputNewPassword">
-        </label>
-        <label class="label-repeat-password" for="repeat-new-password">
-          Repeat New Password
-          <input type="text" name="input-repeat-password" id="inputRepeatPassword">
-        </label>
-        <label class="label-email" for="input-email">
-          Enter Email
-          <input type="text" name="input-email" id="inputEmail">
-        </label>
-        <input id="submit" type="submit">
+          </label>
+          <label for="input-new-password">
+            New Password
+            <input type="text" name="input-new-password" id="inputNewPassword">
+          </label>
+          <label for="repeat-new-password">
+            Repeat New Password
+            <input type="text" name="input-repeat-password" id="inputRepeatPassword">
+          </label>
+          <label for="input-email">
+            Enter Email
+            <input type="text" name="input-email" id="inputEmail">
+          </label>
+          <input id="submit" type="submit">
       </form> <!-- end of form -->
     </div>
 
