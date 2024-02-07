@@ -2,6 +2,7 @@ const db = require('./db-connector');
 const OpenAI = require('openai');
 const configFile = require('./config');
 const fs = require('fs');
+const path = require('path');
 
 // Generate AI things
 
@@ -117,8 +118,9 @@ async function generateImageForCard(prompt1, object1) {
             const b64 = response.data[0]['b64_json'];
             const buffer = Buffer.from(b64, "base64");
             const filename = `image_${object1}.png`;
+            const fullPath = path.join(__dirname, 'images', filename)
             console.log("Writing Image: " +  filename);
-            fs.writeFileSync(filename, buffer);
+            fs.writeFileSync(fullPath, buffer);
             return filename;
         } else {
             throw new Error("No image data received from OpenAI.");
