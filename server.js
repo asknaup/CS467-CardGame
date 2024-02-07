@@ -202,12 +202,10 @@ app.post('/login', async (req, res) => {
 app.post('/cardGenPage', async (req, res) => {
   try {
     if (req.session.user) {
-      const [attr, animal] = cardGen.generateAiForCard(req.body.inputAiImage);
-      const object1 = await cardGen.sendCardToDB(animal, attr, req.session.user.userId);    // returns cardId?
-      const url = await cardGen.generateImageForCard(animal, object1);
-      
-      console.log(url);
-      // console.log(object1);            cardId
+      const attr = cardGen.generateAiForCard(req.body.inputAiImage);
+      const object1 = await cardGen.sendCardToDB(attr, attr, req.session.user.userId);    // returns cardId?
+      const url = await cardGen.generateImageForCard(attr, object1);
+      await cardGen.sendImageURLtoDB(object1, url)
       res.render('cardGenPage', {
         animal: animal, attr: attr, object1: object1
       });
