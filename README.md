@@ -15,6 +15,7 @@ To download necessary node modules:
 <p>npm install nodemon        </p>
 <p>npm install mysql2</p>
 <p>npm install body-parser</p>
+<p>npm install openai</p>
 
 Make sure you are running Node version v20.11
 node -v

@@ -74,9 +74,9 @@ app.get('/userProfile/:username', async (req, res) => {
     // If user is defined, user shown will be loggedin user
     const val = await dbFunc.getUserProfile(user.userId);
     res.render('userProfile', {
-      username: user.username, 
+      username: user.username,
       gameCount: val[0].game_count,
-      wl: 0, 
+      wl: 0,
       showLogoutButton: true
     })
   }
@@ -114,10 +114,19 @@ app.get('/cardGenPage', (req, res) => {
   res.render('cardGenPage', { showLogoutButton: true })
 });
 
+
+app.get('/userProfile', (req, res) => {
+  if (req.session.user) {
+    res.redirect('/userProfile/' + req.session.user.username)
+  } else {
+    res.redirect('/')
+  }
+});
+
 app.get('/cardViewPage', async (req, res) => {
   const val = await cardGen.grabCardFromDB(1);             // Hard Coded
   console.log(val[0]);
-  res.render('cardViewPage', {value: val})
+  res.render('cardViewPage', { value: val })
 });
 
 // Log out
@@ -139,16 +148,18 @@ app.listen(port, () => {
 
 
 // POST ROUTES 
+
 app.post('/userProfile', async (req, res) => {
   try {
     const user_id = await dbFunc.insertNewUser(req.body.inputUserName, req.body.inputNewPassword, req.body.inputEmail);
     const userProfile = await dbFunc.getUserProfile(user_id);
     if (user_id) {          // save relevant user information in the session
       req.session.user = {
-      userId: user_id, username: req.body.inputUserName, gameCount: userProfile[0].game_count,
-      wins: userProfile[0].wins, losses: userProfile[0].losses };
+        userId: user_id, username: req.body.inputUserName, gameCount: userProfile[0].game_count,
+        wins: userProfile[0].wins, losses: userProfile[0].losses
+      };
       console.log(req.session.user);
-    } 
+    }
     res.redirect('/userProfile/' + req.session.user.username);
 
   } catch (err) {
@@ -212,7 +223,7 @@ app.post('/cardGenPage', async (req, res) => {
   }
 });
 
-app.post('/gameGenerationPageAction', async(req, res) => {
+app.post('/gameGenerationPageAction', async (req, res) => {
   try {
     if (req.session.user) {
       const object2 = await gameGen.sendNewGameToDB(req.session.user.userId, 0, 0, 'tbd');           // (ownerId, listCards, noCards, imageLocation) VALUES (?,?,?,?)';

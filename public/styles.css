@@ -8,4 +8,17 @@
     transform: translateX(-50%);
 }
 
-/* gamePlayPage.handlebars */
+/* lookAtGames.handlebars */
+.game-name {
+    font-size: x-large;
+    font-weight: bold;
+}
+
+#lookAtGames img {
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+    /* Add margin to separate image and name */
+    margin-bottom: 10px;
+    /* Add margin to separate image and ruleset button */
+}
