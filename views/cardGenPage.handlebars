@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="global.css">
+</head>
+
+<body>
+  <div class="generate-card-page">
+    
+    {{!-- INPUT: "Enter Description For AI To Generate Image"
+    after clicking submit button send to ChatGpt--}}
+    <form method="POST" action="/cardGenPage">
+      <input type="text" name="inputAiImage" id="inputAiImage">
+      <input id="submit" type="submit">
+    </form> <!-- end of form -->
+
+    <div id="credits">
+      <p> CardId:    {{ object1 }}
+        <br>
+        Health Stat: 2
+        <br>
+        Attack Stat: 2
+        <br>
+        Defense Stat: 2
+      </p>
+    </div>
+
+    <div class="health-stat">
+      <a href=""><button id="health-stat-minus"> - </button></a>
+      <p id="health-stat-text"> health-stat </p>
+      <button id="health-stat-plus" href="#"> + </button>
+    </div>
+    <div class="attack-stat">
+      <a href=""></a><button id="attack-stat-minus" href="#"> - </button></a>
+      <p id="attack-stat-text"> attack-stat </p>
+      <a href=""></a><button id="attack-stat-plus" href="#"> + </button></a>
+    </div>
+    <div class="defense-stat">
+      <a href=""></a><button id="defense-stat-minus" href="#"> - </button></a>
+      <p id="defense-stat-text">defense-stat</p>
+      <a href=""></a><button id="defense-stat-plus" href="#"> + </button></a>
+    </div>
+
+    <img id="game-name-title" src="img/group-6.png" />
+  </div> <!-- class="generate-card-page" -->
+</body>
+
+</html>

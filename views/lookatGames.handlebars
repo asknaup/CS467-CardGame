@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="global.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div id="lookAtGames">
+    <div id="gameMatrix" class="matrix"></div>
+
+    <script>
+      // Example placeholder data -- CONNECT TO DB ****
+      var gamesData = [
+        {
+          "image": "https://placekitten.com/200/200",
+          "name": "Game 1",
+          "ruleset": "https://example.com/ruleset1.pdf"
+        },
+        {
+          "image": "https://placekitten.com/201/200",
+          "name": "Game 2",
+          "ruleset": "https://example.com/ruleset2.pdf"
+        },
+        {
+          "image": "https://placekitten.com/202/200",
+          "name": "Game 3",
+          "ruleset": "https://example.com/ruleset1.pdf"
+        },
+        {
+          "image": "https://placekitten.com/203/200",
+          "name": "Game 4",
+          "ruleset": "https://example.com/ruleset2.pdf"
+        },
+        {
+          "image": "https://placekitten.com/204/200",
+          "name": "Game 5",
+          "ruleset": "https://example.com/ruleset1.pdf"
+        },
+        {
+          "image": "https://placekitten.com/205/200",
+          "name": "Game 6",
+          "ruleset": "https://example.com/ruleset2.pdf"
+        },
+        {
+          "image": "https://placekitten.com/206/200",
+          "name": "Game 7",
+          "ruleset": "https://example.com/ruleset1.pdf"
+        },
+        {
+          "image": "https://placekitten.com/207/200",
+          "name": "Game 8",
+          "ruleset": "https://example.com/ruleset2.pdf"
+        },
+        {
+          "image": "https://placekitten.com/208/200",
+          "name": "Game 9",
+          "ruleset": "https://example.com/ruleset1.pdf"
+        },
+        {
+          "image": "https://placekitten.com/209/200",
+          "name": "Game 10",
+          "ruleset": "https://example.com/ruleset2.pdf"
+        },
+        {
+          "image": "https://placekitten.com/210/200",
+          "name": "Game 11",
+          "ruleset": "https://example.com/ruleset1.pdf"
+        },
+        {
+          "image": "https://placekitten.com/211/200",
+          "name": "Game 12",
+          "ruleset": "https://example.com/ruleset2.pdf"
+        },
+        
+      ];
+
+      // Populate display matrix
+      function populateMatrix() {
+        var matrixContainer = document.getElementById('gameMatrix');
+
+        gamesData.forEach(function (game) {
+          // Create cell
+          var cell = document.createElement('div');
+          cell.className = 'matrix-cell';
+
+          // Add game name above the image
+          var gameName = document.createElement('div');
+          gameName.className = 'game-name'; // Class for styling
+          gameName.textContent = game.name;
+          cell.appendChild(gameName);
+
+          // Add image
+          var image = document.createElement('img');
+          image.src = game.image;
+          cell.appendChild(image);
+
+          // Add ruleset button below the image
+          var rulesetButton = document.createElement('button');
+          rulesetButton.textContent = 'Ruleset';
+          rulesetButton.onclick = function () {
+            window.location.href = game.ruleset;
+          };
+          cell.appendChild(rulesetButton);
+
+          // Append the cell to the matrix container
+          matrixContainer.appendChild(cell);
+        });
+      }
+      
+      populateMatrix();
+    </script>
+  </div>
+
+</body>
+
+</html>
