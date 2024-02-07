@@ -218,7 +218,6 @@ CREATE TABLE IF NOT EXISTS moves (
 
 ALTER TABLE moves AUTO_INCREMENT=1;
 
-
 -- -----------------------------------------------------
 -- CREATE INDEX VALUES FOR FASTER QUERIES
 -- -----------------------------------------------------
