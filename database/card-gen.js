@@ -6,16 +6,23 @@ const path = require('path');
 
 // Generate AI things
 
-const list_attributes = ['big', 'weak', 'little', 'tall', 'fast', 'slow'];
-const animals = ['dog', 'cat', 'monkey', 'parrot', 'dragon', 'unicorn', 'horse'];
+const attributes = ['strong', 'weak', 'small', 'tall', 'fast', 'slow', 'clever', 'clumsy', 'brave', 'timid'];
+const colors = ["red", "orange", "yellow", "green", "blue", "indigo", "violet", "black", "white", "pink"];
+const animals = ['dog', 'cat', 'monkey', 'parrot', 'dragon', 'unicorn', 'horse', 'lion', 'elephant', 'rabbit'];
+const verbs = ['Jump', 'Sing', 'Fly', 'Eat', 'Dance', 'Run', 'Laugh', 'Sleep', 'Read', 'Swim'];
+
 
 function generateAiForCard(input) {
-    const randomAttr = Math.floor(Math.random() * list_attributes.length);
-    const randomAnimal = Math.floor(Math.random() * animals.length);
-
-    const attr = list_attributes[randomAttr];
-    const animal = animals[randomAnimal];
-    return [attr, animal];
+    let string = '';
+    let num = Math.floor(Math.random() * attributes.length);
+    string.concat(" ", attributes[num])
+    num = Math.floor(Math.random() * attributes.length);
+    string.concat(" ", colors[num])
+    num = Math.floor(Math.random() * attributes.length);
+    string.concat(" ", animals[num])
+    num = Math.floor(Math.random() * attributes.length);
+    string = string.concat(" ", verbs[num])
+    return string;
 }
 
 function grabCardFromDB(card_id) {
@@ -91,9 +98,9 @@ function sendCardToDB(name, type, user) {
 
 function sendImageURLtoDB(cardId, imageURL) {
     return new Promise((resolve, reject) => {
-        const sql = 'UPDATE cards SET imageURL = ? WHERE cardId = ?'; // Corrected SQL query
+        const sql = 'UPDATE cards SET imageURL = ? WHERE cardId = ?';     // Corrected SQL query
         const values = [imageURL, cardId]
-        db.pool.query(sql, [card_id], (err, result) => {
+        db.pool.query(sql, values, (err, result) => {
             if (err) {
                 reject(err); // Reject with the error if there is one
             } else {
