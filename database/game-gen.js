@@ -4,7 +4,7 @@ function generatedGameInfo() {
     return;
 };
 
-function sendNewGameToDB(gameid, ownerId, listCards, numCards, imageLocation) {                  // Need DB inputs
+function sendNewGameToDB(ownerId, listCards, numCards, imageLocation) {                  // Need DB inputs
     // Initialize a new game -> winner has not been decided
     return new Promise((resolve, reject) => {
             db.pool.query('START TRANSACTION', (beginTransactionErr) => {
@@ -61,8 +61,21 @@ function grabAllGames() {
     })
 }
 
-
+function sendGameImageURLtoDB(cardId, imageURL) {
+    return new Promise((resolve, reject) => {
+        const sql = 'UPDATE generatedGames SET imageURL = ? WHERE cardId = ?'; // Corrected SQL query
+        const values = [imageURL, cardId]
+        db.pool.query(sql, [card_id], (err, result) => {
+            if (err) {
+                reject(err); // Reject with the error if there is one
+            } else {
+                resolve(result); // Resolve with the query result
+            }
+        });
+    });
+}
 
 module.exports.sendNewGameToDB = sendNewGameToDB;
 module.exports.generatedGameInfo = generatedGameInfo;
 module.exports.grabAllGames = grabAllGames;
+module.exports.sendGameImageURLtoDB = sendGameImageURLtoDB;
