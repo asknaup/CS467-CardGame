@@ -10,15 +10,15 @@
 </head>
 
 <body>
-  <h1>
+  <h1 class="container">
     Welcome New User!
   </h1>
   <div id="input-form">
     <form class="newUser" method="POST" action="/newUser">
       <label for="inputUserName">Username</label>
       {{#if usnError}}
-        <p id="error">{{usnError}}</p>
-        {{/if}}
+      <p id="error">{{usnError}}</p>
+      {{/if}}
       <input type="text" name="inputUserName" id="inputUserName">
       <label for="inputNewPassword">New Password</label>
       <input type="text" name="inputNewPassword" id="inputNewPassword">

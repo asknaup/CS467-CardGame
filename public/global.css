@@ -7,7 +7,9 @@
   font-family: "Montserrat", sans-serif;
 }
 
-li, a, button {
+li,
+a,
+button {
   font-family: "Montserrat", sans-serif;
   font-weight: 500;
   font-size: 16px;
@@ -22,7 +24,7 @@ header {
   padding: 30px 10%;
 }
 
-.nav__links{
+.nav__links {
   list-style: none;
 }
 
@@ -118,7 +120,8 @@ table {
   margin-top: 75px;
 }
 
-th, td {
+th,
+td {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: left;
@@ -135,4 +138,19 @@ img {
 
 h1 {
   margin-bottom: 0;
+}
+
+.matrix {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+
+.matrix-cell {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
