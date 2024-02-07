@@ -114,6 +114,9 @@ app.get('/cardGenPage', (req, res) => {
   res.render('cardGenPage', { showLogoutButton: true })
 });
 
+app.get('/tradeAndCollect', (req, res) => {
+  res.render('tradeAndCollect', {showLogoutButton: true})
+});
 
 app.get('/userProfile', (req, res) => {
   if (req.session.user) {

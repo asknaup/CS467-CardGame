@@ -22,3 +22,226 @@
     margin-bottom: 10px;
     /* Add margin to separate image and ruleset button */
 }
+
+/* TradeAndCollect Page */
+.rowZero {
+    position: relative;
+    width: 93vw;
+    height: 45vw;
+    margin: 0px auto;
+}
+
+.stageAreaZero {
+    position: relative;
+    height: 30vw;
+    width: 93vw;
+    color: white;
+    border-color: grey;
+    border-width: 5px;
+    border-style: dashed;
+    color: grey;
+}
+
+.topStageText {
+    position: absolute;
+    top: 1vw;
+    width: 80vw;
+    text-align: center; 
+}
+
+.topStageText:hover{
+    position: absolute;
+    top: 1vw;
+    width: 80vw;
+    text-align: center;
+}
+
+.bottomStageText {
+    position: absolute;
+    bottom: 1vw;
+    width: 80vw;
+    text-align: center;
+}
+
+.bottomStageText:hover {
+    position: absolute;
+    bottom: 1vw;
+    width: 80vw;
+    text-align: center;
+}
+
+/* Later these will dynamically generated in javascript 
+    and there won't be a bunch of these here */
+    .testDiv{
+        display: block;
+        position: absolute;
+        bottom: 0vw;
+        height: 14.5vw;
+        width: 8.6vw;
+        border-style: solid;
+        border-color: black;
+        background-color: aqua;
+        border-width: 2px;
+        margin: 2px 0px;
+    }
+
+    .testDivAlt {
+        display: block;
+        position: absolute;
+        bottom: 0vw;
+        height: 14.5vw;
+        width: 8.6vw;
+        border-style: solid;
+        border-color: black;
+        background-color: yellow;
+        border-width: 2px;
+        margin: 2px 0px;
+    }
+
+    #testDiv0{
+        z-index: 0;
+    }
+
+    #testDiv0:hover{
+        z-index: 999;
+    }
+
+    #testDiv1{
+        left: 6vw;
+        z-index: 1;
+    }
+
+    #testDiv1:hover{
+        left: 6vw;
+        z-index: 999;
+    }
+    
+    #testDiv2{
+        left: 12vw;
+        z-index: 2;
+    }
+
+    #testDiv2:hover{
+        left: 12vw;
+        z-index: 999;
+    }
+
+    #testDiv3{
+        left:  18vw;
+        z-index: 3;
+    }
+
+    #testDiv3:hover{
+        left:  18vw;
+        z-index: 999;
+    }
+
+    #testDiv4{
+        left:  24vw;
+        z-index: 4;
+    }
+
+    #testDiv4:hover{
+        left: 24vw;
+        z-index: 999;
+    }
+
+    #testDiv5{
+        left: 30vw;
+        z-index: 5;
+    }
+
+    #testDiv5:hover{
+        left: 30vw;
+        z-index: 999;
+    }
+    
+    #testDiv6{
+        left: 36vw;
+        z-index: 6;
+    }
+
+    #testDiv6:hover{
+        left: 36vw;
+        z-index: 999;
+    }
+
+    #testDiv7{
+        left:  42vw;
+        z-index: 7;
+    }
+
+    #testDiv7:hover{
+        left:  42vw;
+        z-index: 999;
+    }
+
+    #testDiv8{
+        left:  48vw;
+        z-index: 8;
+    }
+
+    #testDiv8:hover{
+        left: 48vw;
+        z-index: 999;
+    }
+
+    #testDiv9{
+        left:  54vw;
+        z-index: 9;
+    }
+
+    #testDiv9:hover{
+        left: 54vw;
+        z-index: 999;
+    }
+
+    #testDiv10{
+        left: 60vw;
+        z-index: 10;
+    }
+
+    #testDiv10:hover{
+        left: 60vw;
+        z-index: 999;
+    }
+
+    #testDiv11{
+        left: 66vw;
+        z-index: 11;
+    }
+
+    #testDiv11:hover{
+        left: 66vw;
+        z-index: 999;
+    }
+    
+    #testDiv12{
+        left: 72vw;
+        z-index: 12;
+    }
+
+    #testDiv12:hover{
+        left: 72vw;
+        z-index: 999;
+    }
+
+    #testDiv13{
+        left:  78vw;
+        z-index: 13;
+    }
+
+    #testDiv13:hover{
+        left:  78vw;
+        z-index: 999;
+    }
+
+    #testDiv14{
+        left:  84vw;
+        z-index: 14;
+    }
+
+    #testDiv14:hover{
+        left: 84vw;
+        z-index: 999;
+    }
