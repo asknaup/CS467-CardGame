@@ -58,10 +58,10 @@
     position: absolute;
     top: 1vw;
     width: 80vw;
-    text-align: center; 
+    text-align: center;
 }
 
-.topStageText:hover{
+.topStageText:hover {
     position: absolute;
     top: 1vw;
     width: 80vw;
@@ -84,180 +84,214 @@
 
 /* Later these will dynamically generated in javascript 
     and there won't be a bunch of these here */
-    .testDiv{
-        display: block;
-        position: absolute;
-        bottom: 0vw;
-        height: 14.5vw;
-        width: 8.8vw;
-        border-style: solid;
-        border-color: black;
-        background-color: beige;
-        border-width: 2px;
-        border-radius: 5px;
-        margin: 2px 0px;
-    }
+.testDiv {
+    display: block;
+    position: absolute;
+    bottom: 0vw;
+    height: 14.5vw;
+    width: 8.8vw;
+    border-style: solid;
+    border-color: black;
+    background-color: beige;
+    border-width: 2px;
+    border-radius: 5px;
+    margin: 2px 0px;
+}
 
-    .testDivAlt {
-        display: block;
-        position: absolute;
-        bottom: 0vw;
-        height: 14.5vw;
-        width: 8.8vw;
-        border-style: solid;
-        border-color: black;
-        background-color: beige;
-        border-width: 2px;
-        border-radius: 5px;
-        margin: 2px 0px;
-    }
+.testDivAlt {
+    display: block;
+    position: absolute;
+    bottom: 0vw;
+    height: 14.5vw;
+    width: 8.8vw;
+    border-style: solid;
+    border-color: black;
+    background-color: beige;
+    border-width: 2px;
+    border-radius: 5px;
+    margin: 2px 0px;
+}
 
-    #testDiv0{
-        z-index: 0;
-    }
+#testDiv0 {
+    z-index: 0;
+}
 
-    #testDiv0:hover{
-        z-index: 999;
-    }
+#testDiv0:hover {
+    z-index: 999;
+}
 
-    #testDiv1{
-        left: 6vw;
-        z-index: 1;
-    }
+#testDiv1 {
+    left: 6vw;
+    z-index: 1;
+}
 
-    #testDiv1:hover{
-        left: 6vw;
-        z-index: 999;
-    }
-    
-    #testDiv2{
-        left: 12vw;
-        z-index: 2;
-    }
+#testDiv1:hover {
+    left: 6vw;
+    z-index: 999;
+}
 
-    #testDiv2:hover{
-        left: 12vw;
-        z-index: 999;
-    }
+#testDiv2 {
+    left: 12vw;
+    z-index: 2;
+}
 
-    #testDiv3{
-        left:  18vw;
-        z-index: 3;
-    }
+#testDiv2:hover {
+    left: 12vw;
+    z-index: 999;
+}
 
-    #testDiv3:hover{
-        left:  18vw;
-        z-index: 999;
-    }
+#testDiv3 {
+    left: 18vw;
+    z-index: 3;
+}
 
-    #testDiv4{
-        left:  24vw;
-        z-index: 4;
-    }
+#testDiv3:hover {
+    left: 18vw;
+    z-index: 999;
+}
 
-    #testDiv4:hover{
-        left: 24vw;
-        z-index: 999;
-    }
+#testDiv4 {
+    left: 24vw;
+    z-index: 4;
+}
 
-    #testDiv5{
-        left: 30vw;
-        z-index: 5;
-    }
+#testDiv4:hover {
+    left: 24vw;
+    z-index: 999;
+}
 
-    #testDiv5:hover{
-        left: 30vw;
-        z-index: 999;
-    }
-    
-    #testDiv6{
-        left: 36vw;
-        z-index: 6;
-    }
+#testDiv5 {
+    left: 30vw;
+    z-index: 5;
+}
 
-    #testDiv6:hover{
-        left: 36vw;
-        z-index: 999;
-    }
+#testDiv5:hover {
+    left: 30vw;
+    z-index: 999;
+}
 
-    #testDiv7{
-        left:  42vw;
-        z-index: 7;
-    }
+#testDiv6 {
+    left: 36vw;
+    z-index: 6;
+}
 
-    #testDiv7:hover{
-        left:  42vw;
-        z-index: 999;
-    }
+#testDiv6:hover {
+    left: 36vw;
+    z-index: 999;
+}
 
-    #testDiv8{
-        left:  48vw;
-        z-index: 8;
-    }
+#testDiv7 {
+    left: 42vw;
+    z-index: 7;
+}
 
-    #testDiv8:hover{
-        left: 48vw;
-        z-index: 999;
-    }
+#testDiv7:hover {
+    left: 42vw;
+    z-index: 999;
+}
 
-    #testDiv9{
-        left:  54vw;
-        z-index: 9;
-    }
+#testDiv8 {
+    left: 48vw;
+    z-index: 8;
+}
 
-    #testDiv9:hover{
-        left: 54vw;
-        z-index: 999;
-    }
+#testDiv8:hover {
+    left: 48vw;
+    z-index: 999;
+}
 
-    #testDiv10{
-        left: 60vw;
-        z-index: 10;
-    }
+#testDiv9 {
+    left: 54vw;
+    z-index: 9;
+}
 
-    #testDiv10:hover{
-        left: 60vw;
-        z-index: 999;
-    }
+#testDiv9:hover {
+    left: 54vw;
+    z-index: 999;
+}
 
-    #testDiv11{
-        left: 66vw;
-        z-index: 11;
-    }
+#testDiv10 {
+    left: 60vw;
+    z-index: 10;
+}
 
-    #testDiv11:hover{
-        left: 66vw;
-        z-index: 999;
-    }
-    
-    #testDiv12{
-        left: 72vw;
-        z-index: 12;
-    }
+#testDiv10:hover {
+    left: 60vw;
+    z-index: 999;
+}
 
-    #testDiv12:hover{
-        left: 72vw;
-        z-index: 999;
-    }
+#testDiv11 {
+    left: 66vw;
+    z-index: 11;
+}
 
-    #testDiv13{
-        left:  78vw;
-        z-index: 13;
-    }
+#testDiv11:hover {
+    left: 66vw;
+    z-index: 999;
+}
 
-    #testDiv13:hover{
-        left:  78vw;
-        z-index: 999;
-    }
+#testDiv12 {
+    left: 72vw;
+    z-index: 12;
+}
 
-    #testDiv14{
-        left:  84vw;
-        z-index: 14;
-    }
+#testDiv12:hover {
+    left: 72vw;
+    z-index: 999;
+}
 
-    #testDiv14:hover{
-        left: 84vw;
-        z-index: 999;
-    }
+#testDiv13 {
+    left: 78vw;
+    z-index: 13;
+}
+
+#testDiv13:hover {
+    left: 78vw;
+    z-index: 999;
+}
+
+#testDiv14 {
+    left: 84vw;
+    z-index: 14;
+}
+
+#testDiv14:hover {
+    left: 84vw;
+    z-index: 999;
+}
+
 /* ^^^ Later these will dynamically generated in javascript 
     and there won't be a bunch of these above here ^^^ */
+
+/* userProfile */
+.userStats {
+    width: 50%;
+    /* Set the width of each box to 50% */
+    padding: 20px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+}
+
+.userBrowsing {
+    width: 50%;
+    /* Set the width of each box to 50% */
+    padding: 20px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    text-align: center;
+}
+
+.userContainer {
+    display: flex;
+}
+
+.userCollection,
+.otherCollections {
+    width: 100%;
+    /* Set the width of each box to 100% to take the full width of the container */
+    padding: 20px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    /* Add some margin between the stacked boxes */
+}
