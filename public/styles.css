@@ -46,10 +46,10 @@
     position: absolute;
     top: 1vw;
     width: 80vw;
-    text-align: center; 
+    text-align: center;
 }
 
-.topStageText:hover{
+.topStageText:hover {
     position: absolute;
     top: 1vw;
     width: 80vw;
@@ -68,4 +68,36 @@
     bottom: 1vw;
     width: 80vw;
     text-align: center;
+
+/* userProfile */
+.userStats {
+    width: 50%;
+    /* Set the width of each box to 50% */
+    padding: 20px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+}
+
+.userBrowsing {
+    width: 50%;
+    /* Set the width of each box to 50% */
+    padding: 20px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    text-align: center;
+}
+
+.userContainer {
+    display: flex;
+}
+
+.userCollection,
+.otherCollections {
+    width: 100%;
+    /* Set the width of each box to 100% to take the full width of the container */
+    padding: 20px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    /* Add some margin between the stacked boxes */
 }

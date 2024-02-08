@@ -47,14 +47,14 @@ app.use(express.static(path.join(__dirname, 'public')))
 ROUTES
 */
 
-app.get('/', (req, res) => {
+app.get('/', (req, res) => {                        // This code needs work
   // Pull session user
   const user = req.session.user
-  if (user) {
+  if (req.session.user) {
     // If user then show homepage
     res.render('welcomePagePortal', {
       showLogoutButton: true,
-      showLoginButton: false
+      showLoginButton: false,
     })
   } else {
     // If user loged out, then show login button
@@ -161,18 +161,20 @@ app.post('/userProfile', async (req, res) => {
         userId: user_id, username: req.body.inputUserName, gameCount: userProfile[0].game_count,
         wins: userProfile[0].wins, losses: userProfile[0].losses
       };
-      console.log(req.session.user);
     }
-    res.redirect('/userProfile/' + req.session.user.username);
+    res.redirect('/userProfile/' + req.session.user.username, {
+      username: req.session.user.username,
+      gameCount: req.session.user.gameCount,
+      wins: userProfile[0].wins,
+      losses: userProfile[0].losses
+    });
 
   } catch (err) {
     console.log(err);
-
     if (err.code === 'ER_DUP_ENTRY') {
       res.render("newUser", {
         usnError: 'Username already in use. Please try another.'
-      })
-    } else {
+      })} else {
       // Handle other errors if needed
       res.send(`Something went wrong : (${err})`);
     }
@@ -186,12 +188,19 @@ app.post('/login', async (req, res) => {
     const enteredPassword = req.body.passwordWpp;
     const user = await dbFunc.authenticateUser(username, enteredPassword);
     if (user) {
-      // If true, return userId and username
-      req.session.user = { userId: user.userId, username: user.username };
-      res.redirect('/userProfile/' + req.session.user.username);
+      const userProfile = await dbFunc.getUserProfile(user.userId);
+      console.log(userProfile);
+      req.session.user = { userId: user.userId, username: user.username, gameCount: userProfile[0].game_count, wins: userProfile[0].wins, losses: userProfile[0].losses };
+      console.log(req.session.user);
+
+      res.render('userProfile', { 
+        username: req.session.user.username, 
+        game_count: userProfile[0].game_count, 
+        wins: userProfile[0].wins, 
+        losses: userProfile[0].losses 
+      });
     } else {
       // Authentication failed, return results stating so
-
       res.render('welcomePagePortal', {
         error: 'Invalid credentials. Please try again.'
       });
@@ -244,3 +253,23 @@ app.post('/gameGenerationPageAction', async (req, res) => {
   }
 });
 
+app.post('/createNewCollection', async (req, res) => {
+  try {
+    if (req.session.user.userId) {
+      const gameId = await dbFunc.createNewCollection(req.session.user.userId);
+      console.log(gameId);
+      res.render('currentDeck', {
+        gameId: gameId
+      });
+    }
+    else {
+      // Authentication failed, render 'welcomePagePortal' with an error message
+      res.render('welcomePagePortal', {
+        error: 'Invalid credentials. Please try again.'
+      });
+    }
+  } catch (err) {
+    // Handle errors that may occur during card generation, database interaction, or rendering
+    res.send(`Something went wrong: ${err}`);
+  }
+});
