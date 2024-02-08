@@ -24,6 +24,18 @@
 }
 
 /* TradeAndCollect Page */
+#goblin {
+    height: 128px;
+    width: 128px;
+    margin: 2px;
+}
+
+#darkWizard {
+    height: 128px;
+    width: 128px;
+    margin: 2px;
+}
+
 .rowZero {
     position: relative;
     width: 93vw;
@@ -77,11 +89,12 @@
         position: absolute;
         bottom: 0vw;
         height: 14.5vw;
-        width: 8.6vw;
+        width: 8.8vw;
         border-style: solid;
         border-color: black;
-        background-color: aqua;
+        background-color: beige;
         border-width: 2px;
+        border-radius: 5px;
         margin: 2px 0px;
     }
 
@@ -90,11 +103,12 @@
         position: absolute;
         bottom: 0vw;
         height: 14.5vw;
-        width: 8.6vw;
+        width: 8.8vw;
         border-style: solid;
         border-color: black;
-        background-color: yellow;
+        background-color: beige;
         border-width: 2px;
+        border-radius: 5px;
         margin: 2px 0px;
     }
 
@@ -245,3 +259,5 @@
         left: 84vw;
         z-index: 999;
     }
+/* ^^^ Later these will dynamically generated in javascript 
+    and there won't be a bunch of these above here ^^^ */
