@@ -1,5 +1,4 @@
 var scrollDeck = document.getElementById("scrollDeck");
-var leftDist = 0;
 for (let i = 0; i <= 14; i++){
     var newCard = document.createElement("div");
     newCard.setAttribute("class", "newCard");
@@ -18,7 +17,7 @@ for (let i = 0; i <= 14; i++){
     }
     newCard.style.position = "absolute";
     newCard.style.bottom = "0vw";
-    newCard.style.left = leftDist.toString() + "vw";
+    newCard.style.left = (i * 6).toString() + "vw";
     newCard.style.height = "14.5vw";
     newCard.style.width = "8.8vw";
     newCard.style.backgroundColor = "beige";
@@ -27,7 +26,8 @@ for (let i = 0; i <= 14; i++){
     newCard.style.borderWidth = "2px";
     newCard.style.borderRadius = "5px";
     newCard.style.zIndex = i.toString();
+    newCard.onmouseenter = function(){this.style.zIndex = "999"};
+    newCard.onmouseleave = function(){this.style.zIndex = i.toString()};
     scrollDeck.appendChild(newCard);
-    leftDist += 6;
 }
 

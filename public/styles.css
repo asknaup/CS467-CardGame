@@ -69,23 +69,3 @@
     width: 80vw;
     text-align: center;
 }
-
-/* Later these will dynamically generated in javascript 
-    and there won't be a bunch of these here */
-    .testDiv{
-        display: block;
-        position: absolute;
-        bottom: 0vw;
-        height: 14.5vw;
-        width: 8.8vw;
-        border-style: solid;
-        border-color: black;
-        background-color: beige;
-        border-width: 2px;
-        border-radius: 5px;
-        margin: 2px 0px;
-    }
-
-    .newCard:hover{
-        z-index: 999;
-    }
