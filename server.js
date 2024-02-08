@@ -47,14 +47,14 @@ app.use(express.static(path.join(__dirname, 'public')))
 ROUTES
 */
 
-app.get('/', (req, res) => {
+app.get('/', (req, res) => {                        // This code needs work
   // Pull session user
   const user = req.session.user
-  if (user) {
+  if (req.session.user) {
     // If user then show homepage
     res.render('welcomePagePortal', {
       showLogoutButton: true,
-      showLoginButton: false
+      showLoginButton: false,
     })
   } else {
     // If user loged out, then show login button
@@ -156,6 +156,7 @@ app.post('/userProfile', async (req, res) => {
   try {
     const user_id = await dbFunc.insertNewUser(req.body.inputUserName, req.body.inputNewPassword, req.body.inputEmail);
     const userProfile = await dbFunc.getUserProfile(user_id);
+    console.log(userProfile);
     if (user_id) {          // save relevant user information in the session
       req.session.user = {
         userId: user_id, username: req.body.inputUserName, gameCount: userProfile[0].game_count,
@@ -163,11 +164,15 @@ app.post('/userProfile', async (req, res) => {
       };
       console.log(req.session.user);
     }
-    res.redirect('/userProfile/' + req.session.user.username);
+    res.redirect('/userProfile/' + req.session.user.username, {
+      username: req.session.user.username,
+      gameCount: req.session.user.gameCount,
+      wins: userProfile[0].wins,
+      losses: userProfile[0].losses
+    });
 
   } catch (err) {
     console.log(err);
-
     if (err.code === 'ER_DUP_ENTRY') {
       res.render("newUser", {
         usnError: 'Username already in use. Please try another.'
@@ -186,12 +191,19 @@ app.post('/login', async (req, res) => {
     const enteredPassword = req.body.passwordWpp;
     const user = await dbFunc.authenticateUser(username, enteredPassword);
     if (user) {
-      // If true, return userId and username
-      req.session.user = { userId: user.userId, username: user.username };
-      res.redirect('/userProfile/' + req.session.user.username);
+      const userProfile = await dbFunc.getUserProfile(user.userId);
+      console.log(userProfile);
+      req.session.user = { userId: user.userId, username: user.username, gameCount: userProfile[0].game_count, wins: userProfile[0].wins, losses: userProfile[0].losses };
+      console.log(req.session.user);
+
+      res.render('userProfile', { 
+        username: req.session.user.username, 
+        game_count: userProfile[0].game_count, 
+        wins: userProfile[0].wins, 
+        losses: userProfile[0].losses 
+      });
     } else {
       // Authentication failed, return results stating so
-
       res.render('welcomePagePortal', {
         error: 'Invalid credentials. Please try again.'
       });
