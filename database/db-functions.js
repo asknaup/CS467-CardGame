@@ -74,15 +74,12 @@ function authenticateUser(username, password){
                 reject(err);
                 return;
             }
-
             if (result.length === 0) {
                 // No user found
                 resolve(null);
                 return;
             }
-            
             const user = result[0];
-
             // compare passwords 
             // const passwordsMatch = await bcrypt.compare(password, user.pwd);
             const passwordsMatch = password === user.pwd;
