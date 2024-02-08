@@ -1,33 +1,52 @@
-var scrollDeck = document.getElementById("scrollDeck");
-for (let i = 0; i <= 14; i++){
-    var newCard = document.createElement("div");
-    newCard.setAttribute("class", "newCard");
-    newCard.setAttribute('id', 'card' + i.toString());
+class Card{
+    constructor(primaryKey, imageSrc){
+        this.primaryKey = primaryKey;
+        this.imageSrc = imageSrc;
+        this.staged = false;
+    }
+}
+
+function displayScrollCards(startIndex, endIndex, cardArr){
+    var scrollDeck = document.getElementById("cardSlots");
+    for (let i = startIndex; endIndex <= 13; i++){
+        var scrollCard = document.createElement("div");
+        scrollCard.setAttribute("class", "newCard");
+        scrollCard.setAttribute('id', cardArr[i].primaryKey);
+        let cardImage = document.createElement("img");
+        cardImage.src = cardArr[i].imageSrc;
+        cardImage.style.margin = "2px";
+        scrollCard.appendChild(cardImage);
+        scrollCard.style.position = "absolute";
+        scrollCard.style.bottom = "0vw";
+        scrollCard.style.left = (i * 6 + 3).toString() + "vw";
+        scrollCard.style.height = "14.5vw";
+        scrollCard.style.width = "8.8vw";
+        scrollCard.style.backgroundColor = "beige";
+        scrollCard.style.borderStyle = "solid";
+        scrollCard.style.borderColor = "black";
+        scrollCard.style.borderWidth = "2px";
+        scrollCard.style.borderRadius = "5px";
+        scrollCard.style.zIndex = i.toString();
+        scrollCard.onmouseenter = function(){this.style.zIndex = "999"};
+        scrollCard.onmouseleave = function(){this.style.zIndex = i.toString()};
+        scrollDeck.appendChild(scrollCard);
+    }
+}
+
+/* main code for tradeAndCollect */
+var cardArr = [];
+for (let i = 0; i<=13; i++){
+    var newCard = null;
     if (i % 2 == 0){
-        let goblinImage = document.createElement('img');
-        goblinImage.src = "images/goblin-willow-tree.jpg";
-        goblinImage.style.margin = "2px";
-        newCard.appendChild(goblinImage);
+        newCard = new Card("card" + i.toString, "images/goblin-willow-tree.jpg");
     }
     else{
-        let darkWizardImage = document.createElement('img');
-        darkWizardImage.src = "images/dark-wizard.png";
-        darkWizardImage.style.margin = "2px";
-        newCard.appendChild(darkWizardImage);
+        newCard = new Card("card" + i.toString, "images/dark-wizard.png");
     }
-    newCard.style.position = "absolute";
-    newCard.style.bottom = "0vw";
-    newCard.style.left = (i * 6).toString() + "vw";
-    newCard.style.height = "14.5vw";
-    newCard.style.width = "8.8vw";
-    newCard.style.backgroundColor = "beige";
-    newCard.style.borderStyle = "solid";
-    newCard.style.borderColor = "black";
-    newCard.style.borderWidth = "2px";
-    newCard.style.borderRadius = "5px";
-    newCard.style.zIndex = i.toString();
-    newCard.onmouseenter = function(){this.style.zIndex = "999"};
-    newCard.onmouseleave = function(){this.style.zIndex = i.toString()};
-    scrollDeck.appendChild(newCard);
+    cardArr.push(newCard);
 }
+
+displayScrollCards(0, 13, cardArr);
+
+
 

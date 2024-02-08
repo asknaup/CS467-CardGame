@@ -30,6 +30,31 @@
     margin: 0vw 3vw;
 }
 
+/* scrollDeck div is inside rowZero div */
+#scrollDeck{
+    position: relative;
+}
+
+/* cardSlots and the buttons scrollLeft/scrollRight 
+are inside scrollDeck div */
+#cardSlots{
+    width: 100vw;
+    height: 15vw;
+}
+
+#scrollLeft{
+    position: absolute;
+    top: 5vw;
+    left: .5vw;
+
+}
+
+#scrollRight{
+    position: absolute;
+    top: 5vw;
+    right: .5vw;
+}
+
 .stageAreaZero {
     position: relative;
     height: 30vw;
