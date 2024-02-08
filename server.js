@@ -253,3 +253,23 @@ app.post('/gameGenerationPageAction', async (req, res) => {
   }
 });
 
+app.post('/createNewCollection', async (req, res) => {
+  try {
+    if (req.session.user.userId) {
+      const gameId = await dbFunc.createNewCollection(req.session.user.userId);
+      console.log(gameId);
+      res.render('currentDeck', {
+        gameId: gameId
+      });
+    }
+    else {
+      // Authentication failed, render 'welcomePagePortal' with an error message
+      res.render('welcomePagePortal', {
+        error: 'Invalid credentials. Please try again.'
+      });
+    }
+  } catch (err) {
+    // Handle errors that may occur during card generation, database interaction, or rendering
+    res.send(`Something went wrong: ${err}`);
+  }
+});
