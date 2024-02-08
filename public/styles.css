@@ -26,20 +26,44 @@
 /* TradeAndCollect Page */
 .rowZero {
     position: relative;
-    width: 93vw;
     height: 45vw;
-    margin: 0px auto;
+    margin: 0vw 3vw;
+}
+
+/* scrollDeck div is inside rowZero div */
+#scrollDeck{
+    position: relative;
+}
+
+/* cardSlots and the buttons scrollLeft/scrollRight 
+are inside scrollDeck div */
+#cardSlots{
+    width: 100vw;
+    height: 15vw;
+}
+
+#scrollLeft{
+    position: absolute;
+    top: 5vw;
+    left: .5vw;
+
+}
+
+#scrollRight{
+    position: absolute;
+    top: 5vw;
+    right: .5vw;
 }
 
 .stageAreaZero {
     position: relative;
     height: 30vw;
-    width: 93vw;
     color: white;
     border-color: grey;
     border-width: 5px;
     border-style: dashed;
     color: grey;
+    margin: 0vw 3vw;
 }
 
 .topStageText {
