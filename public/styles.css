@@ -26,20 +26,19 @@
 /* TradeAndCollect Page */
 .rowZero {
     position: relative;
-    width: 93vw;
     height: 45vw;
-    margin: 0px auto;
+    margin: 0vw 3vw;
 }
 
 .stageAreaZero {
     position: relative;
     height: 30vw;
-    width: 93vw;
     color: white;
     border-color: grey;
     border-width: 5px;
     border-style: dashed;
     color: grey;
+    margin: 0vw 3vw;
 }
 
 .topStageText {
@@ -68,6 +67,7 @@
     bottom: 1vw;
     width: 80vw;
     text-align: center;
+}
 
 /* userProfile */
 .userStats {
