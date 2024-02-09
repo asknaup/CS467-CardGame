@@ -126,10 +126,10 @@ app.get('/userProfile', (req, res) => {
   }
 });
 
-app.get('/cardViewPage', async (req, res) => {
+app.get('/cardViewEditPage', async (req, res) => {
   const val = await cardGen.grabCardFromDB(1);             // Hard Coded
   console.log(val[0]);
-  res.render('cardViewPage', { value: val })
+  res.render('cardViewEditPage', { value: val })
 });
 
 // Log out
