@@ -32,6 +32,7 @@
 /* scrollDeck div is inside rowZero div */
 #scrollDeck{
     position: relative;
+    width: 100%;
 }
 
 /* cardSlots and the buttons scrollLeft/scrollRight 
@@ -44,14 +45,14 @@ are inside scrollDeck div */
 #scrollLeft{
     position: absolute;
     top: 5vw;
-    left: .5vw;
+    left: -5.5vw;
 
 }
 
 #scrollRight{
     position: absolute;
     top: 5vw;
-    right: .5vw;
+    right: -7.75vw;
 }
 
 .stageAreaZero {
@@ -62,7 +63,7 @@ are inside scrollDeck div */
     border-width: 5px;
     border-style: dashed;
     color: grey;
-    margin: 0vw 3vw;
+    margin-top: 1.5vw;
 }
 
 .topStageText {
