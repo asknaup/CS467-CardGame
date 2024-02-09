@@ -54,22 +54,12 @@ button:hover {
   background-color: rgba(0, 136, 169, 1);
 }
 
-/* 
 body {
-  font-family: "Montserrat", sans-serif;
   margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #f4f4f4; 
-  flex-direction: column; 
-} */
-
-.container {
-  text-align: center;
-}
+  padding-right: 7%;
+  padding-left: 7%;
+  height: auto;
+} 
 
 label {
   display: block;
@@ -138,6 +128,7 @@ img {
 
 h1 {
   margin-bottom: 0;
+  text-align: center;
 }
 
 .matrix {
@@ -153,4 +144,33 @@ h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.container {
+  display: flex;
+  height: 100%; 
+  text-align: center;
+}
+
+.left-div, .right-div {
+  flex: 1; /* Each div takes up equal space */
+  padding: 10px;
+  border: 1px solid #ccc;
+  flex-direction: column;
+  
+}
+
+.header {
+  border: 1px solid #000; /* Black border with 1px width */
+  padding: 2.2%; /* Optional: Add padding to the header */
+}
+
+footer {
+  padding: 30px 0;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  width: 80%;
+  border: 1px solid #ccc;
+  margin-top: 20px;
 }
