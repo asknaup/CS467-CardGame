@@ -19,7 +19,7 @@ function createCardElement(idString, leftVal, cardObj){
     // this is all the css for this card
     scrollCard.style.position = "absolute";
     scrollCard.style.bottom = "0vw";
-    scrollCard.style.left = (leftVal + 3).toString() + "vw";
+    scrollCard.style.left = (leftVal).toString() + "vw";
     scrollCard.style.height = "14.5vw";
     scrollCard.style.width = "8.8vw";
     scrollCard.style.backgroundColor = "beige";
@@ -42,7 +42,7 @@ function displayScrollCards(startIndex, endIndex, cardArr){
     }
     var scrollDeck = document.getElementById("cardSlots");
     var cardId = 0;
-    var left = 0;
+    var left = -3;
     for (let i = startIndex; i <= endIndex; i++){
         scrollCard = createCardElement(cardId.toString(), left, cardArr[i]);
         scrollDeck.appendChild(scrollCard);
