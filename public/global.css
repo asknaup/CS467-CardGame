@@ -7,6 +7,10 @@
   font-family: "Montserrat", sans-serif;
 }
 
+main{
+  padding-bottom: 10vh;
+}
+
 li,
 a,
 button {
@@ -55,6 +59,7 @@ button:hover {
 }
 
 body {
+  position: relative;
   margin: 0;
   padding-right: 7%;
   padding-left: 7%;
@@ -166,11 +171,10 @@ h1 {
 }
 
 footer {
-  padding: 30px 0;
   text-align: center;
-  position: fixed;
   bottom: 0;
-  width: 80%;
+  width: 100%;
+  height: 6vh;
   border: 1px solid #ccc;
   margin-top: 20px;
 }

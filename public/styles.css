@@ -2,10 +2,9 @@
 
 /* main.handlebars */
 .bottomButtonsMain {
-    position: fixed;
-    bottom: 50px;
+    position: relative;
+    margin: 1vw;
     left: 50%;
-    transform: translateX(-50%);
 }
 
 /* lookAtGames.handlebars */
