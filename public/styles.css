@@ -95,17 +95,9 @@ are inside scrollDeck div */
 }
 
 /* userProfile */
-.userStats {
-    width: 50%;
-    /* Set the width of each box to 50% */
-    padding: 20px;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
-}
-
 .userBrowsing {
     width: 50%;
-    /* Set the width of each box to 50% */
+
     padding: 20px;
     box-sizing: border-box;
     border: 1px solid #ccc;
@@ -119,10 +111,40 @@ are inside scrollDeck div */
 .userCollection,
 .otherCollections {
     width: 100%;
-    /* Set the width of each box to 100% to take the full width of the container */
     padding: 20px;
     box-sizing: border-box;
     border: 1px solid #ccc;
     margin-bottom: 10px;
-    /* Add some margin between the stacked boxes */
+
 }
+
+.userStats {
+    width: calc(33.33% - 30px); 
+    margin: 20px auto;
+    padding: 15px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center;
+    box-sizing: border-box; 
+  }
+  
+  .userStats p {
+    margin: 10px 0;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .userStats p:first-child {
+    font-weight: bold;
+  }
+  
+  .userStats p:last-child {
+    margin-bottom: 0;
+  }
+  
+  .userStats:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease-in-out;
+  }
+  
