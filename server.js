@@ -188,7 +188,7 @@ app.get('/cardGenPage', (req, res) => {
 app.get('/tradeAndCollect', (req, res) => {
   // Show user logged in user profile
   const user = req.session.user;
-  res.render('tradeAndCollect', {showLogoutButton: true})
+  res.render('tradeAndCollect', { showLogoutButton: true })
   if (user) {
     res.render('tradeAndCollect', { showLogoutButton: true })
   } else {
@@ -236,14 +236,14 @@ app.listen(port, () => {
 
 
 // POST ROUTES 
-app.post('/newUser', async (req, res) => {
+app.post('/newUserPost', async (req, res) => {
   // New User
   try {
     const user_id = await dbFunc.insertNewUser(req.body.inputUserName, req.body.inputNewPassword, req.body.inputEmail);
     const userProfile = await dbFunc.getUserProfile(user_id);
     if (user_id) {          // save relevant user information in the session
       req.session.user = {
-        userId: user_id, 
+        userId: user_id,
         username: req.body.inputUserName
       };
     }
@@ -252,9 +252,18 @@ app.post('/newUser', async (req, res) => {
   } catch (err) {
     console.log(err);
     if (err.code === 'ER_DUP_ENTRY') {
-      res.render("newUser", {
-        usnError: 'Username already in use. Please try another.'
-      })} else {
+      // determine duplicate error username or email
+      let errCodeObject = err.sqlMessage.split("'").slice(-2)[0];
+      if (errCodeObject == "username") {
+        res.render("newUser", {
+          usnError: 'Username already in use. Please try another.'
+        });
+      } else if (errCodeObject === "email"){
+        res.render("newUser", {
+          emailError: 'Email already in use. Please try another.'
+        });
+      }
+    } else {
       // Handle other errors if needed
       res.send(`Something went wrong : (${err})`);
     }
@@ -262,7 +271,7 @@ app.post('/newUser', async (req, res) => {
 });
 
 // Post route for login -> once logged in, user should be directed to /userProfile/:username
-app.post('/login', async (req, res) => { 
+app.post('/login', async (req, res) => {
   try {
     const username = req.body.usernameWpp;
     const enteredPassword = req.body.passwordWpp;
@@ -272,7 +281,7 @@ app.post('/login', async (req, res) => {
       console.log(userProfile);
       req.session.user = { userId: user.userId, username: user.username, gameCount: userProfile[0].game_count, wins: userProfile[0].wins, losses: userProfile[0].losses };
       console.log(req.session.user);
-      
+
       // Redirects to userProfile
       res.redirect('userProfile');
     } else {
