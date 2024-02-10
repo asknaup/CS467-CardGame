@@ -72,7 +72,7 @@ label {
 }
 
 input {
-  width: 100%;
+  width: 75%;
   padding: 8px;
   margin-bottom: 16px;
   border: 1px solid #ccc;
@@ -101,7 +101,7 @@ button {
 }
 
 #input-form {
-  max-width: 300px;
+  max-width: 350px;
   margin: 20px auto;
   padding: 20px;
   background-color: #fff;
@@ -168,7 +168,7 @@ h1 {
 }
 
 header h1 {
-  font-size: 70px;
+  font-size: 50px;
   font-weight: 600;
   background-image: linear-gradient(to left, #449a3c, #a7d393);
   color: transparent;

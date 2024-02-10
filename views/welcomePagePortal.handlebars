@@ -36,10 +36,19 @@
       <h2> Please Login </h2>
       <div id="input-form">
         <form class="loginUser" method="POST" action="/login">
-          <label for="usernameWpp">Username:</label>
-          <input id="usernameWpp" name="usernameWpp" type="text" placeholder="Username">
-          <label for="passwordWpp">Password:</label>
-          <input id="passwordWpp" name="passwordWpp" type="text" placeholder="Password">
+
+          <div class="iconContainer">
+            <i class="material-icons">person</i>
+            <input id="usernameWpp" name="usernameWpp" type="text" placeholder="Username">
+
+          </div>
+
+          <div class="iconContainer">
+            <i class="material-icons">lock</i>
+            <input id="passwordWpp" name="passwordWpp" type="text" placeholder="Password">
+
+          </div>
+
           {{#if error}}
           <p id="error">{{error}}</p>
           {{/if}}

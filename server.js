@@ -186,8 +186,6 @@ app.get('/cardGenPage', (req, res) => {
 });
 
 app.get('/tradeAndCollect', (req, res) => {
-  // Show user logged in user profile
-  const user = req.session.user;
   res.render('tradeAndCollect', {showLogoutButton: true})
   if (user) {
     res.render('currentDeck', { showLogoutButton: true })
@@ -253,8 +251,7 @@ app.post('/userProfile', async (req, res) => {
     if (err.code === 'ER_DUP_ENTRY') {
       res.render("newUser", {
         usnError: 'Username already in use. Please try another.'
-      })
-    } else {
+      })} else {
       // Handle other errors if needed
       res.send(`Something went wrong : (${err})`);
     }

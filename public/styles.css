@@ -30,26 +30,26 @@
 }
 
 /* scrollDeck div is inside rowZero div */
-#scrollDeck{
+#scrollDeck {
     position: relative;
     width: 100%;
 }
 
 /* cardSlots and the buttons scrollLeft/scrollRight 
 are inside scrollDeck div */
-#cardSlots{
+#cardSlots {
     width: 100vw;
     height: 15vw;
 }
 
-#scrollLeft{
+#scrollLeft {
     position: absolute;
     top: 5vw;
     left: -5.5vw;
 
 }
 
-#scrollRight{
+#scrollRight {
     position: absolute;
     top: 5vw;
     right: -7.75vw;
@@ -119,37 +119,37 @@ are inside scrollDeck div */
 }
 
 .userStats {
-    width: calc(33.33% - 30px); 
+    width: calc(33.33% - 30px);
     margin: 20px auto;
     padding: 15px;
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     text-align: center;
-    box-sizing: border-box; 
-  }
-  
-  .userStats p {
+    box-sizing: border-box;
+}
+
+.userStats p {
     margin: 10px 0;
     font-size: 16px;
     color: #333;
-  }
-  
-  .userStats p:first-child {
+}
+
+.userStats p:first-child {
     font-weight: bold;
-  }
-  
-  .userStats p:last-child {
+}
+
+.userStats p:last-child {
     margin-bottom: 0;
-  }
-  
-  .userStats:hover {
+}
+
+.userStats:hover {
     transform: scale(1.05);
     transition: transform 0.3s ease-in-out;
-  }
-  
-  /* Login homepage */
-  #loginButton {
+}
+
+/* Login homepage */
+#loginButton {
     border: 1px solid rgba(10, 180, 180, 1);
     background: #4caf50;
     font-size: 18px;
@@ -158,9 +158,22 @@ are inside scrollDeck div */
     padding: 10px 50px;
     cursor: pointer;
     transition: .4s;
+
     &:hover {
-      background: rgba(0, 136, 169, 1);
-      padding: 10px 80px;
+        background: rgba(0, 136, 169, 1);
+        padding: 10px 80px;
     }
-  }
-  
+}
+
+.iconContainer {
+    position: relative;
+}
+
+.material-icons {
+    position: absolute;
+    top: 35%;
+    left: 93%;
+    transform: translateY(-50%);
+    color: #757575;
+    /* Adjust the color as needed */
+}
