@@ -55,7 +55,7 @@ function sendCardToDB(name, type, user) {
                 }
 
                 const insertCardQuery = 'INSERT INTO cards (cardName, cardType, rarity, maxAvailable) VALUES (?, ?, 0, 15)';
-                const insertCardInstanceQuery = 'INSERT INTO cardInstance (cardId, ownerUserId) VALUES (?, 1001)';
+                const insertCardInstanceQuery = 'INSERT INTO cardInstance (cardId, ownerUserId) VALUES (?, ?)';
 
                 connection.query(insertCardQuery, [name, type], (insertCardErr, insertCardResult) => {
                     if (insertCardErr) {
@@ -68,7 +68,7 @@ function sendCardToDB(name, type, user) {
 
                     const lastInsertedId = insertCardResult.insertId;
 
-                    connection.query(insertCardInstanceQuery, [lastInsertedId], (insertInstanceErr, insertInstanceResult) => {
+                    connection.query(insertCardInstanceQuery, [lastInsertedId, user], (insertInstanceErr, insertInstanceResult) => {
                         if (insertInstanceErr) {
                             connection.rollback(() => {
                                 connection.release();
