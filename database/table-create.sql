@@ -25,7 +25,6 @@ DROP TABLE IF EXISTS userCreds;
 -- DROP TRIGGERS
 -- -----------------------------------------------------
 DROP TRIGGER IF EXISTS newUser;
-DROP TRIGGER IF EXISTS newCard;
 
 -- -----------------------------------------------------
 -- Create User Credentials Table 
@@ -51,7 +50,7 @@ DROP TABLE IF EXISTS userProfile;
 CREATE TABLE IF NOT EXISTS userProfile (
     userId INT UNIQUE NOT NULL,
     username VARCHAR(255) UNIQUE NOT NULL,
-    game_count INT DEFAULT 0,
+    gameCount INT DEFAULT 0,
     wins INT DEFAULT 0,
     losses INT DEFAULT 0,
     PRIMARY KEY (userId),
@@ -134,18 +133,6 @@ CREATE TABLE IF NOT EXISTS cardInstance (
 );
 
 ALTER TABLE cardInstance AUTO_INCREMENT=5000;
-
--- Will trigger when user has created a new card
-DELIMITER $$
-CREATE TRIGGER newCard AFTER INSERT ON cards
-    FOR EACH ROW
-        BEGIN
-            -- Insert corresponding record into cardInstance for each user
-            INSERT INTO cardInstance (cardId, ownerUserId)
-            SELECT NEW.cardId, userId
-            FROM userProfile;
-        END $$
-DELIMITER ;
 
 -- -----------------------------------------------------
 -- Create Card Creature table

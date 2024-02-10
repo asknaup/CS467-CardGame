@@ -302,8 +302,9 @@ app.post('/generateCard', async (req, res) => {
     console.log(user);
     if (user) {
       // const attr = cardGen.generateAiForCard(req.body.inputAiImage);
-      const cardType = req.body;
-      const object1 = await cardGen.sendCardToDB(attr, attr, req.session.user.userId);    // returns cardId?
+      const cardType = req.body.cardType;
+      const cardName = req.body.cardName;
+      const object1 = await cardGen.sendCardToDB(cardName, cardType, user.userId);    // returns cardId?
       // const url = await cardGen.generateImageForCard(attr, object1);
       // await cardGen.sendImageURLtoDB(object1, url)
       // res.render('cardGenPage', {
