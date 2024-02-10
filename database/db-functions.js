@@ -213,6 +213,36 @@ function createNewCollection(userId) {
     });
 }
 
+function insertCreatureCard(cardId) {
+    return new Promise((resolve, reject) => {
+        const query = 'INSERT INTO cardCreature (cardId, hp, attack) VALUES (?, ?, ?);';
+        const vars = [cardId, 1, 2];
+
+        db.pool.query(query, vars, (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+}
+
+function insertSpellCard(cardId) {
+    return new Promise((resolve, reject) => {
+        const query = 'INSERT INTO cardSpell (cardId, spellAbility, healthRegen) VALUES (?, ?, ?);';
+        const vars = [cardId, "This card does somethign", 2];
+
+        db.pool.query(query, vars, (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+}
+
 //function insertIntoCollection(deckId, userId, cardId) { }
 
 // function updateGameWinner({ params }) {
@@ -238,3 +268,5 @@ module.exports.insertNewGameIntoGames = insertNewGameIntoGames;
 module.exports.insertNewUser = insertNewUser;
 module.exports.authenticateUser = authenticateUser;
 module.exports.createNewCollection = createNewCollection;
+module.exports.insertCreatureCard = insertCreatureCard;
+module.exports.insertSpellCard = insertSpellCard;
