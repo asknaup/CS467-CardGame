@@ -102,7 +102,7 @@ INSERT INTO cardInstance (cardId, ownerUserId)
 INSERT INTO card_creature (cardId, hp, attack)
     VALUES (@lastCardId, 5, 4);
 
---Example 8 - creature
+-- Example 8 - creature
 INSERT INTO cards (cardName, cardType, rarity, max_available) VALUES
     ('Flaming Dragon', 'creature', 0, 10);
 
@@ -114,7 +114,7 @@ INSERT INTO cardInstance (cardId, ownerUserId)
 INSERT INTO card_creature (cardId, hp, attack)
     VALUES (@lastCardId, 5, 9);
 
---Example 9 - creature
+-- Example 9 - creature
 INSERT INTO cards (cardName, cardType, rarity, max_available) VALUES
     ('Spiked Turtle', 'creature', 0, 15);
 

@@ -48,7 +48,6 @@ ROUTES
 */
 // TODO Home button should go to user's specifc profile
 // FIXME (Amanda) fix req.session.user for logging in -> if iser sent to user profile, if not send to index
-// TODO userProfile, post username, loging - relationship?
 // TODO CardGenPage - sends the card generates the image, need image urls for cardGen, for userProfile
 // TODO createNewCollection - needs further development
 // TODO Need to create cards that insert into cards Table
@@ -135,6 +134,7 @@ app.get('/gamePlayPage', (req, res) => {
 // TODO other image ai sources
 // TODO prompt restriction for better image generation
 app.get('/cardGenPage', (req, res) => {
+
   res.render('cardGenPage', { showLogoutButton: true })
 });
 
@@ -205,7 +205,7 @@ app.post('/userProfile', async (req, res) => {
   }
 });
 
-// Post route to login
+// Post route for login -> once logged in, user should be directed to /userProfile/:username
 app.post('/login', async (req, res) => { // TODO fix to make sure it works
   try {
     const username = req.body.usernameWpp;
@@ -216,13 +216,9 @@ app.post('/login', async (req, res) => { // TODO fix to make sure it works
       console.log(userProfile);
       req.session.user = { userId: user.userId, username: user.username, gameCount: userProfile[0].game_count, wins: userProfile[0].wins, losses: userProfile[0].losses };
       console.log(req.session.user);
-
-      res.render('userProfile', { 
-        username: req.session.user.username, 
-        game_count: userProfile[0].game_count, 
-        wins: userProfile[0].wins, 
-        losses: userProfile[0].losses 
-      });
+      
+      // Redirects to userProfile
+      res.redirect('userProfile');
     } else {
       // Authentication failed, return results stating so
       res.render('welcomePagePortal', {
