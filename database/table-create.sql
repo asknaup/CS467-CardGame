@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS user_creds (
     user_id INT UNIQUE NOT NULL AUTO_INCREMENT,
     username VARCHAR(50) UNIQUE NOT NULL,
     pwd VARCHAR(50) NOT NULL,   -- hashed
-    email VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
     account_status INT NOT NULL DEFAULT 1, -- 0 = not active, 1=activated, 2=suspended
     PRIMARY KEY (user_id)
 );

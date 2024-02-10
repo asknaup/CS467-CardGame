@@ -39,59 +39,64 @@ function grabCardFromDB(card_id) {
 }
 
 // update card
-
 function sendCardToDB(name, type, user) {
-    // Initialize a new game -> winner has not been decided
+    // 1. Start transaction
+    // 2. Initialize cardInstance and insert card
+    // 3. Get LAST_INSERT_ID()
+    // 4. Insert into cards table
+    // 5. Insert into card_creature or card_spell
     return new Promise((resolve, reject) => {
         db.pool.query('START TRANSACTION', (beginTransactionErr) => {
             if (beginTransactionErr) {
                 reject(beginTransactionErr);
                 return;
             }
-
-            const insertQueryCard = 'INSERT INTO cards (cardName, cardType, rarity, max_available) VALUES (?,?,?,?)';
+            
             const insertQueryCardInstance = 'INSERT INTO cardInstance (cardId, ownerUserId) VALUES (?,?)';
-            const valuesCard = [name, type, 2, 2];
-            const selectQuery = 'SELECT LAST_INSERT_ID() as lastCard';
+            const selectUserId = 'SELECT LAST_INSERT_ID() as lastCard';
+            const insertQueryCard = 'INSERT INTO cards (cardName, cardType, rarity, max_available) VALUES (?,?,?,?)';
+            // const valuesCard = [name, type, 2, 2];
 
-            db.pool.query(insertQueryCard, valuesCard, (insertErr, insertResult) => {
-                if (insertErr) {
-                    db.pool.query('ROLLBACK', () => {
-                        reject(insertErr);
-                    });
-                    return;
-                }
-                const insertId = insertResult.insertId;
-                const valuesCardInstance = [insertId, user];
+            // Insert into cardInstance Table
+            db.pool.query(insertQueryCardInstance)
+            // db.pool.query(insertQueryCard, valuesCard, (insertErr, insertResult) => {
+            //     if (insertErr) {
+            //         db.pool.query('ROLLBACK', () => {
+            //             reject(insertErr);
+            //         });
+            //         return;
+            //     }
+            //     const insertId = insertResult.insertId;
+            //     const valuesCardInstance = [insertId, user];
 
-                db.pool.query(insertQueryCardInstance, valuesCardInstance, (insertErr, insertResult) => {
-                    if (insertErr) {
-                        db.pool.query('ROLLBACK', () => {
-                            reject(insertErr);
-                        });
-                        return;
-                    }
+            //     db.pool.query(insertQueryCardInstance, valuesCardInstance, (insertErr, insertResult) => {
+            //         if (insertErr) {
+            //             db.pool.query('ROLLBACK', () => {
+            //                 reject(insertErr);
+            //             });
+            //             return;
+            //         }
 
-                db.pool.query(selectQuery, (selectErr, selectResult) => {
-                    if (selectErr) {
-                        db.pool.query('ROLLBACK', () => {
-                            reject(selectErr);
-                        });
-                        return;
-                    }
+            //     db.pool.query(selectQuery, (selectErr, selectResult) => {
+            //         if (selectErr) {
+            //             db.pool.query('ROLLBACK', () => {
+            //                 reject(selectErr);
+            //             });
+            //             return;
+            //         }
 
-                db.pool.query('COMMIT', (commitErr) => {
-                    if (commitErr) {
-                        db.pool.query('ROLLBACK', () => {
-                            reject(commitErr);
-                        });
-                    } else {
-                        resolve(selectResult[0].lastCard);
-                    }
-                });
-                    });
-                });
-            });
+            //     db.pool.query('COMMIT', (commitErr) => {
+            //         if (commitErr) {
+            //             db.pool.query('ROLLBACK', () => {
+            //                 reject(commitErr);
+            //             });
+            //         } else {
+            //             resolve(selectResult[0].lastCard);
+            //         }
+            //     });
+            //         });
+            //     });
+            // });
         });
     });
 }   

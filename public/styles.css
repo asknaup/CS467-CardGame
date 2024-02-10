@@ -44,15 +44,14 @@ are inside scrollDeck div */
 
 #scrollLeft {
     position: absolute;
+    left: -3vw;
     top: 5vw;
-    left: -5.5vw;
-
 }
 
 #scrollRight {
     position: absolute;
+    right: -3vw;
     top: 5vw;
-    right: -7.75vw;
 }
 
 .stageAreaZero {

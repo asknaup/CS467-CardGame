@@ -5,10 +5,10 @@
 -- Insert into user_creds and user_profile
 -- -----------------------------------------------------
 
-INSERT IGNORE INTO user_creds (username, pwd, account_status) VALUES
-    ('admin', 'admin', 1),
-    ('aknaup', 'qwerty123456', 1),
-    ('cs467', 'cs467pwd', 1);
+INSERT IGNORE INTO user_creds (username, pwd, account_status, email) VALUES
+    ('admin', 'admin', 1, 'admin@admin.com'),
+    ('aknaup', 'qwerty123456', 1, 'knaupa@oregonstate.edu'),
+    ('cs467', 'cs467pwd', 1, 'tradingcardteam@oregonstate.edu');
 
 
 -- -----------------------------------------------------

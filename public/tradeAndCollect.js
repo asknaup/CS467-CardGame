@@ -43,12 +43,12 @@ function displayScrollCards(startIndex, endIndex, cardArr){
     }
     var scrollDeck = document.getElementById("cardSlots");
     var cardId = 0;
-    var left = -3;
+    var left = 0;
     for (let i = startIndex; i <= endIndex; i++){
         scrollCard = createCardElement(cardId.toString(), left, cardArr[i]);
         scrollDeck.appendChild(scrollCard);
         cardId += 1;
-        left += 6;
+        left += 5;
     }
 }
 
@@ -56,7 +56,7 @@ function displayScrollCards(startIndex, endIndex, cardArr){
 var cardArr = [];
 for (let i = 0; i<=27; i++){
     var newCard = null;
-    if(i <= 13){
+    if(i <= 14){
         if (i % 2 == 0){
             newCard = new Card("card" + i.toString(), "images/goblin-willow-tree.jpg");
         }
@@ -71,7 +71,7 @@ for (let i = 0; i<=27; i++){
 
 /* main code for tradeAndCollect */
 var startIndex = 0;
-var endIndex = 13;
+var endIndex = 14;
 displayScrollCards(startIndex, endIndex, cardArr);
 var scrollRightButton = document.getElementById("scrollRight");
 scrollRightButton.addEventListener("click", () => {
@@ -79,20 +79,20 @@ scrollRightButton.addEventListener("click", () => {
         endIndex = cardArr.length
         startIndex = startIndex + (cardArr.length - endIndex)
     }else{
-        endIndex += 14;
-        startIndex += 14;
+        endIndex += 15;
+        startIndex += 15;
     }
     displayScrollCards(startIndex, endIndex, cardArr);
 });
 
 var scrollLeftButton = document.getElementById("scrollLeft");
 scrollLeftButton.addEventListener("click", () => {
-    if (startIndex < 14){
+    if (startIndex < 15){
         startIndex = 0;
         endIndex = endIndex - startIndex;
     }else{
-        endIndex -= 14;
-        startIndex -= 14;
+        endIndex -= 15;
+        startIndex -= 15;
     }
-    displayScrollCards(0, 13, cardArr);
+    displayScrollCards(startIndex, endIndex, cardArr);
 });
