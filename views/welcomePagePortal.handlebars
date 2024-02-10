@@ -10,10 +10,19 @@
 </head>
 
 <body>
-  <div>
-    <div id="input-form">
-      <h2>Login</h2>
-      <form class="loginUser" method="POST" action="/login">
+  <div class="container">
+    <div class="left-div">
+      <br>
+      <h2>Welcome to the Online Trading Card Game Generator</h2>
+      <br><br>
+      <p>Stuff you can do </p>
+
+    </div>
+    <div class="right-div">
+      <br>
+      <h2> Please Login </h2>
+      <div id="input-form">
+        <form class="loginUser" method="POST" action="/login">
         <label for="usernameWpp">Username:</label>
         <input id="usernameWpp" name="usernameWpp" type="text" placeholder="Username">
         <label for="passwordWpp">Password:</label>
@@ -23,8 +32,13 @@
         {{/if}}
         <button id="loginWpp" type="submit">Login</button></a>
       </form>
+      </div>
     </div>
+  </div>
 
+
+
+  <div>
     <div class="bottomButtonsMain">
       <a href="/newUser"><button type="button">New User?</button></a>
       <a href="/browseGames"><button type="button">Browse Games</button></a>

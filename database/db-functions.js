@@ -74,15 +74,12 @@ function authenticateUser(username, password){
                 reject(err);
                 return;
             }
-
             if (result.length === 0) {
                 // No user found
                 resolve(null);
                 return;
             }
-            
             const user = result[0];
-
             // compare passwords 
             // const passwordsMatch = await bcrypt.compare(password, user.pwd);
             const passwordsMatch = password === user.pwd;
@@ -173,10 +170,50 @@ function insertNewGameIntoGames() {
     });
 }
 
-function renderUserLibrary(userId) {
-    
+function createNewCollection(userId) {
+    // Initialize a new game -> winner has not been decided
+    return new Promise((resolve, reject) => {
+        db.pool.query('START TRANSACTION', (beginTransactionErr) => {
+            if (beginTransactionErr) {
+                reject(beginTransactionErr)
+                return;
+            }
+
+            const insertQuery = 'INSERT INTO decks (playerId) VALUES (?)';
+            const selectQuery = 'SELECT LAST_INSERT_ID() as newGameId';
+
+            db.pool.query(insertQuery, userId, (insertErr, insertResult) => {
+                if (insertErr) {
+                    db.pool.query('ROLLBACK', () => {
+                        reject(insertErr);
+                    });
+                    return;
+                }
+
+                db.pool.query(selectQuery, (selectErr, selectResult) => {
+                    if (selectErr) {
+                        db.pool.query('ROLLBACK', () => {
+                            reject(selectErr);
+                        });
+                        return;
+                    }
+
+                    db.pool.query('COMMIT', (commitErr) => {
+                        if (commitErr) {
+                            db.pool.query('ROLLBACK', () => {
+                                reject(commitErr);
+                            });
+                        } else {
+                            resolve(selectResult[0].newGameId);
+                        }
+                    });
+                });
+            });
+        });
+    });
 }
 
+//function insertIntoCollection(deckId, userId, cardId) { }
 
 // function updateGameWinner({ params }) {
 //     // Initialize a new game -> winner has not been decided
@@ -194,31 +231,10 @@ function renderUserLibrary(userId) {
 // }
 
 
-// function confirmUserExists(username, password) {
-//     return new Promise(
-//         (resolve, reject) => {
-//             db.pool.query('SELECT USER WHERE PASSWORD'), (err, result) => {
-//                 if (err) return reject(err);
-//                 return resolve(result);
-//             }
-//         });
-// }
-
-// function createCard({ params }) {
-//     return new Promise(
-//         (resolve, reject) => {
-//             db.pool.query('INSERT INTO '), (err, result) => {
-//                 if (err) return reject(err);
-//                 return resolve(result);
-//             }
-//         });
-// }
-
-
-
 module.exports.insertNewUserIntoDB = insertNewUserIntoDB;
 module.exports.getUserProfile = getUserProfile;
 module.exports.getUserId = getUserId;
 module.exports.insertNewGameIntoGames = insertNewGameIntoGames;
 module.exports.insertNewUser = insertNewUser;
 module.exports.authenticateUser = authenticateUser;
+module.exports.createNewCollection = createNewCollection;

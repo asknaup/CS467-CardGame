@@ -4,18 +4,19 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="public/global.css">
+    <link rel="stylesheet" type="text/css" href="global.css">
     {{{head}}}
 </head>
 
 <body>
-    <header>
+    <header class="header">
         <h1>Online Trading Card Game Maker</h1>
         <nav>
             <ul class="nav__links">
+                <li><a href="/">Home</a></li>
                 <li><a href="/browseGames">Play</a></li>
-                <li><a href="/currentDeck">Collect</a></li>
-                <li><a href="/cardGenPage">Make</a></li>
+                <li><a href="/tradeAndCollect">Collect</a></li>
+                <li><a href="/gameGenPage">Make</a></li>
                 <li>
                     {{#if showLogoutButton}}
                     {{> logoutButton}} <!-- Include the logout button partial -->
@@ -27,13 +28,12 @@
             </ul>
         </nav>
     </header>
-
     <main>
         {{{body}}} <!-- This is where the content of each specific view will be injected -->
     </main>
 
     <footer>
-        {{{footer}}}<!-- footer content -->
+        <h3>Copyright by CS467 Team</h3>
     </footer>
 
     <!-- Add your script includes here -->

@@ -47,14 +47,14 @@ app.use(express.static(path.join(__dirname, 'public')))
 ROUTES
 */
 
-app.get('/', (req, res) => {
+app.get('/', (req, res) => {                        // This code needs work
   // Pull session user
   const user = req.session.user
-  if (user) {
+  if (req.session.user) {
     // If user then show homepage
     res.render('welcomePagePortal', {
       showLogoutButton: true,
-      showLoginButton: false
+      showLoginButton: false,
     })
   } else {
     // If user loged out, then show login button
@@ -74,9 +74,9 @@ app.get('/userProfile/:username', async (req, res) => {
     // If user is defined, user shown will be loggedin user
     const val = await dbFunc.getUserProfile(user.userId);
     res.render('userProfile', {
-      username: user.username, 
+      username: user.username,
       gameCount: val[0].game_count,
-      wl: 0, 
+      wl: 0,
       showLogoutButton: true
     })
   }
@@ -114,10 +114,22 @@ app.get('/cardGenPage', (req, res) => {
   res.render('cardGenPage', { showLogoutButton: true })
 });
 
+app.get('/tradeAndCollect', (req, res) => {
+  res.render('tradeAndCollect', {showLogoutButton: true})
+});
+
+app.get('/userProfile', (req, res) => {
+  if (req.session.user) {
+    res.redirect('/userProfile/' + req.session.user.username)
+  } else {
+    res.redirect('/')
+  }
+});
+
 app.get('/cardViewPage', async (req, res) => {
   const val = await cardGen.grabCardFromDB(1);             // Hard Coded
   console.log(val[0]);
-  res.render('cardViewPage', {value: val})
+  res.render('cardViewPage', { value: val })
 });
 
 // Log out
@@ -137,27 +149,32 @@ app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
 });
 
+
 // POST ROUTES 
+
 app.post('/userProfile', async (req, res) => {
   try {
     const user_id = await dbFunc.insertNewUser(req.body.inputUserName, req.body.inputNewPassword, req.body.inputEmail);
     const userProfile = await dbFunc.getUserProfile(user_id);
     if (user_id) {          // save relevant user information in the session
       req.session.user = {
-      userId: user_id, username: req.body.inputUserName, gameCount: userProfile[0].game_count,
-      wins: userProfile[0].wins, losses: userProfile[0].losses };
-      console.log(req.session.user);
-    } 
-    res.redirect('/userProfile/' + req.session.user.username);
+        userId: user_id, username: req.body.inputUserName, gameCount: userProfile[0].game_count,
+        wins: userProfile[0].wins, losses: userProfile[0].losses
+      };
+    }
+    res.redirect('/userProfile/' + req.session.user.username, {
+      username: req.session.user.username,
+      gameCount: req.session.user.gameCount,
+      wins: userProfile[0].wins,
+      losses: userProfile[0].losses
+    });
 
   } catch (err) {
     console.log(err);
-
     if (err.code === 'ER_DUP_ENTRY') {
       res.render("newUser", {
         usnError: 'Username already in use. Please try another.'
-      })
-    } else {
+      })} else {
       // Handle other errors if needed
       res.send(`Something went wrong : (${err})`);
     }
@@ -171,12 +188,19 @@ app.post('/login', async (req, res) => {
     const enteredPassword = req.body.passwordWpp;
     const user = await dbFunc.authenticateUser(username, enteredPassword);
     if (user) {
-      // If true, return userId and username
-      req.session.user = { userId: user.userId, username: user.username };
-      res.redirect('/userProfile/' + req.session.user.username);
+      const userProfile = await dbFunc.getUserProfile(user.userId);
+      console.log(userProfile);
+      req.session.user = { userId: user.userId, username: user.username, gameCount: userProfile[0].game_count, wins: userProfile[0].wins, losses: userProfile[0].losses };
+      console.log(req.session.user);
+
+      res.render('userProfile', { 
+        username: req.session.user.username, 
+        game_count: userProfile[0].game_count, 
+        wins: userProfile[0].wins, 
+        losses: userProfile[0].losses 
+      });
     } else {
       // Authentication failed, return results stating so
-
       res.render('welcomePagePortal', {
         error: 'Invalid credentials. Please try again.'
       });
@@ -190,9 +214,10 @@ app.post('/login', async (req, res) => {
 app.post('/cardGenPage', async (req, res) => {
   try {
     if (req.session.user) {
-      const [attr, animal] = cardGen.generateAiForCard(req.body.inputAiImage);
-      const object1 = await cardGen.sendCardToDB(animal, attr, req.session.user.userId);
-      // console.log(object1);            cardId
+      const attr = cardGen.generateAiForCard(req.body.inputAiImage);
+      const object1 = await cardGen.sendCardToDB(attr, attr, req.session.user.userId);    // returns cardId?
+      const url = await cardGen.generateImageForCard(attr, object1);
+      await cardGen.sendImageURLtoDB(object1, url)
       res.render('cardGenPage', {
         animal: animal, attr: attr, object1: object1
       });
@@ -208,7 +233,7 @@ app.post('/cardGenPage', async (req, res) => {
   }
 });
 
-app.post('/gameGenerationPageAction', async(req, res) => {
+app.post('/gameGenerationPageAction', async (req, res) => {
   try {
     if (req.session.user) {
       const object2 = await gameGen.sendNewGameToDB(req.session.user.userId, 0, 0, 'tbd');           // (ownerId, listCards, noCards, imageLocation) VALUES (?,?,?,?)';
@@ -228,3 +253,23 @@ app.post('/gameGenerationPageAction', async(req, res) => {
   }
 });
 
+app.post('/createNewCollection', async (req, res) => {
+  try {
+    if (req.session.user.userId) {
+      const gameId = await dbFunc.createNewCollection(req.session.user.userId);
+      console.log(gameId);
+      res.render('currentDeck', {
+        gameId: gameId
+      });
+    }
+    else {
+      // Authentication failed, render 'welcomePagePortal' with an error message
+      res.render('welcomePagePortal', {
+        error: 'Invalid credentials. Please try again.'
+      });
+    }
+  } catch (err) {
+    // Handle errors that may occur during card generation, database interaction, or rendering
+    res.send(`Something went wrong: ${err}`);
+  }
+});

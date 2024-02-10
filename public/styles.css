@@ -2,22 +2,149 @@
 
 /* main.handlebars */
 .bottomButtonsMain {
-    position: fixed;
-    bottom: 50px;
+    position: relative;
+    margin: 1vw;
     left: 50%;
-    transform: translateX(-50%);
 }
 
-/* gamePlayPage.handlebars */
-.card {
-    width: 100px;
-    height: 150px;
-    background-color: #f0f0f0;
+/* lookAtGames.handlebars */
+.game-name {
+    font-size: x-large;
+    font-weight: bold;
+}
+
+#lookAtGames img {
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+    /* Add margin to separate image and name */
+    margin-bottom: 10px;
+    /* Add margin to separate image and ruleset button */
+}
+
+/* TradeAndCollect Page */
+.rowZero {
+    position: relative;
+    height: 45vw;
+    margin: 0vw 3vw;
+}
+
+/* scrollDeck div is inside rowZero div */
+#scrollDeck{
+    position: relative;
+    width: 100%;
+}
+
+/* cardSlots and the buttons scrollLeft/scrollRight 
+are inside scrollDeck div */
+#cardSlots{
+    width: 100vw;
+    height: 15vw;
+}
+
+#scrollLeft{
+    position: absolute;
+    top: 5vw;
+    left: -5.5vw;
+
+}
+
+#scrollRight{
+    position: absolute;
+    top: 5vw;
+    right: -7.75vw;
+}
+
+.stageAreaZero {
+    position: relative;
+    height: 30vw;
+    color: white;
+    border-color: grey;
+    border-width: 5px;
+    border-style: dashed;
+    color: grey;
+    margin-top: 1.5vw;
+}
+
+.topStageText {
+    position: absolute;
+    top: 1vw;
+    width: 80vw;
+    text-align: center;
+}
+
+.topStageText:hover {
+    position: absolute;
+    top: 1vw;
+    width: 80vw;
+    text-align: center;
+}
+
+.bottomStageText {
+    position: absolute;
+    bottom: 1vw;
+    width: 80vw;
+    text-align: center;
+}
+
+.bottomStageText:hover {
+    position: absolute;
+    bottom: 1vw;
+    width: 80vw;
+    text-align: center;
+}
+
+/* userProfile */
+.userBrowsing {
+    width: 50%;
+
+    padding: 20px;
+    box-sizing: border-box;
     border: 1px solid #ccc;
-    margin: 5px;
-    display: inline-block;
-    cursor: pointer;
+    text-align: center;
+}
+
+.userContainer {
+    display: flex;
+}
+
+.userCollection,
+.otherCollections {
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+
+}
+
+.userStats {
+    width: calc(33.33% - 30px); 
+    margin: 20px auto;
+    padding: 15px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center;
+    box-sizing: border-box; 
   }
-  .card.selected {
-    border: 2px solid blue; /* Highlight selected cards */
+  
+  .userStats p {
+    margin: 10px 0;
+    font-size: 16px;
+    color: #333;
   }
+  
+  .userStats p:first-child {
+    font-weight: bold;
+  }
+  
+  .userStats p:last-child {
+    margin-bottom: 0;
+  }
+  
+  .userStats:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease-in-out;
+  }
+  
