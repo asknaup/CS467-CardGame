@@ -296,15 +296,23 @@ app.post('/login', async (req, res) => {
 
 
 app.post('/generateCard', async (req, res) => {
-  // const user = req.session.user;
-  const user = { userId: 1001, username: 'admin' }
+  const user = req.session.user;
+  // const user = { userId: 1002, username: 'aknaup' }
   try {
-    console.log(user);
+    // console.log(user);
     if (user) {
       // const attr = cardGen.generateAiForCard(req.body.inputAiImage);
       const cardType = req.body.cardType;
       const cardName = req.body.cardName;
-      const object1 = await cardGen.sendCardToDB(cardName, cardType, user.userId);    // returns cardId?
+      const cardId = await cardGen.sendCardToDB(cardName, cardType, user.userId);    // returns cardId?
+      
+      
+      if (cardType === "Creature") {
+        // TODO insert into creature table
+      } else {
+        // TODO insert into spell table
+      }
+      
       // const url = await cardGen.generateImageForCard(attr, object1);
       // await cardGen.sendImageURLtoDB(object1, url)
       // res.render('cardGenPage', {
@@ -313,15 +321,14 @@ app.post('/generateCard', async (req, res) => {
 
 
       res.redirect('/cardGenPage');
-
-
     } else {
       // Authentication failed, render 'welcomePagePortal' with an error message
       // res.render('welcomePagePortal', {
       //   error: 'Invalid credentials. Please try again.'
       // });
-      console.log('Something went wrong');
-      res.redirect('/cardGenPage');
+      // TODO if user is not logged in, display error saying they can't submit
+      // res.redirect('/cardGenPage');
+      res.render('cardGenPage', {error: "Sorry! You cannot create a card without having an account"})
     }
   } catch (err) {
     // Handle errors that may occur during card generation, database interaction, or rendering
