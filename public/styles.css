@@ -2,9 +2,10 @@
 
 /* main.handlebars */
 .bottomButtonsMain {
-    position: relative;
-    margin: 1vw;
-    left: 69%;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    /* Adjust as needed */
 }
 
 /* lookAtGames.handlebars */
