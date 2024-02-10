@@ -306,11 +306,11 @@ app.post('/generateCard', async (req, res) => {
       const cardName = req.body.cardName;
       const cardId = await cardGen.sendCardToDB(cardName, cardType, user.userId);    // returns cardId?
       
-      
+      // TODO specific card variables
       if (cardType === "Creature") {
-        // TODO insert into creature table
+        await dbFunc.insertCreatureCard(cardId);
       } else {
-        // TODO insert into spell table
+        await dbFunc.insertCreatureCard(cardId);
       }
       
       // const url = await cardGen.generateImageForCard(attr, object1);
@@ -326,7 +326,6 @@ app.post('/generateCard', async (req, res) => {
       // res.render('welcomePagePortal', {
       //   error: 'Invalid credentials. Please try again.'
       // });
-      // TODO if user is not logged in, display error saying they can't submit
       // res.redirect('/cardGenPage');
       res.render('cardGenPage', {error: "Sorry! You cannot create a card without having an account"})
     }
