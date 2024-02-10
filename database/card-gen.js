@@ -54,11 +54,11 @@ function sendCardToDB(name, type, user) {
             
             const insertQueryCardInstance = 'INSERT INTO cardInstance (cardId, ownerUserId) VALUES (?,?)';
             const selectUserId = 'SELECT LAST_INSERT_ID() as lastCard';
-            const insertQueryCard = 'INSERT INTO cards (cardName, cardType, rarity, max_available) VALUES (?,?,?,?)';
+            const insertQueryCard = 'INSERT INTO cards (cardName, cardType, rarity, maxAvailable) VALUES (?,?,?,?)';
             // const valuesCard = [name, type, 2, 2];
 
             // Insert into cardInstance Table
-            db.pool.query(insertQueryCardInstance)
+            db.pool.query(insertQueryCardInstance, [])
             // db.pool.query(insertQueryCard, valuesCard, (insertErr, insertResult) => {
             //     if (insertErr) {
             //         db.pool.query('ROLLBACK', () => {
