@@ -46,6 +46,20 @@ app.use(express.static(path.join(__dirname, 'public')))
 /*
 ROUTES
 */
+// TODO Home button should go to user's specifc profile
+// FIXME (Amanda) fix req.session.user for logging in -> if iser sent to user profile, if not send to index
+// TODO userProfile, post username, loging - relationship?
+// TODO CardGenPage - sends the card generates the image, need image urls for cardGen, for userProfile
+// TODO createNewCollection - needs further development
+// TODO Need to create cards that insert into cards Table
+// FIXME req.session.user needs fixing for some routing
+// TODO fix redundency for req.session.user and others
+// TODO CardGenPage
+// TODO Database
+// TODO footer adjustments
+// TODO add color to htmls
+// TODO inputs for cardGen such as create, spell, userid, gameid
+// TODO cardview page bulk - bulk generation?
 
 app.get('/', (req, res) => {                        // This code needs work
   // Pull session user
@@ -86,10 +100,17 @@ app.get('/userDeck/:username', (req, res) => {
   res.render('currentDeck', { showLogoutButton: true })
 });
 
+// TODO routing between gameGeneration, card Generation
+// TODO Work on corresponding edit pages, corresponding bulk pages
+// TODO Work on generating inputs
+// TODO (Amanda) database connection and card generation
+// TODO (Amanda) change auto-increment for game generation
 app.get('/gameGenPage', (req, res) => {
   res.render('gameGenPage', { showLogoutButton: true })
 });
 
+// TODO Deck generation page
+// Add to deck, delete, deck stats
 app.get('/currentDeck', (req, res) => {
   res.render('currentDeck', { showLogoutButton: true })
 });
@@ -110,6 +131,9 @@ app.get('/gamePlayPage', (req, res) => {
   res.render('gamePlayPage', { showLogoutButton: true })
 });
 
+// TODO DB variables, other elements on an iterative basis
+// TODO other image ai sources
+// TODO prompt restriction for better image generation
 app.get('/cardGenPage', (req, res) => {
   res.render('cardGenPage', { showLogoutButton: true })
 });
@@ -182,7 +206,7 @@ app.post('/userProfile', async (req, res) => {
 });
 
 // Post route to login
-app.post('/login', async (req, res) => {
+app.post('/login', async (req, res) => { // TODO fix to make sure it works
   try {
     const username = req.body.usernameWpp;
     const enteredPassword = req.body.passwordWpp;

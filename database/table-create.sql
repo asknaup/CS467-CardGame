@@ -224,7 +224,7 @@ ALTER TABLE moves AUTO_INCREMENT=1;
 DROP TABLE IF EXISTS generatedGame;
 
 CREATE TABLE IF NOT EXISTS generatedGame (
-    gameId INT UNIQUE,
+    gameId INT UNIQUE AUTO_INCREMENT,
     imageLocation VARCHAR(1000),
     ownerId INT,
     noCards INT,
@@ -233,6 +233,9 @@ CREATE TABLE IF NOT EXISTS generatedGame (
     PRIMARY KEY (gameId),
     FOREIGN KEY (ownerId) REFERENCES user_profile(user_id) 
 );
+
+
+ALTER TABLE generatedGame AUTO_INCREMENT=5000;
 
 -- -----------------------------------------------------
 -- CREATE INDEX VALUES FOR FASTER QUERIES
