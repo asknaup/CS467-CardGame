@@ -11,11 +11,12 @@
     <br><br>
     <h1> Welcome to the Card Generation Page </h1>
     <div id="input-form">
-      <form action="gameGenerationPageAction" method="post">
-        <label for="dropdown-menu">Select Type of Card:</label>
-        <select id="dropdown-menu">
-          <option value="option1">Creature</option>
-          <option value="option1">Spell</option>
+      {{!-- Links to generateCard post --}}
+      <form action="/generateCard" method="post" > 
+        <label for="dropdownMenu">Select Type of Card:</label>
+        <select id="dropdownMenu" name="dropdownMenu">
+          <option value="Creature">Creature</option>
+          <option value="Spell">Spell</option>
         </select><br><br>
         <input id="theme" type="text" placeholder="Card Theme (several words)">
         <input id="number" type="text" placeholder="Number of Cards">

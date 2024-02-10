@@ -57,6 +57,8 @@ ROUTES
 // TODO add color to htmls
 // TODO inputs for cardGen such as create, spell, userid, gameid
 // TODO cardview page bulk - bulk generation?
+// TODO homepage that's not the welcome page
+// TODO Need better navigation -> navigation to card generation page as maybe a subclass under make. route to make game, make card
 
 app.get('/', (req, res) => {                        // This code needs work
   // Pull session user
@@ -277,10 +279,7 @@ app.post('/login', async (req, res) => {
     const enteredPassword = req.body.passwordWpp;
     const user = await dbFunc.authenticateUser(username, enteredPassword);
     if (user) {
-      const userProfile = await dbFunc.getUserProfile(user.userId);
-      console.log(userProfile);
-      req.session.user = { userId: user.userId, username: user.username, gameCount: userProfile[0].game_count, wins: userProfile[0].wins, losses: userProfile[0].losses };
-      console.log(req.session.user);
+      req.session.user = { userId: user.userId, username: user.username};
 
       // Redirects to userProfile
       res.redirect('userProfile');
@@ -296,21 +295,32 @@ app.post('/login', async (req, res) => {
 });
 
 
-app.post('/cardGenPage', async (req, res) => {
+app.post('/generateCard', async (req, res) => {
+  // const user = req.session.user;
+  const user = { userId: 1001, username: 'admin' }
   try {
-    if (req.session.user) {
-      const attr = cardGen.generateAiForCard(req.body.inputAiImage);
+    console.log(user);
+    if (user) {
+      // const attr = cardGen.generateAiForCard(req.body.inputAiImage);
+      const cardType = req.body;
       const object1 = await cardGen.sendCardToDB(attr, attr, req.session.user.userId);    // returns cardId?
-      const url = await cardGen.generateImageForCard(attr, object1);
-      await cardGen.sendImageURLtoDB(object1, url)
-      res.render('cardGenPage', {
-        animal: animal, attr: attr, object1: object1
-      });
+      // const url = await cardGen.generateImageForCard(attr, object1);
+      // await cardGen.sendImageURLtoDB(object1, url)
+      // res.render('cardGenPage', {
+      //   animal: animal, attr: attr, object1: object1
+      // });
+
+
+      res.redirect('/cardGenPage');
+
+
     } else {
       // Authentication failed, render 'welcomePagePortal' with an error message
-      res.render('welcomePagePortal', {
-        error: 'Invalid credentials. Please try again.'
-      });
+      // res.render('welcomePagePortal', {
+      //   error: 'Invalid credentials. Please try again.'
+      // });
+      console.log('Something went wrong');
+      res.redirect('/cardGenPage');
     }
   } catch (err) {
     // Handle errors that may occur during card generation, database interaction, or rendering
