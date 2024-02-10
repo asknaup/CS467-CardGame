@@ -190,13 +190,14 @@ app.get('/tradeAndCollect', (req, res) => {
   const user = req.session.user;
   res.render('tradeAndCollect', {showLogoutButton: true})
   if (user) {
-    res.render('currentDeck', { showLogoutButton: true })
+    res.render('tradeAndCollect', { showLogoutButton: true })
   } else {
-    res.render('currentDeck', { showLogoutButton: false })
+    res.render('tradeAndCollect', { showLogoutButton: false })
   }
 });
 
 app.get('/userProfile', (req, res) => {
+  // Redirects to userProfile/:username
   // Show user logged in user profile
   const user = req.session.user;
   if (user) {
@@ -209,11 +210,10 @@ app.get('/userProfile', (req, res) => {
 app.get('/cardViewPage', async (req, res) => {
   const val = await cardGen.grabCardFromDB(1);             // Hard Coded
   console.log(val[0]);
-  res.render('cardViewPage', { value: val })
   if (user) {
-    res.render('currentDeck', { showLogoutButton: true })
+    res.render('cardViewPage', { showLogoutButton: true, value: val })
   } else {
-    res.render('currentDeck', { showLogoutButton: false })
+    res.render('cardViewPage', { showLogoutButton: false, value: val })
   }
 });
 
@@ -236,7 +236,8 @@ app.listen(port, () => {
 
 
 // POST ROUTES 
-app.post('/userProfile', async (req, res) => {
+app.post('/newUser', async (req, res) => {
+  // New User
   try {
     const user_id = await dbFunc.insertNewUser(req.body.inputUserName, req.body.inputNewPassword, req.body.inputEmail);
     const userProfile = await dbFunc.getUserProfile(user_id);
