@@ -186,6 +186,8 @@ app.get('/cardGenPage', (req, res) => {
 });
 
 app.get('/tradeAndCollect', (req, res) => {
+  // Show user logged in user profile
+  const user = req.session.user;
   res.render('tradeAndCollect', {showLogoutButton: true})
   if (user) {
     res.render('currentDeck', { showLogoutButton: true })
