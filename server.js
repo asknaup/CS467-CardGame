@@ -139,7 +139,7 @@ app.get('/cardGenPage', (req, res) => {
 });
 
 app.get('/tradeAndCollect', (req, res) => {
-  res.render('tradeAndCollect', {showLogoutButton: true})
+  res.render('tradeAndCollect', { showLogoutButton: true })
 });
 
 app.get('/userProfile', (req, res) => {
@@ -198,13 +198,15 @@ app.post('/userProfile', async (req, res) => {
     if (err.code === 'ER_DUP_ENTRY') {
       res.render("newUser", {
         usnError: 'Username already in use. Please try another.'
-      })} else {
+      })
+    } else {
       // Handle other errors if needed
       res.send(`Something went wrong : (${err})`);
     }
   }
 });
 
+// TODO: From project requirements - "Once theyare logged in, and enter the site, they are presented with a Portal. The Portal shows all the public TCG on the site."
 // Post route to login
 app.post('/login', async (req, res) => { // TODO fix to make sure it works
   try {
@@ -217,11 +219,11 @@ app.post('/login', async (req, res) => { // TODO fix to make sure it works
       req.session.user = { userId: user.userId, username: user.username, gameCount: userProfile[0].game_count, wins: userProfile[0].wins, losses: userProfile[0].losses };
       console.log(req.session.user);
 
-      res.render('userProfile', { 
-        username: req.session.user.username, 
-        game_count: userProfile[0].game_count, 
-        wins: userProfile[0].wins, 
-        losses: userProfile[0].losses 
+      res.render('userProfile', {
+        username: req.session.user.username,
+        game_count: userProfile[0].game_count,
+        wins: userProfile[0].wins,
+        losses: userProfile[0].losses
       });
     } else {
       // Authentication failed, return results stating so
