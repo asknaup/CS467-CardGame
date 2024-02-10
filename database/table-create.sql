@@ -225,7 +225,7 @@ ALTER TABLE moves AUTO_INCREMENT=1;
 DROP TABLE IF EXISTS generatedGame;
 
 CREATE TABLE IF NOT EXISTS generatedGame (
-    gameId INT AUTO_INCREMENT,
+    gameId INT UNIQUE,
     imageLocation VARCHAR(1000),
     ownerId INT,
     noCards INT,

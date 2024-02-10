@@ -9,3 +9,15 @@
 }
 
 /* gamePlayPage.handlebars */
+.card {
+    width: 100px;
+    height: 150px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    margin: 5px;
+    display: inline-block;
+    cursor: pointer;
+  }
+  .card.selected {
+    border: 2px solid blue; /* Highlight selected cards */
+  }

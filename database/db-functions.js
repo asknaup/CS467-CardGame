@@ -173,6 +173,10 @@ function insertNewGameIntoGames() {
     });
 }
 
+function renderUserLibrary(userId) {
+    
+}
+
 
 // function updateGameWinner({ params }) {
 //     // Initialize a new game -> winner has not been decided

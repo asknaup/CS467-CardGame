@@ -12,7 +12,7 @@ function sendNewGameToDB(gameid, ownerId, listCards, numCards, imageLocation) { 
                 reject(beginTransactionErr);
                 return;
             }
-
+            
             const insertQueryGame = 'INSERT INTO generatedGame (ownerId, listCards, noCards, imageLocation) VALUES (?,?,?,?)';
             const valuesGame = [ownerId, listCards, numCards, imageLocation];                                                       
             const selectQuery = 'SELECT LAST_INSERT_ID() as lastGame';
