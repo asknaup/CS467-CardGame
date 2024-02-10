@@ -20,8 +20,7 @@
                 <li>
                     {{#if showLogoutButton}}
                     {{> logoutButton}} <!-- Include the logout button partial -->
-                    {{/if}}
-                    {{#if showLoginButton}}
+                    {{else}}
                     {{> loginButton}}
                     {{/if}}
                 </li>
@@ -32,7 +31,7 @@
         {{{body}}} <!-- This is where the content of each specific view will be injected -->
     </main>
 
-    <footer>
+    <footer> {{!-- #TODO fix positioning --}}
         <h3>Copyright by CS467 Team</h3>
     </footer>
 

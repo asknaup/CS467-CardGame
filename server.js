@@ -46,6 +46,17 @@ app.use(express.static(path.join(__dirname, 'public')))
 /*
 ROUTES
 */
+// TODO Home button should go to user's specifc profile
+// TODO CardGenPage - sends the card generates the image, need image urls for cardGen, for userProfile
+// TODO createNewCollection - needs further development
+// TODO Need to create cards that insert into cards Table
+// TODO fix redundency for req.session.user and others
+// TODO CardGenPage
+// TODO Database
+// TODO footer adjustments
+// TODO add color to htmls
+// TODO inputs for cardGen such as create, spell, userid, gameid
+// TODO cardview page bulk - bulk generation?
 
 app.get('/', (req, res) => {                        // This code needs work
   // Pull session user
@@ -54,13 +65,11 @@ app.get('/', (req, res) => {                        // This code needs work
     // If user then show homepage
     res.render('welcomePagePortal', {
       showLogoutButton: true,
-      showLoginButton: false,
     })
   } else {
     // If user loged out, then show login button
     res.render('welcomePagePortal', {
       showLogoutButton: false,
-      showLoginButton: true
     })
   }
 });
@@ -72,54 +81,125 @@ app.get('/userProfile/:username', async (req, res) => {
   const user = req.session.user;
   if (user) {
     // If user is defined, user shown will be loggedin user
-    const val = await dbFunc.getUserProfile(user.userId);
+    const userProf = await dbFunc.getUserProfile(user.userId);
     res.render('userProfile', {
       username: user.username,
-      gameCount: val[0].game_count,
-      wl: 0,
+      gameCount: userProf[0].game_count,
+      wins: userProf[0].wins,
+      losses: userProf[0].losses,
       showLogoutButton: true
     })
+  } else {
+    // Route to homepage (index) to login
+    res.redirect('/')
   }
 });
 
 app.get('/userDeck/:username', (req, res) => {
-  res.render('currentDeck', { showLogoutButton: true })
+  // Show user logged in user profile
+  const user = req.session.user;
+  if (user) {
+    res.render('currentDeck', { showLogoutButton: true })
+  } else {
+    res.render('currentDeck', { showLogoutButton: false })
+  }
 });
 
+// TODO routing between gameGeneration, card Generation
+// TODO Work on corresponding edit pages, corresponding bulk pages
+// TODO Work on generating inputs
+// TODO (Amanda) database connection and card generation
+// TODO (Amanda) change auto-increment for game generation
 app.get('/gameGenPage', (req, res) => {
-  res.render('gameGenPage', { showLogoutButton: true })
+  // Show user logged in user profile
+  const user = req.session.user;
+  if (user) {
+    res.render('gameGenPage', { showLogoutButton: true })
+  } else {
+    res.render('gameGenPage', { showLogoutButton: false })
+  }
 });
 
+// TODO Deck generation page
+// Add to deck, delete, deck stats
 app.get('/currentDeck', (req, res) => {
-  res.render('currentDeck', { showLogoutButton: true })
+  // Show user logged in user profile
+  const user = req.session.user;
+  if (user) {
+    res.render('currentDeck', { showLogoutButton: true })
+  } else {
+    res.render('currentDeck', { showLogoutButton: false })
+  }
 });
 
 app.get('/browseGames', (req, res) => {
-  res.render('lookatGames', { showLogoutButton: true })
+  // Show user logged in user profile
+  const user = req.session.user;
+  if (user) {
+    res.render('lookatGames', { showLogoutButton: true })
+  } else {
+    res.render('lookatGames', { showLogoutButton: false })
+  }
 });
 
 app.get('/newUser', (req, res) => {
-  res.render('newUser', { showLogoutButton: false, showLoginButton: true })
+  // Show user logged in user profile
+  const user = req.session.user;
+  if (user) {
+    res.render('newUser', { showLogoutButton: true })
+  } else {
+    res.render('newUser', { showLogoutButton: false })
+  }
 });
 
 app.get('/resetPW', (req, res) => {
-  res.render('resetPW', { showLogoutButton: true })
+  // Show user logged in user profile
+  const user = req.session.user;
+  if (user) {
+    res.render('resetPW', { showLogoutButton: true })
+  } else {
+    res.render('resetPW', { showLogoutButton: false })
+  }
 });
 
 app.get('/gamePlayPage', (req, res) => {
-  res.render('gamePlayPage', { showLogoutButton: true })
+  // Show user logged in user profile
+  const user = req.session.user;
+  if (user) {
+    res.render('gamePlayPage', { showLogoutButton: true })
+  } else {
+    res.render('gamePlayPage', { showLogoutButton: false })
+  }
 });
 
+// TODO DB variables, other elements on an iterative basis
+// TODO other image ai sources
+// TODO prompt restriction for better image generation
 app.get('/cardGenPage', (req, res) => {
-  res.render('cardGenPage', { showLogoutButton: true })
+  // Show user logged in user profile
+  const user = req.session.user;
+  if (user) {
+    res.render('cardGenPage', { showLogoutButton: true })
+  } else {
+    res.render('cardGenPage', { showLogoutButton: false })
+  }
 });
 
 app.get('/tradeAndCollect', (req, res) => {
+  // Show user logged in user profile
+  const user = req.session.user;
   res.render('tradeAndCollect', {showLogoutButton: true})
+  if (user) {
+    res.render('currentDeck', { showLogoutButton: true })
+  } else {
+    res.render('currentDeck', { showLogoutButton: false })
+  }
 });
 
 app.get('/userProfile', (req, res) => {
-  if (req.session.user) {
+  // Show user logged in user profile
+  const user = req.session.user;
+  if (user) {
     res.redirect('/userProfile/' + req.session.user.username)
   } else {
     res.redirect('/')
@@ -130,6 +210,11 @@ app.get('/cardViewPage', async (req, res) => {
   const val = await cardGen.grabCardFromDB(1);             // Hard Coded
   console.log(val[0]);
   res.render('cardViewPage', { value: val })
+  if (user) {
+    res.render('currentDeck', { showLogoutButton: true })
+  } else {
+    res.render('currentDeck', { showLogoutButton: false })
+  }
 });
 
 // Log out
@@ -151,38 +236,33 @@ app.listen(port, () => {
 
 
 // POST ROUTES 
-
 app.post('/userProfile', async (req, res) => {
   try {
     const user_id = await dbFunc.insertNewUser(req.body.inputUserName, req.body.inputNewPassword, req.body.inputEmail);
     const userProfile = await dbFunc.getUserProfile(user_id);
     if (user_id) {          // save relevant user information in the session
       req.session.user = {
-        userId: user_id, username: req.body.inputUserName, gameCount: userProfile[0].game_count,
-        wins: userProfile[0].wins, losses: userProfile[0].losses
+        userId: user_id, 
+        username: req.body.inputUserName
       };
     }
-    res.redirect('/userProfile/' + req.session.user.username, {
-      username: req.session.user.username,
-      gameCount: req.session.user.gameCount,
-      wins: userProfile[0].wins,
-      losses: userProfile[0].losses
-    });
+    res.redirect('/userProfile/' + req.session.user.username);
 
   } catch (err) {
     console.log(err);
     if (err.code === 'ER_DUP_ENTRY') {
       res.render("newUser", {
         usnError: 'Username already in use. Please try another.'
-      })} else {
+      })
+    } else {
       // Handle other errors if needed
       res.send(`Something went wrong : (${err})`);
     }
   }
 });
 
-// Post route to login
-app.post('/login', async (req, res) => {
+// Post route for login -> once logged in, user should be directed to /userProfile/:username
+app.post('/login', async (req, res) => { 
   try {
     const username = req.body.usernameWpp;
     const enteredPassword = req.body.passwordWpp;
@@ -192,13 +272,9 @@ app.post('/login', async (req, res) => {
       console.log(userProfile);
       req.session.user = { userId: user.userId, username: user.username, gameCount: userProfile[0].game_count, wins: userProfile[0].wins, losses: userProfile[0].losses };
       console.log(req.session.user);
-
-      res.render('userProfile', { 
-        username: req.session.user.username, 
-        game_count: userProfile[0].game_count, 
-        wins: userProfile[0].wins, 
-        losses: userProfile[0].losses 
-      });
+      
+      // Redirects to userProfile
+      res.redirect('userProfile');
     } else {
       // Authentication failed, return results stating so
       res.render('welcomePagePortal', {

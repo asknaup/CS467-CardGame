@@ -2,28 +2,26 @@
 <html lang="en">
 
 <head>
-  {{!--
-  <meta charset="utf-8" /> --}}
-  {{!--
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> --}}
   <title>{{username}}'s Profile</title>
   <link rel="stylesheet" type="text/css" href="/global.css">
   <link rel="stylesheet" type="text/css" href="/styles.css">
   <base href="http://localhost:3000">
 </head>
-
+{{!-- #TODO add number of decks --}}
+{{!-- #TODO add option to brows between collections and decks --}}
 <body>
   <h1>{{ username }}'s Profile</h1>
   <div class="userContainer">
 
     <div class="userStats">
       <h2>{{username}}'s Statistics</h2>
-      <p>Game Count: {{ game_count }}</p>
+      <p>Game Count: {{ gameCount }}</p>
       <p>Wins: {{ wins }}</p>
       <p>Losses: {{ losses }}</p>
     </div>
 
     <div class="userBrowsing">
+      {{!-- #TODO: Restructure Prowse User Collection, sends where it's currently sending  --}}
       <a href="/tradeAndCollect"><button type="button" class="userCollection">Browse User Game Collection</button></a>
       <div id="userGames">
         <div id="userGameMatrix" class="matrix"></div>
@@ -134,7 +132,8 @@
 
     <div class="userBrowsing">
       <a href="/"><button type="button" class="otherCollections">Browse Other Collections</button></a>
-      <div id="otherGames">
+      <!-- #TODO: browse user deckks and send you somewhere else -->
+      <div id="otherGames"> 
         <div id="otherGameMatrix" class="matrix"></div>
 
         <script>

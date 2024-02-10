@@ -15,29 +15,42 @@
       <br>
       <h2>Welcome to the Online Trading Card Game Generator</h2>
       <br><br>
-      <p>Stuff you can do </p>
+      <p>Our team was tasked with developing a web-based application that’ll receive user inputs to create online
+        trading card games (TCGs).
+        <br><br>
+        Users have account-based logins and are presented with a portal upon entry
+        showing all of the public TCGs on the site. They'll be able to view and CRUD their own TCG games via a Portal
+        menu. Users are capable of editing, publishing or deleting their games, including being able to edit their game
+        attributes. <br><br>
+        CRUDing for game cards is possible along with uploading images and attribute editing. New decks can
+        be created randomly
+        and then played according to the rules of the trading card game. Games are ended based on time or when one
+        player wins. This web app is opearing on a Node.JS web app server using a MySQL db along with HTML5, CSS and
+        JavaScript.
+      </p>
 
     </div>
+
     <div class="right-div">
       <br>
       <h2> Please Login </h2>
       <div id="input-form">
         <form class="loginUser" method="POST" action="/login">
-        <label for="usernameWpp">Username:</label>
-        <input id="usernameWpp" name="usernameWpp" type="text" placeholder="Username">
-        <label for="passwordWpp">Password:</label>
-        <input id="passwordWpp" name="passwordWpp" type="text" placeholder="Password">
-        {{#if error}}
-        <p id="error">{{error}}</p>
-        {{/if}}
-        <button id="loginWpp" type="submit">Login</button></a>
-      </form>
+          <label for="usernameWpp">Username:</label>
+          <input id="usernameWpp" name="usernameWpp" type="text" placeholder="Username">
+          <label for="passwordWpp">Password:</label>
+          <input id="passwordWpp" name="passwordWpp" type="text" placeholder="Password">
+          {{#if error}}
+          <p id="error">{{error}}</p>
+          {{/if}}
+          <button id="loginButton" type="submit">Login</button></a>
+        </form>
       </div>
     </div>
   </div>
 
 
-
+  {{!-- #TODO add help button, move newUser --}}
   <div>
     <div class="bottomButtonsMain">
       <a href="/newUser"><button type="button">New User?</button></a>
@@ -47,4 +60,5 @@
   </div>
 
 </body>
+
 </html>

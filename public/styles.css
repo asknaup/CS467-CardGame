@@ -4,7 +4,7 @@
 .bottomButtonsMain {
     position: relative;
     margin: 1vw;
-    left: 50%;
+    left: 69%;
 }
 
 /* lookAtGames.handlebars */
@@ -146,5 +146,21 @@ are inside scrollDeck div */
   .userStats:hover {
     transform: scale(1.05);
     transition: transform 0.3s ease-in-out;
+  }
+  
+  /* Login homepage */
+  #loginButton {
+    border: 1px solid rgba(10, 180, 180, 1);
+    background: #4caf50;
+    font-size: 18px;
+    color: white;
+    margin-top: 20px;
+    padding: 10px 50px;
+    cursor: pointer;
+    transition: .4s;
+    &:hover {
+      background: rgba(0, 136, 169, 1);
+      padding: 10px 80px;
+    }
   }
   
