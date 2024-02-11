@@ -178,33 +178,3 @@ are inside scrollDeck div */
     /* Adjust the color as needed */
 }
 
-/* tradeAndCollect  */
-.newCard {
-    width: 184px;
-    height: 300px;
-    background-color: beige;
-    color: #fff;
-    border: 2px solid black;
-    border-radius: 8px;
-    margin-right: -25px;
-    /* Adjust as needed for card overlap */
-    transition: transform 0.3s ease-in-out;
-    transform: translateY(-50%);
-}
-
-.card:hover {
-    transform: translateX(20px); /* Adjust as needed for hover effect */
-}
-
-#cardSlots {
-    display: flex;
-    justify-content: center;
-    
-}
-
-#scrollDeck {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
