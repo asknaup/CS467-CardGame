@@ -57,6 +57,8 @@ ROUTES
 // TODO add color to htmls
 // TODO inputs for cardGen such as create, spell, userid, gameid
 // TODO cardview page bulk - bulk generation?
+// TODO homepage that's not the welcome page
+// TODO Need better navigation -> navigation to card generation page as maybe a subclass under make. route to make game, make card
 
 app.get('/', (req, res) => {                        // This code needs work
   // Pull session user
@@ -188,15 +190,16 @@ app.get('/cardGenPage', (req, res) => {
 app.get('/tradeAndCollect', (req, res) => {
   // Show user logged in user profile
   const user = req.session.user;
-  res.render('tradeAndCollect', {showLogoutButton: true})
+  res.render('tradeAndCollect', { showLogoutButton: true })
   if (user) {
-    res.render('currentDeck', { showLogoutButton: true })
+    res.render('tradeAndCollect', { showLogoutButton: true })
   } else {
-    res.render('currentDeck', { showLogoutButton: false })
+    res.render('tradeAndCollect', { showLogoutButton: false })
   }
 });
 
 app.get('/userProfile', (req, res) => {
+  // Redirects to userProfile/:username
   // Show user logged in user profile
   const user = req.session.user;
   if (user) {
@@ -209,11 +212,10 @@ app.get('/userProfile', (req, res) => {
 app.get('/cardViewPage', async (req, res) => {
   const val = await cardGen.grabCardFromDB(1);             // Hard Coded
   console.log(val[0]);
-  res.render('cardViewPage', { value: val })
   if (user) {
-    res.render('currentDeck', { showLogoutButton: true })
+    res.render('cardViewPage', { showLogoutButton: true, value: val })
   } else {
-    res.render('currentDeck', { showLogoutButton: false })
+    res.render('cardViewPage', { showLogoutButton: false, value: val })
   }
 });
 
@@ -236,13 +238,14 @@ app.listen(port, () => {
 
 
 // POST ROUTES 
-app.post('/userProfile', async (req, res) => {
+app.post('/newUserPost', async (req, res) => {
+  // New User
   try {
     const user_id = await dbFunc.insertNewUser(req.body.inputUserName, req.body.inputNewPassword, req.body.inputEmail);
     const userProfile = await dbFunc.getUserProfile(user_id);
     if (user_id) {          // save relevant user information in the session
       req.session.user = {
-        userId: user_id, 
+        userId: user_id,
         username: req.body.inputUserName
       };
     }
@@ -251,9 +254,17 @@ app.post('/userProfile', async (req, res) => {
   } catch (err) {
     console.log(err);
     if (err.code === 'ER_DUP_ENTRY') {
-      res.render("newUser", {
-        usnError: 'Username already in use. Please try another.'
-      })
+      // determine duplicate error username or email
+      let errCodeObject = err.sqlMessage.split("'").slice(-2)[0];
+      if (errCodeObject == "username") {
+        res.render("newUser", {
+          usnError: 'Username already in use. Please try another.'
+        });
+      } else if (errCodeObject === "email"){
+        res.render("newUser", {
+          emailError: 'Email already in use. Please try another.'
+        });
+      }
     } else {
       // Handle other errors if needed
       res.send(`Something went wrong : (${err})`);
@@ -262,17 +273,14 @@ app.post('/userProfile', async (req, res) => {
 });
 
 // Post route for login -> once logged in, user should be directed to /userProfile/:username
-app.post('/login', async (req, res) => { 
+app.post('/login', async (req, res) => {
   try {
     const username = req.body.usernameWpp;
     const enteredPassword = req.body.passwordWpp;
     const user = await dbFunc.authenticateUser(username, enteredPassword);
     if (user) {
-      const userProfile = await dbFunc.getUserProfile(user.userId);
-      console.log(userProfile);
-      req.session.user = { userId: user.userId, username: user.username, gameCount: userProfile[0].game_count, wins: userProfile[0].wins, losses: userProfile[0].losses };
-      console.log(req.session.user);
-      
+      req.session.user = { userId: user.userId, username: user.username};
+
       // Redirects to userProfile
       res.redirect('userProfile');
     } else {
@@ -287,21 +295,39 @@ app.post('/login', async (req, res) => {
 });
 
 
-app.post('/cardGenPage', async (req, res) => {
+app.post('/generateCard', async (req, res) => {
+  const user = req.session.user;
+  // const user = { userId: 1002, username: 'aknaup' }
   try {
-    if (req.session.user) {
-      const attr = cardGen.generateAiForCard(req.body.inputAiImage);
-      const object1 = await cardGen.sendCardToDB(attr, attr, req.session.user.userId);    // returns cardId?
-      const url = await cardGen.generateImageForCard(attr, object1);
-      await cardGen.sendImageURLtoDB(object1, url)
-      res.render('cardGenPage', {
-        animal: animal, attr: attr, object1: object1
-      });
+    // console.log(user);
+    if (user) {
+      // const attr = cardGen.generateAiForCard(req.body.inputAiImage);
+      const cardType = req.body.cardType;
+      const cardName = req.body.cardName;
+      const cardId = await cardGen.sendCardToDB(cardName, cardType, user.userId);    // returns cardId?
+      
+      // TODO specific card variables
+      if (cardType === "Creature") {
+        await dbFunc.insertCreatureCard(cardId);
+      } else {
+        await dbFunc.insertCreatureCard(cardId);
+      }
+      
+      // const url = await cardGen.generateImageForCard(attr, object1);
+      // await cardGen.sendImageURLtoDB(object1, url)
+      // res.render('cardGenPage', {
+      //   animal: animal, attr: attr, object1: object1
+      // });
+
+
+      res.redirect('/cardGenPage');
     } else {
       // Authentication failed, render 'welcomePagePortal' with an error message
-      res.render('welcomePagePortal', {
-        error: 'Invalid credentials. Please try again.'
-      });
+      // res.render('welcomePagePortal', {
+      //   error: 'Invalid credentials. Please try again.'
+      // });
+      // res.redirect('/cardGenPage');
+      res.render('cardGenPage', {error: "Sorry! You cannot create a card without having an account"})
     }
   } catch (err) {
     // Handle errors that may occur during card generation, database interaction, or rendering

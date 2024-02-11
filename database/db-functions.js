@@ -6,7 +6,7 @@ const db = require('./db-connector');
 
 function insertNewUserIntoDB(username, password, email) {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO user_creds (username, pwd, email) VALUES (?, ?, ?)';
+        const sql = 'INSERT INTO userCreds (username, pwd, email) VALUES (?, ?, ?)';
         const val = [username, password, email];
         db.pool.query(sql, val, (err, result) => {
             if (err) {
@@ -28,7 +28,7 @@ function insertNewUser(username, password, email) {
 
             // const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-            const insertQuery = 'INSERT INTO user_creds (username, pwd, email) VALUES (?, ?, ?)';
+            const insertQuery = 'INSERT INTO userCreds (username, pwd, email) VALUES (?, ?, ?)';
             const selectQuery = 'SELECT LAST_INSERT_ID() as newUserId';
 
             const values = [username, password, email];
@@ -66,7 +66,7 @@ function insertNewUser(username, password, email) {
 
 function authenticateUser(username, password){
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT user_id, username, pwd FROM user_creds WHERE username=?';
+        const sql = 'SELECT userId, username, pwd FROM userCreds WHERE username=?';
         const val = [username];
 
         db.pool.query(sql, val, async (err, result) => {
@@ -88,7 +88,7 @@ function authenticateUser(username, password){
             if (passwordsMatch) {
                 // Passwords match, returns userId and username
                 resolve({
-                    userId: user.user_id,
+                    userId: user.userId,
                     username: user.username
                 });
             } else {
@@ -101,7 +101,7 @@ function authenticateUser(username, password){
 
 function getUserId(username, password) {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT user_id FROM user_creds WHERE username = ? and pwd = ?';
+        const sql = 'SELECT userId FROM userCreds WHERE username = ? and pwd = ?';
         const val = [username, password];
         db.pool.query(sql, val, (err, result) => {
             if (err) {
@@ -113,10 +113,10 @@ function getUserId(username, password) {
     });
 }
 
-function getUserProfile(user_id) {
+function getUserProfile(userId) {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT game_count, wins, losses FROM user_profile WHERE user_id = ?'
-        const val = [user_id]
+        const sql = 'SELECT gameCount, wins, losses FROM userProfile WHERE userId = ?'
+        const val = [userId]
         db.pool.query(sql, val, (err, result) => {
             if (err) {
                 reject(err);
@@ -213,6 +213,36 @@ function createNewCollection(userId) {
     });
 }
 
+function insertCreatureCard(cardId) {
+    return new Promise((resolve, reject) => {
+        const query = 'INSERT INTO cardCreature (cardId, hp, attack) VALUES (?, ?, ?);';
+        const vars = [cardId, 1, 2];
+
+        db.pool.query(query, vars, (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+}
+
+function insertSpellCard(cardId) {
+    return new Promise((resolve, reject) => {
+        const query = 'INSERT INTO cardSpell (cardId, spellAbility, healthRegen) VALUES (?, ?, ?);';
+        const vars = [cardId, "This card does somethign", 2];
+
+        db.pool.query(query, vars, (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+}
+
 //function insertIntoCollection(deckId, userId, cardId) { }
 
 // function updateGameWinner({ params }) {
@@ -238,3 +268,5 @@ module.exports.insertNewGameIntoGames = insertNewGameIntoGames;
 module.exports.insertNewUser = insertNewUser;
 module.exports.authenticateUser = authenticateUser;
 module.exports.createNewCollection = createNewCollection;
+module.exports.insertCreatureCard = insertCreatureCard;
+module.exports.insertSpellCard = insertSpellCard;

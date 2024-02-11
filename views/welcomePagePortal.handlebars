@@ -36,28 +36,40 @@
       <h2> Please Login </h2>
       <div id="input-form">
         <form class="loginUser" method="POST" action="/login">
-          <label for="usernameWpp">Username:</label>
-          <input id="usernameWpp" name="usernameWpp" type="text" placeholder="Username">
-          <label for="passwordWpp">Password:</label>
-          <input id="passwordWpp" name="passwordWpp" type="text" placeholder="Password">
+
+          <div class="iconContainer">
+            <i class="material-icons">person</i>
+            <input id="usernameWpp" name="usernameWpp" type="text" placeholder="Username">
+
+          </div>
+
+          <div class="iconContainer">
+            <i class="material-icons">lock</i>
+            <input id="passwordWpp" name="passwordWpp" type="text" placeholder="Password">
+
+          </div>
+
           {{#if error}}
           <p id="error">{{error}}</p>
           {{/if}}
           <button id="loginButton" type="submit">Login</button></a>
         </form>
+
+        {{!-- #TODO Verify routing on buttons is correct --}}
+        <div style="text-align: center;">
+          <div class="bottomButtonsMain">
+            <a href="/browseGames"><button type="button">Browse Games</button></a>
+            <a href="/newUser"><button type="button">New User?</button></a>
+            <a href="/help"><button type="button">Need Help?</button></a>
+          </div>
+          <br>
+        </div>
       </div>
     </div>
   </div>
 
 
-  {{!-- #TODO add help button, move newUser --}}
-  <div>
-    <div class="bottomButtonsMain">
-      <a href="/newUser"><button type="button">New User?</button></a>
-      <a href="/browseGames"><button type="button">Browse Games</button></a>
-    </div>
-    <br>
-  </div>
+
 
 </body>
 

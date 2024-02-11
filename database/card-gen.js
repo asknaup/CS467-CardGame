@@ -39,62 +39,62 @@ function grabCardFromDB(card_id) {
 }
 
 // update card
-
 function sendCardToDB(name, type, user) {
-    // Initialize a new game -> winner has not been decided
     return new Promise((resolve, reject) => {
-        db.pool.query('START TRANSACTION', (beginTransactionErr) => {
-            if (beginTransactionErr) {
-                reject(beginTransactionErr);
+        db.pool.getConnection((connectionErr, connection) => {
+            if (connectionErr) {
+                reject(connectionErr);
                 return;
             }
 
-            const insertQueryCard = 'INSERT INTO cards (cardName, cardType, rarity, max_available) VALUES (?,?,?,?)';
-            const insertQueryCardInstance = 'INSERT INTO cardInstance (cardId, ownerUserId) VALUES (?,?)';
-            const valuesCard = [name, type, 2, 2];
-            const selectQuery = 'SELECT LAST_INSERT_ID() as lastCard';
-
-            db.pool.query(insertQueryCard, valuesCard, (insertErr, insertResult) => {
-                if (insertErr) {
-                    db.pool.query('ROLLBACK', () => {
-                        reject(insertErr);
-                    });
+            connection.query('START TRANSACTION', (startTransactionErr) => {
+                if (startTransactionErr) {
+                    connection.release();
+                    reject(startTransactionErr);
                     return;
                 }
-                const insertId = insertResult.insertId;
-                const valuesCardInstance = [insertId, user];
 
-                db.pool.query(insertQueryCardInstance, valuesCardInstance, (insertErr, insertResult) => {
-                    if (insertErr) {
-                        db.pool.query('ROLLBACK', () => {
-                            reject(insertErr);
+                const insertCardQuery = 'INSERT INTO cards (cardName, cardType, rarity, maxAvailable) VALUES (?, ?, 0, 15)';
+                const insertCardInstanceQuery = 'INSERT INTO cardInstance (cardId, ownerUserId) VALUES (?, ?)';
+
+                connection.query(insertCardQuery, [name, type], (insertCardErr, insertCardResult) => {
+                    if (insertCardErr) {
+                        connection.rollback(() => {
+                            connection.release();
+                            reject(insertCardErr);
                         });
                         return;
                     }
 
-                db.pool.query(selectQuery, (selectErr, selectResult) => {
-                    if (selectErr) {
-                        db.pool.query('ROLLBACK', () => {
-                            reject(selectErr);
-                        });
-                        return;
-                    }
+                    const lastInsertedId = insertCardResult.insertId;
 
-                db.pool.query('COMMIT', (commitErr) => {
-                    if (commitErr) {
-                        db.pool.query('ROLLBACK', () => {
-                            reject(commitErr);
+                    connection.query(insertCardInstanceQuery, [lastInsertedId, user], (insertInstanceErr, insertInstanceResult) => {
+                        if (insertInstanceErr) {
+                            connection.rollback(() => {
+                                connection.release();
+                                reject(insertInstanceErr);
+                            });
+                            return;
+                        }
+
+                        connection.query('COMMIT', (commitErr) => {
+                            if (commitErr) {
+                                connection.rollback(() => {
+                                    connection.release();
+                                    reject(commitErr);
+                                });
+                                return;
+                            }
+
+                            connection.release();
+                            resolve(lastInsertedId);
                         });
-                    } else {
-                        resolve(selectResult[0].lastCard);
-                    }
-                });
                     });
                 });
             });
         });
     });
-}   
+}
 
 function sendImageURLtoDB(cardId, imageURL) {
     return new Promise((resolve, reject) => {

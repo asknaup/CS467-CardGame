@@ -6,6 +6,7 @@ class Card{
     }
 }
 
+// TODO: Standardize card form format
 function createCardElement(idString, leftVal, cardObj){
     // create the div that becomes the card
     var scrollCard = document.createElement("div");
