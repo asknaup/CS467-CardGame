@@ -14,16 +14,19 @@ function appendTitle(cardObj, scrollCard){
     // this creates the image for the card
     let cardTitle = document.createElement("h3");
     cardTitle.innerHTML = cardObj.cardName;
-    cardTitle.style.padding = "0vh .5vh";
+    cardTitle.style.margin = "0vh 1vh";
     scrollCard.appendChild(cardTitle);
 }
 
 function appendImage(cardObj, scrollCard){
+    let frame = document.createElement("div");
+    frame.style.margin = "0vh .5vh";
     // this creates the image for the card
     let cardImage = document.createElement("img");
+    cardImage.style.border = "3px solid black";
     cardImage.src = cardObj.imageSrc;
-    cardImage.style.border = "4px solid beige";
-    scrollCard.appendChild(cardImage);
+    frame.appendChild(cardImage);
+    scrollCard.appendChild(frame);
 }
 
 function appendAttributes(cardObj, scrollCard){
@@ -40,6 +43,14 @@ function appendAttributes(cardObj, scrollCard){
     attributeItem.innerHTML = `<strong> atk: </strong> ${attributes.atk} &nbsp;&nbsp; <strong> def: </strong> ${attributes.def}`;
     attributesList.append(attributeItem);
     scrollCard.appendChild(attributesList);
+}
+
+function appendDescription(cardObj, scrollCard){
+    var description = document.createElement("p");
+    description.innerHTML = `<strong> ${cardObj.description} </strong>`;
+    description.style.padding = "0vh .5vh";
+    description.style.fontSize = "1em";
+    scrollCard.appendChild(description);
 }
 
 // TODO: Standardize card form format
@@ -62,6 +73,7 @@ function createCardElement(width, height, left, bottom, zIndex, cardObj){
     scrollCard.style.borderRadius = "5px";
     scrollCard.style.zIndex = zIndex;
     appendAttributes(cardObj, scrollCard);
+    appendDescription(cardObj, scrollCard);
     // creates the same affect as #id.hover { z-index: [value goes here]}
     scrollCard.onmouseenter = function(){this.style.zIndex = "999"};
     scrollCard.onmouseleave = function(){this.style.zIndex = zIndex};
@@ -76,7 +88,7 @@ function displayScrollCards(startIndex, endIndex, cardArr){
     }
     var scrollDeck = document.getElementById("cardSlots");
     var width = 10;
-    var height = 20;
+    var height = 19;
     var left = .25;
     var bottom = 0;
     var zIndex = 0;
