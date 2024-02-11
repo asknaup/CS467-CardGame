@@ -18,8 +18,7 @@ main {
     width: 80%;
 }
 
-/* Can't be camel case - will break */
-.card-container {
+.cardContainer {
     display: flex;
     justify-content: space-between;
 }
@@ -91,12 +90,11 @@ header {
 }
 
 #carouselCounter {
-    margin: 0 10px;
+    margin: 15px 10px;
     /* Margin to the carousel counter */
 }
 
-/* Can't be camelCase - will break */
-.staging-area {
+.stagingArea {
     display: flex;
     /* Arrange cards in a row */
     justify-content: flex-start;
@@ -114,4 +112,13 @@ header {
 
 .stagedCard {
     margin-right: 10px;
+}
+
+#resetBtn{
+    margin: 5px;
+    align-items: center;
+}
+
+#prevBtn{
+    align-items: center;
 }
