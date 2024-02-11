@@ -166,5 +166,5 @@ INSERT INTO cardSpell (cardId, spellType, spellAbility, spellAttack, spellDefens
 -- Create Deck
 -- -----------------------------------------------------
 INSERT INTO decks (playerId, deckName, cardId) VALUES 
-    (1001, "admin's first deck", "[{'cardId': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]}]"),
-    (1001, "admin's second deck", "[{'cardId': [1, 2, 3, 4, 5, 6, 7, 8, 9, 15, 17, 23, 24]}]")
+    (1001, "admin's first deck", '{"cardList": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]}'),
+    (1001, "admin's second deck", '{"cardList": [1, 2, 3, 4, 5, 6, 7, 8, 9, 15, 17, 23, 24]}')

@@ -322,8 +322,8 @@ app.post('/login', async (req, res) => {
 app.post('/generateCard', async (req, res) => {
   // const user = req.session.user;
   // TODO Switch to session user
-  // const user = req.session.user;
-  const user = {userId: 1001, username: 'admin'}
+  const user = req.session.user;
+  // const user = {userId: 1001, username: 'admin'}
   try {
     if (user) {
       // TODO prompt for Card Image
