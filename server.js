@@ -49,13 +49,10 @@ ROUTES
 // TODO Home button should go to user's specifc profile
 // TODO CardGenPage - sends the card generates the image, need image urls for cardGen, for userProfile
 // TODO createNewCollection - needs further development
-// TODO Need to create cards that insert into cards Table
 // TODO fix redundency for req.session.user and others
-// TODO CardGenPage
 // TODO Database
 // TODO footer adjustments
 // TODO add color to htmls
-// TODO inputs for cardGen such as create, spell, userid, gameid
 // TODO cardview page bulk - bulk generation?
 // TODO homepage that's not the welcome page
 // TODO Need better navigation -> navigation to card generation page as maybe a subclass under make. route to make game, make card
@@ -110,8 +107,6 @@ app.get('/userDeck/:username', (req, res) => {
 // TODO routing between gameGeneration, card Generation
 // TODO Work on corresponding edit pages, corresponding bulk pages
 // TODO Work on generating inputs
-// TODO (Amanda) database connection and card generation
-// TODO (Amanda) change auto-increment for game generation
 app.get('/gameGenPage', (req, res) => {
   // Show user logged in user profile
   const user = req.session.user;
@@ -174,7 +169,6 @@ app.get('/gamePlayPage', (req, res) => {
   }
 });
 
-// TODO DB variables, other elements on an iterative basis
 // TODO other image ai sources
 // TODO prompt restriction for better image generation
 app.get('/cardGenPage', (req, res) => {
@@ -297,24 +291,36 @@ app.post('/login', async (req, res) => {
 
 app.post('/generateCard', async (req, res) => {
   const user = req.session.user;
-  // const user = { userId: 1002, username: 'aknaup' }
   try {
-    // console.log(user);
     if (user) {
+      // TODO prompt for Card Image
       // const attr = cardGen.generateAiForCard(req.body.inputAiImage);
       const cardType = req.body.cardType;
       const cardName = req.body.cardName;
-      const cardId = await cardGen.sendCardToDB(cardName, cardType, user.userId);    // returns cardId?
-      
+      const cardId = await dbFunc.insertCard(cardName, cardType, user.userId);    // returns cardId?
+      const manaCost = req.body.manaCost;      
+
       // TODO specific card variables
       if (cardType === "Creature") {
+        const creatureHP = req.body.creatureHP;
+        const creatureAttack = req.body.creatureAttack;
+        
         await dbFunc.insertCreatureCard(cardId);
       } else {
+        const spellAbility = req.body.spellAbility;
+        const spellHealth = req.body.spellHealth;
+        const spellAttack = req.body.spellAttack;
+        const spellFreeze = req.body.spellFreeze;
+
         await dbFunc.insertCreatureCard(cardId);
       }
       
-      // const url = await cardGen.generateImageForCard(attr, object1);
-      // await cardGen.sendImageURLtoDB(object1, url)
+      // TODO image URL generation
+      const imagePath = await cardGen.generateImageForCard(attr, object1);
+      // Insert URL into db
+      await dbFunc.insertCardUrl(cardId, imagePath);
+
+
       // res.render('cardGenPage', {
       //   animal: animal, attr: attr, object1: object1
       // });
@@ -322,11 +328,7 @@ app.post('/generateCard', async (req, res) => {
 
       res.redirect('/cardGenPage');
     } else {
-      // Authentication failed, render 'welcomePagePortal' with an error message
-      // res.render('welcomePagePortal', {
-      //   error: 'Invalid credentials. Please try again.'
-      // });
-      // res.redirect('/cardGenPage');
+      // Authentication failed, render 'cardGenPage' with an error message
       res.render('cardGenPage', {error: "Sorry! You cannot create a card without having an account"})
     }
   } catch (err) {
@@ -338,11 +340,13 @@ app.post('/generateCard', async (req, res) => {
 app.post('/gameGenerationPageAction', async (req, res) => {
   try {
     if (req.session.user) {
+      const ruleSet = req.body.ruleSet;
+      console.log(ruleSet);
       const object2 = await gameGen.sendNewGameToDB(req.session.user.userId, 0, 0, 'tbd');           // (ownerId, listCards, noCards, imageLocation) VALUES (?,?,?,?)';
       console.log(object2);                     // gameId?
-      res.render('generatedGameView', {
-        object2: object2
-      });
+      // res.render('generatedGameView', {
+      //   object2: object2
+      // });
     } else {
       // Authentication failed, render 'welcomePagePortal' with an error message
       res.render('welcomePagePortal', {

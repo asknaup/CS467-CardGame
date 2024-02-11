@@ -12,16 +12,51 @@
   <div class="container">
     <div class="left-div">
       <br><br>
-      <h2>Welcome to the Game Generation Page</h2>
+      <h1>Welcome to the Game Generation Page</h1>
       <br><br>
+      <h2>Rule Sets</h2>
+      <h3>Rule Set 1: Creatures and Spells</h3>
+      <h4>Creatures</h4>
+      <ol>
+        <li>Each player can have a maximum of 5 creatures on the battlefield at any given time.</li>
+        <li>Creatures have Attack and Defense values, representing their offensive and defensive capabilities.</li>
+        <li>Creatures may have special abilities or effects that trigger under certain conditions.</li>
+        <li>Players can summon creatures by paying the required mana cost, which is indicated on the card.</li>
+        <li>Creatures can attack the opponent directly or other creatures controlled by the opponent.</li>
+        <li>If a creature's defense reaches zero or below, it is destroyed and placed into the graveyard.</li>
+      </ol>
+      <h4>Spells</h4>
+      <ol>
+        <li>Spells are magical cards with various effects that can impact the game.</li>
+        <li>Spells may include offensive spells that deal damage to creatures or players, 
+          defensive spells that protect creatures or players, and utility spells that 
+          manipulate the game state.</li>
+        <li>Players can cast spells by paying the required mana cost, which is indicated on the card.</li>
+        <li>Some spells may have instant effects that resolve immediately upon casting, while others may 
+          have ongoing effects that last for a specified duration.</li>
+      </ol>
+      <br><br>
+      <h3>Rule Set 2: Combat Mechanics</h3>
+      <h4>Combat Phase</h4>
+      <ol>
+        <li>Each turn consists of a combat phase where players can attack with their creatures.</li>
+        <li>During the combat phase, the active player declares their attacking creatures and selects targets for their attacks.</li>
+        <li>The defending player can choose to block attacking creatures with their own creatures or allow the attack to go through.</li>
+        <li>If a creature is blocked, it deals damage to the blocking creature equal to its attack value, and vice versa.</li>
+        <li>If a creature is unblocked, it deals damage to the defending player equal to its attack value.</li>
+        <li>Damage dealt to creatures reduces their defense value. If a creature's defense reaches zero or below, it is destroyed 
+          and placed into the graveyard.</li>
+        <li>After the combat phase, players proceed to the next phase of the turn.</li>
+      </ol>
     </div>
     <div class="right-div">
       <br><br>
       <h2> Please enter Game Generation Inputs </h2>
       <div id="input-form">
         <form action="gameGenerationPageAction" method="post">
-          <select id="dropdown-menu">
-            <option value="option1">Rule Set #1 (Creatures and Spells)</option>
+          <select id="ruleSet">
+            <option value="ruleSet1">Rule Set #1 (Creatures and Spells)</option>
+            <option value="ruleSet2">Rule Set #2 (Combat Mechanics)</option>
           </select><br><br>
           <input id="theme" type="text" placeholder="Game Theme (use several descriptive words)">
           <input id="number" type="text" placeholder="Number of Cards per Deck">

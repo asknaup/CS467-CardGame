@@ -12,6 +12,7 @@ DROP TABLE IF EXISTS moves;
 DROP TABLE IF EXISTS cardSpell;
 DROP TABLE IF EXISTS cardCreature;
 DROP TABLE IF EXISTS cardInstance;
+DROP TABLE IF EXISTS cardUrl;
 
 -- Tables with foreign keys
 DROP TABLE IF EXISTS generatedGame;
@@ -170,6 +171,22 @@ CREATE TABLE IF NOT EXISTS cardSpell (
 );
 
 -- -----------------------------------------------------
+-- Create Image URL table
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS cardUrl;
+
+CREATE TABLE IF NOT EXISTS cardUrl (
+    cardId INT UNIQUE NOT NULL,
+    imagePath VARCHAR(1000) NOT NULL,
+
+    PRIMARY KEY (cardId),
+    FOREIGN KEY (cardId)
+        REFERENCES cards(cardId)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- -----------------------------------------------------
 -- Create deck table
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS decks;
@@ -212,13 +229,14 @@ DROP TABLE IF EXISTS generatedGame;
 
 CREATE TABLE IF NOT EXISTS generatedGame (
     gameId INT UNIQUE AUTO_INCREMENT,
-    imageLocation VARCHAR(1000),
     ownerId INT,
     noCards INT,
     listCards VARCHAR(5000),
+    imageLocation VARCHAR(1000),
 
     PRIMARY KEY (gameId),
-    FOREIGN KEY (ownerId) REFERENCES userProfile(userId) 
+    FOREIGN KEY (ownerId) 
+        REFERENCES userProfile(userId) 
 );
 
 

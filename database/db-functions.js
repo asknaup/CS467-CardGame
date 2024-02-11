@@ -213,6 +213,64 @@ function createNewCollection(userId) {
     });
 }
 
+
+function insertCard(name, type, user) {
+    return new Promise((resolve, reject) => {
+        db.pool.getConnection((connectionErr, connection) => {
+            if (connectionErr) {
+                reject(connectionErr);
+                return;
+            }
+
+            connection.query('START TRANSACTION', (startTransactionErr) => {
+                if (startTransactionErr) {
+                    connection.release();
+                    reject(startTransactionErr);
+                    return;
+                }
+
+                const insertCardQuery = 'INSERT INTO cards (cardName, cardType, rarity, maxAvailable) VALUES (?, ?, 0, 15)';
+                const insertCardInstanceQuery = 'INSERT INTO cardInstance (cardId, ownerUserId) VALUES (?, ?)';
+
+                connection.query(insertCardQuery, [name, type], (insertCardErr, insertCardResult) => {
+                    if (insertCardErr) {
+                        connection.rollback(() => {
+                            connection.release();
+                            reject(insertCardErr);
+                        });
+                        return;
+                    }
+
+                    const lastInsertedId = insertCardResult.insertId;
+
+                    connection.query(insertCardInstanceQuery, [lastInsertedId, user], (insertInstanceErr, insertInstanceResult) => {
+                        if (insertInstanceErr) {
+                            connection.rollback(() => {
+                                connection.release();
+                                reject(insertInstanceErr);
+                            });
+                            return;
+                        }
+
+                        connection.query('COMMIT', (commitErr) => {
+                            if (commitErr) {
+                                connection.rollback(() => {
+                                    connection.release();
+                                    reject(commitErr);
+                                });
+                                return;
+                            }
+
+                            connection.release();
+                            resolve(lastInsertedId);
+                        });
+                    });
+                });
+            });
+        });
+    });
+}
+
 function insertCreatureCard(cardId) {
     return new Promise((resolve, reject) => {
         const query = 'INSERT INTO cardCreature (cardId, hp, attack) VALUES (?, ?, ?);';
@@ -232,6 +290,21 @@ function insertSpellCard(cardId) {
     return new Promise((resolve, reject) => {
         const query = 'INSERT INTO cardSpell (cardId, spellAbility, healthRegen) VALUES (?, ?, ?);';
         const vars = [cardId, "This card does somethign", 2];
+
+        db.pool.query(query, vars, (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+}
+
+function insertCardUrl(cardId, url) {
+    return new Promise((resolve, reject) => {
+        const query = 'INSERT INTO cardUrl (cardId, imagePath) VALUES (?, ?);';
+        const vars = [cardId, url];
 
         db.pool.query(query, vars, (err, result) => {
             if (err) {
@@ -268,5 +341,7 @@ module.exports.insertNewGameIntoGames = insertNewGameIntoGames;
 module.exports.insertNewUser = insertNewUser;
 module.exports.authenticateUser = authenticateUser;
 module.exports.createNewCollection = createNewCollection;
+module.exports.insertCard = insertCard;
 module.exports.insertCreatureCard = insertCreatureCard;
 module.exports.insertSpellCard = insertSpellCard;
+module.exports.insertCardUrl = insertCardUrl;
