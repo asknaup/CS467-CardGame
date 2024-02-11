@@ -83,13 +83,20 @@
       <br><br>
       <h2> Please enter Game Generation Inputs </h2>
       <div id="input-form">
-        <form action="gameGenerationPageAction" method="post">
-          <select id="ruleSet">
+        <form action="/gameGenerationPageAction" method="post">
+          <label for="ruleSet">Select Rule Set:</label>
+          <select id="ruleSet" name="ruleSet">
             <option value="ruleSet1">Rule Set #1 (Creatures and Spells)</option>
             <option value="ruleSet2">Rule Set #2 (Combat Mechanics)</option>
           </select>
           <br><br>
-          <div id="ruleSet1">
+          <label for="userDeckSelect">Select User Deck:</label>
+          <select id="userDeckSelect" name="userDeckSelect">
+            {{#each decks}}
+              <option value="{{deckId}}">{{deckName}}</option>
+            {{/each}}
+          </select>
+          {{!-- <div id="ruleSet1">
             <h2>Creature Cards</h2>
             <div id="creatureCards">
               <div class="label-input-pair">
@@ -139,9 +146,9 @@
               <button id="resetSpellCards">Reset Spell Cards</button>
             </div>
           </div>
-          <div id="ruleSet2" style="display: none;">
+          <div id="ruleSet2" style="display: none;"> 
 
-          </div>
+          </div> --}}
           {{!-- <input id="theme" type="text" placeholder="Game Theme (use several descriptive words)"> --}}
           {{!-- <input id="number" type="text" placeholder="Number of Cards per Deck"> --}}
           {{!-- <label for="slider">Distribution of cards:</label>
@@ -188,5 +195,6 @@
       });
     });
   </script>
+  <script src="game-gen.js"></script>
 </body>
 </html>

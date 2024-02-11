@@ -197,12 +197,13 @@ DROP TABLE IF EXISTS decks;
 CREATE TABLE IF NOT EXISTS decks (
     deckId INT AUTO_INCREMENT,
     playerId INT NOT NULL,
-    cardId INT,
+    deckName VARCHAR(200),
+    cardId VARCHAR(5000),
     quantity INT,
 
     PRIMARY KEY (deckId),
-    FOREIGN KEY (playerId) REFERENCES userProfile(userId),
-    FOREIGN KEY (cardId) REFERENCES cards(cardId)
+    FOREIGN KEY (playerId) REFERENCES userProfile(userId)
+    -- FOREIGN KEY (cardId) REFERENCES cards(cardId)
 );
 
 ALTER TABLE decks AUTO_INCREMENT=7000;

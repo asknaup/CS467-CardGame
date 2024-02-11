@@ -161,3 +161,10 @@ INSERT INTO cardInstance (cardId, ownerUserId)
 
 INSERT INTO cardSpell (cardId, spellType, spellAbility, spellAttack, spellDefense, utility)
     VALUES (@lastCardId, 'Utility', 'Removes status like poisoned', 0, 0, 1);
+
+-- -----------------------------------------------------
+-- Create Deck
+-- -----------------------------------------------------
+INSERT INTO decks (playerId, deckName, cardId) VALUES 
+    (1001, "admin's first deck", "[{'cardId': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]}]"),
+    (1001, "admin's second deck", "[{'cardId': [1, 2, 3, 4, 5, 6, 7, 8, 9, 15, 17, 23, 24]}]")

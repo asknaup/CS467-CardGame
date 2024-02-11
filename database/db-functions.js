@@ -306,6 +306,19 @@ function insertCardUrl(cardId, url) {
     });
 }
 
+async function gatherUserDecks(userId) {
+    return new Promise((resolve, reject) => {
+        db.pool.query('SELECT deckId, deckName FROM decks WHERE playerId = ?', userId, (selectErr, selectResult) => {
+            if (selectErr) {
+                reject(selectErr);
+                return;
+            } else {
+                resolve(selectResult);
+            }
+        });
+    });
+}
+
 //function insertIntoCollection(deckId, userId, cardId) { }
 
 // function updateGameWinner({ params }) {
@@ -335,3 +348,4 @@ module.exports.insertCard = insertCard;
 module.exports.insertCreatureCard = insertCreatureCard;
 module.exports.insertSpellCard = insertSpellCard;
 module.exports.insertCardUrl = insertCardUrl;
+module.exports.gatherUserDecks = gatherUserDecks;
