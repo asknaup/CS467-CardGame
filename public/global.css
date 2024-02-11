@@ -197,3 +197,8 @@ p {
   text-align: left;
   font-size: larger;
 }
+
+.label-input-pair {
+  display: inline-block;
+  margin-right: 1px; /* Adjust as needed */
+}
