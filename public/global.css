@@ -200,5 +200,36 @@ p {
 
 .label-input-pair {
   display: inline-block;
-  margin-right: 1px; /* Adjust as needed */
+  margin-right: 1px;
+  /* Adjust as needed */
+}
+
+/* Dropdown functionality */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ccc;
+}
+
+.dropdown-menu li {
+  border-bottom: 1px solid #ccc;
+  text-align: center;
+  padding: 10px;
+}
+
+.dropdown-menu li:last-child {
+  border-bottom: none;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
 }

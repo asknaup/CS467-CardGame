@@ -129,6 +129,16 @@ app.get('/gameGenPage', async (req, res) => {
 });
 
 // TODO Deck generation page
+app.get('/buildDeck', (req, res) => {
+  // Show user logged in user profile
+  const user = req.session.user;
+  if (user) {
+    res.render('buildDeck', { showLogoutButton: true })
+  } else {
+    res.render('buildDeck', { showLogoutButton: false })
+  }
+});
+
 // Add to deck, delete, deck stats
 app.get('/currentDeck', (req, res) => {
   // Show user logged in user profile
