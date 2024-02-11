@@ -161,3 +161,7 @@ scrollLeftButton.addEventListener("click", () => {
         displayScrollCards(startIndex, endIndex, cardArr);
     }
 });
+
+//TODO: add function that puts card into stage area
+/* I think it should move the card from scrolldeck and not clone it. 
+Meaning there's an empty slot in scroll deck */
