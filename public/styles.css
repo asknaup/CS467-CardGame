@@ -46,13 +46,13 @@ are inside scrollDeck div */
 #scrollLeft {
     position: absolute;
     left: -3vw;
-    top: 5vw;
+    top: 7vw;
 }
 
 #scrollRight {
     position: absolute;
     right: -3vw;
-    top: 5vw;
+    top: 7vw;
 }
 
 .stageAreaZero {
@@ -64,6 +64,7 @@ are inside scrollDeck div */
     border-style: dashed;
     color: grey;
     margin-top: 1.5vw;
+    z-index:  100;
 }
 
 .topStageText {
