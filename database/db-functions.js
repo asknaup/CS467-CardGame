@@ -64,7 +64,7 @@ function insertNewUser(username, password, email) {
     });
 }
 
-function authenticateUser(username, password){
+function authenticateUser(username, password) {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT userId, username, pwd FROM userCreds WHERE username=?';
         const val = [username];
@@ -213,6 +213,112 @@ function createNewCollection(userId) {
     });
 }
 
+
+function insertCard(name, type, user, rarity, manaCost) {
+    return new Promise((resolve, reject) => {
+        db.pool.query('START TRANSACTION', (startTransactionErr) => {
+            if (startTransactionErr) {
+                connection.release();
+                reject(startTransactionErr);
+                return;
+            }
+
+            const insertCardQuery = 'INSERT INTO cards (cardName, cardType, rarity, manaCost) VALUES (?, ?, ?, ?)';
+            const insertCardInstanceQuery = 'INSERT INTO cardInstance (cardId, ownerUserId) VALUES (?, ?)';
+
+            db.pool.query(insertCardQuery, [name, type, rarity, manaCost], (insertCardErr, insertCardResult) => {
+                if (insertCardErr) {
+                    db.pool.query('ROLLBACK', () => {
+                        reject(insertCardErr);
+                    });
+                    return;
+                }
+
+                const lastInsertedId = insertCardResult.insertId;
+
+                db.pool.query(insertCardInstanceQuery, [lastInsertedId, user], (insertInstanceErr, insertInstanceResult) => {
+                    if (insertInstanceErr) {
+                        console.log("HERE");
+                        db.pool.query('ROLLBACK', () => {
+                            reject(insertInstanceErr);
+                        });
+                        return;
+                    }
+
+                    db.pool.query('COMMIT', (commitErr) => {
+                        if (commitErr) {
+                            db.pool.query('ROLLBACK', () => {
+                                reject(commitErr);
+                            });
+                            return;
+                        }
+                        resolve(lastInsertedId);
+                    });
+                });
+            });
+        });
+        // });
+    });
+}
+
+function insertCreatureCard(cardId, creatureAttack, creatureDefense) {
+    return new Promise((resolve, reject) => {
+        const query = 'INSERT INTO cardCreature (cardId, attack, defense) VALUES (?, ?, ?);';
+        const vars = [cardId, creatureAttack, creatureDefense];
+
+        db.pool.query(query, vars, (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+}
+
+function insertSpellCard(cardId, spellType, spellAbility, spellAttack, spellDefense, utility) {
+    return new Promise((resolve, reject) => {
+        const query = 'INSERT INTO cardSpell (cardId, spellType, spellAbility, spellAttack, spellDefense, utility) VALUES (?, ?, ?, ?, ?, ?);';
+        const vars = [cardId, spellType, spellAbility, spellAttack, spellDefense, utility];
+
+        db.pool.query(query, vars, (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+}
+
+function insertCardUrl(cardId, url) {
+    return new Promise((resolve, reject) => {
+        const query = 'INSERT INTO cardUrl (cardId, imagePath) VALUES (?, ?);';
+        const vars = [cardId, url];
+
+        db.pool.query(query, vars, (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+}
+
+async function gatherUserDecks(userId) {
+    return new Promise((resolve, reject) => {
+        db.pool.query('SELECT deckId, deckName FROM decks WHERE playerId = ?', userId, (selectErr, selectResult) => {
+            if (selectErr) {
+                reject(selectErr);
+                return;
+            } else {
+                resolve(selectResult);
+            }
+        });
+    });
+}
+
 //function insertIntoCollection(deckId, userId, cardId) { }
 
 // function updateGameWinner({ params }) {
@@ -238,3 +344,8 @@ module.exports.insertNewGameIntoGames = insertNewGameIntoGames;
 module.exports.insertNewUser = insertNewUser;
 module.exports.authenticateUser = authenticateUser;
 module.exports.createNewCollection = createNewCollection;
+module.exports.insertCard = insertCard;
+module.exports.insertCreatureCard = insertCreatureCard;
+module.exports.insertSpellCard = insertSpellCard;
+module.exports.insertCardUrl = insertCardUrl;
+module.exports.gatherUserDecks = gatherUserDecks;

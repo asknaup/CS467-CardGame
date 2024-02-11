@@ -49,13 +49,9 @@ ROUTES
 // TODO Home button should go to user's specifc profile
 // TODO CardGenPage - sends the card generates the image, need image urls for cardGen, for userProfile
 // TODO createNewCollection - needs further development
-// TODO Need to create cards that insert into cards Table
 // TODO fix redundency for req.session.user and others
-// TODO CardGenPage
-// TODO Database
 // TODO footer adjustments
 // TODO add color to htmls
-// TODO inputs for cardGen such as create, spell, userid, gameid
 // TODO cardview page bulk - bulk generation?
 // TODO homepage that's not the welcome page
 // TODO Need better navigation -> navigation to card generation page as maybe a subclass under make. route to make game, make card
@@ -110,15 +106,21 @@ app.get('/userDeck/:username', (req, res) => {
 // TODO routing between gameGeneration, card Generation
 // TODO Work on corresponding edit pages, corresponding bulk pages
 // TODO Work on generating inputs
-// TODO (Amanda) database connection and card generation
-// TODO (Amanda) change auto-increment for game generation
-app.get('/gameGenPage', (req, res) => {
+// TODO html formatting
+app.get('/gameGenPage', async (req, res) => {
   // Show user logged in user profile
   const user = req.session.user;
-  if (user) {
-    res.render('gameGenPage', { showLogoutButton: true })
-  } else {
-    res.render('gameGenPage', { showLogoutButton: false })
+  // user = {userId:1001, username:'admin'}
+  try {
+    if (user) {
+      const userDecks = await dbFunc.gatherUserDecks(user.userId);
+      console.log(userDecks)
+      res.render('gameGenPage', { showLogoutButton: true, decks: userDecks})
+    } else {
+      res.render('gameGenPage', { showLogoutButton: false })
+    }
+  } catch (err) {
+    console.log(err);
   }
 });
 
@@ -174,7 +176,6 @@ app.get('/gamePlayPage', (req, res) => {
   }
 });
 
-// TODO DB variables, other elements on an iterative basis
 // TODO other image ai sources
 // TODO prompt restriction for better image generation
 app.get('/cardGenPage', (req, res) => {
@@ -231,6 +232,12 @@ app.get('/logout', (req, res) => {
     }
   })
 })
+
+// Game
+app.get('/game/:gameId', (req, res) => {
+  // TODO game handlebars
+  // TODO game logic
+});
 
 app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
@@ -297,30 +304,51 @@ app.post('/login', async (req, res) => {
 
 app.post('/generateCard', async (req, res) => {
   // const user = req.session.user;
-  const user = { userId: 1001, username: 'admin' }
+  // TODO Switch to session user
+  const user = {userId: 1001, username: 'admin'}
   try {
-    console.log(user);
     if (user) {
+      // TODO prompt for Card Image
       // const attr = cardGen.generateAiForCard(req.body.inputAiImage);
-      const cardType = req.body;
-      const object1 = await cardGen.sendCardToDB(attr, attr, req.session.user.userId);    // returns cardId?
-      // const url = await cardGen.generateImageForCard(attr, object1);
-      // await cardGen.sendImageURLtoDB(object1, url)
+      const cardType = req.body.cardType;
+      const cardName = req.body.cardName;
+      const manaCost = req.body.manaCost; 
+      const rarity = req.body.rarity;     
+      
+      console.log(cardType, cardName, manaCost, rarity);
+      const cardId = await dbFunc.insertCard(cardName, cardType, user.userId, rarity, manaCost);    // returns cardId
+      console.log(cardId)
+      // TODO specific card variables
+      if (cardType === "Creature") {
+        const creatureDefense = req.body.creatureDefense;
+        const creatureAttack = req.body.creatureAttack;
+        
+        await dbFunc.insertCreatureCard(cardId, creatureAttack, creatureDefense);
+      } else {
+        const spellType = req.body.spellType;
+        const spellAbility = req.body.spellAbility;
+        const spellAttack = req.body.spellAttack;
+        const spellDefense = req.body.spellDefense;
+        const utility = req.body.utility;
+
+        await dbFunc.insertSpellCard(cardId, spellType, spellAbility, spellAttack, spellDefense, utility);
+      }
+      
+      // TODO image URL generation
+      // const imagePath = await cardGen.generateImageForCard(attr, object1);
+      // Insert URL into db
+      await dbFunc.insertCardUrl(cardId, imagePath);
+
+
       // res.render('cardGenPage', {
       //   animal: animal, attr: attr, object1: object1
       // });
 
-
+      // TODO route to deck page or display image?
       res.redirect('/cardGenPage');
-
-
     } else {
-      // Authentication failed, render 'welcomePagePortal' with an error message
-      // res.render('welcomePagePortal', {
-      //   error: 'Invalid credentials. Please try again.'
-      // });
-      console.log('Something went wrong');
-      res.redirect('/cardGenPage');
+      // Authentication failed, render 'cardGenPage' with an error message
+      res.render('cardGenPage', {error: "Sorry! You cannot create a card without having an account"})
     }
   } catch (err) {
     // Handle errors that may occur during card generation, database interaction, or rendering
@@ -331,11 +359,20 @@ app.post('/generateCard', async (req, res) => {
 app.post('/gameGenerationPageAction', async (req, res) => {
   try {
     if (req.session.user) {
-      const object2 = await gameGen.sendNewGameToDB(req.session.user.userId, 0, 0, 'tbd');           // (ownerId, listCards, noCards, imageLocation) VALUES (?,?,?,?)';
-      console.log(object2);                     // gameId?
-      res.render('generatedGameView', {
-        object2: object2
-      });
+      const ruleSet = req.body.ruleSet;
+      const userDeckId = req.body.userDeckSelect;;
+      console.log(ruleSet);
+      console.log(userDeckId);
+
+      // TODO insert into new game
+
+      // res.redirect('/game/' + req.session.game.gameId);
+
+      // const object2 = await gameGen.sendNewGameToDB(req.session.user.userId, 0, 0, 'tbd');           // (ownerId, listCards, noCards, imageLocation) VALUES (?,?,?,?)';
+      // console.log(object2);                     // gameId?
+      // res.render('generatedGameView', {
+      //   object2: object2
+      // });
     } else {
       // Authentication failed, render 'welcomePagePortal' with an error message
       res.render('welcomePagePortal', {
