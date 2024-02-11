@@ -6,7 +6,6 @@ class Card{
         this.description = description;
         this.additionalText = additionalText;
         this.attributes = attributes;
-        this.staged = false;
     }
 }
 
@@ -54,7 +53,7 @@ function appendDescription(cardObj, scrollCard){
 }
 
 // TODO: Standardize card form format
-function createCardElement(width, height, left, bottom, zIndex, cardObj){
+function createCardElement(position, width, height, zIndex, cardObj){
     // create the div that becomes the card
     var scrollCard = document.createElement("div");
     scrollCard.setAttribute("class", "newCard");
@@ -62,22 +61,25 @@ function createCardElement(width, height, left, bottom, zIndex, cardObj){
     appendTitle(cardObj, scrollCard);
     appendImage(cardObj, scrollCard);
     // this is all the css for this card
-    scrollCard.style.position = "relative";
+    scrollCard.style.position = position;
     scrollCard.style.bottom = "0vw";
     scrollCard.style.width = (width).toString() + "vw";
     scrollCard.style.height = (height).toString() + "vw";
-    scrollCard.style.left = (left).toString() + "vw";
-    scrollCard.style.bottom = (bottom).toString() + "vw";
     scrollCard.style.backgroundColor = "beige";
-    scrollCard.style.border = "2px solid black";
+    scrollCard.style.border = "3px solid black";
     scrollCard.style.borderRadius = "5px";
     scrollCard.style.zIndex = zIndex;
     appendAttributes(cardObj, scrollCard);
     appendDescription(cardObj, scrollCard);
     // creates the same affect as #id.hover { z-index: [value goes here]}
-    scrollCard.onmouseenter = function(){this.style.zIndex = "999"};
+    scrollCard.onmouseenter = function(){this.style.zIndex = "9999"};
     scrollCard.onmouseleave = function(){this.style.zIndex = zIndex};
     return scrollCard;
+}
+
+function setCardPlacement(left, bottom, scrollCard){
+    scrollCard.style.left = (left).toString() + "vw";
+    scrollCard.style.bottom = (bottom).toString() + "vw";
 }
 
 function displayScrollCards(startIndex, endIndex, cardArr){
@@ -93,11 +95,11 @@ function displayScrollCards(startIndex, endIndex, cardArr){
     var bottom = 0;
     var zIndex = 0;
     for (let i = startIndex; i <= endIndex; i++){
-        scrollCard = createCardElement(width, height, left, bottom, zIndex, cardArr[i]);
+        scrollCard = createCardElement("absolute", width, height, zIndex, cardArr[i]);
+        setCardPlacement(left, bottom, scrollCard)
         scrollDeck.appendChild(scrollCard);
         zIndex += 1;
         left += 6.25;
-        bottom += height;
     }
 }
 

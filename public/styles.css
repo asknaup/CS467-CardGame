@@ -39,8 +39,9 @@
 /* cardSlots and the buttons scrollLeft/scrollRight 
 are inside scrollDeck div */
 #cardSlots {
-    width: 100vw;
-    height: 15vw;
+    position: relative;
+    width: 100%;
+    height: 19vw;
 }
 
 #scrollLeft {
@@ -55,43 +56,42 @@ are inside scrollDeck div */
     top: 7vw;
 }
 
-.stageAreaZero {
+#stageAreaZero {
+    display: flex;
+    flex-direction: row;
     position: relative;
-    height: 30vw;
-    color: white;
-    border-color: grey;
-    border-width: 5px;
-    border-style: dashed;
+    height: 20vw;
+    border:  5px dashed grey;
     color: grey;
-    margin-top: 1.5vw;
+    margin: 1.5vw;
     z-index:  100;
 }
 
 .topStageText {
     position: absolute;
     top: 1vw;
-    width: 80vw;
+    width: 100%;
     text-align: center;
 }
 
 .topStageText:hover {
     position: absolute;
     top: 1vw;
-    width: 80vw;
+    width: 100%;
     text-align: center;
 }
 
 .bottomStageText {
     position: absolute;
     bottom: 1vw;
-    width: 80vw;
+    width: 100%;
     text-align: center;
 }
 
 .bottomStageText:hover {
     position: absolute;
     bottom: 1vw;
-    width: 80vw;
+    width: 100%;
     text-align: center;
 }
 
