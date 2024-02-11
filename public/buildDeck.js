@@ -235,9 +235,6 @@ function moveCardToStagingArea(cardData) {
         // Increment the staged card count
         stagedCardCount++;
 
-        // Update the UI or perform additional actions if needed
-        // ...
-
     } else {
         // Optionally provide feedback to the user that the limit has been reached
         console.log('Maximum number of cards staged reached (5 cards).');
@@ -294,7 +291,6 @@ function displayCards(startIndex) {
 // Function to remove a card from the carousel
 function removeCardFromCarousel(cardData) {
     // Implement the logic to remove the card from the carousel
-    // You may want to filter the exampleCards array or use other methods depending on your data structure
     exampleCards = exampleCards.filter(function (card) {
         return card !== cardData;
     });
@@ -307,7 +303,6 @@ function removeCardFromCarousel(cardData) {
 //TODO: Implement this so that it works, need db connection
 function addCardToCarousel(cardData) {
     // Implement the logic to add the card back to the carousel
-    // You may want to push the cardData back into the exampleCards array or use other methods
     exampleCards.push(cardData);
 
     // Redisplay the cards in the carousel
