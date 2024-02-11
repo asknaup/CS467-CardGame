@@ -16,6 +16,7 @@ const db = require('./database/db-connector');
 const dbFunc = require('./database/db-functions')
 const cardGen = require('./database/card-gen');
 const gameGen = require('./database/game-gen');
+const game1 = require('./database/game-play1')
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -94,6 +95,9 @@ app.get('/userProfile/:username', async (req, res) => {
 });
 
 app.get('/userDeck/:username', (req, res) => {
+  // TODO show different decks
+  // TODO insert deck as json into db
+  // TODO handlebars
   // Show user logged in user profile
   const user = req.session.user;
   if (user) {
@@ -109,8 +113,8 @@ app.get('/userDeck/:username', (req, res) => {
 // TODO html formatting
 app.get('/gameGenPage', async (req, res) => {
   // Show user logged in user profile
-  const user = req.session.user;
-  // user = {userId:1001, username:'admin'}
+  // const user = req.session.user;
+  user = {userId:1001, username:'admin'}  // FIXME replace when ready
   try {
     if (user) {
       const userDecks = await dbFunc.gatherUserDecks(user.userId);
@@ -211,6 +215,7 @@ app.get('/userProfile', (req, res) => {
 });
 
 app.get('/cardViewPage', async (req, res) => {
+  // TODO card currently hardcoded
   const val = await cardGen.grabCardFromDB(1);             // Hard Coded
   console.log(val[0]);
   if (user) {
@@ -234,9 +239,21 @@ app.get('/logout', (req, res) => {
 })
 
 // Game
-app.get('/game/:gameId', (req, res) => {
-  // TODO game handlebars
+// FIXME change to '/game/:gameId'
+app.get('/game/', async (req, res) => {
+  // FIXME replace
+  // const user = req.session.user;
+  // const deck = req.session.deck;
+  // const game = req.session.game;
+  const user = {userId: 1001, username: 'admin'}
+  const deck = {deckId: 7001}
+  const game = {ruleSet: 'ruleSet1', gameId: 1001}
+  // TODO game handlebars file
   // TODO game logic
+  if (user) {
+    const deckList = await game1.getDeck(user.userId, deck.deckId);
+    console.log(deckList);
+  }
 });
 
 app.listen(port, () => {
@@ -305,6 +322,7 @@ app.post('/login', async (req, res) => {
 app.post('/generateCard', async (req, res) => {
   // const user = req.session.user;
   // TODO Switch to session user
+  // const user = req.session.user;
   const user = {userId: 1001, username: 'admin'}
   try {
     if (user) {
@@ -318,7 +336,6 @@ app.post('/generateCard', async (req, res) => {
       console.log(cardType, cardName, manaCost, rarity);
       const cardId = await dbFunc.insertCard(cardName, cardType, user.userId, rarity, manaCost);    // returns cardId
       console.log(cardId)
-      // TODO specific card variables
       if (cardType === "Creature") {
         const creatureDefense = req.body.creatureDefense;
         const creatureAttack = req.body.creatureAttack;
@@ -334,15 +351,10 @@ app.post('/generateCard', async (req, res) => {
         await dbFunc.insertSpellCard(cardId, spellType, spellAbility, spellAttack, spellDefense, utility);
       }
       
-      // TODO image URL generation
+      // TODO (JEREMY) image URL generation
       // const imagePath = await cardGen.generateImageForCard(attr, object1);
       // Insert URL into db
-      await dbFunc.insertCardUrl(cardId, imagePath);
-
-
-      // res.render('cardGenPage', {
-      //   animal: animal, attr: attr, object1: object1
-      // });
+      // await dbFunc.insertCardUrl(cardId, imagePath); 
 
       // TODO route to deck page or display image?
       res.redirect('/cardGenPage');
@@ -360,12 +372,17 @@ app.post('/gameGenerationPageAction', async (req, res) => {
   try {
     if (req.session.user) {
       const ruleSet = req.body.ruleSet;
-      const userDeckId = req.body.userDeckSelect;;
+      const userDeckId = req.body.userDeckSelect;
+
+      // save deck and game inforamtion
+      req.session.deck = {deckId: userDeckId}
+      req.session.game = {ruleSet: ruleSet, gameId: 1001}  // FIXME once table has been generated and returned gameId
+
       console.log(ruleSet);
       console.log(userDeckId);
+      // TODO insert into new game to get gameId
 
-      // TODO insert into new game
-
+      // redirects to app.get('/game/:gameId)
       // res.redirect('/game/' + req.session.game.gameId);
 
       // const object2 = await gameGen.sendNewGameToDB(req.session.user.userId, 0, 0, 'tbd');           // (ownerId, listCards, noCards, imageLocation) VALUES (?,?,?,?)';
