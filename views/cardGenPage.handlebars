@@ -20,17 +20,30 @@
         </select><br><br>
         <input name="theme" type="text" placeholder="Card Theme (several words)">
         <input name="cardName" type="text" placeholder="Card Name">
-        <input name="number" type="text" placeholder="Number of Cards">
-        <input name="manaCost" type="text" placeholder="Mana Cost">
+        <input name="number" type="number" placeholder="Number of Cards">
+        <input name="manaCost" type="number" placeholder="Mana Cost">
+        <label for="rarity">Select Card Rarity:</label>
+        <select id="rarity" name="rarity">
+          <option value="Common">Common</option>
+          <option value="uncommon">Uncommon</option>
+          <option value="Rare">Rare</option>
+          <option value="Legendary">Legendary</option>
+        </select><br><br>
         <div id="creatureFields">
-          <input name="creatureHP" type="text" placeholder="Creature HP">
-          <input name="creatureAttack" type="text" placeholder="Creature Attack">
+          <input type="number" id="creatureAttack" name="creatureAttack" placeholder="Attack"><br>
+          <input type="number" id="creatureDefense" name="creatureDefense" placeholder="Defense"><br>
         </div>
         <div id="spellFields" style="display: none;">
+          <label for="spellType">Select Spell Type:</label>
+          <select id="spellType" name="spellType">
+            <option value="Offensive">Offensive</option>
+            <option value="Defensive">Defensive</option>
+          </select> <br><br>
+          <input type="number" id="spellAttack" name="spellAttack" placeholder="Attack"><br>
+          <input type="number" id="spellDefense" name="spellDefense" placeholder="Defense"><br>
           <input name="spellAbility" type="text" placeholder="Spell Ability">
-          <input name="spellHealth" type="text" placeholder="Heath Regeneration (if any)">
-          <input name="spellAttack" type="text" placeholder="Spell Attack">
-          <input name="spellFreeze" type="text" placeholder="Turns to freeze Creature">
+          <label for="utility">Utility:</label><input type="checkbox" id="utility" name="utility">
+          <br>
         </div>
         {{!-- <input id="abilitiesInputGgp" type="text" placeholder="Type Abilities">
         <input id="styleInputGgp" type="text" placeholder="Type Style"> --}}
@@ -55,7 +68,7 @@
         }
       });
     </script>
-</body >
+</body>
 
 
 </html>
