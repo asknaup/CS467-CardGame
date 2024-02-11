@@ -290,33 +290,38 @@ app.post('/login', async (req, res) => {
 
 
 app.post('/generateCard', async (req, res) => {
-  const user = req.session.user;
+  // const user = req.session.user;
+  const user = {userId: 1001, username: 'admin'}
   try {
     if (user) {
       // TODO prompt for Card Image
       // const attr = cardGen.generateAiForCard(req.body.inputAiImage);
       const cardType = req.body.cardType;
       const cardName = req.body.cardName;
-      const cardId = await dbFunc.insertCard(cardName, cardType, user.userId);    // returns cardId?
-      const manaCost = req.body.manaCost;      
-
+      const manaCost = req.body.manaCost; 
+      const rarity = req.body.rarity;     
+      
+      console.log(cardType, cardName, manaCost, rarity);
+      const cardId = await dbFunc.insertCard(cardName, cardType, user.userId, rarity, manaCost);    // returns cardId
+      console.log(cardId)
       // TODO specific card variables
       if (cardType === "Creature") {
-        const creatureHP = req.body.creatureHP;
+        const creatureDefense = req.body.creatureDefense;
         const creatureAttack = req.body.creatureAttack;
         
-        await dbFunc.insertCreatureCard(cardId);
+        await dbFunc.insertCreatureCard(cardId, creatureAttack, creatureDefense);
       } else {
+        const spellType = req.body.spellType;
         const spellAbility = req.body.spellAbility;
-        const spellHealth = req.body.spellHealth;
         const spellAttack = req.body.spellAttack;
-        const spellFreeze = req.body.spellFreeze;
+        const spellDefense = req.body.spellDefense;
+        const utility = req.body.utility;
 
-        await dbFunc.insertCreatureCard(cardId);
+        await dbFunc.insertSpellCard(cardId, spellType, spellAbility, spellAttack, spellDefense, utility);
       }
       
       // TODO image URL generation
-      const imagePath = await cardGen.generateImageForCard(attr, object1);
+      // const imagePath = await cardGen.generateImageForCard(attr, object1);
       // Insert URL into db
       await dbFunc.insertCardUrl(cardId, imagePath);
 

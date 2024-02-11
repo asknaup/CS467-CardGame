@@ -104,8 +104,8 @@ CREATE TABLE IF NOT EXISTS cards (
     cardId INT UNIQUE NOT NULL AUTO_INCREMENT,
     cardName VARCHAR(500) NOT NULL,
     cardType VARCHAR(50) NOT NULL,
-    rarity INT NOT NULL,
-    maxAvailable INT NOT NULL,
+    rarity VARCHAR(50) NOT NULL,
+    manaCost INT NOT NULL,
 
     PRIMARY KEY (cardId)
 );
@@ -142,8 +142,8 @@ DROP TABLE IF EXISTS cardCreature;
 
 CREATE TABLE IF NOT EXISTS cardCreature (
     cardId INT UNIQUE NOT NULL,
-    hp INT DEFAULT NULL,
     attack INT DEFAULT NULL,
+    defense INT DEFAULT NULL,
 
     PRIMARY KEY (cardId),
     FOREIGN KEY (cardId)
@@ -160,8 +160,11 @@ DROP TABLE IF EXISTS cardSpell;
 
 CREATE TABLE IF NOT EXISTS cardSpell (
     cardId INT UNIQUE NOT NULL,
-    spellAbility VARCHAR(500) NOT NULL,
-    healthRegen INT DEFAULT NULL,
+    spellType VARCHAR(500),
+    spellAbility VARCHAR(5000),
+    spellAttack INT DEFAULT NULL,
+    spellDefense INT DEFAULT NULL,
+    utility BOOLEAN,
 
     PRIMARY KEY (cardId),
     FOREIGN KEY (cardId)

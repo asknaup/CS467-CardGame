@@ -64,7 +64,7 @@ function insertNewUser(username, password, email) {
     });
 }
 
-function authenticateUser(username, password){
+function authenticateUser(username, password) {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT userId, username, pwd FROM userCreds WHERE username=?';
         const val = [username];
@@ -214,67 +214,57 @@ function createNewCollection(userId) {
 }
 
 
-function insertCard(name, type, user) {
+function insertCard(name, type, user, rarity, manaCost) {
     return new Promise((resolve, reject) => {
-        db.pool.getConnection((connectionErr, connection) => {
-            if (connectionErr) {
-                reject(connectionErr);
+        db.pool.query('START TRANSACTION', (startTransactionErr) => {
+            if (startTransactionErr) {
+                connection.release();
+                reject(startTransactionErr);
                 return;
             }
 
-            connection.query('START TRANSACTION', (startTransactionErr) => {
-                if (startTransactionErr) {
-                    connection.release();
-                    reject(startTransactionErr);
+            const insertCardQuery = 'INSERT INTO cards (cardName, cardType, rarity, manaCost) VALUES (?, ?, ?, ?)';
+            const insertCardInstanceQuery = 'INSERT INTO cardInstance (cardId, ownerUserId) VALUES (?, ?)';
+
+            db.pool.query(insertCardQuery, [name, type, rarity, manaCost], (insertCardErr, insertCardResult) => {
+                if (insertCardErr) {
+                    db.pool.query('ROLLBACK', () => {
+                        reject(insertCardErr);
+                    });
                     return;
                 }
 
-                const insertCardQuery = 'INSERT INTO cards (cardName, cardType, rarity, maxAvailable) VALUES (?, ?, 0, 15)';
-                const insertCardInstanceQuery = 'INSERT INTO cardInstance (cardId, ownerUserId) VALUES (?, ?)';
+                const lastInsertedId = insertCardResult.insertId;
 
-                connection.query(insertCardQuery, [name, type], (insertCardErr, insertCardResult) => {
-                    if (insertCardErr) {
-                        connection.rollback(() => {
-                            connection.release();
-                            reject(insertCardErr);
+                db.pool.query(insertCardInstanceQuery, [lastInsertedId, user], (insertInstanceErr, insertInstanceResult) => {
+                    if (insertInstanceErr) {
+                        console.log("HERE");
+                        db.pool.query('ROLLBACK', () => {
+                            reject(insertInstanceErr);
                         });
                         return;
                     }
 
-                    const lastInsertedId = insertCardResult.insertId;
-
-                    connection.query(insertCardInstanceQuery, [lastInsertedId, user], (insertInstanceErr, insertInstanceResult) => {
-                        if (insertInstanceErr) {
-                            connection.rollback(() => {
-                                connection.release();
-                                reject(insertInstanceErr);
+                    db.pool.query('COMMIT', (commitErr) => {
+                        if (commitErr) {
+                            db.pool.query('ROLLBACK', () => {
+                                reject(commitErr);
                             });
                             return;
                         }
-
-                        connection.query('COMMIT', (commitErr) => {
-                            if (commitErr) {
-                                connection.rollback(() => {
-                                    connection.release();
-                                    reject(commitErr);
-                                });
-                                return;
-                            }
-
-                            connection.release();
-                            resolve(lastInsertedId);
-                        });
+                        resolve(lastInsertedId);
                     });
                 });
             });
         });
+        // });
     });
 }
 
-function insertCreatureCard(cardId) {
+function insertCreatureCard(cardId, creatureAttack, creatureDefense) {
     return new Promise((resolve, reject) => {
-        const query = 'INSERT INTO cardCreature (cardId, hp, attack) VALUES (?, ?, ?);';
-        const vars = [cardId, 1, 2];
+        const query = 'INSERT INTO cardCreature (cardId, attack, defense) VALUES (?, ?, ?);';
+        const vars = [cardId, creatureAttack, creatureDefense];
 
         db.pool.query(query, vars, (err, result) => {
             if (err) {
@@ -286,10 +276,10 @@ function insertCreatureCard(cardId) {
     });
 }
 
-function insertSpellCard(cardId) {
+function insertSpellCard(cardId, spellType, spellAbility, spellAttack, spellDefense, utility) {
     return new Promise((resolve, reject) => {
-        const query = 'INSERT INTO cardSpell (cardId, spellAbility, healthRegen) VALUES (?, ?, ?);';
-        const vars = [cardId, "This card does somethign", 2];
+        const query = 'INSERT INTO cardSpell (cardId, spellType, spellAbility, spellAttack, spellDefense, utility) VALUES (?, ?, ?, ?, ?, ?);';
+        const vars = [cardId, spellType, spellAbility, spellAttack, spellDefense, utility];
 
         db.pool.query(query, vars, (err, result) => {
             if (err) {
