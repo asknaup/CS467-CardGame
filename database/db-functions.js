@@ -306,12 +306,27 @@ function insertCardUrl(cardId, url) {
     });
 }
 
+// Get all decks from user
 async function gatherUserDecks(userId) {
     return new Promise((resolve, reject) => {
         db.pool.query('SELECT deckId, deckName FROM decks WHERE playerId = ?', userId, (selectErr, selectResult) => {
             if (selectErr) {
                 reject(selectErr);
                 return;
+            } else {
+                resolve(selectResult);
+            }
+        });
+    });
+}
+
+// Get specific deck
+async function getUserDeck(deckId) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT cardId FROM decks WHERE deckId = ?';
+        db.pool.query(query, deckId, (selectErr, selectResult) => {
+            if (selectErr) {
+                reject(selectErr);
             } else {
                 resolve(selectResult);
             }
@@ -349,3 +364,4 @@ module.exports.insertCreatureCard = insertCreatureCard;
 module.exports.insertSpellCard = insertSpellCard;
 module.exports.insertCardUrl = insertCardUrl;
 module.exports.gatherUserDecks = gatherUserDecks;
+module.exports.getUserDeck = getUserDeck;

@@ -93,7 +93,7 @@ var exampleCards = [
             'Gold Cost': 7,
         },
     },
-    // Add more cards as needed
+
     {
         name: 'Ice Dragon',
         image: 'images/ice-dragon.png',
@@ -133,7 +133,7 @@ var exampleCards = [
             'Gold Cost': 7,
         },
     },
-    // Add more cards as needed
+
     {
         name: 'Ice Dragon 2!!',
         image: 'images/ice-dragon.png',
@@ -205,36 +205,38 @@ var stagingArea = document.getElementById('stagingArea');
 
 // Track number of cards staged
 var stagedCardCount = 0;
-
 var deckLimit = 12;
+var displayLimit = 5;
 
-// Move a card to the staging area
+// TODO: Make it so that when the user clicks on a card in the staging area, it returns to the carousel
+//TODO: Make it so that when a card moves from the carousel i.e. clicked in the carousel and to the staging area, it is no longer occupying the carousel
+// TODO: Discuss if limiting is best approach UI wise
+
+// Function to move a card to the staging area
 function moveCardToStagingArea(cardData) {
     if (stagedCardCount < deckLimit) {
-
         // Clone the card for the staging area using the clicked card data
         var clonedCard = createTradingCard(cardData);
 
-        // Add click event to the cloned card for interactions
+        // Add a click event to the cloned card for removing it from the staging area
         clonedCard.addEventListener('click', function () {
-            // Implement the logic for card interactions here
-            // TODO: Make it so that when the user clicks on a card in the staging area, it returns to the carousel
-            //TODO: Make it so that when a card moves from the carousel i.e. clicked in the carousel and to the staging area, it is no longer occupying the carousel
-            console.log('Card clicked in the staging area!');
+            removeCardFromStagingArea(clonedCard);
         });
 
-        // Set class for styling and layout 
-        clonedCard.classList.add('stagedCard');
+        // Set a class for styling and layout purposes
+        clonedCard.classList.add('staged-card');
 
         // Append the cloned card to the staging area
         stagingArea.appendChild(clonedCard);
 
-        // Increment staged card count
+        // Remove the card from the carousel
+        removeCardFromCarousel(cardData);
+
+        // Increment the staged card count
         stagedCardCount++;
 
     } else {
-        // Trade limit reached
-        // TODO: Discuss if limiting is best approach UI wise
+        // Optionally provide feedback to the user that the limit has been reached
         console.log('Maximum number of cards staged reached (5 cards).');
     }
 }
@@ -246,9 +248,20 @@ function addClickEventToCard(createdCard, cardData) {
     });
 }
 
-var displayLimit = 5;
+// Function to remove a card from the staging area
+function removeCardFromStagingArea(cardElement) {
+    // Remove the card element from the staging area
+    stagingArea.removeChild(cardElement);
 
-// Create and append cards to the card container
+    // Decrement the staged card count
+    stagedCardCount--;
+
+    // Add the card back to the carousel
+    var cardData = extractCardData(cardElement);
+    addCardToCarousel(cardData);
+}
+
+// Function to create and append cards to the card container
 function displayCards(startIndex) {
     // Clear previous cards
     cardContainer.innerHTML = '';
@@ -258,13 +271,13 @@ function displayCards(startIndex) {
         var cardData = exampleCards[i];
         var createdCard = createTradingCard(cardData);
 
-        // Add click event to the created card for moving it to the staging area
+        // Add a click event to the created card for moving it to the staging area
         addClickEventToCard(createdCard, cardData);
 
         cardContainer.appendChild(createdCard);
     }
 
-    // Update current index
+    // Update the current index
     currentIndex = startIndex;
 
     // Update navigation button visibility
@@ -275,6 +288,26 @@ function displayCards(startIndex) {
     carouselCounter.textContent = currentSet;
 }
 
+// Function to remove a card from the carousel
+function removeCardFromCarousel(cardData) {
+    // Implement the logic to remove the card from the carousel
+    exampleCards = exampleCards.filter(function (card) {
+        return card !== cardData;
+    });
+
+    // Redisplay the remaining cards in the carousel
+    displayCards(currentIndex);
+}
+
+// Function to add a card back to the carousel
+//TODO: Implement this so that it works, need db connection
+function addCardToCarousel(cardData) {
+    // Implement the logic to add the card back to the carousel
+    exampleCards.push(cardData);
+
+    // Redisplay the cards in the carousel
+    displayCards(currentIndex);
+}
 
 // Function to navigate through cards
 function navigateCards(offset) {
@@ -286,6 +319,30 @@ function navigateCards(offset) {
 function updateNavigationButtons() {
     prevBtn.disabled = currentIndex === 0;
     nextBtn.disabled = currentIndex + displayLimit >= exampleCards.length;
+}
+
+// Function to reset the game
+// TODO: Make reset repopulate the carousel with db cards
+function resetGame() {
+    // Clear the staging area
+    clearStagingArea();
+
+    // Reset the exampleCards array (replace with db link)
+    exampleCards = [...initialExampleCards];
+
+    // Redisplay the cards in the carousel
+    displayCards(currentIndex);
+}
+
+// Function to clear the staging area
+function clearStagingArea() {
+    // Remove all cards from the staging area
+    while (stagingArea.firstChild) {
+        stagingArea.removeChild(stagingArea.firstChild);
+    }
+
+    // Reset the staged card count
+    stagedCardCount = 0;
 }
 
 // Display initial set of cards
