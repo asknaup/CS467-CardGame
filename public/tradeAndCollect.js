@@ -114,27 +114,25 @@ function displayScrollCards(startIndex, endIndex, cardArr){
 /* Create Example Dummy Cards */
 // Example cards data (you can add more)
 var exampleCards = [
-    /*params: primaryKey,   cardName,       imageSrc,                   description,
-            additionalText, attributes){    */
-    new Card("primaryKey0", "Goblin", 'images/goblin-willow-tree.jpg', 'A small forest goblin.', 
-            'Creature', {hp:50, atk:50, def:30, specialAbility:'Cooking', goldCost:5}),
-    /*params: primaryKey,   cardName,       imageSrc,                   description,
-            additionalText, attributes){    */
-    new Card("primaryKey1", 'Fire Ball Scroll', 'images/dark-wizard.png',  'A powerful fire ball.',
-            'Spell', {hp:80, atk:60, def:20, specialAbility:'Fire Ball', goldCost:7}),
-    /*params: primaryKey,   cardName,       imageSrc,               description,
-            additionalText, attributes){    */
-    new Card("primaryKey2", 'Ice Dragon', 'images/ice-dragon.png', 'An ice dragon from the North.', 
-            'Creature', {hp:120, atk:100, def:80, specialAbility:'Flying', goldCost:9})
+    goblinObj = {primaryKey: "primaryKey0", cardName: "Goblin", imageSrc: 'images/goblin-willow-tree.jpg', 
+            description: 'A small forest goblin.', additionalText:'Creature', 
+            attributes: {hp:50, atk:50, def:30, specialAbility:'Cooking', goldCost:5}},
+    wizardObj = {primaryKey: "primaryKey1", cardName: 'Fire Ball Scroll', imageSrc: 'images/dark-wizard.png',  
+                description:'A powerful fire ball.', additionalText: 'Spell', 
+                attributes: {hp:80, atk:60, def:20, specialAbility:'Fire Ball', goldCost:7}},
+    iceDragonObj = {primaryKey: "primaryKey2", cardName: 'Ice Dragon', imageSrc: 'images/ice-dragon.png', 
+                    description: 'An ice dragon from the North.', additionalText: 'Creature', 
+                    attributes: {hp:120, atk:100, def:80, specialAbility:'Flying', goldCost:9}}
     // Add more cards as needed
 ];
 
 cardArr = [];
 for (let index = 0; index<=33; index++){
     let numCards = exampleCards.length;
-    let exampleCardsIndex = Math.floor(Math.random() * numCards);
-    let newCard = exampleCards[exampleCardsIndex];
-    cardArr.push(newCard);
+    let randomIndex = Math.floor(Math.random() * numCards);
+    let cardObj = exampleCards[randomIndex];
+    cardArr.push(new Card(cardObj.primaryKey, cardObj.cardName, cardObj.imageSrc,
+                cardObj.description, cardObj.additionalText, cardObj.attributes));
 }
 
 
