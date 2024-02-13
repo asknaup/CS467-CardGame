@@ -57,6 +57,10 @@ ROUTES
 // TODO homepage that's not the welcome page
 // TODO Need better navigation -> navigation to card generation page as maybe a subclass under make. route to make game, make card
 
+app.get('/favico.ico', (req, res) => {
+  res.sendStatus(404);
+});
+
 app.get('/', (req, res) => {                        // This code needs work
   // Pull session user
   const user = req.session.user
