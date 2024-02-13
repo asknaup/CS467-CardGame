@@ -2,9 +2,10 @@
 
 /* main.handlebars */
 .bottomButtonsMain {
-    position: relative;
-    margin: 1vw;
-    left: 50%;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    /* Adjust as needed */
 }
 
 /* lookAtGames.handlebars */
@@ -26,71 +27,88 @@
 .rowZero {
     position: relative;
     height: 45vw;
-    margin: 0vw 3vw;
 }
 
 /* scrollDeck div is inside rowZero div */
-#scrollDeck{
+#scrollDeck {
     position: relative;
     width: 100%;
 }
 
 /* cardSlots and the buttons scrollLeft/scrollRight 
 are inside scrollDeck div */
-#cardSlots{
-    width: 100vw;
-    height: 15vw;
-}
-
-#scrollLeft{
-    position: absolute;
-    top: 5vw;
-    left: -5.5vw;
-
-}
-
-#scrollRight{
-    position: absolute;
-    top: 5vw;
-    right: -7.75vw;
-}
-
-.stageAreaZero {
+#cardSlots {
+    display: flex;
+    flex-direction: row;
+    justify-content: normal;
     position: relative;
-    height: 30vw;
-    color: white;
-    border-color: grey;
-    border-width: 5px;
-    border-style: dashed;
+    width: 100%;
+    height: 19vw;
+}
+
+
+#scrollLeft {
+    position: absolute;
+    left: -6vh;
+    top: 16vh;
+}
+
+#scrollRight {
+    position: absolute;
+    right: -6vh;
+    top: 16vh;
+}
+
+#stageAreaZero {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    height: 20vw;
+    border:  5px dashed grey;
     color: grey;
-    margin-top: 1.5vw;
+    z-index:  100;
+    margin: 1vh 0vh;
+}
+
+.redBox{
+    position: relative;
+    height: 19vw;
+    width: 25%;
+    background-color: red;
+}
+
+.greenBox{
+    position: relative;
+    height: 19vw;
+    width: 25%;
+    background-color: green;
 }
 
 .topStageText {
     position: absolute;
     top: 1vw;
-    width: 80vw;
+    width: 100%;
     text-align: center;
 }
 
 .topStageText:hover {
     position: absolute;
     top: 1vw;
-    width: 80vw;
+    width: 100%;
     text-align: center;
 }
 
 .bottomStageText {
     position: absolute;
     bottom: 1vw;
-    width: 80vw;
+    width: 100%;
     text-align: center;
 }
 
 .bottomStageText:hover {
     position: absolute;
     bottom: 1vw;
-    width: 80vw;
+    width: 100%;
     text-align: center;
 }
 
@@ -119,32 +137,61 @@ are inside scrollDeck div */
 }
 
 .userStats {
-    width: calc(33.33% - 30px); 
+    width: calc(33.33% - 30px);
     margin: 20px auto;
     padding: 15px;
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     text-align: center;
-    box-sizing: border-box; 
-  }
-  
-  .userStats p {
+    box-sizing: border-box;
+}
+
+.userStats p {
     margin: 10px 0;
     font-size: 16px;
     color: #333;
-  }
-  
-  .userStats p:first-child {
+}
+
+.userStats p:first-child {
     font-weight: bold;
-  }
-  
-  .userStats p:last-child {
+}
+
+.userStats p:last-child {
     margin-bottom: 0;
-  }
-  
-  .userStats:hover {
+}
+
+.userStats:hover {
     transform: scale(1.05);
     transition: transform 0.3s ease-in-out;
-  }
-  
+}
+
+/* Login homepage */
+#loginButton {
+    border: 1px solid rgba(10, 180, 180, 1);
+    background: #4caf50;
+    font-size: 18px;
+    color: white;
+    margin-top: 20px;
+    padding: 10px 50px;
+    cursor: pointer;
+    transition: .4s;
+
+    &:hover {
+        background: rgba(0, 136, 169, 1);
+        padding: 10px 80px;
+    }
+}
+
+.iconContainer {
+    position: relative;
+}
+
+.material-icons {
+    position: absolute;
+    top: 35%;
+    left: 93%;
+    transform: translateY(-50%);
+    color: #757575;
+    /* Adjust the color as needed */
+}

@@ -2,25 +2,26 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, intial-scale=1.0">
+  {{!-- <meta charset="utf-8" /> --}}
+  {{!-- <meta name="viewport" content="width=device-width, intial-scale=1.0"> --}}
   <title>Create New Game</title>
   <link rel="stylesheet" type="text/css" href="/global.css">
+    <link rel="stylesheet" type="text/css" href="/styles.css">
 </head>
 
 <body>
     <div class="rowZero">
-        <div class="stageAreaZero">
+        <div id="stageAreaZero">
             <div class="topStageText">Click Card To Stage It Here</div>
             <div class="bottomStageText">Click Card To Stage It Here</div>
         </div>
         <div id="scrollDeck">
             <button type="button" id="scrollLeft"> &lt; </button>
-            <div id="cardSlots"></div>
             <button type="button" id="scrollRight"> &gt; </button>
+            <div id="cardSlots"></div>
         </div>
     </div>
-    
+    </div>
+
     <script src="/tradeAndCollect.js"></script>
-    <link rel="stylesheet" type="text/css" href="/styles.css">
 </body>

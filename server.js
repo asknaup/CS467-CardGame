@@ -16,6 +16,7 @@ const db = require('./database/db-connector');
 const dbFunc = require('./database/db-functions')
 const cardGen = require('./database/card-gen');
 const gameGen = require('./database/game-gen');
+const game1 = require('./database/game-play1')
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -46,6 +47,15 @@ app.use(express.static(path.join(__dirname, 'public')))
 /*
 ROUTES
 */
+// TODO Home button should go to user's specifc profile
+// TODO CardGenPage - sends the card generates the image, need image urls for cardGen, for userProfile
+// TODO createNewCollection - needs further development
+// TODO fix redundency for req.session.user and others
+// TODO footer adjustments
+// TODO add color to htmls
+// TODO cardview page bulk - bulk generation?
+// TODO homepage that's not the welcome page
+// TODO Need better navigation -> navigation to card generation page as maybe a subclass under make. route to make game, make card
 
 app.get('/', (req, res) => {                        // This code needs work
   // Pull session user
@@ -54,13 +64,11 @@ app.get('/', (req, res) => {                        // This code needs work
     // If user then show homepage
     res.render('welcomePagePortal', {
       showLogoutButton: true,
-      showLoginButton: false,
     })
   } else {
     // If user loged out, then show login button
     res.render('welcomePagePortal', {
       showLogoutButton: false,
-      showLoginButton: true
     })
   }
 });
@@ -72,64 +80,159 @@ app.get('/userProfile/:username', async (req, res) => {
   const user = req.session.user;
   if (user) {
     // If user is defined, user shown will be loggedin user
-    const val = await dbFunc.getUserProfile(user.userId);
+    const userProf = await dbFunc.getUserProfile(user.userId);
     res.render('userProfile', {
       username: user.username,
-      gameCount: val[0].game_count,
-      wl: 0,
+      gameCount: userProf[0].game_count,
+      wins: userProf[0].wins,
+      losses: userProf[0].losses,
       showLogoutButton: true
     })
+  } else {
+    // Route to homepage (index) to login
+    res.redirect('/')
   }
 });
 
 app.get('/userDeck/:username', (req, res) => {
-  res.render('currentDeck', { showLogoutButton: true })
+  // TODO show different decks
+  // TODO insert deck as json into db
+  // TODO handlebars
+  // Show user logged in user profile
+  const user = req.session.user;
+  if (user) {
+    res.render('currentDeck', { showLogoutButton: true })
+  } else {
+    res.render('currentDeck', { showLogoutButton: false })
+  }
 });
 
-app.get('/gameGenPage', (req, res) => {
-  res.render('gameGenPage', { showLogoutButton: true })
+// TODO routing between gameGeneration, card Generation
+// TODO Work on corresponding edit pages, corresponding bulk pages
+// TODO Work on generating inputs
+// TODO html formatting
+app.get('/gameGenPage', async (req, res) => {
+  // Show user logged in user profile
+  // const user = req.session.user;
+  user = {userId:1001, username:'admin'}  // FIXME replace when ready
+  try {
+    if (user) {
+      const userDecks = await dbFunc.gatherUserDecks(user.userId);
+      console.log(userDecks)
+      res.render('gameGenPage', { showLogoutButton: true, decks: userDecks})
+    } else {
+      res.render('gameGenPage', { showLogoutButton: false })
+    }
+  } catch (err) {
+    console.log(err);
+  }
 });
 
+// TODO Deck generation page
+app.get('/buildDeck', (req, res) => {
+  // Show user logged in user profile
+  const user = req.session.user;
+  if (user) {
+    res.render('buildDeck', { showLogoutButton: true })
+  } else {
+    res.render('buildDeck', { showLogoutButton: false })
+  }
+});
+
+// Add to deck, delete, deck stats
 app.get('/currentDeck', (req, res) => {
-  res.render('currentDeck', { showLogoutButton: true })
+  // Show user logged in user profile
+  const user = req.session.user;
+  if (user) {
+    res.render('currentDeck', { showLogoutButton: true })
+  } else {
+    res.render('currentDeck', { showLogoutButton: false })
+  }
 });
 
 app.get('/browseGames', (req, res) => {
-  res.render('lookatGames', { showLogoutButton: true })
+  // Show user logged in user profile
+  const user = req.session.user;
+  if (user) {
+    res.render('lookatGames', { showLogoutButton: true })
+  } else {
+    res.render('lookatGames', { showLogoutButton: false })
+  }
 });
 
 app.get('/newUser', (req, res) => {
-  res.render('newUser', { showLogoutButton: false, showLoginButton: true })
+  // Show user logged in user profile
+  const user = req.session.user;
+  if (user) {
+    res.render('newUser', { showLogoutButton: true })
+  } else {
+    res.render('newUser', { showLogoutButton: false })
+  }
 });
 
 app.get('/resetPW', (req, res) => {
-  res.render('resetPW', { showLogoutButton: true })
+  // Show user logged in user profile
+  const user = req.session.user;
+  if (user) {
+    res.render('resetPW', { showLogoutButton: true })
+  } else {
+    res.render('resetPW', { showLogoutButton: false })
+  }
 });
 
 app.get('/gamePlayPage', (req, res) => {
-  res.render('gamePlayPage', { showLogoutButton: true })
+  // Show user logged in user profile
+  const user = req.session.user;
+  if (user) {
+    res.render('gamePlayPage', { showLogoutButton: true })
+  } else {
+    res.render('gamePlayPage', { showLogoutButton: false })
+  }
 });
 
+// TODO other image ai sources
+// TODO prompt restriction for better image generation
 app.get('/cardGenPage', (req, res) => {
-  res.render('cardGenPage', { showLogoutButton: true })
+  // Show user logged in user profile
+  const user = req.session.user;
+  if (user) {
+    res.render('cardGenPage', { showLogoutButton: true })
+  } else {
+    res.render('cardGenPage', { showLogoutButton: false })
+  }
 });
 
 app.get('/tradeAndCollect', (req, res) => {
-  res.render('tradeAndCollect', {showLogoutButton: true})
+  // Show user logged in user profile
+  const user = req.session.user;
+  res.render('tradeAndCollect', { showLogoutButton: true })
+  if (user) {
+    res.render('tradeAndCollect', { showLogoutButton: true })
+  } else {
+    res.render('tradeAndCollect', { showLogoutButton: false })
+  }
 });
 
 app.get('/userProfile', (req, res) => {
-  if (req.session.user) {
+  // Redirects to userProfile/:username
+  // Show user logged in user profile
+  const user = req.session.user;
+  if (user) {
     res.redirect('/userProfile/' + req.session.user.username)
   } else {
     res.redirect('/')
   }
 });
 
-app.get('/cardViewEditPage', async (req, res) => {
+app.get('/cardViewPage', async (req, res) => {
+  // TODO card currently hardcoded
   const val = await cardGen.grabCardFromDB(1);             // Hard Coded
   console.log(val[0]);
-  res.render('cardViewEditPage', { value: val })
+  if (user) {
+    res.render('cardViewPage', { showLogoutButton: true, value: val })
+  } else {
+    res.render('cardViewPage', { showLogoutButton: false, value: val })
+  }
 });
 
 // Log out
@@ -145,60 +248,75 @@ app.get('/logout', (req, res) => {
   })
 })
 
+// Game
+// FIXME change to '/game/:gameId'
+app.get('/game/', async (req, res) => {
+  // FIXME replace
+  // const user = req.session.user;
+  // const deck = req.session.deck;
+  // const game = req.session.game;
+  const user = {userId: 1001, username: 'admin'}
+  const deck = {deckId: 7001}
+  const game = {ruleSet: 'ruleSet1', gameId: 1001}
+  // TODO game handlebars file
+  // TODO game logic
+  if (user) {
+    const deckList = await game1.getDeck(user.userId, deck.deckId);
+    console.log(deckList);
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
 });
 
 
 // POST ROUTES 
-
-app.post('/userProfile', async (req, res) => {
+app.post('/newUserPost', async (req, res) => {
+  // New User
   try {
     const user_id = await dbFunc.insertNewUser(req.body.inputUserName, req.body.inputNewPassword, req.body.inputEmail);
     const userProfile = await dbFunc.getUserProfile(user_id);
     if (user_id) {          // save relevant user information in the session
       req.session.user = {
-        userId: user_id, username: req.body.inputUserName, gameCount: userProfile[0].game_count,
-        wins: userProfile[0].wins, losses: userProfile[0].losses
+        userId: user_id,
+        username: req.body.inputUserName
       };
     }
-    res.redirect('/userProfile/' + req.session.user.username, {
-      username: req.session.user.username,
-      gameCount: req.session.user.gameCount,
-      wins: userProfile[0].wins,
-      losses: userProfile[0].losses
-    });
+    res.redirect('/userProfile/' + req.session.user.username);
 
   } catch (err) {
     console.log(err);
     if (err.code === 'ER_DUP_ENTRY') {
-      res.render("newUser", {
-        usnError: 'Username already in use. Please try another.'
-      })} else {
+      // determine duplicate error username or email
+      let errCodeObject = err.sqlMessage.split("'").slice(-2)[0];
+      if (errCodeObject == "username") {
+        res.render("newUser", {
+          usnError: 'Username already in use. Please try another.'
+        });
+      } else if (errCodeObject === "email"){
+        res.render("newUser", {
+          emailError: 'Email already in use. Please try another.'
+        });
+      }
+    } else {
       // Handle other errors if needed
       res.send(`Something went wrong : (${err})`);
     }
   }
 });
 
-// Post route to login
+// Post route for login -> once logged in, user should be directed to /userProfile/:username
 app.post('/login', async (req, res) => {
   try {
     const username = req.body.usernameWpp;
     const enteredPassword = req.body.passwordWpp;
     const user = await dbFunc.authenticateUser(username, enteredPassword);
     if (user) {
-      const userProfile = await dbFunc.getUserProfile(user.userId);
-      console.log(userProfile);
-      req.session.user = { userId: user.userId, username: user.username, gameCount: userProfile[0].game_count, wins: userProfile[0].wins, losses: userProfile[0].losses };
-      console.log(req.session.user);
+      req.session.user = { userId: user.userId, username: user.username};
 
-      res.render('userProfile', { 
-        username: req.session.user.username, 
-        game_count: userProfile[0].game_count, 
-        wins: userProfile[0].wins, 
-        losses: userProfile[0].losses 
-      });
+      // Redirects to userProfile
+      res.redirect('userProfile');
     } else {
       // Authentication failed, return results stating so
       res.render('welcomePagePortal', {
@@ -211,21 +329,48 @@ app.post('/login', async (req, res) => {
 });
 
 
-app.post('/cardGenPage', async (req, res) => {
+app.post('/generateCard', async (req, res) => {
+  // const user = req.session.user;
+  // TODO Switch to session user
+  const user = req.session.user;
+  // const user = {userId: 1001, username: 'admin'}
   try {
-    if (req.session.user) {
-      const attr = cardGen.generateAiForCard(req.body.inputAiImage);
-      const object1 = await cardGen.sendCardToDB(attr, attr, req.session.user.userId);    // returns cardId?
-      const url = await cardGen.generateImageForCard(attr, object1);
-      await cardGen.sendImageURLtoDB(object1, url)
-      res.render('cardGenPage', {
-        animal: animal, attr: attr, object1: object1
-      });
+    if (user) {
+      // TODO prompt for Card Image
+      // const attr = cardGen.generateAiForCard(req.body.inputAiImage);
+      const cardType = req.body.cardType;
+      const cardName = req.body.cardName;
+      const manaCost = req.body.manaCost; 
+      const rarity = req.body.rarity;     
+      
+      console.log(cardType, cardName, manaCost, rarity);
+      const cardId = await dbFunc.insertCard(cardName, cardType, user.userId, rarity, manaCost);    // returns cardId
+      console.log(cardId)
+      if (cardType === "Creature") {
+        const creatureDefense = req.body.creatureDefense;
+        const creatureAttack = req.body.creatureAttack;
+        
+        await dbFunc.insertCreatureCard(cardId, creatureAttack, creatureDefense);
+      } else {
+        const spellType = req.body.spellType;
+        const spellAbility = req.body.spellAbility;
+        const spellAttack = req.body.spellAttack;
+        const spellDefense = req.body.spellDefense;
+        const utility = req.body.utility;
+
+        await dbFunc.insertSpellCard(cardId, spellType, spellAbility, spellAttack, spellDefense, utility);
+      }
+      
+      // TODO (JEREMY) image URL generation
+      // const imagePath = await cardGen.generateImageForCard(attr, object1);
+      // Insert URL into db
+      // await dbFunc.insertCardUrl(cardId, imagePath); 
+
+      // TODO route to deck page or display image?
+      res.redirect('/cardGenPage');
     } else {
-      // Authentication failed, render 'welcomePagePortal' with an error message
-      res.render('welcomePagePortal', {
-        error: 'Invalid credentials. Please try again.'
-      });
+      // Authentication failed, render 'cardGenPage' with an error message
+      res.render('cardGenPage', {error: "Sorry! You cannot create a card without having an account"})
     }
   } catch (err) {
     // Handle errors that may occur during card generation, database interaction, or rendering
@@ -236,11 +381,25 @@ app.post('/cardGenPage', async (req, res) => {
 app.post('/gameGenerationPageAction', async (req, res) => {
   try {
     if (req.session.user) {
-      const object2 = await gameGen.sendNewGameToDB(req.session.user.userId, 0, 0, 'tbd');           // (ownerId, listCards, noCards, imageLocation) VALUES (?,?,?,?)';
-      console.log(object2);                     // gameId?
-      res.render('generatedGameView', {
-        object2: object2
-      });
+      const ruleSet = req.body.ruleSet;
+      const userDeckId = req.body.userDeckSelect;
+
+      // save deck and game inforamtion
+      req.session.deck = {deckId: userDeckId}
+      req.session.game = {ruleSet: ruleSet, gameId: 1001}  // FIXME once table has been generated and returned gameId
+
+      console.log(ruleSet);
+      console.log(userDeckId);
+      // TODO insert into new game to get gameId
+
+      // redirects to app.get('/game/:gameId)
+      // res.redirect('/game/' + req.session.game.gameId);
+
+      // const object2 = await gameGen.sendNewGameToDB(req.session.user.userId, 0, 0, 'tbd');           // (ownerId, listCards, noCards, imageLocation) VALUES (?,?,?,?)';
+      // console.log(object2);                     // gameId?
+      // res.render('generatedGameView', {
+      //   object2: object2
+      // });
     } else {
       // Authentication failed, render 'welcomePagePortal' with an error message
       res.render('welcomePagePortal', {

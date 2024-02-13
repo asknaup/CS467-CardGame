@@ -15,7 +15,7 @@
   <br><br>
   <div id="input-form">
     
-    <form class="newUser" method="POST" action="/userProfile">
+    <form class="newUser" method="POST" action="/newUserPost">
       <label for="inputUserName">Username</label>
       {{#if usnError}}
       <p id="error">{{usnError}}</p>
@@ -26,6 +26,9 @@
       <label for="inputRepeatPassword">Repeat New Password</label>
       <input type="text" name="inputRepeatPassword" id="inputRepeatPassword">
       <label for="inputEmail">Enter Email</label>
+      {{#if emailError}}
+      <p id="error">{{emailError}}</p>
+      {{/if}}
       <input type="text" name="inputEmail" id="inputEmail">
       {{!-- <input id="submit" type="submit"> --}}
       <button type="submit">Submit</button>

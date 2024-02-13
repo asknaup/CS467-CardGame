@@ -1,0 +1,125 @@
+main {
+    display: flex;
+    flex-direction: column;
+    /* Adjust to a vertical layout */
+    align-items: center;
+    /* Center items horizontally */
+    height: 100vh;
+}
+
+.stagingArea {
+    border: 2px dashed #e74c3c;
+    background-color: #f2dede;
+    padding: 10px;
+    margin-bottom: 20px;
+    /* Add margin between staging area and card carousel */
+    min-height: 200px;
+    max-height: 400px;
+    width: 80%;
+}
+
+.cardContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.card {
+    width: 184px;
+    height: 350px;
+    /* Card container height */
+    background-color: beige;
+    border: 2px solid #000;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+    margin-right: 10px;
+    margin-bottom: 20px;
+    /* Add margin between cards */
+}
+
+.card:last-child {
+    margin-right: 0;
+    /* Remove margin from the last card */
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.cardContent {
+    padding: 10px;
+}
+
+.cardName {
+    margin: 0;
+    color: #000;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.cardImage img {
+    width: 100%;
+    height: auto;
+}
+
+.attributes {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 14px;
+}
+
+.navigation {
+    display: flex;
+}
+
+button {
+    padding: 10px;
+    margin: 0 5px;
+    /* Margin between buttons */
+}
+
+header {
+    font-size: xx-large;
+    font-weight: bold;
+    background-image: linear-gradient(to left, #449a3c, #a7d393);
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+}
+
+#carouselCounter {
+    margin: 15px 10px;
+    /* Margin to the carousel counter */
+}
+
+.stagingArea {
+    display: flex;
+    /* Arrange cards in a row */
+    justify-content: flex-start;
+    /* Align cards to the start (left) of the flex container */
+    align-items: center;
+    /* Center cards vertically in the flex container */
+    border: 2px dashed #e74c3c;
+    background-color: #f2dede;
+    padding: 10px;
+    margin-bottom: 20px;
+    min-height: 200px;
+    max-height: 400px;
+    width: 80%;
+}
+
+.stagedCard {
+    margin-right: 10px;
+}
+
+#resetBtn {
+    margin: 5px;
+    align-items: center;
+}
+
+#prevBtn {
+    align-items: center;
+}
+

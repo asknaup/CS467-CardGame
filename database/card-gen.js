@@ -38,78 +38,6 @@ function grabCardFromDB(card_id) {
     });
 }
 
-// update card
-
-function sendCardToDB(name, type, user) {
-    // Initialize a new game -> winner has not been decided
-    return new Promise((resolve, reject) => {
-        db.pool.query('START TRANSACTION', (beginTransactionErr) => {
-            if (beginTransactionErr) {
-                reject(beginTransactionErr);
-                return;
-            }
-
-            const insertQueryCard = 'INSERT INTO cards (cardName, cardType, rarity, max_available) VALUES (?,?,?,?)';
-            const insertQueryCardInstance = 'INSERT INTO cardInstance (cardId, ownerUserId) VALUES (?,?)';
-            const valuesCard = [name, type, 2, 2];
-            const selectQuery = 'SELECT LAST_INSERT_ID() as lastCard';
-
-            db.pool.query(insertQueryCard, valuesCard, (insertErr, insertResult) => {
-                if (insertErr) {
-                    db.pool.query('ROLLBACK', () => {
-                        reject(insertErr);
-                    });
-                    return;
-                }
-                const insertId = insertResult.insertId;
-                const valuesCardInstance = [insertId, user];
-
-                db.pool.query(insertQueryCardInstance, valuesCardInstance, (insertErr, insertResult) => {
-                    if (insertErr) {
-                        db.pool.query('ROLLBACK', () => {
-                            reject(insertErr);
-                        });
-                        return;
-                    }
-
-                db.pool.query(selectQuery, (selectErr, selectResult) => {
-                    if (selectErr) {
-                        db.pool.query('ROLLBACK', () => {
-                            reject(selectErr);
-                        });
-                        return;
-                    }
-
-                db.pool.query('COMMIT', (commitErr) => {
-                    if (commitErr) {
-                        db.pool.query('ROLLBACK', () => {
-                            reject(commitErr);
-                        });
-                    } else {
-                        resolve(selectResult[0].lastCard);
-                    }
-                });
-                    });
-                });
-            });
-        });
-    });
-}   
-
-function sendImageURLtoDB(cardId, imageURL) {
-    return new Promise((resolve, reject) => {
-        const sql = 'UPDATE cards SET imageURL = ? WHERE cardId = ?';     // Corrected SQL query
-        const values = [imageURL, cardId]
-        db.pool.query(sql, values, (err, result) => {
-            if (err) {
-                reject(err); // Reject with the error if there is one
-            } else {
-                resolve(result); // Resolve with the query result
-            }
-        });
-    });
-}
-
 async function generateImageForCard(prompt1, object1) {
     try {
         const openai = new OpenAI({ apiKey: configFile.password });
@@ -138,10 +66,6 @@ async function generateImageForCard(prompt1, object1) {
     }
 }
 
-
-    
-
-
 /*
 const result = "your image URL";
   const fetchFile = await fetch(result);
@@ -156,6 +80,4 @@ const result = "your image URL";
 
 module.exports.generateAiForCard = generateAiForCard;
 module.exports.generateImageForCard = generateImageForCard;
-module.exports.sendCardToDB = sendCardToDB;
 module.exports.grabCardFromDB = grabCardFromDB;
-module.exports.sendImageURLtoDB = sendImageURLtoDB;
