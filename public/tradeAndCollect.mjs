@@ -139,7 +139,7 @@ function displayScrollCards(startIndex, endIndex, cardArr){
     var height = 18.5;
     for (let index = startIndex; index <= endIndex; index++){
         var elementId = cardArr[index].primaryKey;
-        scrollCard = createCardElement("relative", width, height, elementId, index, cardArr);
+        let scrollCard = createCardElement("relative", width, height, elementId, index, cardArr);
         scrollCard.setAttribute("class", "newCard");
         addScrollCardFunctionality(width, height, index, cardArr, scrollCard);
         cardSlots.appendChild(scrollCard);
@@ -149,19 +149,20 @@ function displayScrollCards(startIndex, endIndex, cardArr){
 /* Create Example Dummy Cards */
 // Example cards data (you can add more)
 var exampleCards = [
-    goblinObj = {primaryKey: "goblin", cardName: "Goblin", imageSrc: 'images/goblin-willow-tree.jpg', 
+    {primaryKey: "goblin", cardName: "Goblin", imageSrc: 'images/goblin-willow-tree.jpg', 
             description: 'A small forest goblin.', additionalText:'Creature', 
             attributes: {hp:50, atk:50, def:30, specialAbility:'Cooking', goldCost:5}},
-    wizardObj = {primaryKey: "wizard", cardName: 'Fire Ball Scroll', imageSrc: 'images/dark-wizard.png',  
+    {primaryKey: "wizard", cardName: 'Fire Ball Scroll', imageSrc: 'images/dark-wizard.png',  
                 description:'A powerful fire ball.', additionalText: 'Spell', 
                 attributes: {hp:80, atk:60, def:20, specialAbility:'Fire Ball', goldCost:7}},
-    iceDragonObj = {primaryKey: "iceDragon", cardName: 'Ice Dragon', imageSrc: 'images/ice-dragon.png', 
+    {primaryKey: "iceDragon", cardName: 'Ice Dragon', imageSrc: 'images/ice-dragon.png', 
                     description: 'An ice dragon from the North.', additionalText: 'Creature', 
                     attributes: {hp:120, atk:100, def:80, specialAbility:'Flying', goldCost:9}}
     // Add more cards as needed
 ];
 
-cardArr = [];
+
+let cardArr = [];
 for (let index = 0; index<=33; index++){
     let numCards = exampleCards.length;
     let randomIndex = Math.floor(Math.random() * numCards);
