@@ -1,3 +1,4 @@
+
 import { createTradingCard } from "./generalCardCode.mjs";
 
 class Card{
@@ -67,7 +68,6 @@ function displayScrollCards(startIndex, endIndex, cardArr){
     }
 }
 
-
 /* Create Example Dummy Cards */
 // Example cards data (you can add more)
 var exampleCards = [
@@ -78,8 +78,8 @@ var exampleCards = [
                 description:'A powerful fire ball.', cardType: 'Spell', 
                 attributes: {hp:80, atk:60, def:20, specialAbility:'Fire Ball', goldCost:7}},
     {primaryKey: "iceDragon", cardName: 'Ice Dragon', image: 'images/ice-dragon.png', 
-                    description: 'An ice dragon from the North.', cardType: 'Creature', 
-                    attributes: {hp:120, atk:100, def:80, specialAbility:'Flying', goldCost:9}}
+                description: 'An ice dragon from the North.', cardType: 'Creature', 
+                attributes: {hp:120, atk:100, def:80, specialAbility:'Flying', goldCost:9}}
     // Add more cards as needed
 ];
 
@@ -100,7 +100,6 @@ var numScrollCards = 8;
 var startIndex = 0;
 var endIndex = numScrollCards - 1;
 displayScrollCards(startIndex, endIndex, cardArr);
-
 
 var scrollRightButton = document.getElementById("scrollRight");
 scrollRightButton.addEventListener("click", () => {
