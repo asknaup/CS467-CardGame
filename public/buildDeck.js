@@ -328,7 +328,7 @@ function resetGame() {
     clearStagingArea();
 
     // Reset the exampleCards array (replace with db link)
-    exampleCards = [...initialExampleCards];
+    // exampleCards = [...initialExampleCards];
 
     // Redisplay the cards in the carousel
     displayCards(currentIndex);

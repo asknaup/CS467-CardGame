@@ -76,11 +76,11 @@ main {
 
 button {
     padding: 10px;
-    margin: 0 5px;
+    margin: 40px 5px;
     /* Margin between buttons */
 }
 
-header {
+h1, header {
     font-size: xx-large;
     font-weight: bold;
     background-image: linear-gradient(to left, #449a3c, #a7d393);
@@ -115,7 +115,7 @@ header {
 }
 
 #resetBtn {
-    margin: 5px;
+    margin: 15px;
     align-items: center;
 }
 
