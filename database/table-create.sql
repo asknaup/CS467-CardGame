@@ -199,8 +199,8 @@ CREATE TABLE IF NOT EXISTS decks (
     deckId INT AUTO_INCREMENT,
     playerId INT NOT NULL,
     deckName VARCHAR(200),
-    cardId VARCHAR(5000),
-    quantity INT,
+    cardId VARCHAR(5000),  --json of list of card {"cardList": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]}
+    -- quantity INT,
 
     PRIMARY KEY (deckId),
     FOREIGN KEY (playerId) REFERENCES userProfile(userId)
@@ -240,7 +240,7 @@ CREATE TABLE IF NOT EXISTS game (
     PRIMARY KEY (gameId, playerId, deckId),
     FOREIGN KEY (gameId) REFERENCES gameInstance(gameId),
     FOREIGN KEY (playerId) REFERENCES userProfile(userId),
-    FOREIGN KEY (deckId) REFERENCES deck(deckId)
+    FOREIGN KEY (deckId) REFERENCES decks(deckId)
 );
 
 -- -----------------------------------------------------
