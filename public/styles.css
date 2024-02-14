@@ -135,6 +135,33 @@
     text-align: center;
 }
 
+#userScrollDeck{
+    position: relative;
+}
+
+#userStartTradeButton {
+    position: absolute;
+    left: -6vw;
+}
+
+#userScrollLeft{
+    position: absolute;
+    left: -3vw;
+    top: 6vw;
+}
+
+#userScrollRight{
+    position: absolute;
+    right: -3vw;
+    top: 6vw;
+}
+
+#userCardSlots{
+    display: flex;
+    flex-direction: row;
+}
+
+
 /* userProfile */
 .userBrowsing {
     width: 50%;
