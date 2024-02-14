@@ -78,20 +78,20 @@
 }
 
 /* TradeAndCollect Page */
-.rowZero {
+.rowZero, .row1 {
     position: relative;
     height: 45vw;
 }
 
 /* scrollDeck div is inside rowZero div */
-#scrollDeck {
+#scrollDeck, #scrollDeck1{
     position: relative;
     width: 100%;
 }
 
 /* cardSlots and the buttons scrollLeft/scrollRight 
 are inside scrollDeck div */
-#cardSlots {
+#cardSlots, #cardSlots1{
     display: flex;
     flex-direction: row;
     justify-content: normal;
@@ -101,19 +101,19 @@ are inside scrollDeck div */
 }
 
 
-#scrollLeft {
+#scrollLeft, #scrollLeft1{
     position: absolute;
     left: -6vh;
     top: 16vh;
 }
 
-#scrollRight {
+#scrollRight, #scrollRight1{
     position: absolute;
     right: -6vh;
     top: 16vh;
 }
 
-#stageAreaZero {
+#stageAreaZero, #stageArea1 {
     display: flex;
     flex-direction: row;
     position: relative;
@@ -122,20 +122,6 @@ are inside scrollDeck div */
     color: grey;
     z-index:  100;
     margin: 1vh 0vh;
-}
-
-.redBox{
-    position: relative;
-    height: 19vw;
-    width: 25%;
-    background-color: red;
-}
-
-.greenBox{
-    position: relative;
-    height: 19vw;
-    width: 25%;
-    background-color: green;
 }
 
 .topStageText {
