@@ -133,6 +133,10 @@
     text-align: center;
 }
 
+#otherPlayerTitle h2{
+    color: rgb(173, 124, 173);
+}
+
 .userTopStageText {
     position: absolute;
     top: 2vw;
@@ -155,6 +159,10 @@
     right: 0vw;
     width: 50%;
     text-align: center;
+}
+
+#userTitle h2{
+    color: #a7d393;
 }
 
 #userScrollDeck, #otherScrollDeck{

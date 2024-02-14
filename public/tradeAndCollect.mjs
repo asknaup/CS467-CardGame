@@ -28,9 +28,13 @@ function addScrollCardFunctionality(primaryIndex, playerObj, scrollCard){
         let cardData = playerObj.cardDict[primaryKey];
         if (cardData.isStaged == false){
             if(playerObj.stagedCardCount < 4){
-                scrollCard.style.border = "6px solid #4caf50";
+                if(playerObj.stageArea === "userStageArea"){
+                    scrollCard.style.border = "6px solid #65f76b";
+                }else{
+                    scrollCard.style.border = "6px solid #f06cf0";
+                }
                 var stageArea = document.getElementById(playerObj.stageArea);
-                let stagedCard = createTradingCard(cardData.primaryKey + playerObj.stagedCard, cardData);
+                let stagedCard = createTradingCard(cardData.primaryKey + playerObj.stagedCardName, cardData);
                 stagedCard.onclick = function(){addStagedCardFunctionality(primaryIndex, playerObj)};
                 stageArea.appendChild(stagedCard);
                 cardData.isStaged = true;
@@ -39,7 +43,7 @@ function addScrollCardFunctionality(primaryIndex, playerObj, scrollCard){
             }
         } else {
             scrollCard.style.border = "3px solid black";
-            var stagedCard = document.getElementById(cardData.primaryKey + playerObj.stagedCard);
+            var stagedCard = document.getElementById(cardData.primaryKey + playerObj.stagedCardName);
             stagedCard.remove();
             cardData.isStaged = false;
             //stagedCardCount is a global variable
@@ -63,7 +67,11 @@ function displayScrollCards(playerObj){
         scrollCard.classList.add(playerObj.newCardName);
         addScrollCardFunctionality(index, playerObj, scrollCard);
         if (cardData.isStaged == true){
-            scrollCard.style.border = "6px solid #4caf50";
+            if(playerObj.stageArea === "userStageArea"){
+                scrollCard.style.border = "6px solid #65f76b";
+            }else{
+                scrollCard.style.border = "6px solid #f06cf0";
+            }
         }else{
             scrollCard.style.border = "3px solid black";
         }
@@ -87,12 +95,10 @@ var exampleCards = [
 ];
 
 var numScrollCards = 8;
-let userObject = {primaryKeyArr: [], cardDict: {}, stagedCardCount: 0, startIndex: 0, endIndex: 7,
-                    newCardName: "userNewCard", cardSlots: "userCardSlots", stageArea: "userStageArea",
-                    stagedCard: "userStagedCard"};
-let otherPlayerObj = {primaryKeyArr: [], cardDict: {}, stagedCardCount: 0, startIndex: 0, endIndex: 7,
-                    newCardName: "otherNewCard", cardSlots: "otherCardSlots", stageArea: "otherStageArea",
-                    stagedCard: "otherStagedCard"};
+let userObject = {primaryKeyArr: [], cardDict: {}, stagedCardCount: 0, startIndex: 0, endIndex: 7,newCardName: "userNewCard", 
+                    cardSlots: "userCardSlots", stageArea: "userStageArea", stagedCardName: "userStagedCard"};
+let otherPlayerObj = {primaryKeyArr: [], cardDict: {}, stagedCardCount: 0, startIndex: 0, endIndex: 7, newCardName: "otherNewCard", 
+                    cardSlots: "otherCardSlots", stageArea: "otherStageArea", stagedCardName: "otherStagedCard"};
 for (let index = 0; index<=33; index++){
     let numCards = exampleCards.length;
     let randomIndex = Math.floor(Math.random() * numCards);
@@ -127,8 +133,8 @@ otherScrollRightButton.addEventListener("click", () => {
     }
 });
 
-var otherrScrollLeftButton = document.getElementById("otherScrollLeft");
-otherrScrollLeftButton.addEventListener("click", () => {
+var otherScrollLeftButton = document.getElementById("otherScrollLeft");
+otherScrollLeftButton.addEventListener("click", () => {
     if (otherPlayerObj.startIndex > 0){
         otherPlayerObj.endIndex = otherPlayerObj.startIndex - 1;
         otherPlayerObj.startIndex -= numScrollCards;
@@ -173,15 +179,16 @@ userScrollLeftButton.addEventListener("click", () => {
 
 /* trading code =============================================================================================== */
 
-function getStagedCards(){
-    var stagedArea = document.getElementById("stageAreaZero");
-    let endSubstring = "StagedCard";
-    let cardArr = []
-    for(const stagedCard of stagedArea.children){
-        let primaryKeyEndIndex = stagedCard.id.length - endSubstring.length;
-        let primaryKey = stagedCard.id.substring(0, primaryKeyEndIndex)
-        console.log(primaryKey);
-        console.log(stagedCard.id);
+function getStagedCards(userObj, otherPlayerObj){
+    var userStagedArea = document.getElementById(userObj.stageArea);
+    let userEndSubstring = userObj.stagedCardName;
+    for(const userStagedCard of userStagedArea.children){
+        let userStagedCardId = userStagedCard.id;
+        let userPrimaryKey = userStagedCard.id.substring(0, userStagedCardId - userEndSubstring.length)
+        console.log(userStagedCard);
+        console.log(userPrimaryKey);
     }
 }
+
+
 
