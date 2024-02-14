@@ -15,6 +15,7 @@ DROP TABLE IF EXISTS cardInstance;
 DROP TABLE IF EXISTS cardUrl;
 
 -- Tables with foreign keys
+DROP TABLE IF EXISTS gameInstance;
 DROP TABLE IF EXISTS generatedGame;
 DROP TABLE IF EXISTS decks;
 DROP TABLE IF EXISTS game;
@@ -78,9 +79,9 @@ DELIMITER ;
 -- -----------------------------------------------------
 -- Create User Game Table 
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS game;
+DROP TABLE IF EXISTS gameInstance;
 
-CREATE TABLE IF NOT EXISTS game (
+CREATE TABLE IF NOT EXISTS gameInstance (
     gameId INT UNIQUE NOT NULL AUTO_INCREMENT,
     startTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     endTime TIMESTAMP NULL,
@@ -93,7 +94,7 @@ CREATE TABLE IF NOT EXISTS game (
         -- ON UPDATE CASCADE
 );
 
-ALTER TABLE game AUTO_INCREMENT=501;
+ALTER TABLE gameInstance AUTO_INCREMENT=501;
 
 -- -----------------------------------------------------
 -- Create Card table
@@ -220,14 +221,30 @@ CREATE TABLE IF NOT EXISTS moves (
     moveDetails VARCHAR(255),
 
     PRIMARY KEY (moveId),
-    FOREIGN KEY (gameId) REFERENCES game(gameId),
+    FOREIGN KEY (gameId) REFERENCES gameInstance(gameId),
     FOREIGN KEY (playerId) REFERENCES userProfile(userId)
 );
 
 ALTER TABLE moves AUTO_INCREMENT=1;
 
 -- -----------------------------------------------------
--- CREATE INDEX VALUES FOR FASTER QUERIES
+-- CREATE generateGame Table
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS game;
+
+CREATE TABLE IF NOT EXISTS game (
+    gameId INT,
+    playerId INT,
+    deckId INT,
+
+    PRIMARY KEY (gameId, playerId, deckId),
+    FOREIGN KEY (gameId) REFERENCES gameInstance(gameId),
+    FOREIGN KEY (playerId) REFERENCES userProfile(userId),
+    FOREIGN KEY (deckId) REFERENCES deck(deckId)
+);
+
+-- -----------------------------------------------------
+-- CREATE generateGame Table
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS generatedGame;
 
