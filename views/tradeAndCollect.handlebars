@@ -11,16 +11,30 @@
 
 <body>
     <div class="rowZero">
-        <div id="stageAreaZero">
-            <div class="topStageText">Click Card To Stage It Here</div>
-            <div class="bottomStageText">Click Card To Stage It Here</div>
-        </div>
+        <div class="topStageText">Click Card To Stage It Here</div>
+        <div id="stageAreaZero"></div>
+        <div class="bottomStageText">Click Card To Stage It Here</div>
+
+        <button type="button" id="startTradeButton"> START<br>TRADE</button>
         <div id="scrollDeck">
             <button type="button" id="scrollLeft"> &lt; </button>
             <button type="button" id="scrollRight"> &gt; </button>
             <div id="cardSlots"></div>
         </div>
     </div>
+
+    <div id="screenSeparator"><h1>OTHER PLAYER'S SCREEN</h1></div>
+    <div class="otherRow">
+        <div class="topStageText">Click Card To Stage It Here</div>
+        <div id="otherStageArea"></div>
+        <div class="bottomStageText">Click Card To Stage It Here</div>
+        
+        <button type="button" id="otherStartTradeButton"> START<br>TRADE</button>
+        <div id="otherScrollDeck">
+            <button type="button" id="otherScrollLeft"> &lt; </button>
+            <button type="button" id="otherScrollRight"> &gt; </button>
+            <div id="otherCardSlots"></div>
+        </div>
     </div>
 
     <script type="module" src="/tradeAndCollect.mjs"></script>

@@ -78,20 +78,32 @@
 }
 
 /* TradeAndCollect Page */
-.rowZero {
+#screenSeparator {
+    border-style: solid;
+    border-width: 6px;
+    border-color: white;
+    border-top-color: red;
+    width: 100%;
+    height: 8vw;
+}
+#startTradeButton, #otherStartTradeButton{
+    position: absolute;
+    left: -6vw;
+}
+.rowZero, .otherRow{
     position: relative;
     height: 45vw;
 }
 
 /* scrollDeck div is inside rowZero div */
-#scrollDeck {
+#scrollDeck, #otherScrollDeck{
     position: relative;
     width: 100%;
 }
 
 /* cardSlots and the buttons scrollLeft/scrollRight 
 are inside scrollDeck div */
-#cardSlots {
+#cardSlots, #otherCardSlots{
     display: flex;
     flex-direction: row;
     justify-content: normal;
@@ -100,20 +112,19 @@ are inside scrollDeck div */
     height: 19vw;
 }
 
-
-#scrollLeft {
+#scrollLeft, #otherScrollLeft{
     position: absolute;
     left: -6vh;
     top: 16vh;
 }
 
-#scrollRight {
+#scrollRight, #otherScrollRight{
     position: absolute;
     right: -6vh;
     top: 16vh;
 }
 
-#stageAreaZero {
+#stageAreaZero, #otherStageArea {
     display: flex;
     flex-direction: row;
     position: relative;
@@ -124,46 +135,18 @@ are inside scrollDeck div */
     margin: 1vh 0vh;
 }
 
-.redBox{
-    position: relative;
-    height: 19vw;
-    width: 25%;
-    background-color: red;
-}
-
-.greenBox{
-    position: relative;
-    height: 19vw;
-    width: 25%;
-    background-color: green;
-}
-
 .topStageText {
-    position: absolute;
-    top: 1vw;
+    position: relative;
     width: 100%;
     text-align: center;
-}
-
-.topStageText:hover {
-    position: absolute;
-    top: 1vw;
-    width: 100%;
-    text-align: center;
+    bottom: -3vw;
 }
 
 .bottomStageText {
-    position: absolute;
-    bottom: 1vw;
+    position: relative;
     width: 100%;
     text-align: center;
-}
-
-.bottomStageText:hover {
-    position: absolute;
-    bottom: 1vw;
-    width: 100%;
-    text-align: center;
+    top: -3vw;
 }
 
 /* userProfile */
