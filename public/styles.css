@@ -135,7 +135,7 @@
     text-align: center;
 }
 
-#userScrollDeck{
+#userScrollDeck, #otherScrollDeck{
     position: relative;
 }
 
@@ -144,19 +144,19 @@
     left: -6vw;
 }
 
-#userScrollLeft{
+#userScrollLeft, #otherScrollLeft{
     position: absolute;
     left: -3vw;
     top: 6vw;
 }
 
-#userScrollRight{
+#userScrollRight, #otherScrollRight{
     position: absolute;
     right: -3vw;
     top: 6vw;
 }
 
-#userCardSlots{
+#userCardSlots, #otherCardSlots{
     display: flex;
     flex-direction: row;
 }
