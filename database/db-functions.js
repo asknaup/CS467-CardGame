@@ -238,7 +238,6 @@ function insertCard(name, type, user, rarity, manaCost) {
 
                 db.pool.query(insertCardInstanceQuery, [lastInsertedId, user], (insertInstanceErr, insertInstanceResult) => {
                     if (insertInstanceErr) {
-                        console.log("HERE");
                         db.pool.query('ROLLBACK', () => {
                             reject(insertInstanceErr);
                         });
@@ -334,6 +333,50 @@ async function getUserDeck(deckId) {
     });
 }
 
+// Generate new game
+async function createNewGame(ruleSet, userId, userDeckId) {
+    // Initialize a new game -> winner has not been decided
+    return new Promise((resolve, reject) => {
+        db.pool.query('START TRANSACTION', (beginTransactionErr) => {
+            if (beginTransactionErr) {
+                reject(beginTransactionErr)
+                return;
+            }
+
+            const insertQuery = 'INSERT INTO decks (playerId) VALUES (?)';
+            const selectQuery = 'SELECT LAST_INSERT_ID() as newGameId';
+
+            db.pool.query(insertQuery, userId, (insertErr, insertResult) => {
+                if (insertErr) {
+                    db.pool.query('ROLLBACK', () => {
+                        reject(insertErr);
+                    });
+                    return;
+                }
+
+                db.pool.query(selectQuery, (selectErr, selectResult) => {
+                    if (selectErr) {
+                        db.pool.query('ROLLBACK', () => {
+                            reject(selectErr);
+                        });
+                        return;
+                    }
+
+                    db.pool.query('COMMIT', (commitErr) => {
+                        if (commitErr) {
+                            db.pool.query('ROLLBACK', () => {
+                                reject(commitErr);
+                            });
+                        } else {
+                            resolve(selectResult[0].newGameId);
+                        }
+                    });
+                });
+            });
+        });
+    });
+}
+
 //function insertIntoCollection(deckId, userId, cardId) { }
 
 // function updateGameWinner({ params }) {
@@ -402,4 +445,5 @@ module.exports.insertSpellCard = insertSpellCard;
 module.exports.insertCardUrl = insertCardUrl;
 module.exports.gatherUserDecks = gatherUserDecks;
 module.exports.getUserDeck = getUserDeck;
+module.exports.createNewGame = createNewGame;
 module.exports.getCardIdByUser = getCardIdByUser;
