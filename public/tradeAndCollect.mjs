@@ -13,66 +13,55 @@ class Card{
     }
 }
 
-function addStagedCardFunctionality(deckOwner, primaryIndex, primaryKeyArr){
-    var startIndex = Math.floor(primaryIndex / numScrollCards) * numScrollCards;
-    var endIndex = startIndex + (numScrollCards - 1);
-    if (endIndex > primaryKeyArr.length - 1){
-        endIndex = primaryKeyArr.length - 1
+function addStagedCardFunctionality(primaryIndex, playerObj){
+    playerObj.startIndex = Math.floor(primaryIndex / numScrollCards) * numScrollCards;
+    playerObj.endIndex = playerObj.startIndex + (numScrollCards - 1);
+    if (playerObj.endIndex > playerObj.primaryKeyArr.length - 1){
+        playerObj.endIndex = playerObj.primaryKeyArr.length - 1
     }
-    displayScrollCards(deckOwner, startIndex, endIndex, primaryKeyArr);
+    displayScrollCards(playerObj);
 }
 
-function addScrollCardFunctionality(deckOwner, primaryIndex, primaryKeyArr, scrollCard){
-    var stageName = "";
-    var stagedCardName = "";
-    if (deckOwner === "user"){
-        stageName = "userStageArea";
-        stagedCardName = "userStagedCard";
-    }
+function addScrollCardFunctionality(primaryIndex, playerObj, scrollCard){
     scrollCard.onclick = function(){
-        let primaryKey = primaryKeyArr[primaryIndex];
-        let cardData = cardDict[primaryKey];
+        let primaryKey = playerObj.primaryKeyArr[primaryIndex];
+        let cardData = playerObj.cardDict[primaryKey];
         if (cardData.isStaged == false){
-            if(stagedCardCount < 8){
+            if(playerObj.stagedCardCount < 4){
                 scrollCard.style.border = "6px solid #4caf50";
-                var stageArea = document.getElementById(stageName);
-                let stagedCard = createTradingCard(cardData.primaryKey + stagedCardName, cardData);
-                stagedCard.onclick = function(){addStagedCardFunctionality(deckOwner, primaryIndex, primaryKeyArr)};
+                var stageArea = document.getElementById("userStageArea");
+                let stagedCard = createTradingCard(cardData.primaryKey + "userStagedCard", cardData);
+                stagedCard.onclick = function(){addStagedCardFunctionality(primaryIndex, playerObj)};
                 stageArea.appendChild(stagedCard);
                 cardData.isStaged = true;
                 //stagedCardCount is a global variable
-                stagedCardCount += 1;
+                playerObj.stagedCardCount += 1;
             }
         } else {
             scrollCard.style.border = "3px solid black";
-            var stagedCard = document.getElementById(cardData.primaryKey + stagedCardName);
+            var stagedCard = document.getElementById(cardData.primaryKey + "userStagedCard");
             stagedCard.remove();
             cardData.isStaged = false;
             //stagedCardCount is a global variable
-            stagedCardCount -= 1;
+            playerObj.stagedCardCount -= 1;
         }
     };
 }
 
-function displayScrollCards(deckOwner, startIndex, endIndex, primaryKeyArr){
-    var cardSlots = "";
-    var newCardName = "";
-    if (deckOwner === "user"){
-        cardSlots = "userCardSlots";
-        newCardName = "userNewCard";
-    }
+function displayScrollCards(playerObj){
     // Clear out old card elements
-    var oldCards = document.getElementsByClassName(newCardName);
+    //console.log(playerObj);
+    var oldCards = document.getElementsByClassName('newCard');
     for (let i= oldCards.length - 1; i >=0; i--) {
         oldCards[i].remove();
     }
-    var cardSlots = document.getElementById(cardSlots);
-    for (let index = startIndex; index <= endIndex; index++){
-        let primaryKey = primaryKeyArr[index];
-        let cardData = cardDict[primaryKey];
+    var cardSlots = document.getElementById("userCardSlots");
+    for (let index = playerObj.startIndex; index <= playerObj.endIndex; index++){
+        let primaryKey = playerObj.primaryKeyArr[index];
+        let cardData = playerObj.cardDict[primaryKey];
         let scrollCard = createTradingCard(primaryKey, cardData);
-        scrollCard.classList.add(newCardName);
-        addScrollCardFunctionality(deckOwner, index, primaryKeyArr, scrollCard);
+        scrollCard.classList.add('newCard');
+        addScrollCardFunctionality(index, playerObj, scrollCard);
         if (cardData.isStaged == true){
             scrollCard.style.border = "6px solid #4caf50";
         }else{
@@ -97,8 +86,8 @@ var exampleCards = [
     // Add more cards as needed
 ];
 
-let primaryKeyArr = [];
-let cardDict = {};
+var numScrollCards = 8;
+let userObject = {primaryKeyArr: [], cardDict: {}, stagedCardCount: 0, startIndex: 0, endIndex: 7};
 let otherPrimaryKeyArr = [];
 let otherCardDict = {};
 for (let index = 0; index<=33; index++){
@@ -106,88 +95,51 @@ for (let index = 0; index<=33; index++){
     let randomIndex = Math.floor(Math.random() * numCards);
     let cardData = exampleCards[randomIndex];
     let uniquePrimaryKey = cardData.primaryKey + index.toString()
-    primaryKeyArr.push(uniquePrimaryKey);
-    cardDict[uniquePrimaryKey] = new Card(uniquePrimaryKey, cardData.cardName, cardData.image,
+    userObject.primaryKeyArr.push(uniquePrimaryKey);
+    userObject.cardDict[uniquePrimaryKey] = new Card(uniquePrimaryKey, cardData.cardName, cardData.image,
                 cardData.description, cardData.cardType, cardData.attributes);
     // now create other player's card set
+    /*
     let otherRandomIndex = (randomIndex + 1) %  exampleCards.length;
     let otherCardData = exampleCards[otherRandomIndex];
     let otherUniquePrimaryKey = otherCardData.primaryKey + index.toString()
     otherPrimaryKeyArr.push(otherUniquePrimaryKey);
     otherCardDict[otherUniquePrimaryKey] = new Card(otherUniquePrimaryKey, otherCardData.cardName, otherCardData.image,
                 otherCardData.description, otherCardData.cardType, otherCardData.attributes);
+    */
 }
 
 
 /* main code for tradeAndCollect */
-var numScrollCards = 8;
-var stagedCardCount = 0;
-var startIndex = 0;
-var endIndex = numScrollCards - 1;
-displayScrollCards("user", startIndex, endIndex, primaryKeyArr);
+displayScrollCards(userObject);
 
-var scrollRightButton = document.getElementById("scrollRight");
-scrollRightButton.addEventListener("click", () => {
-    if (endIndex < primaryKeyArr.length - 1){
-        startIndex = endIndex + 1;
-        endIndex += numScrollCards;
-        if (endIndex > primaryKeyArr.length - 1){
-            endIndex = primaryKeyArr.length - 1
+var userScrollRightButton = document.getElementById("userScrollRight");
+userScrollRightButton.addEventListener("click", () => {
+    if (userObject.endIndex < userObject.primaryKeyArr.length - 1){
+        userObject.startIndex = userObject.endIndex + 1;
+        userObject.endIndex += numScrollCards;
+        if (userObject.endIndex > userObject.primaryKeyArr.length - 1){
+            userObject.endIndex = userObject.primaryKeyArr.length - 1
         }
-        console.log(startIndex);
-        console.log(endIndex);
-        displayScrollCards("user", startIndex, endIndex, primaryKeyArr);
+        console.log(userObject.startIndex);
+        console.log(userObject.endIndex);
+        displayScrollCards(userObject);
     }
 });
 
-var scrollLeftButton = document.getElementById("scrollLeft");
-scrollLeftButton.addEventListener("click", () => {
-    if (startIndex > 0){
-        endIndex = startIndex - 1;
-        startIndex -= numScrollCards;
-        if(startIndex < 0){
-            startIndex = 0;
+var userScrollLeftButton = document.getElementById("userScrollLeft");
+userScrollLeftButton.addEventListener("click", () => {
+    if (userObject.startIndex > 0){
+        userObject.endIndex = userObject.startIndex - 1;
+        userObject.startIndex -= numScrollCards;
+        if(userObject.startIndex < 0){
+            userObject.startIndex = 0;
         }
-        console.log(startIndex);
-        console.log(endIndex);
-        displayScrollCards("user", startIndex, endIndex, primaryKeyArr);
+        console.log(userObject.startIndex);
+        console.log(userObject.endIndex);
+        displayScrollCards(userObject);
     }
 });
-
-/*
-var otherStagedCardCount = 0;
-var otherStartIndex = 0;
-var otherEndIndex = numScrollCards - 1;
-displayScrollCards(otherStartIndex, otherEndIndex, otherPrimaryKeyArr);
-
-var otherScrollRightButton = document.getElementById("otherScrollRight");
-otherScrollRightButton.addEventListener("click", () => {
-    if (otherEndIndex < otherPrimaryKeyArr.length - 1){
-        otherStartIndex = otherEndIndex + 1;
-        otherEndIndex += numScrollCards;
-        if (otherEndIndex > otherPrimaryKeyArr.length - 1){
-            otherEndIndex = otherPrimaryKeyArr.length - 1
-        }
-        console.log(otherStartIndex);
-        console.log(otherEndIndex);
-        otherDisplayScrollCards(otherStartIndex, otherEndIndex, otherPrimaryKeyArr);
-    }
-});
-
-var otherScrollLeftButton = document.getElementById("otherScrollLeft");
-otherScrollLeftButton.addEventListener("click", () => {
-    if (otherStartIndex > 0){
-        otherEndIndex = otherStartIndex - 1;
-        otherStartIndex -= numScrollCards;
-        if(otherStartIndex < 0){
-            otherStartIndex = 0;
-        }
-        console.log(otherStartIndex);
-        console.log(otherEndIndex);
-        displayScrollCards(otherStartIndex, otherEndIndex, otherPrimaryKeyArr);
-    }
-});
-*/
 
 /* trading code =============================================================================================== */
 

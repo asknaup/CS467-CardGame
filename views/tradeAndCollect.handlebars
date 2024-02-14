@@ -11,12 +11,26 @@
 
 <body>
     <div class="userRow">
-        <div class="topStageText">Click Card To Stage It Here</div>
-        <div id="userStageArea"></div>
-        <div class="bottomStageText">Click Card To Stage It Here</div>
+        
+        <div id="otherScrollDeck">
+            <button type="button" id="otherStartTradeButton"> START<br>TRADE</button>
+            <button type="button" id="otherScrollLeft"> &lt; </button>
+            <button type="button" id="otherScrollRight"> &gt; </button>
+            <div id="otherCardSlots"></div>
+        </div>
 
-        <button type="button" id="userStartTradeButton"> START<br>TRADE</button>
+        <div id="stageArea">
+            <div class="otherTopStageText">Click Card To Stage It Here</div>
+            <div class="otherBottomStageText">Click Card To Stage It Here</div>
+            <div id="otherStageArea"></div>
+
+            <div id="userStageArea"></div>
+            <div class="userTopStageText">Click Card To Stage It Here</div>
+            <div class="userBottomStageText">Click Card To Stage It Here</div>
+        </div>
+
         <div id="userScrollDeck">
+             <button type="button" id="userStartTradeButton"> START<br>TRADE</button>
             <button type="button" id="userScrollLeft"> &lt; </button>
             <button type="button" id="userScrollRight"> &gt; </button>
             <div id="userCardSlots"></div>
