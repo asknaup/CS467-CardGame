@@ -78,6 +78,13 @@
 }
 
 /* TradeAndCollect Page */
+#otherPlayerDeck {
+    color: black;
+    width: 100%;
+    text-align: center;
+    margin: 1vw;
+}
+
 #stageArea{
     display: flex;
     flex-direction: row;
@@ -119,6 +126,13 @@
     text-align: center;
 }
 
+#otherPlayerTitle{
+    position: absolute;
+    top: 9vw;
+    width: 50%;
+    text-align: center;
+}
+
 .userTopStageText {
     position: absolute;
     top: 2vw;
@@ -130,6 +144,14 @@
 .userBottomStageText {
     position: absolute;
     bottom: 2vw;
+    right: 0vw;
+    width: 50%;
+    text-align: center;
+}
+
+#userTitle{
+    position: absolute;
+    top: 9vw;
     right: 0vw;
     width: 50%;
     text-align: center;
