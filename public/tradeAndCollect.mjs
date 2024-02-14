@@ -236,31 +236,52 @@ otherScrollLeftButton.addEventListener("click", () => {
     }
 });
 
-/* trading code ===============================================================================================
+/* trading code =============================================================================================== */
+function popUpTradeForm(){
+
+}
+
 function getStagedCards(){
     var stagedArea = document.getElementById("stageAreaZero");
+    let endSubstring = "StagedCard";
+    let cardArr = []
     for(const stagedCard of stagedArea.children){
+        let primaryKeyEndIndex = stagedCard.id.length - endSubstring.length;
+        let primaryKey = stagedCard.id.substring(0, primaryKeyEndIndex)
+        console.log(primaryKey);
         console.log(stagedCard.id);
     }
 }
+
 var tradeHasStarted = false;
 var startTradeButton = document.getElementById("startTradeButton");
 startTradeButton.addEventListener("click", () => {
     tradeHasStarted = true;
     console.log(tradeHasStarted);
     getStagedCards();
-    if (tradeHasStarted && otherPlayerTradeHasStarted){
+    if (tradeHasStarted && otherPlayerHasStarted){
         console.log("this trade is in action")
     }
 });
 
-var otherPlayerTradeHasStarted = false;
-var startTradeButton1 = document.getElementById("otherStartTradeButton");
-startTradeButton1.addEventListener("click", () => {
-    otherPlayerTradeHasStarted = true;
-    console.log(otherPlayerTradeHasStarted);
-    if (otherPlayerTradeHasStarted && tradeHasStarted){
+function otherGetStagedCards(){
+    var otherStagedArea = document.getElementById("otherStageArea");
+    let endSubstring = "otherStagedCard";
+    let otherCardArr = []
+    for(const otherStagedCard of otherStagedArea.children){
+        let primaryKeyEndIndex = otherStagedCard.id.length - endSubstring.length;
+        let primaryKey = otherStagedCard.id.substring(0, primaryKeyEndIndex)
+        console.log(primaryKey);
+        console.log(otherStagedCard.id);
+    }
+}
+
+var otherPlayerHasStarted = false;
+var otherStartTradeButton = document.getElementById("otherStartTradeButton");
+otherStartTradeButton.addEventListener("click", () => {
+    otherPlayerHasStarted = true;
+    otherGetStagedCards();
+    if (otherPlayerHasStarted && tradeHasStarted){
         console.log("this trade is in action")
     }
 });
-*/
