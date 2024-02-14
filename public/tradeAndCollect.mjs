@@ -224,3 +224,30 @@ scrollLeftButton1.addEventListener("click", () => {
         otherDisplayScrollCards(startIndex1, endIndex1, cardArr1);
     }
 });
+/* trading code ===============================================================================================*/
+function getStagedCards(){
+    var stagedArea = document.getElementById("stageAreaZero");
+    for(const stagedCard of stagedArea.children){
+        console.log(stagedCard);
+    }
+}
+var tradeHasStarted = false;
+var startTradeButton = document.getElementById("startTradeButton");
+startTradeButton.addEventListener("click", () => {
+    tradeHasStarted = true;
+    console.log(tradeHasStarted);
+    getStagedCards();
+    if (tradeHasStarted && otherPlayerTradeHasStarted){
+        console.log("this trade is in action")
+    }
+});
+
+var otherPlayerTradeHasStarted = false;
+var startTradeButton1 = document.getElementById("startTradeButton1");
+startTradeButton1.addEventListener("click", () => {
+    otherPlayerTradeHasStarted = true;
+    console.log(otherPlayerTradeHasStarted);
+    if (otherPlayerTradeHasStarted && tradeHasStarted){
+        console.log("this trade is in action")
+    }
+});
