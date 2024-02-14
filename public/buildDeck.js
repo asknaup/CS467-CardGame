@@ -1,3 +1,5 @@
+const dbFunc = require('./database/db-functions')
+
 // Function to create a trading card
 function createTradingCard(cardData) {
 
@@ -66,128 +68,131 @@ function createTradingCard(cardData) {
 }
 
 // Example cards data (you can add more)
-var exampleCards = [
-    {
-        name: 'Goblin',
-        image: 'images/goblin-willow-tree.jpg',
-        description: 'A small forest goblin.',
-        additionalText: 'Creature',
-        attributes: {
-            HP: 100,
-            Attack: 50,
-            Defense: 30,
-            'Special Ability': 'Cooking',
-            'Gold Cost': 5,
-        },
-    },
-    {
-        name: 'Fire Ball Scroll',
-        image: 'images/dark-wizard.png',
-        description: 'A powerful fire ball.',
-        additionalText: 'Spell',
-        attributes: {
-            HP: 80,
-            Attack: 60,
-            Defense: 20,
-            'Special Ability': 'Fire Ball',
-            'Gold Cost': 7,
-        },
-    },
+// var exampleCards = [
+//     {
+//         name: 'Goblin',
+//         image: 'images/goblin-willow-tree.jpg',
+//         description: 'A small forest goblin.',
+//         additionalText: 'Creature',
+//         attributes: {
+//             HP: 100,
+//             Attack: 50,
+//             Defense: 30,
+//             'Special Ability': 'Cooking',
+//             'Gold Cost': 5,
+//         },
+//     },
+//     {
+//         name: 'Fire Ball Scroll',
+//         image: 'images/dark-wizard.png',
+//         description: 'A powerful fire ball.',
+//         additionalText: 'Spell',
+//         attributes: {
+//             HP: 80,
+//             Attack: 60,
+//             Defense: 20,
+//             'Special Ability': 'Fire Ball',
+//             'Gold Cost': 7,
+//         },
+//     },
 
-    {
-        name: 'Ice Dragon',
-        image: 'images/ice-dragon.png',
-        description: 'An ice dragon from the North.',
-        additionalText: 'Creature',
-        attributes: {
-            HP: 50,
-            Attack: 20,
-            Defense: 10,
-            'Special Ability': 'Flying',
-            'Gold Cost': 9,
-        },
-    },
-    {
-        name: 'Goblin 2!!',
-        image: 'images/goblin-willow-tree.jpg',
-        description: 'A small forest goblin.',
-        additionalText: 'Creature',
-        attributes: {
-            HP: 100,
-            Attack: 50,
-            Defense: 30,
-            'Special Ability': 'Cooking',
-            'Gold Cost': 5,
-        },
-    },
-    {
-        name: 'Fire Ball Scroll 2!!',
-        image: 'images/ice-dragon.png',
-        description: 'A powerful fire ball.',
-        additionalText: 'Spell',
-        attributes: {
-            HP: 80,
-            Attack: 60,
-            Defense: 20,
-            'Special Ability': 'Fire Ball',
-            'Gold Cost': 7,
-        },
-    },
+//     {
+//         name: 'Ice Dragon',
+//         image: 'images/ice-dragon.png',
+//         description: 'An ice dragon from the North.',
+//         additionalText: 'Creature',
+//         attributes: {
+//             HP: 50,
+//             Attack: 20,
+//             Defense: 10,
+//             'Special Ability': 'Flying',
+//             'Gold Cost': 9,
+//         },
+//     },
+//     {
+//         name: 'Goblin 2!!',
+//         image: 'images/goblin-willow-tree.jpg',
+//         description: 'A small forest goblin.',
+//         additionalText: 'Creature',
+//         attributes: {
+//             HP: 100,
+//             Attack: 50,
+//             Defense: 30,
+//             'Special Ability': 'Cooking',
+//             'Gold Cost': 5,
+//         },
+//     },
+//     {
+//         name: 'Fire Ball Scroll 2!!',
+//         image: 'images/ice-dragon.png',
+//         description: 'A powerful fire ball.',
+//         additionalText: 'Spell',
+//         attributes: {
+//             HP: 80,
+//             Attack: 60,
+//             Defense: 20,
+//             'Special Ability': 'Fire Ball',
+//             'Gold Cost': 7,
+//         },
+//     },
 
-    {
-        name: 'Ice Dragon 2!!',
-        image: 'images/ice-dragon.png',
-        description: 'An ice dragon from the North.',
-        additionalText: 'Creature',
-        attributes: {
-            HP: 50,
-            Attack: 20,
-            Defense: 10,
-            'Special Ability': 'Flying',
-            'Gold Cost': 9,
-        },
-    },
-    {
-        name: 'Goblin 3!!!',
-        image: 'images/dark-wizard.png',
-        description: 'A small forest goblin.',
-        additionalText: 'Creature',
-        attributes: {
-            HP: 100,
-            Attack: 50,
-            Defense: 30,
-            'Special Ability': 'Cooking',
-            'Gold Cost': 5,
-        },
-    },
-    {
-        name: 'Fire Ball Scroll 3!!!',
-        image: 'images/dark-wizard.png',
-        description: 'A powerful fire ball.',
-        additionalText: 'Spell',
-        attributes: {
-            HP: 80,
-            Attack: 60,
-            Defense: 20,
-            'Special Ability': 'Fire Ball',
-            'Gold Cost': 7,
-        },
-    },
-    // Add more cards as needed
-    {
-        name: 'Ice Dragon 3!!!',
-        image: 'images/goblin-willow-tree.jpg',
-        description: 'An ice dragon from the North.',
-        additionalText: 'Creature',
-        attributes: {
-            HP: 50,
-            Attack: 20,
-            Defense: 10,
-            'Special Ability': 'Flying',
-            'Gold Cost': 9,
-        },
-    },
-];
+//     {
+//         name: 'Ice Dragon 2!!',
+//         image: 'images/ice-dragon.png',
+//         description: 'An ice dragon from the North.',
+//         additionalText: 'Creature',
+//         attributes: {
+//             HP: 50,
+//             Attack: 20,
+//             Defense: 10,
+//             'Special Ability': 'Flying',
+//             'Gold Cost': 9,
+//         },
+//     },
+//     {
+//         name: 'Goblin 3!!!',
+//         image: 'images/dark-wizard.png',
+//         description: 'A small forest goblin.',
+//         additionalText: 'Creature',
+//         attributes: {
+//             HP: 100,
+//             Attack: 50,
+//             Defense: 30,
+//             'Special Ability': 'Cooking',
+//             'Gold Cost': 5,
+//         },
+//     },
+//     {
+//         name: 'Fire Ball Scroll 3!!!',
+//         image: 'images/dark-wizard.png',
+//         description: 'A powerful fire ball.',
+//         additionalText: 'Spell',
+//         attributes: {
+//             HP: 80,
+//             Attack: 60,
+//             Defense: 20,
+//             'Special Ability': 'Fire Ball',
+//             'Gold Cost': 7,
+//         },
+//     },
+//     // Add more cards as needed
+//     {
+//         name: 'Ice Dragon 3!!!',
+//         image: 'images/goblin-willow-tree.jpg',
+//         description: 'An ice dragon from the North.',
+//         additionalText: 'Creature',
+//         attributes: {
+//             HP: 50,
+//             Attack: 20,
+//             Defense: 10,
+//             'Special Ability': 'Flying',
+//             'Gold Cost': 9,
+//         },
+//     },
+// ];
+
+var exampleCards = dbFunc.getCardIdByUser(1001);
+console.log(exampleCards);
 
 // Card container element from the HTML
 var cardContainer = document.getElementById('cardContainer');

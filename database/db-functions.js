@@ -351,6 +351,43 @@ async function getUserDeck(deckId) {
 //     });
 // }
 
+async function getCardIdByUser(userId) {
+    return new Promise((resolve, reject) => {
+
+        const query = 'select ci.cardId, cardName, imagePath, cardType, rarity, manaCost, spellType, spellAbility, spellAttack, spellDefense, utility, attack, defense from cardInstance as ci ' +
+            'join cards as c on c.cardId = ci.cardId ' +
+            'left join cardUrl as cu on ci.cardId = cu.cardId ' +
+            'left join cardSpell as cs on ci.cardId = cs.cardId ' +
+            'left join cardCreature as cc on ci.cardId = cc.cardId ' +
+            'WHERE ci.ownerUserId = ?';
+
+        db.pool.query(query, userId, (selectErr, selectResult) => {
+            if (selectErr) {
+                reject(selectErr);
+            } else {
+                resolve(selectResult);
+            }
+        });
+    });
+}
+
+function insertNewDeck(userId, deckName, cardList) {
+    return new Promise((resolve, reject) => {
+
+        const query = 'INSERT into decks (playerId, deckName, cardId) VALUES (?, ?, ?)';
+        const values = [userId, deckName, cardList];
+        db.pool.query(query, values, (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+}
+
+
+
 
 module.exports.insertNewUserIntoDB = insertNewUserIntoDB;
 module.exports.getUserProfile = getUserProfile;
@@ -365,3 +402,4 @@ module.exports.insertSpellCard = insertSpellCard;
 module.exports.insertCardUrl = insertCardUrl;
 module.exports.gatherUserDecks = gatherUserDecks;
 module.exports.getUserDeck = getUserDeck;
+module.exports.getCardIdByUser = getCardIdByUser;
