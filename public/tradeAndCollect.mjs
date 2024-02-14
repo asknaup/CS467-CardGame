@@ -96,9 +96,9 @@ var exampleCards = [
 
 var numScrollCards = 8;
 let userObject = {primaryKeyArr: [], cardDict: {}, stagedCardCount: 0, startIndex: 0, endIndex: 7,newCardName: "userNewCard", 
-                    cardSlots: "userCardSlots", stageArea: "userStageArea", stagedCardName: "userStagedCard"};
+                    cardSlots: "userCardSlots", stageArea: "userStageArea", stagedCardName: "userStagedCard", cardsToBeTraded: []};
 let otherPlayerObj = {primaryKeyArr: [], cardDict: {}, stagedCardCount: 0, startIndex: 0, endIndex: 7, newCardName: "otherNewCard", 
-                    cardSlots: "otherCardSlots", stageArea: "otherStageArea", stagedCardName: "otherStagedCard"};
+                    cardSlots: "otherCardSlots", stageArea: "otherStageArea", stagedCardName: "otherStagedCard", cardsToBeTraded: []};
 for (let index = 0; index<=33; index++){
     let numCards = exampleCards.length;
     let randomIndex = Math.floor(Math.random() * numCards);
@@ -180,15 +180,41 @@ userScrollLeftButton.addEventListener("click", () => {
 /* trading code =============================================================================================== */
 
 function getStagedCards(userObj, otherPlayerObj){
-    var userStagedArea = document.getElementById(userObj.stageArea);
+    var stagedCardsToBeRemoved = [];
+    var userStageArea = document.getElementById(userObj.stageArea);
     let userEndSubstring = userObj.stagedCardName;
-    for(const userStagedCard of userStagedArea.children){
+    userObj.cardsToBeTraded = [];
+    for(const userStagedCard of userStageArea.children){
         let userStagedCardId = userStagedCard.id;
         let userPrimaryKey = userStagedCard.id.substring(0, userStagedCardId - userEndSubstring.length)
-        console.log(userStagedCard);
-        console.log(userPrimaryKey);
+        userObj.cardsToBeTraded.push(userObj.cardDict[userPrimaryKey]);
+        //The line below is temporary and is used for simulation purposes only
+        stagedCardsToBeRemoved.push(userStagedCardId)
+    }
+    var otherStageArea = document.getElementById(otherPlayerObj.stageArea);
+    let otherEndSubstring = otherPlayerObj.stagedCardName;
+    otherPlayerObj.cardsToBeTraded = [];
+    for(const otherStagedCard of otherStageArea.children){
+        let otherStagedCardId = otherStagedCard.id;
+        let otherPrimaryKey = otherStagedCard.id.substring(0, otherStagedCardId - otherEndSubstring.length)
+        otherPlayerObj.cardsToBeTraded.push(userObj.cardDict[otherPrimaryKey]);
+        //The line below is temporary and is used for simulation purposes only
+        stagedCardsToBeRemoved.push(otherStagedCardId)
+    }
+    //These lines below are temporary and are used for simulation purposes only
+    for(let i = 0; i < stagedCardsToBeRemoved.length; i++){
+        var cardToBeRemoved = document.getElementById(stagedCardsToBeRemoved[i]);
+        cardToBeRemoved.remove();
     }
 }
+
+var startTradeButton = document.getElementById("startTradeButton");
+startTradeButton.addEventListener("click", () => {
+    getStagedCards(userObject, otherPlayerObj);
+
+});
+
+
 
 
 

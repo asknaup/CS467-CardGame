@@ -169,7 +169,7 @@
     position: relative;
 }
 
-#userStartTradeButton {
+#startTradeButton {
     position: absolute;
     left: -6vw;
 }
