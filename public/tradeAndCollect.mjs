@@ -124,10 +124,10 @@ var numScrollCards = 8;
 var stagedCardCount = 0;
 var startIndex = 0;
 var endIndex = numScrollCards - 1;
-displayScrollCards("user", startIndex, endIndex, primaryKeyArr);
+//displayScrollCards("user", startIndex, endIndex, primaryKeyArr);
 
-var scrollRightButton = document.getElementById("scrollRight");
-scrollRightButton.addEventListener("click", () => {
+var userScrollRightButton = document.getElementById("userScrollRight");
+userScrollRightButton.addEventListener("click", () => {
     if (endIndex < primaryKeyArr.length - 1){
         startIndex = endIndex + 1;
         endIndex += numScrollCards;
@@ -140,8 +140,8 @@ scrollRightButton.addEventListener("click", () => {
     }
 });
 
-var scrollLeftButton = document.getElementById("scrollLeft");
-scrollLeftButton.addEventListener("click", () => {
+var userScrollLeftButton = document.getElementById("userScrollLeft");
+userScrollLeftButton.addEventListener("click", () => {
     if (startIndex > 0){
         endIndex = startIndex - 1;
         startIndex -= numScrollCards;
