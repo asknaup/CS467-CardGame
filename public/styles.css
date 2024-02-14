@@ -78,32 +78,24 @@
 }
 
 /* TradeAndCollect Page */
-#screenSeparator {
-    border-style: solid;
-    border-width: 6px;
-    border-color: white;
-    border-top-color: red;
-    width: 100%;
-    height: 8vw;
-}
-#startTradeButton, #otherStartTradeButton{
+#userStartTradeButton{
     position: absolute;
     left: -6vw;
 }
-.rowZero, .otherRow{
+.userRow{
     position: relative;
     height: 45vw;
 }
 
 /* scrollDeck div is inside rowZero div */
-#scrollDeck, #otherScrollDeck{
+#userScrollDeck{
     position: relative;
     width: 100%;
 }
 
 /* cardSlots and the buttons scrollLeft/scrollRight 
 are inside scrollDeck div */
-#cardSlots, #otherCardSlots{
+#userCardSlots{
     display: flex;
     flex-direction: row;
     justify-content: normal;
@@ -112,19 +104,19 @@ are inside scrollDeck div */
     height: 19vw;
 }
 
-#scrollLeft, #otherScrollLeft{
+#userScrollLeft{
     position: absolute;
     left: -6vh;
     top: 16vh;
 }
 
-#scrollRight, #otherScrollRight{
+#userScrollRight{
     position: absolute;
     right: -6vh;
     top: 16vh;
 }
 
-#stageAreaZero, #otherStageArea {
+#userStageArea {
     display: flex;
     flex-direction: row;
     position: relative;
