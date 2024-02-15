@@ -186,20 +186,26 @@ function getStagedCards(userObj, otherPlayerObj){
     userObj.cardsToBeTraded = [];
     for(const userStagedCard of userStageArea.children){
         let userStagedCardId = userStagedCard.id;
-        let userPrimaryKey = userStagedCard.id.substring(0, userStagedCardId - userEndSubstring.length)
+        let userPrimaryKey = userStagedCard.id.substring(0, userStagedCardId.length - userEndSubstring.length)
         userObj.cardsToBeTraded.push(userObj.cardDict[userPrimaryKey]);
-        //The line below is temporary and is used for simulation purposes only
+        //Theese lines below are temporary and is used for simulation purposes only
         stagedCardsToBeRemoved.push(userStagedCardId)
+        var userCardObj = userObj.cardDict[userPrimaryKey];
+        userCardObj.isStaged = false;
+        displayScrollCards(userObj);
     }
     var otherStageArea = document.getElementById(otherPlayerObj.stageArea);
     let otherEndSubstring = otherPlayerObj.stagedCardName;
     otherPlayerObj.cardsToBeTraded = [];
     for(const otherStagedCard of otherStageArea.children){
         let otherStagedCardId = otherStagedCard.id;
-        let otherPrimaryKey = otherStagedCard.id.substring(0, otherStagedCardId - otherEndSubstring.length)
-        otherPlayerObj.cardsToBeTraded.push(userObj.cardDict[otherPrimaryKey]);
-        //The line below is temporary and is used for simulation purposes only
+        let otherPrimaryKey = otherStagedCard.id.substring(0, otherStagedCardId.length - otherEndSubstring.length)
+        otherPlayerObj.cardsToBeTraded.push(otherPlayerObj.cardDict[otherPrimaryKey]);
+        //The lines below are temporary and is used for simulation purposes only
         stagedCardsToBeRemoved.push(otherStagedCardId)
+        var otherCardObj = otherPlayerObj.cardDict[otherPrimaryKey];
+        otherCardObj.isStaged = false;
+        displayScrollCards(otherPlayerObj);
     }
     //These lines below are temporary and are used for simulation purposes only
     for(let i = 0; i < stagedCardsToBeRemoved.length; i++){
