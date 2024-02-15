@@ -1,8 +1,7 @@
 // Function to create a trading card
-export function createTradingCard(id, cardData) {
+export function createTradingCard(cardData) {
     // Card container
     var cardContainer = document.createElement('div');
-    cardContainer.setAttribute('id', id);
     cardContainer.classList.add('card');
 
     // Card content
