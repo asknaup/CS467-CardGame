@@ -250,17 +250,36 @@ function updateNavigationButtons() {
 }
 
 // Function to reset the game
-// TODO: Make reset repopulate the carousel with db cards
-function resetGame() {
-    // Clear the staging area
-    clearStagingArea();
+// Function to reset the staging area and refresh the page
+function resetStagingArea() {
+    // Display a confirmation dialog
+    var confirmReset = window.confirm("Are you sure you want to reset?");
 
-    // Reset the exampleCards array (replace with db link)
-    // exampleCards = [...initialExampleCards];
+    if (confirmReset) {
+        // Reset the staging area (clear cards)
+        stagingArea.innerHTML = '';
+        stagedCardCount = 0;
 
-    // Redisplay the cards in the carousel
-    displayCards(currentIndex);
+        // Adjust the staging area height (if needed)
+        adjustStagingAreaHeight();
+
+        // Refresh the page
+        window.location.reload();
+    }
 }
+
+// Function to save the deck
+function saveDeck() {
+    // Your save deck logic goes here
+    // For example, you can display an alert
+    alert("Deck saved!");
+}
+
+// Attach the saveDeck function to the Save Deck button click event
+document.getElementById('saveDeckButton').addEventListener('click', saveDeck);
+
+// Attach the resetStagingArea function to the Reset button click event
+document.getElementById('resetButton').addEventListener('click', resetStagingArea);
 
 // Function to clear the staging area
 function clearStagingArea() {
