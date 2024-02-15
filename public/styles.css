@@ -78,6 +78,46 @@
 }
 
 /* TradeAndCollect Page */
+#tradePopUpForm{
+    display: none;
+    position: absolute;
+    top: 30%;
+    left: 25%;
+    width: 50%;
+    padding: 2vw;
+    background-color: #a7d393;
+    border-radius: 10px;
+    z-index: 100;
+}
+
+.tradeButtons {
+    display:inline-block;
+    background-color: rgb(173, 124, 173);
+}
+
+#declineTradeButton{
+    background-color: rgb(255, 0, 76);
+}
+
+#otherTradedCardsTitle, #userTradedCardsTitle{
+    font-size: 1em;
+    padding-bottom: .5em;
+    color: black;
+}
+
+#otherPlayerTradeCardSlots, #userTradeCardSlots{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+}
+
+#playerPerspective h2{
+    position: relative;
+    left: -6vw;
+    color: black;
+    font-size: 1em;
+    padding-bottom: .5em;
+}
 #otherPlayerDeck {
     color: black;
     width: 100%;
@@ -98,7 +138,7 @@
     position: relative;
     height: 20vw;
     color: grey;
-    z-index:  100;
+    z-index:  10;
     margin: 1vh 0vh;
 }
 
