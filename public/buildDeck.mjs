@@ -156,32 +156,18 @@ var displayLimit = 5;
 
 // Function to move a card to the staging area
 function moveCardToStagingArea(cardData) {
-    if (stagedCardCount < deckLimit) {
-        // Clone the card for the staging area using the clicked card data
-        var clonedCard = createTradingCard(cardData);
+    var clonedCard = createTradingCard(cardData);
 
-        // Add a click event to the cloned card for removing it from the staging area
-        clonedCard.addEventListener('click', function () {
-            removeCardFromStagingArea(clonedCard);
-        });
+    clonedCard.classList.add('staged-card');
+    stagingArea.appendChild(clonedCard);
 
-        // Set a class for styling and layout purposes
-        clonedCard.classList.add('staged-card');
-
-        // Append the cloned card to the staging area
-        stagingArea.appendChild(clonedCard);
-
-        // Remove the card from the carousel
-        removeCardFromCarousel(cardData);
-
-        // Increment the staged card count
-        stagedCardCount++;
-
-    } else {
-        // Optionally provide feedback to the user that the limit has been reached
-        console.log('Maximum number of cards staged reached (5 cards).');
-    }
+    // Increment the staged card count
+    stagedCardCount++;
 }
+
+//TODO: Fix movement from carousel to staging back to carousel
+//TODO: Get cards from carousel to be removed once they're staged and vice verse, push vs pop
+//TODO: Fix every button
 
 // Add click event to each created card for moving it to the staging area
 function addClickEventToCard(createdCard, cardData) {

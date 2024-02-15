@@ -14,7 +14,7 @@ export function createTradingCard(cardData) {
 
     var cardName = document.createElement('h2');
     cardName.classList.add('cardName');
-    cardName.textContent = cardData.cardName;
+    cardName.textContent = cardData.name;
 
     cardHeader.appendChild(cardName);
   
