@@ -68,5 +68,7 @@ export function createTradingCard(cardData) {
 }
 
 export function createTradingCardWithId(id, cardData){
-    return createTradingCard(cardData);
+    let cardContainer = createTradingCard(cardData);
+    cardContainer.setAttribute('id', id);
+    return cardContainer;
 }
