@@ -11,30 +11,48 @@
 
 <body>
     <div class="userRow">
-        
+        <h1 id="otherPlayerDeck">Other Player's Deck</h1>
         <div id="otherScrollDeck">
-            <button type="button" id="otherStartTradeButton"> START<br>TRADE</button>
             <button type="button" id="otherScrollLeft"> &lt; </button>
             <button type="button" id="otherScrollRight"> &gt; </button>
             <div id="otherCardSlots"></div>
         </div>
 
         <div id="stageArea">
+            <div id="otherPlayerTitle"><h2>Other Player's Stage Area</h2></div>
             <div class="otherTopStageText">Click Card To Stage It Here</div>
             <div class="otherBottomStageText">Click Card To Stage It Here</div>
             <div id="otherStageArea"></div>
 
-            <div id="userStageArea"></div>
+            <div id="userTitle"><h2>User's Stage Area</h2></div>
             <div class="userTopStageText">Click Card To Stage It Here</div>
             <div class="userBottomStageText">Click Card To Stage It Here</div>
+            <div id="userStageArea"></div>
         </div>
 
         <div id="userScrollDeck">
-             <button type="button" id="userStartTradeButton"> START<br>TRADE</button>
+            <div id="playerPerspective" >
+                <h2 id="perspectiveTitle">User's Perspective</h2>
+                <button type="button" id="startTradeButton"> START<br>TRADE</button>
+            </div>
             <button type="button" id="userScrollLeft"> &lt; </button>
             <button type="button" id="userScrollRight"> &gt; </button>
             <div id="userCardSlots"></div>
         </div>
+        <h1 id="userDeck">User's Deck</h1>
+    </div>
+
+    <div id="tradePopUpForm">
+        <form class="tradeForm">
+            <h1>Trade Request </h1>
+                <h2 id="otherTradedCardsTitle">Other Player's Cards:</h2>
+                <div id="otherPlayerTradeCardSlots"></div>
+                <h2 id="userTradedCardsTitle">User's Cards:</h2>
+                <div id="userTradeCardSlots"></div>
+                <button type="button" class="tradeButtons" id="acceptTradeButton">Accept</button>
+                <button type ="button" class="tradeButtons" id="declineTradeButton">Decline</button>
+                <button type="button" class="tradeButtons" id="counterOfferTradeButton">Counter Offer</button>
+        </form>
     </div>
 
     <script type="module" src="/tradeAndCollect.mjs"></script>

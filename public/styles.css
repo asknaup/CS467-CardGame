@@ -78,6 +78,53 @@
 }
 
 /* TradeAndCollect Page */
+#tradePopUpForm{
+    display: none;
+    position: absolute;
+    top: 30%;
+    left: 25%;
+    width: 50%;
+    padding: 2vw;
+    background-color: #a7d393;
+    border-radius: 10px;
+    z-index: 100;
+}
+
+.tradeButtons {
+    display:inline-block;
+    background-color: rgb(173, 124, 173);
+}
+
+#declineTradeButton{
+    background-color: rgb(255, 0, 76);
+}
+
+#otherTradedCardsTitle, #userTradedCardsTitle{
+    font-size: 1em;
+    padding-bottom: .5em;
+    color: black;
+}
+
+#otherPlayerTradeCardSlots, #userTradeCardSlots{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+}
+
+#playerPerspective h2{
+    position: relative;
+    left: -6vw;
+    color: black;
+    font-size: 1em;
+    padding-bottom: .5em;
+}
+#otherPlayerDeck {
+    color: black;
+    width: 100%;
+    text-align: center;
+    margin: 1vw;
+}
+
 #stageArea{
     display: flex;
     flex-direction: row;
@@ -91,7 +138,7 @@
     position: relative;
     height: 20vw;
     color: grey;
-    z-index:  100;
+    z-index:  10;
     margin: 1vh 0vh;
 }
 
@@ -119,6 +166,17 @@
     text-align: center;
 }
 
+#otherPlayerTitle{
+    position: absolute;
+    top: 9vw;
+    width: 50%;
+    text-align: center;
+}
+
+#otherPlayerTitle h2{
+    color: rgb(173, 124, 173);
+}
+
 .userTopStageText {
     position: absolute;
     top: 2vw;
@@ -135,28 +193,40 @@
     text-align: center;
 }
 
-#userScrollDeck{
+#userTitle{
+    position: absolute;
+    top: 9vw;
+    right: 0vw;
+    width: 50%;
+    text-align: center;
+}
+
+#userTitle h2{
+    color: #a7d393;
+}
+
+#userScrollDeck, #otherScrollDeck{
     position: relative;
 }
 
-#userStartTradeButton {
+#startTradeButton {
     position: absolute;
     left: -6vw;
 }
 
-#userScrollLeft{
+#userScrollLeft, #otherScrollLeft{
     position: absolute;
     left: -3vw;
     top: 6vw;
 }
 
-#userScrollRight{
+#userScrollRight, #otherScrollRight{
     position: absolute;
     right: -3vw;
     top: 6vw;
 }
 
-#userCardSlots{
+#userCardSlots, #otherCardSlots{
     display: flex;
     flex-direction: row;
 }
