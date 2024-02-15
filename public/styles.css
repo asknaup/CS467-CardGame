@@ -131,7 +131,7 @@
     position: relative;
 }
 
-#otherStageArea, #userStageArea {
+.otherStageAreaClass, .userStageAreaClass {
     display: flex;
     flex-direction: row;
     width: 50%;
@@ -142,11 +142,11 @@
     margin: 1vh 0vh;
 }
 
-#otherStageArea {
+.otherStageAreaClass {
     border:  5px dashed grey;
 }
 
-#userStageArea{
+.userStageAreaClass {
     border-width: 5px 5px 5px 0px;
     border-style: dashed;
     border-color: grey;

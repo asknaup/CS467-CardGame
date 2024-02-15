@@ -27,12 +27,12 @@ function addScrollCardFunctionality(primaryIndex, playerObj, scrollCard){
         let cardData = playerObj.cardDict[primaryKey];
         if (cardData.isStaged == false){
             if(playerObj.stagedCardCount < 4){
-                if(playerObj.stageArea === "userStageArea"){
+                if(playerObj.stageAreaId === "userStageAreaId"){
                     scrollCard.style.border = "6px solid #65f76b";
                 }else{
                     scrollCard.style.border = "6px solid #f06cf0";
                 }
-                var stageArea = document.getElementById(playerObj.stageArea);
+                var stageArea = document.getElementById(playerObj.stageAreaId);
                 let stagedCard = createTradingCardWithId(cardData.primaryKey + playerObj.stagedCardName, cardData);
                 stagedCard.onclick = function(){addStagedCardFunctionality(primaryIndex, playerObj)};
                 stageArea.appendChild(stagedCard);
@@ -95,9 +95,11 @@ var exampleCards = [
 
 var numScrollCards = 8;
 let userObject = {primaryKeyArr: [], cardDict: {}, stagedCardCount: 0, startIndex: 0, endIndex: 7,newCardName: "userNewCard", 
-                    cardSlots: "userCardSlots", stageArea: "userStageArea", stagedCardName: "userStagedCard", cardsToBeTraded: []};
+                    cardSlots: "userCardSlots", stageAreaId: "userStageAreaId", stageAreaClass: "userStageAreaClass", 
+                    stagedCardName: "userStagedCard", cardsToBeTraded: []};
 let otherPlayerObj = {primaryKeyArr: [], cardDict: {}, stagedCardCount: 0, startIndex: 0, endIndex: 7, newCardName: "otherNewCard", 
-                    cardSlots: "otherCardSlots", stageArea: "otherStageArea", stagedCardName: "otherStagedCard", cardsToBeTraded: []};
+                    cardSlots: "otherCardSlots", stageAreaId: "otherStageAreaId", stageAreaClass: "otherStageAreaClass", 
+                    stagedCardName: "otherStagedCard", cardsToBeTraded: []};
 for (let index = 0; index<=33; index++){
     let numCards = exampleCards.length;
     let randomIndex = Math.floor(Math.random() * numCards);
@@ -116,8 +118,9 @@ for (let index = 0; index<=33; index++){
 }
 
 
-/* main code for tradeAndCollect */
+/*main code for tradeAndCollect */
 displayScrollCards(otherPlayerObj);
+
 var otherScrollRightButton = document.getElementById("otherScrollRight");
 otherScrollRightButton.addEventListener("click", () => {
     if (otherPlayerObj.endIndex < otherPlayerObj.primaryKeyArr.length - 1){
@@ -176,39 +179,37 @@ userScrollLeftButton.addEventListener("click", () => {
     }
 });
 
+
 /* trading code =============================================================================================== */
 
 function getStagedCards(userObj, otherPlayerObj){
     var stagedCardsToBeRemoved = [];
-    var userStageArea = document.getElementById(userObj.stageArea);
-    let userEndSubstring = userObj.stagedCardName;
-    userObj.cardsToBeTraded = [];
-    for(const userStagedCard of userStageArea.children){
-        let userStagedCardId = userStagedCard.id;
-        let userPrimaryKey = userStagedCard.id.substring(0, userStagedCardId.length - userEndSubstring.length)
-        userObj.cardsToBeTraded.push(userObj.cardDict[userPrimaryKey]);
-        //Theese lines below are temporary and is used for simulation purposes only
-        stagedCardsToBeRemoved.push(userStagedCardId)
-        var userCardObj = userObj.cardDict[userPrimaryKey];
-        userCardObj.isStaged = false;
-        displayScrollCards(userObj);
-    }
-    var otherStageArea = document.getElementById(otherPlayerObj.stageArea);
-    let otherEndSubstring = otherPlayerObj.stagedCardName;
     otherPlayerObj.cardsToBeTraded = [];
-    for(const otherStagedCard of otherStageArea.children){
+    var otherStageArea= document.getElementById(otherPlayerObj.stageAreaId);
+    for (const otherStagedCard of otherStageArea.children) {
         let otherStagedCardId = otherStagedCard.id;
-        let otherPrimaryKey = otherStagedCard.id.substring(0, otherStagedCardId.length - otherEndSubstring.length)
-        otherPlayerObj.cardsToBeTraded.push(otherPlayerObj.cardDict[otherPrimaryKey]);
+        let otherPrimaryKey = otherStagedCard.id.substring(0, otherStagedCardId.length - otherPlayerObj.stagedCardName.length);
+        let otherCardObj = otherPlayerObj.cardDict[otherPrimaryKey];
+        otherPlayerObj.cardsToBeTraded.push(otherCardObj);
         //The lines below are temporary and is used for simulation purposes only
-        stagedCardsToBeRemoved.push(otherStagedCardId)
-        var otherCardObj = otherPlayerObj.cardDict[otherPrimaryKey];
         otherCardObj.isStaged = false;
-        displayScrollCards(otherPlayerObj);
+        otherCardObj.stagedCardCount -= 1;
+        stagedCardsToBeRemoved.push(otherStagedCard);
+    }
+    userObj.cardsToBeTraded = [];
+    var userStageArea= document.getElementById(userObj.stageAreaId);
+    for (const userStagedCard of userStageArea.children) {
+        let userStagedCardId = userStagedCard.id;
+        let userPrimaryKey = userStagedCard.id.substring(0, userStagedCardId.length - userObj.stagedCardName.length);
+        let userCardObj = userObj.cardDict[userPrimaryKey];
+        userObj.cardsToBeTraded.push(userCardObj);
+        //The lines below are temporary and is used for simulation purposes only
+        userCardObj.isStaged = false;
+        userCardObj.stagedCardCount -= 1;
+        stagedCardsToBeRemoved.push(userStagedCard);
     }
     //These lines below are temporary and are used for simulation purposes only
-    for(let i = 0; i < stagedCardsToBeRemoved.length; i++){
-        var cardToBeRemoved = document.getElementById(stagedCardsToBeRemoved[i]);
+    for(const cardToBeRemoved of stagedCardsToBeRemoved){
         cardToBeRemoved.remove();
     }
 }
@@ -217,20 +218,9 @@ var startTradeButton = document.getElementById("startTradeButton");
 startTradeButton.addEventListener("click", () => {
     let tradePopUpForm = document.getElementById("tradePopUpForm");
     tradePopUpForm.style.display = "block";
-    getStagedCards(userObject, otherPlayerObj);
     var perspectiveText = document.getElementById("perspectiveTitle");
     perspectiveText.innerText = "Other Player's Perspective"
-    var otherPlayerTradeCardSlots = document.getElementById("otherPlayerTradeCardSlots");
-    for(let index = 0; index < otherPlayerObj.cardsToBeTraded.length; index++){
-        var otherCardObj = otherPlayerObj.cardsToBeTraded[index];
-        otherPlayerTradeCardSlots.appendChild(createTradingCardWithId(otherCardObj.primaryKey, otherCardObj));
-    }
-
-    var userTradeCardSlots = document.getElementById("userTradeCardSlots");
-    for(let index = 0; index < userObject.cardsToBeTraded.length; index++){
-        var userCardObj = userObject.cardsToBeTraded[index];
-        userTradeCardSlots.appendChild(createTradingCardWithId(userCardObj.primaryKey, userCardObj));
-    }
+    getStagedCards(userObject, otherPlayerObj);
 });
 
 var acceptTradeButton= document.getElementById("acceptTradeButton");
@@ -251,17 +241,17 @@ counterOfferTradeButton.addEventListener("click", () => {
     let tradePopUpForm = document.getElementById("tradePopUpForm");
     tradePopUpForm.style.display = "none";
 
-    var userStageArea = document.getElementById(userObject.stageArea);
+    var userStageArea = document.getElementById(userObject.stageAreaId);
     for(let index = 0; index < otherPlayerObj.cardsToBeTraded.length; index++){
         var otherCardObj = otherPlayerObj.cardsToBeTraded[index];
-        console.log(otherCardObj)
+        //console.log(otherCardObj)
         userStageArea.appendChild(createTradingCardWithId(otherCardObj.primaryKey, otherCardObj))
     }
     
-    var otherStageArea = document.getElementById(otherPlayerObj.stageArea);
+    var otherStageArea = document.getElementById(otherPlayerObj.stageAreaId);
     for(let index = 0; index < userObject.cardsToBeTraded.length; index++){
         var userCardObj = userObject.cardsToBeTraded[index];
-        console.log(userCardObj)
-        otherStageArea.appendChild(createTradingCardWIthId(userCardObj.primaryKey, userCardObj))
+        //console.log(userCardObj)
+        otherStageArea.appendChild(createTradingCardWithId(userCardObj.primaryKey, userCardObj))
     }
 });
