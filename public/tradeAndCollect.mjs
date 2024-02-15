@@ -66,7 +66,7 @@ function displayScrollCards(playerObj){
         scrollCard.classList.add(playerObj.newCardName);
         addScrollCardFunctionality(index, playerObj, scrollCard);
         if (cardData.isStaged == true){
-            if(playerObj.stageArea === "userStageArea"){
+            if(playerObj.stageAreaId === "userStageAreaId"){
                 scrollCard.style.border = "6px solid #65f76b";
             }else{
                 scrollCard.style.border = "6px solid #f06cf0";
@@ -77,6 +77,10 @@ function displayScrollCards(playerObj){
         cardSlots.appendChild(scrollCard);
     }
 }
+
+/* above are definitions
+========================================================================================================================
+below are hardcoded cards and the setup of event listeners */
 
 /* Create Example Dummy Cards */
 // Example cards data (you can add more)
@@ -212,6 +216,8 @@ function getStagedCards(userObj, otherPlayerObj){
     for(const cardToBeRemoved of stagedCardsToBeRemoved){
         cardToBeRemoved.remove();
     }
+    displayScrollCards(otherPlayerObj);
+    displayScrollCards(userObj);
 }
 
 var startTradeButton = document.getElementById("startTradeButton");
@@ -220,6 +226,8 @@ startTradeButton.addEventListener("click", () => {
     tradePopUpForm.style.display = "block";
     var perspectiveText = document.getElementById("perspectiveTitle");
     perspectiveText.innerText = "Other Player's Perspective"
+    perspectiveText.style.fontSize = "2em";
+    perspectiveText.style.color = "red";
     getStagedCards(userObject, otherPlayerObj);
 });
 
@@ -237,9 +245,7 @@ declineTradeButton.addEventListener("click", () => {
 
 var counterOfferTradeButton= document.getElementById("counterOfferTradeButton");
 counterOfferTradeButton.addEventListener("click", () => {
-    console.log("counter offer in action!!")
     let tradePopUpForm = document.getElementById("tradePopUpForm");
-    tradePopUpForm.style.display = "none";
 
     var userStageArea = document.getElementById(userObject.stageAreaId);
     for(let index = 0; index < otherPlayerObj.cardsToBeTraded.length; index++){
@@ -254,4 +260,5 @@ counterOfferTradeButton.addEventListener("click", () => {
         //console.log(userCardObj)
         otherStageArea.appendChild(createTradingCardWithId(userCardObj.primaryKey, userCardObj))
     }
+    tradePopUpForm.style.display = "none";
 });
