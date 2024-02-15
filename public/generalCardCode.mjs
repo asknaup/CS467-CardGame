@@ -66,3 +66,7 @@ export function createTradingCard(cardData) {
     return cardContainer;
     
 }
+
+export function createTradingCardWithId(id, cardData){
+    return createTradingCard(cardData);
+}
