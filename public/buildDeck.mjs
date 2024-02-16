@@ -1,69 +1,8 @@
-// Function to create a trading card
-function createTradingCard(cardData) {
+//TODO: dbfunc import statement killing off the card display for some reason
+// import dbFunc from './database/db-functions';
+import { createTradingCard } from "./generalCardCode.mjs";
 
-    // Card container
-    var cardContainer = document.createElement('div');
-    cardContainer.classList.add('card');
-
-    // Card content
-    var cardContent = document.createElement('div');
-    cardContent.classList.add('cardContent');
-
-    // Card header
-    var cardHeader = document.createElement('div');
-
-    var cardName = document.createElement('h2');
-    cardName.classList.add('cardName');
-    cardName.textContent = cardData.name;
-
-    cardHeader.appendChild(cardName);
-
-    // Card image
-    var cardImage = document.createElement('div');
-    cardImage.classList.add('cardImage');
-
-    var imageElement = document.createElement('img');
-    imageElement.src = cardData.image;
-    imageElement.alt = 'Card Image';
-
-    cardImage.appendChild(imageElement);
-
-    // Card details
-    var cardDetails = document.createElement('div');
-    cardDetails.classList.add('cardDetails');
-
-    var cardDescription = document.createElement('p');
-    cardDescription.classList.add('cardDescription');
-    cardDescription.textContent = cardData.description;
-
-    var additionalText = document.createElement('p');
-    additionalText.textContent = cardData.cardType; // Set additional text content
-
-    var attributesList = document.createElement('ul');
-    attributesList.classList.add('attributes');
-
-    // Iterate through card attributes to create list items
-    Object.keys(cardData.attributes).forEach(function (attribute) {
-        var listItem = document.createElement('li');
-        listItem.innerHTML = `<strong>${attribute}:</strong> ${cardData.attributes[attribute]}`;
-        attributesList.appendChild(listItem);
-    });
-
-    // Build card body
-    cardDetails.appendChild(cardDescription);
-    cardDetails.appendChild(additionalText);
-    cardDetails.appendChild(attributesList);
-
-    // Append elements to card content
-    cardContent.appendChild(cardHeader);
-    cardContent.appendChild(cardImage);
-    cardContent.appendChild(cardDetails);
-
-    // Append card content to card container
-    cardContainer.appendChild(cardContent);
-
-    return cardContainer;
-}
+//TODO: Fix reset button, doesn't work using generalCardCode for some reason
 
 // Example cards data (you can add more)
 var exampleCards = [
@@ -71,7 +10,7 @@ var exampleCards = [
         name: 'Goblin',
         image: 'images/goblin-willow-tree.jpg',
         description: 'A small forest goblin.',
-        additionalText: 'Creature',
+        cardType: 'Creature',
         attributes: {
             HP: 100,
             Attack: 50,
@@ -84,7 +23,7 @@ var exampleCards = [
         name: 'Fire Ball Scroll',
         image: 'images/dark-wizard.png',
         description: 'A powerful fire ball.',
-        additionalText: 'Spell',
+        cardType: 'Spell',
         attributes: {
             HP: 80,
             Attack: 60,
@@ -98,7 +37,7 @@ var exampleCards = [
         name: 'Ice Dragon',
         image: 'images/ice-dragon.png',
         description: 'An ice dragon from the North.',
-        additionalText: 'Creature',
+        cardType: 'Creature',
         attributes: {
             HP: 50,
             Attack: 20,
@@ -111,7 +50,7 @@ var exampleCards = [
         name: 'Goblin 2!!',
         image: 'images/goblin-willow-tree.jpg',
         description: 'A small forest goblin.',
-        additionalText: 'Creature',
+        cardType: 'Creature',
         attributes: {
             HP: 100,
             Attack: 50,
@@ -124,7 +63,7 @@ var exampleCards = [
         name: 'Fire Ball Scroll 2!!',
         image: 'images/ice-dragon.png',
         description: 'A powerful fire ball.',
-        additionalText: 'Spell',
+        cardType: 'Spell',
         attributes: {
             HP: 80,
             Attack: 60,
@@ -138,7 +77,7 @@ var exampleCards = [
         name: 'Ice Dragon 2!!',
         image: 'images/ice-dragon.png',
         description: 'An ice dragon from the North.',
-        additionalText: 'Creature',
+        cardType: 'Creature',
         attributes: {
             HP: 50,
             Attack: 20,
@@ -151,7 +90,7 @@ var exampleCards = [
         name: 'Goblin 3!!!',
         image: 'images/dark-wizard.png',
         description: 'A small forest goblin.',
-        additionalText: 'Creature',
+        cardType: 'Creature',
         attributes: {
             HP: 100,
             Attack: 50,
@@ -164,7 +103,7 @@ var exampleCards = [
         name: 'Fire Ball Scroll 3!!!',
         image: 'images/dark-wizard.png',
         description: 'A powerful fire ball.',
-        additionalText: 'Spell',
+        cardType: 'Spell',
         attributes: {
             HP: 80,
             Attack: 60,
@@ -178,7 +117,7 @@ var exampleCards = [
         name: 'Ice Dragon 3!!!',
         image: 'images/goblin-willow-tree.jpg',
         description: 'An ice dragon from the North.',
-        additionalText: 'Creature',
+        cardType: 'Creature',
         attributes: {
             HP: 50,
             Attack: 20,
@@ -188,6 +127,9 @@ var exampleCards = [
         },
     },
 ];
+
+// var exampleCards = dbFunc.getCardIdByUser(1001);
+// console.log(exampleCards);
 
 // Card container element from the HTML
 var cardContainer = document.getElementById('cardContainer');
@@ -328,7 +270,7 @@ function resetGame() {
     clearStagingArea();
 
     // Reset the exampleCards array (replace with db link)
-    exampleCards = [...initialExampleCards];
+    // exampleCards = [...initialExampleCards];
 
     // Redisplay the cards in the carousel
     displayCards(currentIndex);

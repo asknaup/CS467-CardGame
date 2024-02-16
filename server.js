@@ -57,6 +57,10 @@ ROUTES
 // TODO homepage that's not the welcome page
 // TODO Need better navigation -> navigation to card generation page as maybe a subclass under make. route to make game, make card
 
+app.get('/favico.ico', (req, res) => {
+  res.sendStatus(404);
+});
+
 app.get('/', (req, res) => {                        // This code needs work
   // Pull session user
   const user = req.session.user
@@ -114,12 +118,12 @@ app.get('/userDeck/:username', (req, res) => {
 app.get('/gameGenPage', async (req, res) => {
   // Show user logged in user profile
   // const user = req.session.user;
-  user = {userId:1001, username:'admin'}  // FIXME replace when ready
+  user = { userId: 1001, username: 'admin' }  // FIXME replace when ready
   try {
     if (user) {
       const userDecks = await dbFunc.gatherUserDecks(user.userId);
       console.log(userDecks)
-      res.render('gameGenPage', { showLogoutButton: true, decks: userDecks})
+      res.render('gameGenPage', { showLogoutButton: true, decks: userDecks })
     } else {
       res.render('gameGenPage', { showLogoutButton: false })
     }
@@ -140,10 +144,14 @@ app.get('/buildDeck', (req, res) => {
 });
 
 // Add to deck, delete, deck stats
-app.get('/currentDeck', (req, res) => {
+app.get('/currentDeck', async (req, res) => {
   // Show user logged in user profile
-  const user = req.session.user;
+  // FIXME
+  const user = {userId: 1001, username: 'admin'};
+  // const user = req.session.user;
   if (user) {
+    var exampleCards = await dbFunc.getCardIdByUser(1001);
+    console.log(exampleCards);
     res.render('currentDeck', { showLogoutButton: true })
   } else {
     res.render('currentDeck', { showLogoutButton: false })
@@ -255,9 +263,9 @@ app.get('/game/', async (req, res) => {
   // const user = req.session.user;
   // const deck = req.session.deck;
   // const game = req.session.game;
-  const user = {userId: 1001, username: 'admin'}
-  const deck = {deckId: 7001}
-  const game = {ruleSet: 'ruleSet1', gameId: 1001}
+  const user = { userId: 1001, username: 'admin' }
+  const deck = { deckId: 7001 }
+  const game = { ruleSet: 'ruleSet1', gameId: 1001 }
   // TODO game handlebars file
   // TODO game logic
   if (user) {
@@ -294,7 +302,7 @@ app.post('/newUserPost', async (req, res) => {
         res.render("newUser", {
           usnError: 'Username already in use. Please try another.'
         });
-      } else if (errCodeObject === "email"){
+      } else if (errCodeObject === "email") {
         res.render("newUser", {
           emailError: 'Email already in use. Please try another.'
         });
@@ -313,7 +321,7 @@ app.post('/login', async (req, res) => {
     const enteredPassword = req.body.passwordWpp;
     const user = await dbFunc.authenticateUser(username, enteredPassword);
     if (user) {
-      req.session.user = { userId: user.userId, username: user.username};
+      req.session.user = { userId: user.userId, username: user.username };
 
       // Redirects to userProfile
       res.redirect('userProfile');
@@ -340,16 +348,16 @@ app.post('/generateCard', async (req, res) => {
       // const attr = cardGen.generateAiForCard(req.body.inputAiImage);
       const cardType = req.body.cardType;
       const cardName = req.body.cardName;
-      const manaCost = req.body.manaCost; 
-      const rarity = req.body.rarity;     
-      
+      const manaCost = req.body.manaCost;
+      const rarity = req.body.rarity;
+
       console.log(cardType, cardName, manaCost, rarity);
       const cardId = await dbFunc.insertCard(cardName, cardType, user.userId, rarity, manaCost);    // returns cardId
       console.log(cardId)
       if (cardType === "Creature") {
         const creatureDefense = req.body.creatureDefense;
         const creatureAttack = req.body.creatureAttack;
-        
+
         await dbFunc.insertCreatureCard(cardId, creatureAttack, creatureDefense);
       } else {
         const spellType = req.body.spellType;
@@ -360,7 +368,7 @@ app.post('/generateCard', async (req, res) => {
 
         await dbFunc.insertSpellCard(cardId, spellType, spellAbility, spellAttack, spellDefense, utility);
       }
-      
+
       // TODO (JEREMY) image URL generation
       // const imagePath = await cardGen.generateImageForCard(attr, object1);
       // Insert URL into db
@@ -370,7 +378,7 @@ app.post('/generateCard', async (req, res) => {
       res.redirect('/cardGenPage');
     } else {
       // Authentication failed, render 'cardGenPage' with an error message
-      res.render('cardGenPage', {error: "Sorry! You cannot create a card without having an account"})
+      res.render('cardGenPage', { error: "Sorry! You cannot create a card without having an account" })
     }
   } catch (err) {
     // Handle errors that may occur during card generation, database interaction, or rendering
@@ -385,8 +393,8 @@ app.post('/gameGenerationPageAction', async (req, res) => {
       const userDeckId = req.body.userDeckSelect;
 
       // save deck and game inforamtion
-      req.session.deck = {deckId: userDeckId}
-      req.session.game = {ruleSet: ruleSet, gameId: 1001}  // FIXME once table has been generated and returned gameId
+      req.session.deck = { deckId: userDeckId }
+      req.session.game = { ruleSet: ruleSet, gameId: 1001 }  // FIXME once table has been generated and returned gameId
 
       console.log(ruleSet);
       console.log(userDeckId);

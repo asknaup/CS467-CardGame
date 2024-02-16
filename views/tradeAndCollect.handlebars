@@ -4,24 +4,66 @@
 <head>
   {{!-- <meta charset="utf-8" /> --}}
   {{!-- <meta name="viewport" content="width=device-width, intial-scale=1.0"> --}}
-  <title>Create New Game</title>
-  <link rel="stylesheet" type="text/css" href="/global.css">
+    <title>Create New Game</title>
+    <link rel="stylesheet" type="text/css" href="/global.css">
     <link rel="stylesheet" type="text/css" href="/styles.css">
 </head>
 
 <body>
-    <div class="rowZero">
-        <div id="stageAreaZero">
-            <div class="topStageText">Click Card To Stage It Here</div>
-            <div class="bottomStageText">Click Card To Stage It Here</div>
+    <div class="userRow">
+        <h1 id="otherPlayerDeck">Other Player's Deck</h1>
+        <div id="otherScrollDeck">
+            <button type="button" id="otherScrollLeft"> &lt; </button>
+            <button type="button" id="otherScrollRight"> &gt; </button>
+            <div id="otherCardSlots"></div>
         </div>
-        <div id="scrollDeck">
-            <button type="button" id="scrollLeft"> &lt; </button>
-            <button type="button" id="scrollRight"> &gt; </button>
-            <div id="cardSlots"></div>
+
+        <div id="stageArea">
+            <div id="otherPlayerTitle"><h2>Other Player's Stage Area</h2></div>
+            <div class="otherTopStageText">Click Card To Stage It Here</div>
+            <div class="otherBottomStageText">Click Card To Stage It Here</div>
+            <div id="otherStageAreaId" class="otherStageAreaClass"></div>
+
+            <div id="userTitle"><h2>User's Stage Area</h2></div>
+            <div class="userTopStageText">Click Card To Stage It Here</div>
+            <div class="userBottomStageText">Click Card To Stage It Here</div>
+            <div id="userStageAreaId" class="userStageAreaClass"></div>
         </div>
-    </div>
+
+        <div id="userScrollDeck">
+            <button type="button" id="startTradeButton"> START<br>TRADE</button>
+            <button type="button" id="userScrollLeft"> &lt; </button>
+            <button type="button" id="userScrollRight"> &gt; </button>
+            <div id="userCardSlots"></div>
+        </div>
+        <h1 id="userDeck">User's Deck</h1>
     </div>
 
-    <script src="/tradeAndCollect.js"></script>
+    <div id="tradePopUpForm">
+        <form class="tradeForm">
+            <h1 id="tradeRequest">Trade Request </h1>
+            <h3 id="noteToProgrammers">
+                NOTE: The start-trade button would be clicked by the user. 
+                But this pop up would appear on the other player's screen. And
+                NOT on the screen of the player who clicked the start-trade button
+            </h3>
+                <div id="tradeSection">
+                    <div id="otherPlayerTradeSection">
+                        <h2 id="otherTradedCardsTitle">Other Player's Cards:</h2>
+                        <div id="otherPlayerTradeSlots"></div>
+                    </div>
+                    <div id="userTradeSection">
+                        <h2 id="userTradedCardsTitle">User's Cards:</h2>
+                        <div id="userTradeSlots"></div>
+                    </div>
+                </div>
+                <div id="tradeButtonSection">
+                    <button type="button" class="tradeButtons" id="acceptTradeButton">Accept</button>
+                    <button type ="button" class="tradeButtons" id="declineTradeButton">Decline</button>
+                    <button type="button" class="tradeButtons" id="counterOfferTradeButton">Counter Offer</button>
+                </div>
+        </form>
+    </div>
+
+    <script type="module" src="/tradeAndCollect.mjs"></script>
 </body>
