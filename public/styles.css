@@ -81,42 +81,51 @@
 #tradePopUpForm{
     display: none;
     position: absolute;
-    top: 30%;
-    left: 25%;
-    width: 50%;
-    padding: 2vw;
-    background-color: #a7d393;
+    top: 33%;
+    left: 6%;
+    width: 88%;
+    height: 35%;
+    padding: 1vh;
+    margin: 0vh;
+    background-color: rgb(177, 200, 204);
     border-radius: 10px;
     z-index: 100;
 }
 
-.tradeButtons {
-    display:inline-block;
-    background-color: rgb(173, 124, 173);
+#tradeRequest{
+    padding: 1vw;
+    margin: 0vw;
+}
+
+#otherPlayerTradeSlots, #userTradeSlots{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+}
+
+#tradeButtonSection {
+    position: absolute;
+    bottom: 1vh;
+}
+
+#otherPlayerTradeSection, #userTradeSection{
+    display: inline-block;
+    width: 49%;
+}
+
+.tradeButtons{
+    display: inline-block;
+    background-color: #4caf50;
 }
 
 #declineTradeButton{
-    background-color: rgb(255, 0, 76);
+    background-color: rgb(196, 63, 63);
 }
 
 #otherTradedCardsTitle, #userTradedCardsTitle{
     font-size: 1em;
     padding-bottom: .5em;
     color: black;
-}
-
-#otherPlayerTradeCardSlots, #userTradeCardSlots{
-    position: relative;
-    display: flex;
-    flex-direction: row;
-}
-
-#playerPerspective h2{
-    position: relative;
-    left: -6vw;
-    color: black;
-    font-size: 1em;
-    padding-bottom: .5em;
 }
 
 #stageArea{

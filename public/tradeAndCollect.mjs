@@ -98,7 +98,7 @@ var exampleCards = [
 ];
 
 var numScrollCards = 8;
-let userObject = {primaryKeyArr: [], cardDict: {}, stagedCardCount: 0, startIndex: 0, endIndex: 7,newCardName: "userNewCard", 
+let userObj = {primaryKeyArr: [], cardDict: {}, stagedCardCount: 0, startIndex: 0, endIndex: 7,newCardName: "userNewCard", 
                     cardSlots: "userCardSlots", stageAreaId: "userStageAreaId", stageAreaClass: "userStageAreaClass", 
                     stagedCardName: "userStagedCard", cardsToBeTraded: []};
 let otherPlayerObj = {primaryKeyArr: [], cardDict: {}, stagedCardCount: 0, startIndex: 0, endIndex: 7, newCardName: "otherNewCard", 
@@ -109,8 +109,8 @@ for (let index = 0; index<=33; index++){
     let randomIndex = Math.floor(Math.random() * numCards);
     let cardData = exampleCards[randomIndex];
     let uniquePrimaryKey = cardData.primaryKey + index.toString()
-    userObject.primaryKeyArr.push(uniquePrimaryKey);
-    userObject.cardDict[uniquePrimaryKey] = new Card(uniquePrimaryKey, cardData.cardName, cardData.image,
+    userObj.primaryKeyArr.push(uniquePrimaryKey);
+    userObj.cardDict[uniquePrimaryKey] = new Card(uniquePrimaryKey, cardData.cardName, cardData.image,
                 cardData.description, cardData.cardType, cardData.attributes);
     // now create other player's card set
     let otherRandomIndex = (randomIndex + 1) %  exampleCards.length;
@@ -154,32 +154,32 @@ otherScrollLeftButton.addEventListener("click", () => {
 });
 
 
-displayScrollCards(userObject);
+displayScrollCards(userObj);
 var userScrollRightButton = document.getElementById("userScrollRight");
 userScrollRightButton.addEventListener("click", () => {
-    if (userObject.endIndex < userObject.primaryKeyArr.length - 1){
-        userObject.startIndex = userObject.endIndex + 1;
-        userObject.endIndex += numScrollCards;
-        if (userObject.endIndex > userObject.primaryKeyArr.length - 1){
-            userObject.endIndex = userObject.primaryKeyArr.length - 1
+    if (userObj.endIndex < userObj.primaryKeyArr.length - 1){
+        userObj.startIndex = userObj.endIndex + 1;
+        userObj.endIndex += numScrollCards;
+        if (userObj.endIndex > userObj.primaryKeyArr.length - 1){
+            userObj.endIndex = userObj.primaryKeyArr.length - 1
         }
-        console.log(userObject.startIndex);
-        console.log(userObject.endIndex);
-        displayScrollCards(userObject);
+        console.log(userObj.startIndex);
+        console.log(userObj.endIndex);
+        displayScrollCards(userObj);
     }
 });
 
 var userScrollLeftButton = document.getElementById("userScrollLeft");
 userScrollLeftButton.addEventListener("click", () => {
-    if (userObject.startIndex > 0){
-        userObject.endIndex = userObject.startIndex - 1;
-        userObject.startIndex -= numScrollCards;
-        if(userObject.startIndex < 0){
-            userObject.startIndex = 0;
+    if (userObj.startIndex > 0){
+        userObj.endIndex = userObj.startIndex - 1;
+        userObj.startIndex -= numScrollCards;
+        if(userObj.startIndex < 0){
+            userObj.startIndex = 0;
         }
-        console.log(userObject.startIndex);
-        console.log(userObject.endIndex);
-        displayScrollCards(userObject);
+        console.log(userObj.startIndex);
+        console.log(userObj.endIndex);
+        displayScrollCards(userObj);
     }
 });
 
@@ -224,11 +224,18 @@ var startTradeButton = document.getElementById("startTradeButton");
 startTradeButton.addEventListener("click", () => {
     let tradePopUpForm = document.getElementById("tradePopUpForm");
     tradePopUpForm.style.display = "block";
-    var perspectiveText = document.getElementById("perspectiveTitle");
-    perspectiveText.innerText = "Other Player's Perspective"
-    perspectiveText.style.fontSize = "2em";
-    perspectiveText.style.color = "red";
-    getStagedCards(userObject, otherPlayerObj);
+    getStagedCards(userObj, otherPlayerObj);
+    var otherPlayerTradeSlots = document.getElementById("otherPlayerTradeSlots");
+    for(let index=0; index < otherPlayerObj.cardsToBeTraded.length; index++){
+        let otherCardObj = otherPlayerObj.cardsToBeTraded[index];
+        otherPlayerTradeSlots.appendChild(createTradingCardWithId(otherCardObj.id, otherCardObj));
+    }
+    var userTradeSlots = document.getElementById("userTradeSlots");
+    for(let index=0; index < userObj.cardsToBeTraded.length; index++){
+        let userCardObj = userObj.cardsToBeTraded[index];
+        userTradeSlots.appendChild(createTradingCardWithId(userCardObj.id, userCardObj));
+    }
+
 });
 
 var acceptTradeButton= document.getElementById("acceptTradeButton");
@@ -247,18 +254,18 @@ var counterOfferTradeButton= document.getElementById("counterOfferTradeButton");
 counterOfferTradeButton.addEventListener("click", () => {
     let tradePopUpForm = document.getElementById("tradePopUpForm");
 
-    var userStageArea = document.getElementById(userObject.stageAreaId);
+    var otherStageArea = document.getElementById(otherPlayerObj.stageAreaId);
     for(let index = 0; index < otherPlayerObj.cardsToBeTraded.length; index++){
         var otherCardObj = otherPlayerObj.cardsToBeTraded[index];
         //console.log(otherCardObj)
-        userStageArea.appendChild(createTradingCardWithId(otherCardObj.primaryKey, otherCardObj))
+        otherStageArea.appendChild(createTradingCardWithId(otherCardObj.primaryKey, otherCardObj))
     }
     
-    var otherStageArea = document.getElementById(otherPlayerObj.stageAreaId);
-    for(let index = 0; index < userObject.cardsToBeTraded.length; index++){
-        var userCardObj = userObject.cardsToBeTraded[index];
+    var userStageArea = document.getElementById(userObj.stageAreaId);
+    for(let index = 0; index < userObj.cardsToBeTraded.length; index++){
+        var userCardObj = userObj.cardsToBeTraded[index];
         //console.log(userCardObj)
-        otherStageArea.appendChild(createTradingCardWithId(userCardObj.primaryKey, userCardObj))
+        userStageArea.appendChild(createTradingCardWithId(userCardObj.primaryKey, userCardObj))
     }
     tradePopUpForm.style.display = "none";
 });

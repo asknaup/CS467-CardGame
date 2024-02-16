@@ -31,10 +31,7 @@
         </div>
 
         <div id="userScrollDeck">
-            <div id="playerPerspective" >
-                <h2 id="perspectiveTitle">User's Perspective</h2>
-                <button type="button" id="startTradeButton"> START<br>TRADE</button>
-            </div>
+            <button type="button" id="startTradeButton"> START<br>TRADE</button>
             <button type="button" id="userScrollLeft"> &lt; </button>
             <button type="button" id="userScrollRight"> &gt; </button>
             <div id="userCardSlots"></div>
@@ -44,14 +41,22 @@
 
     <div id="tradePopUpForm">
         <form class="tradeForm">
-            <h1>Trade Request </h1>
-                <h2 id="otherTradedCardsTitle">Other Player's Cards:</h2>
-                <div id="otherPlayerTradeCardSlots"></div>
-                <h2 id="userTradedCardsTitle">User's Cards:</h2>
-                <div id="userTradeCardSlots"></div>
-                <button type="button" class="tradeButtons" id="acceptTradeButton">Accept</button>
-                <button type ="button" class="tradeButtons" id="declineTradeButton">Decline</button>
-                <button type="button" class="tradeButtons" id="counterOfferTradeButton">Counter Offer</button>
+            <h1 id="tradeRequest">Trade Request </h1>
+                <div id="tradeSection">
+                    <div id="otherPlayerTradeSection">
+                        <h2 id="otherTradedCardsTitle">Other Player's Cards:</h2>
+                        <div id="otherPlayerTradeSlots"></div>
+                    </div>
+                    <div id="userTradeSection">
+                        <h2 id="userTradedCardsTitle">User's Cards:</h2>
+                        <div id="userTradeSlots"></div>
+                    </div>
+                </div>
+                <div id="tradeButtonSection">
+                    <button type="button" class="tradeButtons" id="acceptTradeButton">Accept</button>
+                    <button type ="button" class="tradeButtons" id="declineTradeButton">Decline</button>
+                    <button type="button" class="tradeButtons" id="counterOfferTradeButton">Counter Offer</button>
+                </div>
         </form>
     </div>
 
