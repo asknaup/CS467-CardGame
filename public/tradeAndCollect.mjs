@@ -198,39 +198,60 @@ function getStagedCards(userObj, otherPlayerObj){
     return stagedCardsDict;
 }
 
-function createPopUpForm(userObj, otherPlayerObj){
+function createPopUpForm(userObj, otherPlayerObj, stagedCardsDict){
     let tradePopUpForm = document.getElementById("tradePopUpForm");
     tradePopUpForm.style.display = "block";
+    // Clear out old card elements
+    var otherPlayerTradeCardSlots = document.getElementById("otherPlayerTradeSlots");
+    while(otherPlayerTradeCardSlots.firstChild){
+        otherPlayerTradeCardSlots.removeChild(otherPlayerTradeCardSlots.firstChild);
+    }
+    // Clear out old card elements
+    var userTradeCardSlots = document.getElementById("userTradeSlots");
+    while(userTradeCardSlots.firstChild){
+        userTradeCardSlots.removeChild(userTradeCardSlots.firstChild);
+    }
+    // move card element from stagedArea to pop up form
+    let otherPlayerTradeSlots = document.getElementById("otherPlayerTradeSlots");
+    let otherStagedCardsArr = stagedCardsDict["otherStagedCardsArr"];
+    console.log(otherStagedCardsArr)
+    for (let index = 0; index < otherStagedCardsArr.length; index++) {
+        otherPlayerTradeSlots.appendChild(otherStagedCardsArr[index]);
+    }
+    // move card element from stagedArea to pop up form
+    let userTradeSlots = document.getElementById("userTradeSlots");
+    let userStagedCardsArr = stagedCardsDict["userStagedCardsArr"];
+    console.log(userStagedCardsArr)
+    for(let index = 0; index < userStagedCardsArr.length; index++){
+        userTradeSlots.appendChild(userStagedCardsArr[index]);
+    }
 }
 
 function simulateTrade(userObj, otherPlayerObj){
     let stagedCardsDict = getStagedCards(userObj, otherPlayerObj);
     let otherStagedCardsArr = stagedCardsDict["otherStagedCardsArr"];
     for (let index = 0; index < otherStagedCardsArr.length; index++) {
-        // remove isStaged status from cardObj and unhighlight it
+        // remove isStaged status from cardObj and unhighlight its html card element
         let otherStagedCardId = otherStagedCardsArr[index].id;
         let otherPrimaryKey = otherStagedCardId.substring(0, otherStagedCardId.length - otherPlayerObj.stagedCardName.length);
         let otherStagedCardObj = otherPlayerObj.cardDict[otherPrimaryKey];
         otherStagedCardObj.isStaged = false;
         otherPlayerObj.stagedCardCount -= 1;
-        // move card element from stagedArea to pop up form
-        let otherPlayerTradeSlots = document.getElementById("otherPlayerTradeSlots");
-        otherPlayerTradeSlots.appendChild(otherStagedCardsArr[index]);
-
+        var scrollCard = document.getElementById(otherPrimaryKey);
+        highlightCard(false, otherPlayerObj, scrollCard);
     }
     let userStagedCardsArr = stagedCardsDict["userStagedCardsArr"];
     for (let index = 0; index < userStagedCardsArr.length; index++) {
-         // remove isStaged status from cardObj and unhighlight it
+         // remove isStaged status from cardObj and unhighlight its html card element
         let userStagedCardId = userStagedCardsArr[index].id;
         let userPrimaryKey = userStagedCardId.substring(0, userStagedCardId.length - userObj.stagedCardName.length);
         let userStagedCardObj = userObj.cardDict[userPrimaryKey];
         userStagedCardObj.isStaged = false;
         userObj.stagedCardCount -= 1;
-        // move card element from stagedArea to pop up form
-        let userTradeSlots = document.getElementById("userTradeSlots");
-        userTradeSlots.appendChild(userStagedCardsArr[index]);
+        var scrollCard = document.getElementById(userPrimaryKey);
+        highlightCard(false, userObj, scrollCard);
     }
-    createPopUpForm(userObj, otherPlayerObj);
+    createPopUpForm(userObj, otherPlayerObj, stagedCardsDict);
 }
 
 
