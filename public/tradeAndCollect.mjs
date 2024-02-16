@@ -212,18 +212,22 @@ function createPopUpForm(userObj, otherPlayerObj, stagedCardsDict){
         userTradeCardSlots.removeChild(userTradeCardSlots.firstChild);
     }
     // move card element from stagedArea to pop up form
-    let otherPlayerTradeSlots = document.getElementById("otherPlayerTradeSlots");
+    /* NOTE: the cards from otherStageArea get moved to userTradeSlots
+        because this it pop up form is on other player's computer
+    */
+    let userTradeSlots = document.getElementById("userTradeSlots");
     let otherStagedCardsArr = stagedCardsDict["otherStagedCardsArr"];
-    console.log(otherStagedCardsArr)
     for (let index = 0; index < otherStagedCardsArr.length; index++) {
-        otherPlayerTradeSlots.appendChild(otherStagedCardsArr[index]);
+        userTradeSlots.appendChild(otherStagedCardsArr[index]);
     }
     // move card element from stagedArea to pop up form
-    let userTradeSlots = document.getElementById("userTradeSlots");
+    /* NOTE: the cards from userStageArea get moved to otherPlayerTradeSlots
+        because this it pop up form is on other player's computer
+    */
+    let otherPlayerTradeSlots = document.getElementById("otherPlayerTradeSlots");
     let userStagedCardsArr = stagedCardsDict["userStagedCardsArr"];
-    console.log(userStagedCardsArr)
     for(let index = 0; index < userStagedCardsArr.length; index++){
-        userTradeSlots.appendChild(userStagedCardsArr[index]);
+        otherPlayerTradeSlots.appendChild(userStagedCardsArr[index]);
     }
 }
 
