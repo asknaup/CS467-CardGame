@@ -101,12 +101,6 @@
     margin: 0vw;
 }
 
-#otherPlayerTradeSlots, #userTradeSlots{
-    position: relative;
-    display: flex;
-    flex-direction: row;
-}
-
 #tradeButtonSection {
     position: absolute;
     bottom: 1vh;
@@ -115,6 +109,12 @@
 #otherPlayerTradeSection, #userTradeSection{
     display: inline-block;
     width: 49%;
+}
+
+#otherPlayerTradeSlots, #userTradeSlots{
+    position: relative;
+    display: flex;
+    flex-direction: row;
 }
 
 .tradeButtons{
@@ -166,28 +166,17 @@
     text-align: center;
 }
 
-.otherBottomStageText {
-    position: absolute;
-    bottom: 2vw;
-    width: 50%;
-    text-align: center;
-}
-
-#otherPlayerTitle{
-    position: absolute;
-    top: 9vw;
-    width: 50%;
-    text-align: center;
-}
-
-#otherPlayerTitle h2{
-    color: rgb(173, 124, 173);
-}
-
 .userTopStageText {
     position: absolute;
     top: 2vw;
     right: 0vw;
+    width: 50%;
+    text-align: center;
+}
+
+.otherBottomStageText {
+    position: absolute;
+    bottom: 2vw;
     width: 50%;
     text-align: center;
 }
@@ -200,12 +189,23 @@
     text-align: center;
 }
 
+#otherPlayerTitle{
+    position: absolute;
+    top: 9vw;
+    width: 50%;
+    text-align: center;
+}
+
 #userTitle{
     position: absolute;
     top: 9vw;
     right: 0vw;
     width: 50%;
     text-align: center;
+}
+
+#otherPlayerTitle h2{
+    color: rgb(173, 124, 173);
 }
 
 #userTitle h2{
@@ -226,14 +226,14 @@
     margin: 1vw;
 }
 
-#userScrollDeck, #otherScrollDeck{
-    position: relative;
-}
-
 #startTradeButton {
     position: absolute;
     left: -6vw;
     top: -12vw;
+}
+
+#userScrollDeck, #otherScrollDeck{
+    position: relative;
 }
 
 #userScrollLeft, #otherScrollLeft{
