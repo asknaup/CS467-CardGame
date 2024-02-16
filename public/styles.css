@@ -78,13 +78,17 @@
 }
 
 /* TradeAndCollect Page */
+#noteToProgrammers{
+    padding: 2vh;
+}
+
 #tradePopUpForm{
     display: none;
     position: absolute;
     top: 33%;
     left: 6%;
     width: 88%;
-    height: 35%;
+    height: 38%;
     padding: 1vh;
     margin: 0vh;
     background-color: rgb(177, 200, 204);
