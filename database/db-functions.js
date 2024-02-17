@@ -441,7 +441,6 @@ function insertNewDeck(userId, deckName, cardList) {
     });
 }
 
-
 module.exports.insertNewUserIntoDB = insertNewUserIntoDB;
 module.exports.getUserProfile = getUserProfile;
 module.exports.getUserId = getUserId;

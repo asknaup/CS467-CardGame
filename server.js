@@ -15,7 +15,6 @@ const port = 3000;
 
 const db = require('./database/db-connector');
 const dbFunc = require('./database/db-functions')
-const cardGen = require('./database/card-gen');
 const gameGen = require('./database/game-gen');
 const game1 = require('./database/game-play1')
 const card = require('./database/card');

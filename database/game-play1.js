@@ -36,8 +36,6 @@ function shuffleDeck(deck) {
     return deck;
 }
 
-
-
 // Initalize Hand with 7 cards
 function drawCardsPerTurn(deck, hand) {  
     const updatedHand = [...hand]; // Create a copy of the hand array
