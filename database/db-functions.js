@@ -213,7 +213,6 @@ function createNewCollection(userId) {
     });
 }
 
-
 function insertCard(name, type, user, rarity, manaCost) {
     return new Promise((resolve, reject) => {
         db.pool.query('START TRANSACTION', (startTransactionErr) => {
@@ -303,6 +302,19 @@ function insertCardUrl(cardId, url) {
             }
         });
     });
+}
+
+function getCardInfo(cardId) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM cards where cardId = ?'
+        db.pool.query(query, cardId, (selectErr, selectResult) => {
+            if (selectErr) {
+                reject(selectErr);
+            } else {
+                resolve(selectResult);
+            }
+        })
+    }); 
 }
 
 // Get all decks from user
@@ -429,9 +441,6 @@ function insertNewDeck(userId, deckName, cardList) {
     });
 }
 
-
-
-
 module.exports.insertNewUserIntoDB = insertNewUserIntoDB;
 module.exports.getUserProfile = getUserProfile;
 module.exports.getUserId = getUserId;
@@ -440,6 +449,7 @@ module.exports.insertNewUser = insertNewUser;
 module.exports.authenticateUser = authenticateUser;
 module.exports.createNewCollection = createNewCollection;
 module.exports.insertCard = insertCard;
+module.exports.getCardInfo = getCardInfo;
 module.exports.insertCreatureCard = insertCreatureCard;
 module.exports.insertSpellCard = insertSpellCard;
 module.exports.insertCardUrl = insertCardUrl;
