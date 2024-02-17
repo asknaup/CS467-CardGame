@@ -447,3 +447,4 @@ module.exports.gatherUserDecks = gatherUserDecks;
 module.exports.getUserDeck = getUserDeck;
 module.exports.createNewGame = createNewGame;
 module.exports.getCardIdByUser = getCardIdByUser;
+module.exports.insertNewDeck = insertNewDeck;
