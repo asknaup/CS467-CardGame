@@ -238,8 +238,8 @@ function simulateTrade(userObj, otherPlayerObj){
         // remove isStaged status from cardObj and unhighlight its html card element
         let otherStagedCardId = otherStagedCardsArr[index].id;
         let otherPrimaryKey = otherStagedCardId.substring(0, otherStagedCardId.length - otherPlayerObj.stagedCardName.length);
-        let otherStagedCardObj = otherPlayerObj.cardDict[otherPrimaryKey];
-        otherStagedCardObj.isStaged = false;
+        let otherScrollCardObj = otherPlayerObj.cardDict[otherPrimaryKey];
+        otherScrollCardObj.isStaged = false;
         otherPlayerObj.stagedCardCount -= 1;
         var scrollCard = document.getElementById(otherPrimaryKey);
         highlightCard(false, otherPlayerObj, scrollCard);
@@ -249,8 +249,8 @@ function simulateTrade(userObj, otherPlayerObj){
          // remove isStaged status from cardObj and unhighlight its html card element
         let userStagedCardId = userStagedCardsArr[index].id;
         let userPrimaryKey = userStagedCardId.substring(0, userStagedCardId.length - userObj.stagedCardName.length);
-        let userStagedCardObj = userObj.cardDict[userPrimaryKey];
-        userStagedCardObj.isStaged = false;
+        let userScrollCardObj = userObj.cardDict[userPrimaryKey];
+        userScrollCardObj.isStaged = false;
         userObj.stagedCardCount -= 1;
         var scrollCard = document.getElementById(userPrimaryKey);
         highlightCard(false, userObj, scrollCard);
