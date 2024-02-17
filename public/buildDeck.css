@@ -1,13 +1,8 @@
 #cardList {
     border: 1px solid #ccc;
     min-height: 200px;
-  }
-  
-  #stagingArea {
-    border: 1px solid #ccc;
-    min-height: 100px;
-  }
-  
+}
+
 main {
     display: flex;
     flex-direction: column;
@@ -18,15 +13,41 @@ main {
 }
 
 .stagingArea {
+    border: 1px solid #ccc;
+    background-color:#a7d393;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    /* Adjust gap as needed for spacing between cards */
+    justify-content: flex-start;
+    align-items: flex-start;
+    height: 350px;
+    /* Fixed height */
+    min-height: 400px;
+    width: 100%;
+    /* Fixed width */
+    overflow-y: auto;
+    /* Add this if you want a vertical scrollbar if the content overflows */
+}
+
+.stagingArea .cardContainer {
+    flex: 0 0 calc(16.666% - 10px);
+    /* Set to approximately 100% / 6 with gap in mind */
+    box-sizing: border-box;
+    /* Include padding and border in the width calculation */
+}
+
+
+/* .stagingArea {
     border: 2px dashed #e74c3c;
     background-color: #f2dede;
     padding: 10px;
     margin-bottom: 20px;
     /* Add margin between staging area and card carousel */
-    min-height: 600px;
+/* min-height: 600px;
     max-height: 800px;
-    width: 80%;
-}
+    width: 80%; */
+/* } */
 
 .cardContainer {
     display: flex;
@@ -105,19 +126,18 @@ header {
     /* Margin to the carousel counter */
 }
 
-.stagingArea {
+/* .stagingArea {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
     overflow-x: hidden;
     overflow-y: auto;
-    height: 500px;
     border: 2px dashed #e74c3c;
     background-color: #f2dede;
     padding: 10px;
     margin-bottom: 20px;
     width: 80%;
-}
+} */
 
 .stagedCard {
     flex-basis: calc(20% - 10px);
