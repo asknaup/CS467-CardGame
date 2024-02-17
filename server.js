@@ -15,7 +15,6 @@ const port = 3000;
 
 const db = require('./database/db-connector');
 const dbFunc = require('./database/db-functions')
-const cardGen = require('./database/card-gen');
 const gameGen = require('./database/game-gen');
 const game1 = require('./database/game-play1')
 const card = require('./database/card');
@@ -237,12 +236,13 @@ app.get('/userProfile', (req, res) => {
 
 app.get('/cardViewPage', async (req, res) => {
   // TODO card currently hardcoded
-  const val = await cardGen.grabCardFromDB(1);             // Hard Coded
+  const user = req.session.user;
+  
   console.log(val[0]);
   if (user) {
-    res.render('cardViewPage', { showLogoutButton: true, value: val })
+    res.render('cardViewEditPage', { showLogoutButton: true, value: val })
   } else {
-    res.render('cardViewPage', { showLogoutButton: false, value: val })
+    res.render('cardViewEditPage', { showLogoutButton: false, value: val })
   }
 });
 
@@ -342,9 +342,6 @@ app.post('/login', async (req, res) => {
 
 app.post('/cardViewEditPage', async (req, res) => {
   const user = req.session.user;
-  async function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
   try {
     if (user) {
       const cardId = await dbFunc.insertCard(req.body.cardName, req.body.cardType, user.userId, req.body.rarity, req.body.manaCost);    // returns cardId
@@ -357,14 +354,17 @@ app.post('/cardViewEditPage', async (req, res) => {
 
       const aiCard = await card.createAICard(req.body.creatureType, req.body.theme, req.body.color, req.body.rarity);      
       let values = [];
+      async function delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+      }
       while (values.length == 0) {
           values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId); //aiCard.sdGenerationJob.generationId
           // console.log(values);
           await delay(1000);
-      }
-      // await dbFunc.insertCardUrl(cardId, imagePath); 
+      }      
       res.render('cardViewEditPage', {
-        val: values
+        val: values,
+        cardId: cardId
       });
     } else {
       // Authentication failed, render 'cardGenPage' with an error message
@@ -376,6 +376,21 @@ app.post('/cardViewEditPage', async (req, res) => {
   }
 });
 
+app.post('/cardViewPrintedPage', async (req, res) => {
+  try {
+    const user = req.session.user;
+    const url = await dbFunc.insertCardUrl(req.body.cardId, req.body.url);
+    const data = await dbFunc.getCardInfo(req.body.cardId);
+
+    res.render('cardViewPrintedPage', {
+      url: url,
+      data: data
+    });
+  } catch (err) {
+    // Handle errors that may occur during card generation, database interaction, or rendering
+    res.send(`Something went wrong: ${err}`);
+  }
+});
 
 app.post('/gameGenerationPageAction', async (req, res) => {
   try {
