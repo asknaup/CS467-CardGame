@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
         zone.addEventListener('drop', drop);
     })
 
+
     function dragOver(event) {
         event.preventDefault();
     }
@@ -32,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const cardElement = document.createElement('div');
         cardElement.textContent = cardId;
         event.target.appendChild(cardElement);
-    
+
         // Identifying the drop zone
         const dropZoneId = event.target.id;
         console.log('Dropped into drop zone:', dropZoneId);
