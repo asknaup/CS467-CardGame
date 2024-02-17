@@ -210,14 +210,14 @@ app.get('/cardGenPage', (req, res) => {
   }
 });
 
-app.get('/tradeAndCollect', (req, res) => {
+app.get('/trading', (req, res) => {
   // Show user logged in user profile
   const user = req.session.user;
-  res.render('tradeAndCollect', { showLogoutButton: true })
+  res.render('trading', { showLogoutButton: true })
   if (user) {
-    res.render('tradeAndCollect', { showLogoutButton: true })
+    res.render('trading', { showLogoutButton: true })
   } else {
-    res.render('tradeAndCollect', { showLogoutButton: false })
+    res.render('trading', { showLogoutButton: false })
   }
 });
 
