@@ -1,3 +1,13 @@
+#cardList {
+    border: 1px solid #ccc;
+    min-height: 200px;
+  }
+  
+  #stagingArea {
+    border: 1px solid #ccc;
+    min-height: 100px;
+  }
+  
 main {
     display: flex;
     flex-direction: column;
@@ -13,8 +23,8 @@ main {
     padding: 10px;
     margin-bottom: 20px;
     /* Add margin between staging area and card carousel */
-    min-height: 200px;
-    max-height: 400px;
+    min-height: 600px;
+    max-height: 800px;
     width: 80%;
 }
 
@@ -80,7 +90,8 @@ button {
     /* Margin between buttons */
 }
 
-h1, header {
+h1,
+header {
     font-size: xx-large;
     font-weight: bold;
     background-image: linear-gradient(to left, #449a3c, #a7d393);
@@ -96,30 +107,28 @@ h1, header {
 
 .stagingArea {
     display: flex;
-    /* Arrange cards in a row */
+    flex-wrap: wrap;
     justify-content: flex-start;
-    /* Align cards to the start (left) of the flex container */
-    align-items: center;
-    /* Center cards vertically in the flex container */
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 500px;
     border: 2px dashed #e74c3c;
     background-color: #f2dede;
     padding: 10px;
     margin-bottom: 20px;
-    min-height: 200px;
-    max-height: 400px;
     width: 80%;
 }
 
 .stagedCard {
-    margin-right: 10px;
+    flex-basis: calc(20% - 10px);
+    margin: 0 10px 10px 0;
 }
 
-#resetBtn {
-    margin: 15px;
+#resetButton {
+    margin: 0px;
     align-items: center;
 }
 
 #prevBtn {
     align-items: center;
 }
-

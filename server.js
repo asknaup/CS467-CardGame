@@ -16,7 +16,8 @@ const db = require('./database/db-connector');
 const dbFunc = require('./database/db-functions')
 const cardGen = require('./database/card-gen');
 const gameGen = require('./database/game-gen');
-const Game1 = require('./database/game-play1')
+const game1 = require('./database/game-play1');
+const hf = require('./database/helperFuncs')
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -43,6 +44,7 @@ app.set('views', path.join(__dirname, 'views'));
 // Serve static file from public directory
 // app.use(express.static('public'));
 app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, 'images')))
 
 /*
 ROUTES
@@ -56,6 +58,29 @@ ROUTES
 // TODO cardview page bulk - bulk generation?
 // TODO homepage that's not the welcome page
 // TODO Need better navigation -> navigation to card generation page as maybe a subclass under make. route to make game, make card
+
+// app.get('/db-functions.js', (req, res) => {
+//   res.type('application/javascript');
+//   // Your logic to send the file
+// });
+app.get('/cards', async (req, res) => {
+  try {
+      // Retrieve the user ID from the request query parameters
+      // const userId = req.query.userId;
+      const userId = 1001; //FIXME
+      // console.log(userId);
+      // Call the database function to get card data based on userId
+      const cardData = await dbFunc.getCardIdByUser(userId);
+      const cardsDict = hf.convertListToDict(cardData);
+      // console.log(cardsDict);
+      // Send card data as reponse
+      res.json(cardsDict);
+  } catch (error) {
+      // Handle errors that occur during data retrival
+      console.error('Error fetching card data:', error);
+      res.status(500).json({error: 'Internal server error'})
+  }
+})
 
 app.get('/favico.ico', (req, res) => {
   res.sendStatus(404);
@@ -141,9 +166,11 @@ app.get('/gameGenPage', async (req, res) => {
 // TODO Deck generation page
 app.get('/buildDeck', (req, res) => {
   // Show user logged in user profile
-  const user = req.session.user;
+  // FIXME
+  // const user = req.session.user;
+  user = {userId: 1001, username: 'admin'}
   if (user) {
-    res.render('buildDeck', { showLogoutButton: true })
+    res.render('buildDeck', { showLogoutButton: true , userId : 1001})
   } else {
     res.render('buildDeck', { showLogoutButton: false })
   }
@@ -153,7 +180,7 @@ app.get('/buildDeck', (req, res) => {
 app.get('/currentDeck', async (req, res) => {
   // Show user logged in user profile
   // FIXME
-  const user = {userId: 1001, username: 'admin'};
+  const user = { userId: 1001, username: 'admin' };
   // const user = req.session.user;
   if (user) {
     var exampleCards = await dbFunc.getCardIdByUser(1001);
@@ -454,3 +481,4 @@ app.post('/createNewCollection', async (req, res) => {
     res.send(`Something went wrong: ${err}`);
   }
 });
+

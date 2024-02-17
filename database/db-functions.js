@@ -410,12 +410,14 @@ async function createNewGame(ruleSet, userId, userDeckId) {
 async function getCardIdByUser(userId) {
     return new Promise((resolve, reject) => {
 
-        const query = 'select ci.cardId, cardName, imagePath, cardType, rarity, manaCost, spellType, spellAbility, spellAttack, spellDefense, utility, attack, defense from cardInstance as ci ' +
-            'join cards as c on c.cardId = ci.cardId ' +
-            'left join cardUrl as cu on ci.cardId = cu.cardId ' +
-            'left join cardSpell as cs on ci.cardId = cs.cardId ' +
-            'left join cardCreature as cc on ci.cardId = cc.cardId ' +
-            'WHERE ci.ownerUserId = ?';
+        const query = `SELECT ci.cardId, cardName, imagePath, cardType, rarity, manaCost, spellType, spellAbility, 
+                        spellAttack, spellDefense, utility, attack, defense 
+                 FROM cardInstance AS ci 
+                 JOIN cards AS c ON c.cardId = ci.cardId 
+                 LEFT JOIN cardUrl AS cu ON ci.cardId = cu.cardId 
+                 LEFT JOIN cardSpell AS cs ON ci.cardId = cs.cardId 
+                 LEFT JOIN cardCreature AS cc ON ci.cardId = cc.cardId 
+                 WHERE ci.ownerUserId = ?`;
 
         db.pool.query(query, userId, (selectErr, selectResult) => {
             if (selectErr) {
@@ -460,3 +462,4 @@ module.exports.gatherUserDecks = gatherUserDecks;
 module.exports.getUserDeck = getUserDeck;
 module.exports.createNewGame = createNewGame;
 module.exports.getCardIdByUser = getCardIdByUser;
+module.exports.insertNewDeck = insertNewDeck;
