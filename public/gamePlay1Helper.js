@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const playerDropZones = document.querySelectorAll(".player .drop-zone");
     console.log(handList);
 
-    handList.forEach(card => { 
+    handList.forEach(card => {
         // const cardElement = document.createElement('div');
         // cardElement.draggable = true;
         card.addEventListener('dragstart', dragStart);
