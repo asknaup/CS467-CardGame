@@ -1,12 +1,3 @@
-function convertListToDict(list) {
-    let dict = {};
-    for (let i = 0; i < list.length; i++) {
-        let card = list[i];
-        dict[card.cardId] = card;
-    }
-    return dict;
-}
-
 // Function to create a trading card
 function createTradingCard(cardData) {
     // Card container
@@ -98,5 +89,4 @@ function createTradingCard(cardData) {
     return cardContainer;
 }
 
-module.exports.convertListToDict = convertListToDict;
 module.exports.createTradingCard = createTradingCard;

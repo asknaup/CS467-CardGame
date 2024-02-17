@@ -7,9 +7,10 @@
     <title>Build Deck</title>
     <link rel="stylesheet" type="text/css" href="/global.css">
     <link rel="stylesheet" type="text/css" href="/buildDeck.css">
+    <link rel="stylesheet" type="text/css" href="/styles.css">
 </head>
 
-<body>
+<body data-user-id={{userId}}>
     <h1>Instructions</h1>
     <div class="instructions">
         <p>Here you can build your deck depending on what game you wish to play. First select the game
@@ -18,33 +19,51 @@
             to remove them from your deck and click cards in the card carousel to add them to your deck. Once you're
             finished, click Done, name your new deck and click Save.</p>
     </div>
-    <header>Build Your Deck</header>
-    <div class="stagingArea" id="stagingArea"></div>
-    <button id="saveDeckButton">Save Deck</button>
-    <div class="cardContainer" id="cardContainer"></div>
+    <h1>Build Your Deck</h1>
+    <div class="stagingArea" id="stagingArea">
+        <!-- Drop Zone -->
+        <div class="dropZone">
+            Drop Zone
+        </div>
+    </div>
+    
+    <!-- Handlebars template for card -->
+    <div class="cardContainer" id="cardContainer">
+        <script id="card-template" type="text/x-handlebars-template">
+            <div class="card">
+                {{!-- <h3>{{cardName}}</h3> --}}
+                <img src={{imagePath}} alt={{cardName}}>
+                {{!-- <p>Card Type: {{cardType}}</p>
+                <p>Attributes:</p>
+                <ul>
+                    <li>Card ID: {{cardId}}</li>
+                    <li>Rarity: {{rarity}}</li>
+                    <li>Mana Cost: {{manaCost}}</li> --}}
+                    <!-- Add other attributes as needed -->
+                </ul>
+            </div>
+        </script>
+    </div>
+    {{!-- <div class="stagingArea" id="stagingArea">
+        <!-- Drop Zone -->
+        <div class="dropZone">
+            Drop Zone
+        </div>
+    </div>
+
+    <!-- Navigation buttons -->
     <div class="navigation">
         <button id="prevBtn" onclick="navigateCards(-3)">Previous</button>
-
         <button id="nextBtn" onclick="navigateCards(3)">Next</button>
     </div>
 
+    <!-- Additional buttons -->
     <span id="carouselCounter">1</span>
     <button id="resetButton" onclick="resetGame()">Reset</button>
-    <script id="card-template" type="text/x-handlebars-template">
-    <div class="card">
-        <h3>{{name}}</h3>
-        <img src="{{image}}" alt="{{name}}">
-        <p>{{description}}</p>
-        <p>Card Type: {{cardType}}</p>
-        <p>Attributes:</p>
-        <ul>
-            {{#each attributes}}
-                <li>{{@key}}: {{this}}</li>
-            {{/each}}
-        </ul>
-    </div>
-</script>
+    <button id="saveDeckButton">Save Deck</button> --}}
 
-    <script src="/buildDeck.js"></script>
-    <link rel="stylesheet" type="text/css" href="/styles.css">
+    <!-- Scripts and styles -->
+    <script src="/buildDeckHelper.js"></script>
 </body>
+
+</html>
