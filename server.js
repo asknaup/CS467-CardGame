@@ -17,6 +17,7 @@ const dbFunc = require('./database/db-functions')
 const cardGen = require('./database/card-gen');
 const gameGen = require('./database/game-gen');
 const game1 = require('./database/game-play1')
+const card = require('./database/card');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -337,45 +338,29 @@ app.post('/login', async (req, res) => {
 });
 
 
-app.post('/generateCard', async (req, res) => {
-  // const user = req.session.user;
-  // TODO Switch to session user
+app.post('/cardViewEditPage', async (req, res) => {
   const user = req.session.user;
-  // const user = {userId: 1001, username: 'admin'}
   try {
     if (user) {
-      // TODO prompt for Card Image
-      // const attr = cardGen.generateAiForCard(req.body.inputAiImage);
-      const cardType = req.body.cardType;
-      const cardName = req.body.cardName;
-      const manaCost = req.body.manaCost;
-      const rarity = req.body.rarity;
-
-      console.log(cardType, cardName, manaCost, rarity);
-      const cardId = await dbFunc.insertCard(cardName, cardType, user.userId, rarity, manaCost);    // returns cardId
-      console.log(cardId)
-      if (cardType === "Creature") {
-        const creatureDefense = req.body.creatureDefense;
-        const creatureAttack = req.body.creatureAttack;
-
-        await dbFunc.insertCreatureCard(cardId, creatureAttack, creatureDefense);
+      const cardId = await dbFunc.insertCard(req.body.cardName, req.body.cardType, user.userId, req.body.rarity, req.body.manaCost);    // returns cardId
+      //console.log(cardId)
+      if (req.body.cardType === "Creature") {
+        await dbFunc.insertCreatureCard(cardId, req.body.creatureAttack, req.body.creatureDefense);
       } else {
-        const spellType = req.body.spellType;
-        const spellAbility = req.body.spellAbility;
-        const spellAttack = req.body.spellAttack;
-        const spellDefense = req.body.spellDefense;
-        const utility = req.body.utility;
-
-        await dbFunc.insertSpellCard(cardId, spellType, spellAbility, spellAttack, spellDefense, utility);
+        await dbFunc.insertSpellCard(cardId, req.body.spellType, req.body.spellAbility, req.body.spellAttack, req.body.spellDefense, req.body.utility);
       }
 
-      // TODO (JEREMY) image URL generation
-      // const imagePath = await cardGen.generateImageForCard(attr, object1);
-      // Insert URL into db
+      const aiCard = await card.createAICard(req.body.creatureType, req.body.theme, req.body.color, req.body.rarity);
+      console.log(aiCard['sdGenerationJob']['generationId']);
+      
+      const values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId.toString()); //aiCard.sdGenerationJob.generationId
+      console.log(values);
       // await dbFunc.insertCardUrl(cardId, imagePath); 
+      //b126d1fd-1379-4ce4-8440-709acd6d0b2c
+      res.render('cardViewEditPage', {
+        val: values
+      });
 
-      // TODO route to deck page or display image?
-      res.redirect('/cardGenPage');
     } else {
       // Authentication failed, render 'cardGenPage' with an error message
       res.render('cardGenPage', { error: "Sorry! You cannot create a card without having an account" })
@@ -398,6 +383,7 @@ app.post('/gameGenerationPageAction', async (req, res) => {
 
       console.log(ruleSet);
       console.log(userDeckId);
+      
       // TODO insert into new game to get gameId
 
       // redirects to app.get('/game/:gameId)
