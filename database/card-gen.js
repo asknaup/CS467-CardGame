@@ -66,17 +66,6 @@ async function generateImageForCard(prompt1, object1) {
     }
 }
 
-/*
-const result = "your image URL";
-  const fetchFile = await fetch(result);
-  const responseBlob = await fetchFile.blob();
-  const arrayBuffer = await responseBlob.arrayBuffer();
-  const buffer = Buffer.from(arrayBuffer);
- const filePath = path.join(__dirname, './' + new Date() + ".png");
-
- const writeFileToDisc = fs.writeFileSync(filePath, buffer);
-
-*/
 
 module.exports.generateAiForCard = generateAiForCard;
 module.exports.generateImageForCard = generateImageForCard;

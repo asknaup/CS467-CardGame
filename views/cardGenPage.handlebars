@@ -12,16 +12,17 @@
     <h1> Welcome to the Card Generation Page </h1>
     <div id="input-form">
       {{!-- Links to generateCard post --}}
-      <form action="/generateCard" method="post" id="cardForm">
+      <form action="/cardViewEditPage" method="post" id="cardForm">
         <label for="cardType">Select Type of Card:</label>
         <select id="cardType" name="cardType">
           <option value="Creature">Creature</option>
           <option value="Spell">Spell</option>
         </select><br><br>
-        <input name="theme" type="text" placeholder="Card Theme (several words)">
+        <input name="theme" type="text" placeholder="Card Theme or Setting">
         <input name="cardName" type="text" placeholder="Card Name">
-        <input name="number" type="number" placeholder="Number of Cards">
+        <input name="creatureType" type="text" placeholder="Type of Creature">
         <input name="manaCost" type="number" placeholder="Mana Cost">
+        <input name="color" type="text" placeholder="Color">
         <label for="rarity">Select Card Rarity:</label>
         <select id="rarity" name="rarity">
           <option value="Common">Common</option>
