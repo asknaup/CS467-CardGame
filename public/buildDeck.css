@@ -14,7 +14,7 @@ main {
 
 .stagingArea {
     border: 1px solid #ccc;
-    background-color:#a7d393;
+    background-color:#d8eece;
     display: flex;
     flex-wrap: wrap;
     gap: 10px;

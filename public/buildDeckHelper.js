@@ -47,11 +47,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Display cards for the current page
                 Object.keys(userCards).slice(startIndex, endIndex).forEach(cardId => {
                     const card = userCards[cardId];
-                    const cardElement = createTradingCard(card);
-                    cardElement.dataset.cardId = cardId; // Add a dataset for identifying the card
-                    cardElement.draggable = true;
-                    cardElement.addEventListener('click', () => selectCard(cardId));
-                    cardContainer.appendChild(cardElement);
+                    if (!selectedCards.includes(cardId)) {
+                        const cardElement = createTradingCard(card);
+                        cardElement.dataset.cardId = cardId; // Add a dataset for identifying the card
+                        cardElement.draggable = true;
+                        cardElement.addEventListener('click', () => selectCard(cardId));
+                        cardContainer.appendChild(cardElement);
+                    }
                 });
             }
 
@@ -88,6 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 });
+
 
 // Function to create a trading card
 function createTradingCard(cardData) {
