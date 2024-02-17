@@ -16,19 +16,17 @@
   <div>
     <form id="imageForm" action="/cardViewPrintedPage" method="POST">
       <img src="{{ val.[0].url }}" alt="Image">
-      <input type="hidden" name="cardId" value="{{ val.cardId }}">
       <input type="hidden" name="url" value="{{ val.url }}">
       <input type="submit" value="Print">
     </form>
     <form id="imageForm" action="/cardViewPrintedPage" method="POST">
       <img src="{{ val.[1].url }}" alt="Image">
-      <input type="hidden" name="cardId" value="{{ val.cardId }}">
+
       <input type="hidden" name="url" value="{{ val.[1].url }}">
       <input type="submit" value="Print">
     </form>
     <form id="imageForm" action="/cardViewPrintedPage" method="POST">
       <img src="{{ val.[2].url }}" alt="Image">
-      <input type="hidden" name="cardId" value="{{ val.cardId }}">
       <input type="hidden" name="url" value="{{ val.[2].url }}">
       <input type="submit" value="Print">
     </form>
