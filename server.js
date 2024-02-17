@@ -42,9 +42,15 @@ app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
 
 // Serve static file from public directory
-// app.use(express.static('public'));
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, 'public'),
+  {
+    'extensions': ['js'],
+    'index': false,
+    'Content-Type': 'text/javascript'
+  }));
 app.use(express.static(path.join(__dirname, 'images')))
+app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use('/database', express.static(path.join(__dirname, 'public')));
 
 /*
 ROUTES
@@ -65,20 +71,20 @@ ROUTES
 // });
 app.get('/cards', async (req, res) => {
   try {
-      // Retrieve the user ID from the request query parameters
-      // const userId = req.query.userId;
-      const userId = 1001; //FIXME
-      // console.log(userId);
-      // Call the database function to get card data based on userId
-      const cardData = await dbFunc.getCardIdByUser(userId);
-      const cardsDict = hf.convertListToDict(cardData);
-      // console.log(cardsDict);
-      // Send card data as reponse
-      res.json(cardsDict);
+    // Retrieve the user ID from the request query parameters
+    // const userId = req.query.userId;
+    const userId = 1001; //FIXME
+    // console.log(userId);
+    // Call the database function to get card data based on userId
+    const cardData = await dbFunc.getCardIdByUser(userId);
+    const cardsDict = hf.convertListToDict(cardData);
+    // console.log(cardsDict);
+    // Send card data as reponse
+    res.json(cardsDict);
   } catch (error) {
-      // Handle errors that occur during data retrival
-      console.error('Error fetching card data:', error);
-      res.status(500).json({error: 'Internal server error'})
+    // Handle errors that occur during data retrival
+    console.error('Error fetching card data:', error);
+    res.status(500).json({ error: 'Internal server error' })
   }
 })
 
@@ -131,7 +137,7 @@ app.get('/userDeck/:username', async (req, res) => {
   // TODO handlebars
   // Show user logged in user profile
   // const user = req.session.user;
-  user = {userId: 1001, username: 'admin'}
+  user = { userId: 1001, username: 'admin' }
   if (user) {
     var exampleCards = await dbFunc.getCardIdByUser(1001);
     var exampleCardsDict = convertListToDict(exampleCards);
@@ -168,9 +174,9 @@ app.get('/buildDeck', (req, res) => {
   // Show user logged in user profile
   // FIXME
   // const user = req.session.user;
-  user = {userId: 1001, username: 'admin'}
+  user = { userId: 1001, username: 'admin' }
   if (user) {
-    res.render('buildDeck', { showLogoutButton: true , userId : 1001})
+    res.render('buildDeck', { showLogoutButton: true, userId: 1001 })
   } else {
     res.render('buildDeck', { showLogoutButton: false })
   }
@@ -305,10 +311,10 @@ app.get('/game/', async (req, res) => {
     // console.log(deckList);
     const game = new Game1(user.userId, deck.deckId);
     await game.initialize();
-    
+
     res.render('gamePlay1', {
-      gameId: game.gameId, 
-      ruleSet: game.ruleSet, 
+      gameId: game.gameId,
+      ruleSet: game.ruleSet,
       hand: game.hand,
       remainingDeckCards: game.deck.length
     });

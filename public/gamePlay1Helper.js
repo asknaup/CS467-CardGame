@@ -1,25 +1,26 @@
 // gamePlay1Helper.js
 // Game play for RuleSet 1
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const hand = document.getElementById('hand');
     const handList = document.querySelectorAll("#hand .card");
-    const playerDropZones  = document.querySelectorAll(".player .drop-zone");
+    const playerDropZones = document.querySelectorAll(".player .drop-zone");
+    console.log(handList);
 
     handList.forEach(card => {
-        const cardElement = document.createElement('div');
-        cardElement.draggable = true;
-
-        cardElement.addEventListener('dragstart', dragStart);
-        hand.append(cardElement)
+        // const cardElement = document.createElement('div');
+        // cardElement.draggable = true;
+        card.addEventListener('dragstart', dragStart);
     })
 
     function dragStart(event) {
-        event.dataTransfer.setData('text/plain', event.target.textContent);
+        event.dataTransfer.setData('text/plain', event.target.id);
     }
-
-    stagingArea.addEventListener('dragover', dragOver);
-    stagingArea.addEventListener('drop', drop);
+    console.log(handList);
+    playerDropZones.forEach(zone => {
+        zone.addEventListener('dragover', dragOver);
+        zone.addEventListener('drop', drop);
+    })
 
     function dragOver(event) {
         event.preventDefault();
@@ -27,10 +28,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function drop(event) {
         event.preventDefault();
-        const cardName = event.dataTransfer.getData('text/plain');
+        const cardId = event.dataTransfer.getData('text/plain');
         const cardElement = document.createElement('div');
-        cardElement.textContent = cardName;
-        stagingArea.appendChild(cardElement)
+        cardElement.textContent = cardId;
+        event.target.appendChild(cardElement);
+    
+        // Identifying the drop zone
+        const dropZoneId = event.target.id;
+        console.log('Dropped into drop zone:', dropZoneId);
     }
 })
 
@@ -49,28 +54,28 @@ document.addEventListener('DOMContentLoaded', function() {
 //     })
 // });
 
-function dragStart(event) {
-    event.dataTransfer.setData("text/plain", event.target.id);
-}
+// function dragStart(event) {
+//     event.dataTransfer.setData("text/plain", event.target.id);
+// }
 
-function dragOver(event) {
-    event.preventDefault();
-}
+// function dragOver(event) {
+//     event.preventDefault();
+// }
 
-function drop(event) {
-    event.preventDefault();
-    const cardId = event.dataTransfer.getData("text/plain"); 
-    const cardElement = document.getElementById(cardId);
+// function drop(event) {
+//     event.preventDefault();
+//     const cardId = event.dataTransfer.getData("text/plain");
+//     const cardElement = document.getElementById(cardId);
 
-    // Find cloest drop zone
-    const dropZone = event.target.cloest('.drop-zone');
+//     // Find cloest drop zone
+//     const dropZone = event.target.cloest('.drop-zone');
 
-    // Check if the drop target is a player card slot
-    if (dropZone) {
-        // Append the card to the drop zone
-        dropZone.appendChild(cardElement);
-    } else {
-        // If the drop target is not a player card slot, do nothing or handle the case as needed
-        console.log('Invalid drop target');
-    }
-}
+//     // Check if the drop target is a player card slot
+//     if (dropZone) {
+//         // Append the card to the drop zone
+//         dropZone.appendChild(cardElement);
+//     } else {
+//         // If the drop target is not a player card slot, do nothing or handle the case as needed
+//         console.log('Invalid drop target');
+//     }
+// }
