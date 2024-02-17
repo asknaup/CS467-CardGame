@@ -14,7 +14,7 @@ main {
 
 .stagingArea {
     border: 1px solid #ccc;
-    background-color:#d8eece;
+    background-color: #d8eece;
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
@@ -37,21 +37,15 @@ main {
     /* Include padding and border in the width calculation */
 }
 
-
-/* .stagingArea {
-    border: 2px dashed #e74c3c;
-    background-color: #f2dede;
-    padding: 10px;
-    margin-bottom: 20px;
-    /* Add margin between staging area and card carousel */
-/* min-height: 600px;
-    max-height: 800px;
-    width: 80%; */
-/* } */
-
-.cardContainer {
+/* .cardContainer {
     display: flex;
     justify-content: space-between;
+} */
+
+#cardContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .card {
@@ -125,19 +119,6 @@ header {
     margin: 15px 10px;
     /* Margin to the carousel counter */
 }
-
-/* .stagingArea {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    overflow-x: hidden;
-    overflow-y: auto;
-    border: 2px dashed #e74c3c;
-    background-color: #f2dede;
-    padding: 10px;
-    margin-bottom: 20px;
-    width: 80%;
-} */
 
 .stagedCard {
     flex-basis: calc(20% - 10px);

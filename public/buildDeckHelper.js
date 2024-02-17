@@ -44,19 +44,35 @@ document.addEventListener('DOMContentLoaded', function () {
                 const startIndex = currentPage * cardsPerPage;
                 const endIndex = startIndex + cardsPerPage;
 
-                // Display cards for the current page
-                Object.keys(userCards).slice(startIndex, endIndex).forEach(cardId => {
+                // Display cards for the current page, limited to 6
+                const displayedCards = Object.keys(userCards).slice(startIndex, endIndex).slice(0, cardsPerRow);
+
+                displayedCards.forEach(cardId => {
                     const card = userCards[cardId];
-                    if (!selectedCards.includes(cardId)) {
+                    const cardElement = createTradingCard(card);
+                    cardElement.dataset.cardId = cardId; // Add a dataset for identifying the card
+                    cardElement.draggable = true;
+                    cardElement.addEventListener('click', () => selectCard(cardId));
+                    cardContainer.appendChild(cardElement);
+                });
+
+                // Display remaining cards in the carousel
+                if (displayedCards.length < cardsPerRow) {
+                    const remainingCards = Object.keys(userCards).slice(endIndex, endIndex + (cardsPerRow - displayedCards.length));
+                    remainingCards.forEach(cardId => {
+                        const card = userCards[cardId];
                         const cardElement = createTradingCard(card);
-                        cardElement.dataset.cardId = cardId; // Add a dataset for identifying the card
+                        cardElement.dataset.cardId = cardId;
                         cardElement.draggable = true;
                         cardElement.addEventListener('click', () => selectCard(cardId));
                         cardContainer.appendChild(cardElement);
-                    }
-                });
+                    });
+                }
             }
 
+            // TODO: if the card carousel has more than 6 cards being displayed, and the user wants to click a card staged in the staging area in order to return it to the carousel, 
+            // then carrying out that operation causes the carousel to break and display more than 6 cards at a time. Allow for the user to return a card to the carousel even if there 
+            // are 6 cards displayed in the carousel, just have that card be displayed by some other set that has 5 cards or less. 
             function selectCard(cardId) {
                 const cardElement = document.querySelector(`[data-card-id="${cardId}"]`);
 
@@ -68,26 +84,26 @@ document.addEventListener('DOMContentLoaded', function () {
                     cardContainer.appendChild(cardElement);
                 } else {
                     // Select the card and move it to the staging area
-                    if (selectedCards.length < cardsPerRow) {
-                        cardElement.classList.add('selected');
-                        selectedCards.push(cardId);
-                        stagingArea.appendChild(cardElement);
-                    } else {
-                        // Start a new row in the staging area
+                    cardElement.classList.add('selected');
+                    selectedCards.push(cardId);
+                    stagingArea.appendChild(cardElement);
+
+                    // Remove the selected card from the carousel
+                    const index = displayedCards.indexOf(cardId);
+                    if (index !== -1) {
+                        displayedCards.splice(index, 1);
+                        updateCardDisplay(userCards);
+                    }
+
+                    // Ensure only 6 cards are displayed in the staging area horizontally
+                    if (selectedCards.length % cardsPerRow === 0) {
                         const newRow = document.createElement('div');
                         newRow.classList.add('staging-row');
-                        selectedCards.forEach(selectedCardId => {
-                            const selectedCardElement = document.querySelector(`[data-card-id="${selectedCardId}"]`);
-                            selectedCardElement.classList.remove('selected');
-                            cardContainer.appendChild(selectedCardElement);
-                        });
-                        selectedCards = [cardId];
-                        cardElement.classList.add('selected');
-                        newRow.appendChild(cardElement);
                         stagingArea.appendChild(newRow);
                     }
                 }
             }
+
         });
 });
 
