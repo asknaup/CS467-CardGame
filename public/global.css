@@ -158,6 +158,11 @@ h1 {
   text-align: center;
 }
 
+.containerNC {
+  display: flex;
+  height: 100%;
+}
+
 .left-div,
 .right-div {
   flex: 1;

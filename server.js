@@ -18,7 +18,7 @@ const dbFunc = require('./database/db-functions')
 const gameGen = require('./database/game-gen');
 const game1 = require('./database/game-play1')
 const card = require('./database/card');
-const configFile = require('./database/config');
+// const configFile = require('./database/config');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -212,14 +212,14 @@ app.get('/cardGenPage', (req, res) => {
   }
 });
 
-app.get('/tradeAndCollect', (req, res) => {
+app.get('/trading', (req, res) => {
   // Show user logged in user profile
   const user = req.session.user;
-  res.render('tradeAndCollect', { showLogoutButton: true })
+  res.render('trading', { showLogoutButton: true })
   if (user) {
-    res.render('tradeAndCollect', { showLogoutButton: true })
+    res.render('trading', { showLogoutButton: true })
   } else {
-    res.render('tradeAndCollect', { showLogoutButton: false })
+    res.render('trading', { showLogoutButton: false })
   }
 });
 

@@ -1,0 +1,47 @@
+.leftPane,
+.rightpane {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #27ae60;
+    font-size: 2.5em;
+    text-align: center;
+}
+
+h2,
+h3,
+h4 {
+    color: #2ecc71;
+}
+
+ol,
+ul {
+    margin: 10px 0;
+    padding: 0;
+}
+
+li {
+    margin: 5px 0;
+}
+
+ol li {
+    list-style-type: decimal;
+}
+
+ul li {
+    list-style-type: disc;
+}
+
+ul ul {
+    margin-top: 5px;
+    list-style-type: circle;
+}
+
+ul ul ul {
+    list-style-type: square;
+}

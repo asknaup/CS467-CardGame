@@ -6,16 +6,16 @@
   <meta name="viewport" content="width=device-width, intial-scale=1.0">
   <title>Game Generation Page</title>
   <link rel="stylesheet" href="global.css">
+  <link rel="stylesheet" href="gameGenPage.css">
 </head>
 
 <body>
-  <div class="container">
-    <div class="left-div">
-      {{!-- TODO formatting of the rule set --}}
-      <br><br>
+  <div class="containerNC">
+    <div class="leftPane">
       <h1>Welcome to the Game Generation Page</h1>
       <br><br>
       <h2>Rule Sets</h2>
+      <br><br>
       <h3>Rule Set 1: Creatures and Spells</h3>
       <h4>Creatures</h4>
       <ol>
@@ -79,9 +79,9 @@
         </ul>
       </ol>
     </div>
-    <div class="right-div">
+    <div class="rightPane">
       <br><br>
-      <h2> Please enter Game Generation Inputs </h2>
+      <h1> Please Enter Game Generation Inputs </h1>
       <div id="input-form">
         <form action="/gameGenerationPageAction" method="post">
           <label for="ruleSet">Select Rule Set:</label>
@@ -93,7 +93,7 @@
           <label for="userDeckSelect">Select User Deck:</label>
           <select id="userDeckSelect" name="userDeckSelect">
             {{#each decks}}
-              <option value="{{deckId}}">{{deckName}}</option>
+            <option value="{{deckId}}">{{deckName}}</option>
             {{/each}}
           </select>
           {{!-- <div id="ruleSet1">
@@ -146,7 +146,7 @@
               <button id="resetSpellCards">Reset Spell Cards</button>
             </div>
           </div>
-          <div id="ruleSet2" style="display: none;"> 
+          <div id="ruleSet2" style="display: none;">
 
           </div> --}}
           {{!-- <input id="theme" type="text" placeholder="Game Theme (use several descriptive words)"> --}}
@@ -162,7 +162,8 @@
   </div>
 
 
-  {{!-- <script>
+  {{!--
+  <script>
     document.getElementById('ruleSet1').addEventListener('change', function () {
       var cardType = this.value;
       var creatureFields = document.getElementById('creatureFields');
@@ -197,4 +198,5 @@
   </script> --}}
   <script src="game-gen.js"></script>
 </body>
+
 </html>
