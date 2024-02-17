@@ -344,14 +344,6 @@ app.post('/cardViewEditPage', async (req, res) => {
   const user = req.session.user;
   try {
     if (user) {
-      const cardId = await dbFunc.insertCard(req.body.cardName, req.body.cardType, user.userId, req.body.rarity, req.body.manaCost);    // returns cardId
-      //console.log(cardId)
-      if (req.body.cardType === "Creature") {
-        await dbFunc.insertCreatureCard(cardId, req.body.creatureAttack, req.body.creatureDefense);
-      } else {
-        await dbFunc.insertSpellCard(cardId, req.body.spellType, req.body.spellAbility, req.body.spellAttack, req.body.spellDefense, req.body.utility);
-      }
-
       const aiCard = await card.createAICard(req.body.creatureType, req.body.theme, req.body.color, req.body.rarity);      
       let values = [];
       async function delay(ms) {
@@ -364,7 +356,6 @@ app.post('/cardViewEditPage', async (req, res) => {
       }      
       res.render('cardViewEditPage', {
         val: values,
-        cardId: cardId
       });
     } else {
       // Authentication failed, render 'cardGenPage' with an error message
@@ -379,7 +370,14 @@ app.post('/cardViewEditPage', async (req, res) => {
 app.post('/cardViewPrintedPage', async (req, res) => {
   try {
     const user = req.session.user;
-    const url = await dbFunc.insertCardUrl(req.body.cardId, req.body.url);
+    const cardId = await dbFunc.insertCard(req.body.cardName, req.body.cardType, user.userId, req.body.rarity, req.body.manaCost);    // returns cardId
+    //console.log(cardId)
+    if (req.body.cardType === "Creature") {
+      await dbFunc.insertCreatureCard(cardId, req.body.creatureAttack, req.body.creatureDefense);
+    } else {
+      await dbFunc.insertSpellCard(cardId, req.body.spellType, req.body.spellAbility, req.body.spellAttack, req.body.spellDefense, req.body.utility);
+    }
+    const url = await dbFunc.insertCardUrl(cardId, req.body.url);
     const data = await dbFunc.getCardInfo(req.body.cardId);
 
     res.render('cardViewPrintedPage', {
