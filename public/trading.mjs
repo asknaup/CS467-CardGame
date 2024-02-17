@@ -161,6 +161,59 @@ function simulateTrade(userObj, otherPlayerObj){
 }
 
 
+/* above are function definitions
+========================================================================================================================
+below are hardcoded cards  */
+
+var numScrollCards = 8;
+let userObj = {primaryKeyArr: [], cardDict: {}, stagedCardCount: 0, startIndex: 0, endIndex: 7, cardSlots: "userCardSlots", 
+            stageAreaId: "userStageAreaId", stageAreaClass: "userStageAreaClass", stagedCardName: "userStagedCard"};
+let otherPlayerObj = {primaryKeyArr: [], cardDict: {}, stagedCardCount: 0, startIndex: 0, endIndex: 7, cardSlots: "otherCardSlots", 
+            stageAreaId: "otherStageAreaId", stageAreaClass: "otherStageAreaClass", stagedCardName: "otherStagedCard"};
+
+
+/* Create Example Dummy Cards */
+// Example cards data (you can add more)
+var exampleCards = [
+    {primaryKey: "goblin", cardName: "Goblin", image: 'images/goblin-willow-tree.jpg', 
+            description: 'A small forest goblin.', cardType:'Creature', 
+            attributes: {hp:50, atk:50, def:30, specialAbility:'Cooking', goldCost:5}},
+    {primaryKey: "wizard", cardName: 'Fire Ball Scroll', image: 'images/dark-wizard.png',  
+                description:'A powerful fire ball.', cardType: 'Spell', 
+                attributes: {hp:80, atk:60, def:20, specialAbility:'Fire Ball', goldCost:7}},
+    {primaryKey: "iceDragon", cardName: 'Ice Dragon', image: 'images/ice-dragon.png', 
+                description: 'An ice dragon from the North.', cardType: 'Creature', 
+                attributes: {hp:120, atk:100, def:80, specialAbility:'Flying', goldCost:9}}
+    // Add more cards as needed
+];
+
+/* populate the players' card dictionaries with card objs */
+for (let index = 0; index<=33; index++){
+    let numCards = exampleCards.length;
+    let randomIndex = Math.floor(Math.random() * numCards);
+    let cardData = exampleCards[randomIndex];
+    let uniquePrimaryKey = cardData.primaryKey + index.toString()
+    userObj.primaryKeyArr.push(uniquePrimaryKey);
+    userObj.cardDict[uniquePrimaryKey] = new Card(uniquePrimaryKey, cardData.cardName, cardData.image,
+                cardData.description, cardData.cardType, cardData.attributes);
+    // now create other player's card set
+    let otherRandomIndex = (randomIndex + 1) %  exampleCards.length;
+    let otherCardData = exampleCards[otherRandomIndex];
+    let otherUniquePrimaryKey = otherCardData.primaryKey + index.toString()
+    otherPlayerObj.primaryKeyArr.push(otherUniquePrimaryKey);
+    otherPlayerObj.cardDict[otherUniquePrimaryKey]= new Card(otherUniquePrimaryKey, otherCardData.cardName, otherCardData.image,
+                otherCardData.description, otherCardData.cardType, otherCardData.attributes);
+}
+
+/* above are hardcoded cards
+========================================================================================================================
+below is the setup of event listeners and the code that executes for this file  */
+
+/*main code for trading */
+displayScrollCards(otherPlayerObj);
+displayScrollCards(userObj);
+
+
 var otherScrollRightButton = document.getElementById("otherScrollRight");
 otherScrollRightButton.addEventListener("click", () => {
     if (otherPlayerObj.endIndex < otherPlayerObj.primaryKeyArr.length - 1){
@@ -220,54 +273,6 @@ userScrollLeftButton.addEventListener("click", () => {
     }
 });
 
-/* above are definitions and the setup of event listeners
-========================================================================================================================
-below are hardcoded cards and the code that executes from this file */
-
-var numScrollCards = 8;
-let userObj = {primaryKeyArr: [], cardDict: {}, stagedCardCount: 0, startIndex: 0, endIndex: 7, cardSlots: "userCardSlots", 
-            stageAreaId: "userStageAreaId", stageAreaClass: "userStageAreaClass", stagedCardName: "userStagedCard"};
-let otherPlayerObj = {primaryKeyArr: [], cardDict: {}, stagedCardCount: 0, startIndex: 0, endIndex: 7, cardSlots: "otherCardSlots", 
-            stageAreaId: "otherStageAreaId", stageAreaClass: "otherStageAreaClass", stagedCardName: "otherStagedCard"};
-
-
-/* Create Example Dummy Cards */
-// Example cards data (you can add more)
-var exampleCards = [
-    {primaryKey: "goblin", cardName: "Goblin", image: 'images/goblin-willow-tree.jpg', 
-            description: 'A small forest goblin.', cardType:'Creature', 
-            attributes: {hp:50, atk:50, def:30, specialAbility:'Cooking', goldCost:5}},
-    {primaryKey: "wizard", cardName: 'Fire Ball Scroll', image: 'images/dark-wizard.png',  
-                description:'A powerful fire ball.', cardType: 'Spell', 
-                attributes: {hp:80, atk:60, def:20, specialAbility:'Fire Ball', goldCost:7}},
-    {primaryKey: "iceDragon", cardName: 'Ice Dragon', image: 'images/ice-dragon.png', 
-                description: 'An ice dragon from the North.', cardType: 'Creature', 
-                attributes: {hp:120, atk:100, def:80, specialAbility:'Flying', goldCost:9}}
-    // Add more cards as needed
-];
-
-/* populate the players' card dictionaries with card objs */
-for (let index = 0; index<=33; index++){
-    let numCards = exampleCards.length;
-    let randomIndex = Math.floor(Math.random() * numCards);
-    let cardData = exampleCards[randomIndex];
-    let uniquePrimaryKey = cardData.primaryKey + index.toString()
-    userObj.primaryKeyArr.push(uniquePrimaryKey);
-    userObj.cardDict[uniquePrimaryKey] = new Card(uniquePrimaryKey, cardData.cardName, cardData.image,
-                cardData.description, cardData.cardType, cardData.attributes);
-    // now create other player's card set
-    let otherRandomIndex = (randomIndex + 1) %  exampleCards.length;
-    let otherCardData = exampleCards[otherRandomIndex];
-    let otherUniquePrimaryKey = otherCardData.primaryKey + index.toString()
-    otherPlayerObj.primaryKeyArr.push(otherUniquePrimaryKey);
-    otherPlayerObj.cardDict[otherUniquePrimaryKey]= new Card(otherUniquePrimaryKey, otherCardData.cardName, otherCardData.image,
-                otherCardData.description, otherCardData.cardType, otherCardData.attributes);
-}
-
-
-/*main code for tradeAndCollect */
-displayScrollCards(otherPlayerObj);
-displayScrollCards(userObj);
 
 var startTradeButton = document.getElementById("startTradeButton");
 startTradeButton.addEventListener("click", () => {
