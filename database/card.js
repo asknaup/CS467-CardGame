@@ -44,11 +44,11 @@ async function getImageUrlFromLeonardo(imageId) {
         console.error(error);
     }
 }
-
 /*
 (async () => {
-    //const aiCard = await createAICard('samurai', 'dark', 'gold');
-    const val = await getImageUrlFromLeonardo('8c7a0cd1-475b-4740-9f29-fa1b167cf7d5'); // aiCard.sdGenerationJob.generationId
+    const aiCard = await createAICard('samurai', 'dark', 'gold', 'rare');
+    console.log(aiCard.sdGenerationJob);
+    const val = await getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId); // aiCard.sdGenerationJob.generationId
     console.log(val);
 })();
 */

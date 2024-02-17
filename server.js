@@ -6,6 +6,7 @@ const session = require('express-session');     // Session control to save varia
 // const bcrypt = require('bcrypt');               // Encryption
 const router = new require('express').Router();
 const bodyParser = require('body-parser');
+// const ngrok = require("@ngrok/ngrok");
 const path = require('path');
 const fs = require('fs');
 
@@ -18,6 +19,7 @@ const cardGen = require('./database/card-gen');
 const gameGen = require('./database/game-gen');
 const game1 = require('./database/game-play1')
 const card = require('./database/card');
+const configFile = require('./database/config');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -275,10 +277,10 @@ app.get('/game/', async (req, res) => {
   }
 });
 
+
 app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
 });
-
 
 // POST ROUTES 
 app.post('/newUserPost', async (req, res) => {
@@ -340,6 +342,9 @@ app.post('/login', async (req, res) => {
 
 app.post('/cardViewEditPage', async (req, res) => {
   const user = req.session.user;
+  async function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
   try {
     if (user) {
       const cardId = await dbFunc.insertCard(req.body.cardName, req.body.cardType, user.userId, req.body.rarity, req.body.manaCost);    // returns cardId
@@ -350,17 +355,17 @@ app.post('/cardViewEditPage', async (req, res) => {
         await dbFunc.insertSpellCard(cardId, req.body.spellType, req.body.spellAbility, req.body.spellAttack, req.body.spellDefense, req.body.utility);
       }
 
-      const aiCard = await card.createAICard(req.body.creatureType, req.body.theme, req.body.color, req.body.rarity);
-      console.log(aiCard['sdGenerationJob']['generationId']);
-      
-      const values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId.toString()); //aiCard.sdGenerationJob.generationId
-      console.log(values);
+      const aiCard = await card.createAICard(req.body.creatureType, req.body.theme, req.body.color, req.body.rarity);      
+      let values = [];
+      while (values.length == 0) {
+          values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId); //aiCard.sdGenerationJob.generationId
+          // console.log(values);
+          await delay(1000);
+      }
       // await dbFunc.insertCardUrl(cardId, imagePath); 
-      //b126d1fd-1379-4ce4-8440-709acd6d0b2c
       res.render('cardViewEditPage', {
         val: values
       });
-
     } else {
       // Authentication failed, render 'cardGenPage' with an error message
       res.render('cardGenPage', { error: "Sorry! You cannot create a card without having an account" })
@@ -370,6 +375,7 @@ app.post('/cardViewEditPage', async (req, res) => {
     res.send(`Something went wrong: ${err}`);
   }
 });
+
 
 app.post('/gameGenerationPageAction', async (req, res) => {
   try {
