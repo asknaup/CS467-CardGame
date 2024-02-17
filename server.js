@@ -44,8 +44,15 @@ app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
 
 // Serve static file from public directory
-// app.use(express.static('public'));
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, 'public'),
+  {
+    'extensions': ['js'],
+    'index': false,
+    'Content-Type': 'text/javascript'
+  }));
+app.use(express.static(path.join(__dirname, 'images')))
+app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use('/database', express.static(path.join(__dirname, 'public')));
 
 /*
 ROUTES
@@ -59,6 +66,29 @@ ROUTES
 // TODO cardview page bulk - bulk generation?
 // TODO homepage that's not the welcome page
 // TODO Need better navigation -> navigation to card generation page as maybe a subclass under make. route to make game, make card
+
+// app.get('/db-functions.js', (req, res) => {
+//   res.type('application/javascript');
+//   // Your logic to send the file
+// });
+app.get('/cards', async (req, res) => {
+  try {
+      // Retrieve the user ID from the request query parameters
+      // const userId = req.query.userId;
+      const userId = 1001; //FIXME
+      // console.log(userId);
+      // Call the database function to get card data based on userId
+      const cardData = await dbFunc.getCardIdByUser(userId);
+      const cardsDict = hf.convertListToDict(cardData);
+      // console.log(cardsDict);
+      // Send card data as reponse
+      res.json(cardsDict);
+  } catch (error) {
+      // Handle errors that occur during data retrival
+      console.error('Error fetching card data:', error);
+      res.status(500).json({error: 'Internal server error'})
+  }
+})
 
 app.get('/favico.ico', (req, res) => {
   res.sendStatus(404);
@@ -106,7 +136,8 @@ app.get('/userDeck/:username', (req, res) => {
   // TODO insert deck as json into db
   // TODO handlebars
   // Show user logged in user profile
-  const user = req.session.user;
+  // const user = req.session.user;
+  user = {userId: 1001, username: 'admin'}
   if (user) {
     res.render('currentDeck', { showLogoutButton: true })
   } else {
@@ -138,9 +169,11 @@ app.get('/gameGenPage', async (req, res) => {
 // TODO Deck generation page
 app.get('/buildDeck', (req, res) => {
   // Show user logged in user profile
-  const user = req.session.user;
+  // FIXME
+  // const user = req.session.user;
+  user = {userId: 1001, username: 'admin'}
   if (user) {
-    res.render('buildDeck', { showLogoutButton: true })
+    res.render('buildDeck', { showLogoutButton: true , userId : 1001})
   } else {
     res.render('buildDeck', { showLogoutButton: false })
   }
@@ -272,8 +305,17 @@ app.get('/game/', async (req, res) => {
   // TODO game handlebars file
   // TODO game logic
   if (user) {
-    const deckList = await game1.getDeck(user.userId, deck.deckId);
-    console.log(deckList);
+    // const deckList = await game1.getDeck(user.userId, deck.deckId);
+    // console.log(deckList);
+    const game = new Game1(user.userId, deck.deckId);
+    await game.initialize();
+    
+    res.render('gamePlay1', {
+      gameId: game.gameId, 
+      ruleSet: game.ruleSet, 
+      hand: game.hand,
+      remainingDeckCards: game.deck.length
+    });
   }
 });
 
