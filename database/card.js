@@ -1,4 +1,4 @@
-const configFile = require('./config');
+// const configFile = require('./config');
 
 // Sends a post request to Leonardo with prompts, returns data
 async function createAICard(prompt, theme, color, rarity) {

@@ -19,7 +19,7 @@ const cardGen = require('./database/card-gen');
 const gameGen = require('./database/game-gen');
 const game1 = require('./database/game-play1')
 const card = require('./database/card');
-const configFile = require('./database/config');
+// const configFile = require('./database/config');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
