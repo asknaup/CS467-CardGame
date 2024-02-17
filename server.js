@@ -98,13 +98,19 @@ app.get('/userProfile/:username', async (req, res) => {
   }
 });
 
-app.get('/userDeck/:username', (req, res) => {
+
+
+app.get('/userDeck/:username', async (req, res) => {
   // TODO show different decks
   // TODO insert deck as json into db
   // TODO handlebars
   // Show user logged in user profile
-  const user = req.session.user;
+  // const user = req.session.user;
+  user = {userId: 1001, username: 'admin'}
   if (user) {
+    var exampleCards = await dbFunc.getCardIdByUser(1001);
+    var exampleCardsDict = convertListToDict(exampleCards);
+    console.log(exampleCardsDict['11'])
     res.render('currentDeck', { showLogoutButton: true })
   } else {
     res.render('currentDeck', { showLogoutButton: false })
@@ -213,7 +219,6 @@ app.get('/cardGenPage', (req, res) => {
 app.get('/tradeAndCollect', (req, res) => {
   // Show user logged in user profile
   const user = req.session.user;
-  res.render('tradeAndCollect', { showLogoutButton: true })
   if (user) {
     res.render('tradeAndCollect', { showLogoutButton: true })
   } else {

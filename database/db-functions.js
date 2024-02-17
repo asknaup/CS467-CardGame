@@ -332,6 +332,19 @@ async function getUserDeck(deckId) {
         });
     });
 }
+// Get specific deck
+async function getCardById(userId) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT cardId FROM cardInstance WHERE ownerUserId = ?';
+        db.pool.query(query, deckId, (selectErr, selectResult) => {
+            if (selectErr) {
+                reject(selectErr);
+            } else {
+                resolve(selectResult);
+            }
+        });
+    });
+}
 
 // Generate new game
 async function createNewGame(ruleSet, userId, userDeckId) {
