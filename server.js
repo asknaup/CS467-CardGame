@@ -16,7 +16,7 @@ const db = require('./database/db-connector');
 const dbFunc = require('./database/db-functions')
 const cardGen = require('./database/card-gen');
 const gameGen = require('./database/game-gen');
-const game1 = require('./database/game-play1');
+const Game1 = require('./database/game-play1');
 const hf = require('./database/helperFuncs')
 
 app.use(bodyParser.urlencoded({ extended: true }));
