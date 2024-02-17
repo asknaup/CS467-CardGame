@@ -16,7 +16,7 @@ const db = require('./database/db-connector');
 const dbFunc = require('./database/db-functions')
 const cardGen = require('./database/card-gen');
 const gameGen = require('./database/game-gen');
-const game1 = require('./database/game-play1')
+const Game1 = require('./database/game-play1')
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -274,8 +274,17 @@ app.get('/game/', async (req, res) => {
   // TODO game handlebars file
   // TODO game logic
   if (user) {
-    const deckList = await game1.getDeck(user.userId, deck.deckId);
-    console.log(deckList);
+    // const deckList = await game1.getDeck(user.userId, deck.deckId);
+    // console.log(deckList);
+    const game = new Game1(user.userId, deck.deckId);
+    await game.initialize();
+    
+    res.render('gamePlay1', {
+      gameId: game.gameId, 
+      ruleSet: game.ruleSet, 
+      hand: game.hand,
+      remainingDeckCards: game.deck.length
+    });
   }
 });
 

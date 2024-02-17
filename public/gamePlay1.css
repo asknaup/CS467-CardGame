@@ -1,0 +1,34 @@
+.drop-zone {
+    width: 150px; /* Adjust the width as needed */
+    height: 210px; /* Adjust the height as needed */
+    border: 2px dashed #000;
+    margin: 10px;
+    display: inline-block;
+    flex-wrap: wrap;
+}
+
+.card {
+    width: 100px;
+    height: 140px;
+    margin: 5px;
+    border: 1px solid black; 
+}
+
+.board {
+    border: 2px solid green;
+    width: auto;
+    height: auto;
+    margin: 20px;
+    justify-content: space-evenly;
+}
+
+.computer, .player {
+    display: flex; 
+    flex-wrap: wrap; 
+    justify-content: space-evenly;
+}
+
+.card-container {
+    display: flex;
+    justify-content: center;
+}

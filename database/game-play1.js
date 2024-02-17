@@ -3,7 +3,6 @@ helper = require('./helper-funcs')
 // Using RuleSet1
 
 // TODO get user deck and shuffle
-
 class Game{
     constructor(userId, deckId) {
         this.userId = userId;
@@ -11,8 +10,10 @@ class Game{
         this.hand = [];
         this.deck = [];
         this.playerStage = [];
+        this.playerHealth = 100;
     }
 
+    // Initialize the game
     async initialize() {
         this.deck = await this.getDeck();
         this.drawInitialHand();
@@ -95,14 +96,4 @@ class Game{
     }
 };
 
-// Usage:
-// const userId = 'user123';
-// const deckId = 'deck456';
-// const game = new Game(userId, deckId);
-// game.initialize().then(() => {
-//     // Game initialized, start playing
-//     game.playNextTurn();
-// });
-
-
-module.exports.getDeck = getDeck;
+module.exports = Game;
