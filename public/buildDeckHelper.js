@@ -2,33 +2,61 @@ document.addEventListener('DOMContentLoaded', function() {
     const cardList = document.getElementById('cardList');
     const stagingArea = document.getElementById('stagingArea');
     const cardContainer = document.getElementById('cardContainer');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    let currentPage = 0;
+    const cardsPerPage = 6;
 
     // Fetch user's cards from the server
     fetch('/cards')
         .then(response => response.json())
         .then(userCards => {
-            Object.keys(userCards).forEach(cardId => {
-                const card = userCards[cardId];
-                
-                // Card HTML properties
-                const cardElement = document.createElement('div');
-                // cardElement.textContent = card.cardName;
-                cardElement.draggable = true;
-                
-                // Card Image properties
-                const imgElement = document.createElement('img');
-                imgElement.src = 'Default_trading_card_game_card_samurai_warrior_the_number_1_in_3.jpg';
-                imgElement.alt = card.cardName;
-                imgElement.classList.add('card-image');
+            const totalCards = Object.keys(userCards).length;
+            const totalPages = Math.ceil(totalCards / cardsPerPage);
 
-                cardElement.appendChild(imgElement);
-                cardElement.addEventListener('dragstart', dragStart);
-                cardContainer.appendChild(cardElement);
-            })
+            updateCardDisplay(userCards);
+
+            // Add event listeners for pagination buttons
+            prevBtn.addEventListener('click', () => navigatePage(-1));
+            nextBtn.addEventListener('click', () => navigatePage(1));
+
+            function navigatePage(direction) {
+                currentPage += direction;
+
+                if (currentPage < 0) {
+                    currentPage = 0;
+                } else if (currentPage >= totalPages) {
+                    currentPage = totalPages - 1;
+                }
+
+                updateCardDisplay(userCards);
+            }
+
+            function updateCardDisplay(userCards) {
+                // Clear existing cards
+                cardContainer.innerHTML = '';
+
+                // Calculate start and end indices for the current page
+                const startIndex = currentPage * cardsPerPage;
+                const endIndex = startIndex + cardsPerPage;
+
+                // Display cards for the current page
+                Object.keys(userCards).slice(startIndex, endIndex).forEach(cardId => {
+                    const card = userCards[cardId];
+                    const cardElement = createTradingCard(card);
+                    cardElement.draggable = true;
+                    cardElement.addEventListener('dragstart', dragStart);
+                    cardContainer.appendChild(cardElement);
+                });
+            }
         });
 
     function dragStart(event) {
-        event.dataTransfer.setData('text/plain', event.target.textContent);
+        // Update the data being transferred to include the card details
+        const cardId = event.target.dataset.cardId;
+        const cardData = userCards[cardId];
+        event.dataTransfer.setData('text/plain', JSON.stringify(cardData));
     }
 
     stagingArea.addEventListener('dragover', dragOver);
@@ -40,11 +68,95 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function drop(event) {
         event.preventDefault();
-        const cardName = event.dataTransfer.getData('text/plain');
-        const cardElement = document.createElement('div');
-        cardElement.textContent = cardName;
-        stagingArea.appendChild(cardElement)
+        const cardData = JSON.parse(event.dataTransfer.getData('text/plain'));
+        const cardElement = createTradingCard(cardData);
+        stagingArea.appendChild(cardElement);
     }
+
+    function createTradingCard(cardData) {
+        // Card container
+        var cardContainer = document.createElement('div');
+        cardContainer.classList.add('card');
+    
+        // Card content
+        var cardContent = document.createElement('div');
+        cardContent.classList.add('cardContent');
+    
+        // Card header
+        var cardHeader = document.createElement('div');
+    
+        // Name
+        var cardName = document.createElement('h2');
+        cardName.classList.add('cardName');
+        cardName.textContent = cardData.cardName;
+    
+        cardHeader.appendChild(cardName);
+    
+        // Card image
+        var cardImage = document.createElement('div');
+        cardImage.classList.add('cardImage');
+    
+        if (cardData.imagePath) {
+            var imageElement = document.createElement('img');
+            imageElement.src = cardData.imagePath;
+            imageElement.alt = 'Card Image';
+            cardImage.appendChild(imageElement);
+        }
+    
+        // Card details
+        var cardDetails = document.createElement('div');
+        cardDetails.classList.add('cardDetails');
+    
+        var cardType = document.createElement('p');
+        cardType.textContent = cardData.cardType;
+    
+        var rarity = document.createElement('p');
+        rarity.textContent = cardData.rarity;
+    
+        var manaCost = document.createElement('p');
+        manaCost.innerHTML = `<strong>Mana Cost:</strong> ${cardData.manaCost || 0}`;
+    
+        var attributesList = document.createElement('ul');
+        attributesList.classList.add('attributes');
+    
+        if (cardData.cardType && cardData.cardType.toLowerCase() === "spell") {
+            // Check for spell attributes
+            addAttribute(attributesList, 'Spell Type', cardData.spellType);
+            addAttribute(attributesList, 'Spell Ability', cardData.spellAbility);
+            addAttribute(attributesList, 'Spell Attack', cardData.spellAttack);
+            addAttribute(attributesList, 'Spell Defense', cardData.spellDefense);
+        } else {
+            // For other card types, use textContent
+            addAttribute(attributesList, 'Attack', cardData.attack);
+            addAttribute(attributesList, 'Defense', cardData.defense);
+        }
+    
+        // Helper function to add attributes with proper checks
+        function addAttribute(parent, label, value) {
+            if (value !== null && value !== undefined) {
+                var attribute = document.createElement('li');
+                attribute.innerHTML = `<strong>${label}:</strong> ${value}`;
+                parent.appendChild(attribute);
+            }
+        }
+    
+        // Build card body
+        cardDetails.appendChild(cardType);
+        cardDetails.appendChild(rarity);
+        cardDetails.appendChild(manaCost);
+        cardDetails.appendChild(attributesList);
+    
+        // Append elements to card content
+        cardContent.appendChild(cardHeader);
+        cardContent.appendChild(cardImage);
+        cardContent.appendChild(cardDetails);
+    
+        // Append card content to card container
+        cardContainer.appendChild(cardContent);
+    
+        return cardContainer;
+    }
+
 });
 
 
