@@ -1,6 +1,6 @@
 const db = require('./db-connector');
 const OpenAI = require('openai');
-const configFile = require('./config');
+// const configFile = require('./config');
 const fs = require('fs');
 const path = require('path');
 
