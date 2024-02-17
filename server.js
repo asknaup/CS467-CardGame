@@ -57,6 +57,11 @@ ROUTES
 // TODO homepage that's not the welcome page
 // TODO Need better navigation -> navigation to card generation page as maybe a subclass under make. route to make game, make card
 
+app.get('/db-functions.js', (req, res) => {
+  res.type('application/javascript');
+  // Your logic to send the file
+});
+
 app.get('/favico.ico', (req, res) => {
   res.sendStatus(404);
 });
@@ -147,7 +152,7 @@ app.get('/buildDeck', (req, res) => {
 app.get('/currentDeck', async (req, res) => {
   // Show user logged in user profile
   // FIXME
-  const user = {userId: 1001, username: 'admin'};
+  const user = { userId: 1001, username: 'admin' };
   // const user = req.session.user;
   if (user) {
     var exampleCards = await dbFunc.getCardIdByUser(1001);

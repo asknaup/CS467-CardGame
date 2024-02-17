@@ -1,6 +1,8 @@
 //TODO: dbfunc import statement killing off the card display for some reason
-// import dbFunc from './database/db-functions';
+import dbFunc from './database/db-functions';
 import { createTradingCard } from "./generalCardCode.mjs";
+import { convertListToDict } from "./generalCardCode.mjs";
+
 
 //TODO: Fix reset button, doesn't work using generalCardCode for some reason
 
@@ -128,8 +130,7 @@ var exampleCards = [
     },
 ];
 
-// var exampleCards = dbFunc.getCardIdByUser(1001);
-// console.log(exampleCards);
+var exampleCards = dbFunc.getCardIdByUser(1001);
 
 // Card container element from the HTML
 var cardContainer = document.getElementById('cardContainer');
@@ -196,6 +197,7 @@ function displayCards(startIndex) {
 
     // Display three cards at a time
     for (var i = startIndex; i < startIndex + displayLimit && i < exampleCards.length; i++) {
+        exampleCards = convertListToDict(exampleCards);
         var cardData = exampleCards[i];
         var createdCard = createTradingCard(cardData);
 
