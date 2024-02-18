@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     const stagingArea = document.getElementById('stagingArea');
     const cardContainer = document.getElementById('cardContainer');
-    // const saveDeckButton = document.getElementById('saveDeckButton');
 
     const cardsPerRow = 6;
 
@@ -14,13 +13,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
             updateCardDisplay(userCards);
 
-
             function updateCardDisplay(userCards) {
                 // Clear existing cards
                 cardContainer.innerHTML = '';
 
                 // Display all cards in the carousel dynamically with no more than 7 cards per row
                 const cardIds = Object.keys(userCards);
+                const totalCards = cardIds.length;
 
                 let currentRow;
 
@@ -50,7 +49,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 const cardElement = document.querySelector(`[data-card-id="${cardId}"]`);
 
                 if (selectedCards.includes(cardId)) {
-                    // ... (Existing code)
+                    // Remove the card if it is already selected
+                    const selectedCardIndex = selectedCards.indexOf(cardId);
+                    selectedCards.splice(selectedCardIndex, 1);
+
+                    // Remove the card from the staging area
+                    const stagingRows = document.querySelectorAll('.staging-row');
+                    stagingRows.forEach(row => {
+                        const stagedCardElement = row.querySelector(`[data-card-id="${cardId}"]`);
+                        if (stagedCardElement) {
+                            row.removeChild(stagedCardElement);
+                        }
+                    });
                 } else {
                     // ... (Existing code)
 
@@ -66,6 +76,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
 
                     lastRow.appendChild(cardElement);
+
+                    // Add the card to the selectedCards array
+                    selectedCards.push(cardId);
                 }
             }
 
@@ -104,6 +117,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (saveDeckButton) {
         saveDeckButton.addEventListener('click', () => saveDeck(selectedCards));
     }
+
+    // ... (Your existing code)
 
 });
 
