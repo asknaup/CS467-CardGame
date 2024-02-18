@@ -439,6 +439,26 @@ async function getCardIdByUser(userId) {
     });
 }
 
+async function getCardByCardId(cardId) {
+    return new Promise((resolve, reject) => {
+
+        const query = 'select ci.cardId, cardName, imagePath, cardType, rarity, manaCost, spellType, spellAbility, spellAttack, spellDefense, utility, attack, defense from cardInstance as ci ' +
+            'join cards as c on c.cardId = ci.cardId ' +
+            'left join cardUrl as cu on ci.cardId = cu.cardId ' +
+            'left join cardSpell as cs on ci.cardId = cs.cardId ' +
+            'left join cardCreature as cc on ci.cardId = cc.cardId ' +
+            'WHERE ci.cardId = ?';
+
+        db.pool.query(query, cardId, (selectErr, selectResult) => {
+            if (selectErr) {
+                reject(selectErr);
+            } else {
+                resolve(selectResult);
+            }
+        });
+    });
+}
+
 function insertNewDeck(userId, deckName, cardList) {
     return new Promise((resolve, reject) => {
 
@@ -471,3 +491,4 @@ module.exports.getUserDeck = getUserDeck;
 module.exports.getCardById = getCardById;
 module.exports.createNewGame = createNewGame;
 module.exports.getCardIdByUser = getCardIdByUser;
+module.exports.getCardByCardId = getCardByCardId;
