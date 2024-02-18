@@ -43,10 +43,11 @@ main {
     /* Include padding and border in the width calculation */
 }
 
-/* .cardContainer {
-    display: flex;
-    justify-content: space-between;
-} */
+.cardContainer {
+    max-width: 100%;
+    margin: 0 auto;
+    /* Center the container */
+}
 
 #cardContainer {
     display: flex;

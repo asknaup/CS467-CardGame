@@ -38,49 +38,59 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     currentRow.appendChild(cardElement);
                 });
-
-                // Update selectedCards array to include all cards
-                selectedCards = [];
-
-                // ... (Existing code)
             }
 
             function selectCard(cardId) {
                 const cardElement = document.querySelector(`[data-card-id="${cardId}"]`);
 
                 if (selectedCards.includes(cardId)) {
-                    // Remove the card if it is already selected
+                    // Card is already selected, remove it from the selected cards array
                     const selectedCardIndex = selectedCards.indexOf(cardId);
                     selectedCards.splice(selectedCardIndex, 1);
 
-                    // Remove the card from the staging area
+                    // Check if the card is in the staging area
                     const stagingRows = document.querySelectorAll('.staging-row');
                     stagingRows.forEach(row => {
                         const stagedCardElement = row.querySelector(`[data-card-id="${cardId}"]`);
                         if (stagedCardElement) {
                             row.removeChild(stagedCardElement);
+                            // Append the card back to the cardContainer
+                            cardContainer.appendChild(cardElement);
+                            // Add the card to the carousel row
+                            const carouselRow = document.querySelector('.carouselRow');
+                            carouselRow.appendChild(cardElement);
                         }
                     });
                 } else {
-                    // ... (Existing code)
-
-                    // Ensure only 6 cards are displayed in each row in the staging area horizontally
-                    const stagingRows = document.querySelectorAll('.staging-row');
-                    let lastRow = stagingRows[stagingRows.length - 1];
-
-                    if (!lastRow || lastRow.childElementCount >= cardsPerRow) {
-                        // Create a new row if the last one is full or doesn't exist
-                        lastRow = document.createElement('div');
-                        lastRow.classList.add('staging-row');
-                        stagingArea.appendChild(lastRow);
-                    }
-
-                    lastRow.appendChild(cardElement);
-
-                    // Add the card to the selectedCards array
+                    // Card is not selected, add it to the selected cards array
                     selectedCards.push(cardId);
+
+                    // Check if the card is in the carousel
+                    const carouselRows = document.querySelectorAll('.carouselRow');
+                    carouselRows.forEach(row => {
+                        const carouselCardElement = row.querySelector(`[data-card-id="${cardId}"]`);
+                        if (carouselCardElement) {
+                            // Remove the card from the carousel
+                            row.removeChild(carouselCardElement);
+
+                            // Ensure only 6 cards are displayed in each row in the staging area horizontally
+                            const stagingRows = document.querySelectorAll('.staging-row');
+                            let lastRow = stagingRows[stagingRows.length - 1];
+
+                            if (!lastRow || lastRow.childElementCount >= cardsPerRow) {
+                                // Create a new row if the last one is full or doesn't exist
+                                lastRow = document.createElement('div');
+                                lastRow.classList.add('staging-row');
+                                stagingArea.appendChild(lastRow);
+                            }
+
+                            lastRow.appendChild(cardElement);
+                        }
+                    });
                 }
             }
+
+
 
         });
 
