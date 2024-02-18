@@ -12,6 +12,12 @@ main {
     height: 100vh;
 }
 
+.carouselRow {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+}
+
 .stagingArea {
     border: 1px solid #ccc;
     background-color: #d8eece;

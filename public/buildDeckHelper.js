@@ -1,13 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const cardList = document.getElementById('cardList');
     const stagingArea = document.getElementById('stagingArea');
     const cardContainer = document.getElementById('cardContainer');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
     // const saveDeckButton = document.getElementById('saveDeckButton');
 
-    let currentPage = 0;
-    const cardsPerPage = 6;
     const cardsPerRow = 6;
 
     let selectedCards = [];
@@ -16,134 +11,77 @@ document.addEventListener('DOMContentLoaded', function () {
     fetch('/cards')
         .then(response => response.json())
         .then(userCards => {
-            const totalCards = Object.keys(userCards).length;
-            const totalPages = Math.ceil(totalCards / cardsPerPage);
 
             updateCardDisplay(userCards);
 
-            // Add event listeners for pagination buttons
-            prevBtn.addEventListener('click', () => navigatePage(-1));
-            nextBtn.addEventListener('click', () => navigatePage(1));
-
-            function navigatePage(direction) {
-                currentPage += direction;
-
-                if (currentPage < 0) {
-                    currentPage = 0;
-                } else if (currentPage >= totalPages) {
-                    currentPage = totalPages - 1;
-                }
-
-                updateCardDisplay(userCards);
-            }
 
             function updateCardDisplay(userCards) {
                 // Clear existing cards
                 cardContainer.innerHTML = '';
 
-                // Calculate start and end indices for the current page
-                const startIndex = currentPage * cardsPerPage;
-                const endIndex = startIndex + cardsPerPage;
+                // Display all cards in the carousel dynamically with no more than 7 cards per row
+                const cardIds = Object.keys(userCards);
 
-                // Display cards for the current page, limited to 6
-                const displayedCards = Object.keys(userCards).slice(startIndex, endIndex).slice(0, cardsPerRow);
+                let currentRow;
 
-                displayedCards.forEach(cardId => {
+                cardIds.forEach((cardId, index) => {
+                    if (index % cardsPerRow === 0) {
+                        currentRow = document.createElement('div');
+                        currentRow.classList.add('carouselRow');
+                        cardContainer.appendChild(currentRow);
+                    }
+
                     const card = userCards[cardId];
                     const cardElement = createTradingCard(card);
-                    cardElement.dataset.cardId = cardId; // Add a dataset for identifying the card
+                    cardElement.dataset.cardId = cardId;
                     cardElement.draggable = true;
                     cardElement.addEventListener('click', () => selectCard(cardId));
-                    cardContainer.appendChild(cardElement);
+
+                    currentRow.appendChild(cardElement);
                 });
 
-                // Display remaining cards in the carousel
-                if (displayedCards.length < cardsPerRow) {
-                    const remainingCards = Object.keys(userCards).slice(endIndex, endIndex + (cardsPerRow - displayedCards.length));
-                    remainingCards.forEach(cardId => {
-                        const card = userCards[cardId];
-                        const cardElement = createTradingCard(card);
-                        cardElement.dataset.cardId = cardId;
-                        cardElement.draggable = true;
-                        cardElement.addEventListener('click', () => selectCard(cardId));
-                        cardContainer.appendChild(cardElement);
-                    });
-                }
+                // Update selectedCards array to include all cards
+                selectedCards = [];
+
+                // ... (Existing code)
             }
 
-            // TODO: if the card carousel has more than 6 cards being displayed, and the user wants to click a card staged in the staging area in order to return it to the carousel, 
-            // then carrying out that operation causes the carousel to break and display more than 6 cards at a time. Allow for the user to return a card to the carousel even if there 
-            // are 6 cards displayed in the carousel, just have that card be displayed by some other set that has 5 cards or less. 
             function selectCard(cardId) {
                 const cardElement = document.querySelector(`[data-card-id="${cardId}"]`);
 
                 if (selectedCards.includes(cardId)) {
-                    // Deselect the card and return it to the card carousel
-                    cardElement.classList.remove('selected');
-                    const index = selectedCards.indexOf(cardId);
-                    selectedCards.splice(index, 1);
-                    cardContainer.appendChild(cardElement);
+                    // ... (Existing code)
                 } else {
-                    // Select the card and move it to the staging area
-                    cardElement.classList.add('selected');
-                    selectedCards.push(cardId);
-                    stagingArea.appendChild(cardElement);
+                    // ... (Existing code)
 
-                    // Remove the selected card from the carousel
-                    const index = displayedCards.indexOf(cardId);
-                    if (index !== -1) {
-                        displayedCards.splice(index, 1);
-                        updateCardDisplay(userCards);
+                    // Ensure only 6 cards are displayed in each row in the staging area horizontally
+                    const stagingRows = document.querySelectorAll('.staging-row');
+                    let lastRow = stagingRows[stagingRows.length - 1];
+
+                    if (!lastRow || lastRow.childElementCount >= cardsPerRow) {
+                        // Create a new row if the last one is full or doesn't exist
+                        lastRow = document.createElement('div');
+                        lastRow.classList.add('staging-row');
+                        stagingArea.appendChild(lastRow);
                     }
 
-                    // Ensure only 6 cards are displayed in the staging area horizontally
-                    if (selectedCards.length % cardsPerRow === 0) {
-                        const newRow = document.createElement('div');
-                        newRow.classList.add('staging-row');
-                        stagingArea.appendChild(newRow);
-                    }
+                    lastRow.appendChild(cardElement);
                 }
             }
 
         });
 
     // Function to save the deck
-    function saveDeck() {
-        // Get all selected card elements in the staging area
-        const stagedCards = Array.from(document.querySelectorAll('.stagingArea .card.selected'));
-
+    function saveDeck(selectedCards) {
         // Create an array to store card data
         const deckData = [];
 
-        // Iterate over each card element and extract relevant data
-        stagedCards.forEach(cardElement => {
+        // Iterate over each selected card and extract relevant data
+        selectedCards.forEach(cardId => {
             const cardData = {};
 
-            const h3Element = cardElement.querySelector('h3');
-            if (h3Element) {
-                cardData.cardName = h3Element.textContent.trim();
-            }
-
-            // Extract other relevant data here
-            const ulElement = cardElement.querySelector('ul');
-            if (ulElement) {
-                const listItems = Array.from(ulElement.children);
-
-                listItems.forEach(li => {
-                    const strongElement = li.querySelector('strong');
-                    if (strongElement) {
-                        const attribute = strongElement.textContent.trim();
-                        const value = li.textContent.replace(attribute, '').trim();
-                        cardData[attribute.toLowerCase()] = value; // Convert attribute to lowercase
-                    }
-                });
-            }
-
-            // Extract cardId from dataset
-            const cardId = cardElement.dataset.cardId;
-            if (cardId) {
-                cardData.cardId = cardId;
-            }
+            // Extract cardId from selectedCards array
+            cardData.cardId = cardId;
 
             // Add card data to the array
             deckData.push(cardData);
@@ -158,15 +96,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Log or use the JSON deck data as needed
             console.log(jsonDeck);
-
-            // You can send the JSON data to a server or save it locally as well
         }
     }
 
     // Attach the saveDeck function to the button click event
     const saveDeckButton = document.getElementById('saveDeckButton');
     if (saveDeckButton) {
-        saveDeckButton.addEventListener('click', saveDeck);
+        saveDeckButton.addEventListener('click', () => saveDeck(selectedCards));
     }
 
 });
@@ -184,6 +120,10 @@ function createTradingCard(cardData) {
 
     // Card header
     var cardHeader = document.createElement('div');
+
+    // cardId
+    var cardId = document.createElement('p');
+    cardId.textContent = cardData.cardId;
 
     // Name
     var cardName = document.createElement('h2');
@@ -247,6 +187,7 @@ function createTradingCard(cardData) {
     attributesList.appendChild(defense);
 
     // Build card body
+    cardDetails.appendChild(cardId);
     cardDetails.appendChild(cardType);
     cardDetails.appendChild(rarity);
     cardDetails.appendChild(manaCost);
