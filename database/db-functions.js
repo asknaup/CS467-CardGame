@@ -213,7 +213,7 @@ function createNewCollection(userId) {
     });
 }
 
-function insertCard(name, type, user, rarity, manaCost) {
+async function insertCard(name, type, user, rarity, manaCost) {
     return new Promise((resolve, reject) => {
         db.pool.query('START TRANSACTION', (startTransactionErr) => {
             if (startTransactionErr) {
@@ -259,7 +259,7 @@ function insertCard(name, type, user, rarity, manaCost) {
     });
 }
 
-function insertCreatureCard(cardId, creatureAttack, creatureDefense) {
+async function insertCreatureCard(cardId, creatureAttack, creatureDefense) {
     return new Promise((resolve, reject) => {
         const query = 'INSERT INTO cardCreature (cardId, attack, defense) VALUES (?, ?, ?);';
         const vars = [cardId, creatureAttack, creatureDefense];
@@ -274,7 +274,7 @@ function insertCreatureCard(cardId, creatureAttack, creatureDefense) {
     });
 }
 
-function insertSpellCard(cardId, spellType, spellAbility, spellAttack, spellDefense, utility) {
+async function insertSpellCard(cardId, spellType, spellAbility, spellAttack, spellDefense, utility) {
     return new Promise((resolve, reject) => {
         const query = 'INSERT INTO cardSpell (cardId, spellType, spellAbility, spellAttack, spellDefense, utility) VALUES (?, ?, ?, ?, ?, ?);';
         const vars = [cardId, spellType, spellAbility, spellAttack, spellDefense, utility];
@@ -289,7 +289,7 @@ function insertSpellCard(cardId, spellType, spellAbility, spellAttack, spellDefe
     });
 }
 
-function insertCardUrl(cardId, url) {
+async function insertCardUrl(cardId, url) {
     return new Promise((resolve, reject) => {
         const query = 'INSERT INTO cardUrl (cardId, imagePath) VALUES (?, ?);';
         const vars = [cardId, url];
@@ -304,7 +304,7 @@ function insertCardUrl(cardId, url) {
     });
 }
 
-function getCardInfo(cardId) {
+async function getCardInfo(cardId) {
     return new Promise((resolve, reject) => {
         const query = 'SELECT * FROM cards where cardId = ?'
         db.pool.query(query, cardId, (selectErr, selectResult) => {
