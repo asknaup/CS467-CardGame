@@ -1,5 +1,79 @@
-import { createTradingCardWithId } from "./generalCardCode.mjs";
+// Function to create a trading card
+function createTradingCard(cardData) {
+    // Card container
+    var cardContainer = document.createElement('div');
+    cardContainer.classList.add('card');
 
+    // Card content
+    var cardContent = document.createElement('div');
+    cardContent.classList.add('cardContent');
+
+    // Card header
+    var cardHeader = document.createElement('div');
+
+    var cardName = document.createElement('h2');
+    cardName.classList.add('cardName');
+    cardName.textContent = cardData.cardName;
+
+    cardHeader.appendChild(cardName);
+  
+    // Card image
+    var cardImage = document.createElement('div');
+    cardImage.classList.add('cardImage');
+
+    var imageElement = document.createElement('img');
+    imageElement.src = cardData.image;
+    imageElement.alt = 'Card Image';
+
+    cardImage.appendChild(imageElement);
+
+    
+    // Card details
+    var cardDetails = document.createElement('div');
+    cardDetails.classList.add('cardDetails');
+
+    var cardDescription = document.createElement('p');
+    cardDescription.classList.add('cardDescription');
+    cardDescription.textContent = cardData.description;
+
+    var additionalText = document.createElement('p');
+    additionalText.textContent = cardData.cardType; // Set additional text content
+
+    var attributesList = document.createElement('ul');
+    attributesList.classList.add('attributes');
+
+    
+    // Iterate through card attributes to create list items
+    Object.keys(cardData.attributes).forEach(function (attribute) {
+        var listItem = document.createElement('li');
+        listItem.innerHTML = `<strong>${attribute}:</strong> ${cardData.attributes[attribute]}`;
+        attributesList.appendChild(listItem);
+    });
+
+    // Build card body
+    cardDetails.appendChild(cardDescription);
+    cardDetails.appendChild(additionalText);
+    cardDetails.appendChild(attributesList);
+
+    // Append elements to card content
+    cardContent.appendChild(cardHeader);
+    cardContent.appendChild(cardImage);
+    cardContent.appendChild(cardDetails);
+
+    // Append card content to card container
+    cardContainer.appendChild(cardContent);
+
+    return cardContainer;
+    
+}
+
+function createTradingCardWithId(id, cardData){
+    let cardContainer = createTradingCard(cardData);
+    cardContainer.setAttribute('id', id);
+    return cardContainer;
+}
+
+/* ================== pasted code from generalCardCode above =========================================*/
 class Card{
     constructor(primaryKey, cardName, image, description, cardType, attributes){
         this.primaryKey = primaryKey;
@@ -50,7 +124,6 @@ function addScrollCardFunctionality(playerObj, primaryIndex, cardData, scrollCar
                 highlightCard(true, playerObj, scrollCard);
                 createAndAppendStagedCard(playerObj, primaryIndex, cardData);
                 cardData.isStaged = true;
-                //stagedCardCount is a global variable
                 playerObj.stagedCardCount += 1;
             }
         } else {
@@ -58,7 +131,6 @@ function addScrollCardFunctionality(playerObj, primaryIndex, cardData, scrollCar
             var stagedCard = document.getElementById(cardData.primaryKey + playerObj.stagedCardName);
             stagedCard.remove();
             cardData.isStaged = false;
-            //stagedCardCount is a global variable
             playerObj.stagedCardCount -= 1;
         }
     };
@@ -111,22 +183,20 @@ function removeOldCardsFromPopUpForm(){
     }
 }
 
-function createPopUpForm(userObj, otherPlayerObj, stagedCardsDict){
+function createPopUpForm(stagedCardsDict){
     let tradePopUpForm = document.getElementById("tradePopUpForm");
     tradePopUpForm.style.display = "block";
     removeOldCardsFromPopUpForm();
-    // move card element from stagedArea to pop up form
-    /* NOTE: the cards from otherStageArea get moved to userTradeSlots
-        because this it pop up form is on other player's computer
+    /* NOTE: the cards from otherStageArea get moved to userTradeSlots in the
+        pop up form because this pop up form is on other player's computer
     */
     let userTradeSlots = document.getElementById("userTradeSlots");
     let otherStagedCardsArr = stagedCardsDict["otherStagedCardsArr"];
     for (let index = 0; index < otherStagedCardsArr.length; index++) {
         userTradeSlots.appendChild(otherStagedCardsArr[index]);
     }
-    // move card element from stagedArea to pop up form
-    /* NOTE: the cards from userStageArea get moved to otherPlayerTradeSlots
-        because this it pop up form is on other player's computer
+    /* NOTE: the cards from userStageArea get moved to otherPlayerTradeSlots in the
+        pop up form because this pop up form is on other player's computer
     */
     let otherPlayerTradeSlots = document.getElementById("otherPlayerTradeSlots");
     let userStagedCardsArr = stagedCardsDict["userStagedCardsArr"];
@@ -136,31 +206,30 @@ function createPopUpForm(userObj, otherPlayerObj, stagedCardsDict){
 }
 
 
+function removeIsStagedStatusAndItsEffects(playerObj, index, stagedCardsArr){
+    // remove isStaged status from cardObj and unhighlight its html card element
+    let stagedCardId = stagedCardsArr[index].id;
+    // now with primary key we can access both the stagedCardObj and stagedCard document element
+    let primaryKey = stagedCardId.substring(0, stagedCardId.length - playerObj.stagedCardName.length);
+    let scrollCardObj = playerObj.cardDict[primaryKey];
+    scrollCardObj.isStaged = false;
+    playerObj.stagedCardCount -= 1;
+    var scrollCard = document.getElementById(primaryKey);
+    highlightCard(false, playerObj, scrollCard);
+}
+
+
 function simulateTrade(userObj, otherPlayerObj){
     let stagedCardsDict = getStagedCards(userObj, otherPlayerObj);
     let otherStagedCardsArr = stagedCardsDict["otherStagedCardsArr"];
     for (let index = 0; index < otherStagedCardsArr.length; index++) {
-        // remove isStaged status from cardObj and unhighlight its html card element
-        let otherStagedCardId = otherStagedCardsArr[index].id;
-        let otherPrimaryKey = otherStagedCardId.substring(0, otherStagedCardId.length - otherPlayerObj.stagedCardName.length);
-        let otherScrollCardObj = otherPlayerObj.cardDict[otherPrimaryKey];
-        otherScrollCardObj.isStaged = false;
-        otherPlayerObj.stagedCardCount -= 1;
-        var scrollCard = document.getElementById(otherPrimaryKey);
-        highlightCard(false, otherPlayerObj, scrollCard);
+        removeIsStagedStatusAndItsEffects(otherPlayerObj, index, otherStagedCardsArr);
     }
     let userStagedCardsArr = stagedCardsDict["userStagedCardsArr"];
     for (let index = 0; index < userStagedCardsArr.length; index++) {
-         // remove isStaged status from cardObj and unhighlight its html card element
-        let userStagedCardId = userStagedCardsArr[index].id;
-        let userPrimaryKey = userStagedCardId.substring(0, userStagedCardId.length - userObj.stagedCardName.length);
-        let userScrollCardObj = userObj.cardDict[userPrimaryKey];
-        userScrollCardObj.isStaged = false;
-        userObj.stagedCardCount -= 1;
-        var scrollCard = document.getElementById(userPrimaryKey);
-        highlightCard(false, userObj, scrollCard);
+        removeIsStagedStatusAndItsEffects(userObj, index, userStagedCardsArr);
     }
-    createPopUpForm(userObj, otherPlayerObj, stagedCardsDict);
+    createPopUpForm(stagedCardsDict);
 }
 
 
