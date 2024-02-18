@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const cardContainer = document.getElementById('cardContainer');
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
+    // const saveDeckButton = document.getElementById('saveDeckButton');
 
     let currentPage = 0;
     const cardsPerPage = 6;
@@ -105,6 +106,69 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
         });
+
+    // Function to save the deck
+    function saveDeck() {
+        // Get all selected card elements in the staging area
+        const stagedCards = Array.from(document.querySelectorAll('.stagingArea .card.selected'));
+
+        // Create an array to store card data
+        const deckData = [];
+
+        // Iterate over each card element and extract relevant data
+        stagedCards.forEach(cardElement => {
+            const cardData = {};
+
+            const h3Element = cardElement.querySelector('h3');
+            if (h3Element) {
+                cardData.cardName = h3Element.textContent.trim();
+            }
+
+            // Extract other relevant data here
+            const ulElement = cardElement.querySelector('ul');
+            if (ulElement) {
+                const listItems = Array.from(ulElement.children);
+
+                listItems.forEach(li => {
+                    const strongElement = li.querySelector('strong');
+                    if (strongElement) {
+                        const attribute = strongElement.textContent.trim();
+                        const value = li.textContent.replace(attribute, '').trim();
+                        cardData[attribute.toLowerCase()] = value; // Convert attribute to lowercase
+                    }
+                });
+            }
+
+            // Extract cardId from dataset
+            const cardId = cardElement.dataset.cardId;
+            if (cardId) {
+                cardData.cardId = cardId;
+            }
+
+            // Add card data to the array
+            deckData.push(cardData);
+        });
+
+        // Prompt the user to enter a name for the deck
+        const deckName = prompt('Enter a name for the deck:');
+
+        if (deckName) {
+            // Create a JSON representation of the deck data
+            const jsonDeck = JSON.stringify({ deckName, cards: deckData });
+
+            // Log or use the JSON deck data as needed
+            console.log(jsonDeck);
+
+            // You can send the JSON data to a server or save it locally as well
+        }
+    }
+
+    // Attach the saveDeck function to the button click event
+    const saveDeckButton = document.getElementById('saveDeckButton');
+    if (saveDeckButton) {
+        saveDeckButton.addEventListener('click', saveDeck);
+    }
+
 });
 
 
@@ -198,3 +262,4 @@ function createTradingCard(cardData) {
 
     return cardContainer;
 }
+
