@@ -1,5 +1,11 @@
 const configFile = require('./config');
 
+const attributes = ['strong', 'weak', 'small', 'tall', 'fast', 'slow', 'clever', 'clumsy', 'brave', 'timid'];
+const colors = ["red", "orange", "yellow", "green", "blue", "indigo", "violet", "black", "white", "pink"];
+const animals = ['dog', 'cat', 'monkey', 'parrot', 'dragon', 'unicorn', 'horse', 'lion', 'elephant', 'rabbit'];
+const verbs = ['Jump', 'Sing', 'Fly', 'Eat', 'Dance', 'Run', 'Laugh', 'Sleep', 'Read', 'Swim'];
+
+
 // Sends a post request to Leonardo with prompts, returns data
 async function createAICard(prompt, theme, color, rarity) {
     const option_post = {
@@ -44,11 +50,11 @@ async function getImageUrlFromLeonardo(imageId) {
         console.error(error);
     }
 }
-
 /*
 (async () => {
-    //const aiCard = await createAICard('samurai', 'dark', 'gold');
-    const val = await getImageUrlFromLeonardo('8c7a0cd1-475b-4740-9f29-fa1b167cf7d5'); // aiCard.sdGenerationJob.generationId
+    const aiCard = await createAICard('samurai', 'dark', 'gold', 'rare');
+    console.log(aiCard.sdGenerationJob);
+    const val = await getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId); // aiCard.sdGenerationJob.generationId
     console.log(val);
 })();
 */

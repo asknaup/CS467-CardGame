@@ -98,10 +98,7 @@ function getStagedCards(userObj, otherPlayerObj){
     return stagedCardsDict;
 }
 
-
-function createPopUpForm(userObj, otherPlayerObj, stagedCardsDict){
-    let tradePopUpForm = document.getElementById("tradePopUpForm");
-    tradePopUpForm.style.display = "block";
+function removeOldCardFromPopUpForm(){
     // Clear out old card elements
     var otherPlayerTradeCardSlots = document.getElementById("otherPlayerTradeSlots");
     while(otherPlayerTradeCardSlots.firstChild){
@@ -112,6 +109,12 @@ function createPopUpForm(userObj, otherPlayerObj, stagedCardsDict){
     while(userTradeCardSlots.firstChild){
         userTradeCardSlots.removeChild(userTradeCardSlots.firstChild);
     }
+}
+
+function createPopUpForm(userObj, otherPlayerObj, stagedCardsDict){
+    let tradePopUpForm = document.getElementById("tradePopUpForm");
+    tradePopUpForm.style.display = "block";
+    removeOldCardFromPopUpForm();
     // move card element from stagedArea to pop up form
     /* NOTE: the cards from otherStageArea get moved to userTradeSlots
         because this it pop up form is on other player's computer

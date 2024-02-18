@@ -14,8 +14,33 @@
     Inspect the Card
   </h1>
   <div>
-    <img src="{{ val.[0].url }}" alt="Image">
-    <img src="{{ val.[1].url }}" alt="Image">
+    <form id="imageForm" action="/cardViewPrintedPage" method="POST">
+      <img src="{{ val.[0].url }}" alt="Image">
+      <input type="hidden" name="cardName" value="{{ cardName }}">
+      <input type="hidden" name="cardType" value="{{ cardType }}">
+      <input type="hidden" name="rarity" value="{{ rarity }}">
+      <input type="hidden" name="manaCost" value="{{ manaCost }}">
+      <input type="hidden" name="url" value="{{ val.[0].url }}">
+      <input type="submit" value="Print">
+    </form>
+    <form id="imageForm" action="/cardViewPrintedPage" method="POST">
+      <img src="{{ val.[1].url }}" alt="Image">
+      <input type="hidden" name="cardName" value="{{ cardName }}">
+      <input type="hidden" name="cardType" value="{{ cardType }}">
+      <input type="hidden" name="rarity" value="{{ rarity }}">
+      <input type="hidden" name="manaCost" value="{{ manaCost }}">
+      <input type="hidden" name="url" value="{{ val.[1].url }}">
+      <input type="submit" value="Print">
+    </form>
+    <form id="imageForm" action="/cardViewPrintedPage" method="POST">
+      <img src="{{ val.[2].url }}" alt="Image">
+      <input type="hidden" name="cardName" value="{{ cardName }}">
+      <input type="hidden" name="cardType" value="{{ cardType }}">
+      <input type="hidden" name="rarity" value="{{ rarity }}">
+      <input type="hidden" name="manaCost" value="{{ manaCost }}">
+      <input type="hidden" name="url" value="{{ val.[2].url }}">
+      <input type="submit" value="Print">
+    </form>
   </div>
   <button>Edit</button>
   <button>Delete</button>

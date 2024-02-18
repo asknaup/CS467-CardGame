@@ -14,10 +14,11 @@ const port = 3000;
 
 const db = require('./database/db-connector');
 const dbFunc = require('./database/db-functions')
-const cardGen = require('./database/card-gen');
 const gameGen = require('./database/game-gen');
-const game1 = require('./database/game-play1')
+const Game1 = require('./database/game-play1');
+const hf = require('./database/helper-funcs');
 const card = require('./database/card');
+const configFile = require('./database/config');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -42,8 +43,15 @@ app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
 
 // Serve static file from public directory
-// app.use(express.static('public'));
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, 'public'),
+  {
+    'extensions': ['js'],
+    'index': false,
+    'Content-Type': 'text/javascript'
+  }));
+app.use(express.static(path.join(__dirname, 'images')))
+app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use('/database', express.static(path.join(__dirname, 'public')));
 
 /*
 ROUTES
@@ -57,6 +65,25 @@ ROUTES
 // TODO cardview page bulk - bulk generation?
 // TODO homepage that's not the welcome page
 // TODO Need better navigation -> navigation to card generation page as maybe a subclass under make. route to make game, make card
+
+app.get('/cards', async (req, res) => {
+  try {
+      // Retrieve the user ID from the request query parameters
+      // const userId = req.query.userId;
+      const userId = 1001; //FIXME
+      // console.log(userId);
+      // Call the database function to get card data based on userId
+      const cardData = await dbFunc.getCardIdByUser(userId);
+      const cardsDict = hf.convertListToDict(cardData);
+      // console.log(cardsDict);
+      // Send card data as reponse
+      res.json(cardsDict);
+  } catch (error) {
+      // Handle errors that occur during data retrival
+      console.error('Error fetching card data:', error);
+      res.status(500).json({error: 'Internal server error'})
+  }
+})
 
 app.get('/favico.ico', (req, res) => {
   res.sendStatus(404);
@@ -104,7 +131,8 @@ app.get('/userDeck/:username', (req, res) => {
   // TODO insert deck as json into db
   // TODO handlebars
   // Show user logged in user profile
-  const user = req.session.user;
+  // const user = req.session.user;
+  user = {userId: 1001, username: 'admin'}
   if (user) {
     res.render('currentDeck', { showLogoutButton: true })
   } else {
@@ -136,9 +164,11 @@ app.get('/gameGenPage', async (req, res) => {
 // TODO Deck generation page
 app.get('/buildDeck', (req, res) => {
   // Show user logged in user profile
-  const user = req.session.user;
+  // FIXME
+  // const user = req.session.user;
+  user = {userId: 1001, username: 'admin'}
   if (user) {
-    res.render('buildDeck', { showLogoutButton: true })
+    res.render('buildDeck', { showLogoutButton: true , userId : 1001})
   } else {
     res.render('buildDeck', { showLogoutButton: false })
   }
@@ -235,12 +265,13 @@ app.get('/userProfile', (req, res) => {
 
 app.get('/cardViewPage', async (req, res) => {
   // TODO card currently hardcoded
-  const val = await cardGen.grabCardFromDB(1);             // Hard Coded
+  const user = req.session.user;
+  
   console.log(val[0]);
   if (user) {
-    res.render('cardViewPage', { showLogoutButton: true, value: val })
+    res.render('cardViewEditPage', { showLogoutButton: true, value: val })
   } else {
-    res.render('cardViewPage', { showLogoutButton: false, value: val })
+    res.render('cardViewEditPage', { showLogoutButton: false, value: val })
   }
 });
 
@@ -270,15 +301,24 @@ app.get('/game/', async (req, res) => {
   // TODO game handlebars file
   // TODO game logic
   if (user) {
-    const deckList = await game1.getDeck(user.userId, deck.deckId);
-    console.log(deckList);
+    // const deckList = await game1.getDeck(user.userId, deck.deckId);
+    // console.log(deckList);
+    const game = new Game1(user.userId, deck.deckId);
+    await game.initialize();
+
+    res.render('gamePlay1', {
+      gameId: game.gameId,
+      ruleSet: game.ruleSet,
+      hand: game.hand,
+      remainingDeckCards: game.deck.length
+    });
   }
 });
+
 
 app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
 });
-
 
 // POST ROUTES 
 app.post('/newUserPost', async (req, res) => {
@@ -342,29 +382,54 @@ app.post('/cardViewEditPage', async (req, res) => {
   const user = req.session.user;
   try {
     if (user) {
-      const cardId = await dbFunc.insertCard(req.body.cardName, req.body.cardType, user.userId, req.body.rarity, req.body.manaCost);    // returns cardId
-      //console.log(cardId)
-      if (req.body.cardType === "Creature") {
-        await dbFunc.insertCreatureCard(cardId, req.body.creatureAttack, req.body.creatureDefense);
-      } else {
-        await dbFunc.insertSpellCard(cardId, req.body.spellType, req.body.spellAbility, req.body.spellAttack, req.body.spellDefense, req.body.utility);
+      const aiCard = await card.createAICard(req.body.creatureType, req.body.theme, req.body.color, req.body.rarity);      
+      let values = [];
+      async function delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
       }
-
-      const aiCard = await card.createAICard(req.body.creatureType, req.body.theme, req.body.color, req.body.rarity);
-      console.log(aiCard['sdGenerationJob']['generationId']);
-      
-      const values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId.toString()); //aiCard.sdGenerationJob.generationId
-      console.log(values);
-      // await dbFunc.insertCardUrl(cardId, imagePath); 
-      //b126d1fd-1379-4ce4-8440-709acd6d0b2c
+      while (values.length == 0) {
+          values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId); //aiCard.sdGenerationJob.generationId
+          // console.log(values);
+          await delay(1000);
+      }      
       res.render('cardViewEditPage', {
-        val: values
+        val: values,
+        cardName: req.body.cardName,
+        cardType: req.body.cardType,
+        rarity: req.body.rarity,
+        manaCost: req.body.manaCost,
       });
-
     } else {
       // Authentication failed, render 'cardGenPage' with an error message
       res.render('cardGenPage', { error: "Sorry! You cannot create a card without having an account" })
     }
+  } catch (err) {
+    // Handle errors that may occur during card generation, database interaction, or rendering
+    res.send(`Something went wrong: ${err}`);
+  }
+});
+
+app.post('/cardViewPrintedPage', async (req, res) => {
+  try {
+    const user = req.session.user;
+    console.log(req.body.url, req.body.cardName);
+    const cardId = await dbFunc.insertCard(req.body.cardName, req.body.cardType, user.userId, req.body.rarity, req.body.manaCost);    // returns cardId
+    console.log(cardId, req.body.rarity)
+    if (req.body.cardType === "Creature") {
+      await dbFunc.insertCreatureCard(cardId, req.body.creatureAttack, req.body.creatureDefense);
+    } else {
+      await dbFunc.insertSpellCard(cardId, req.body.spellType, req.body.spellAbility, req.body.spellAttack, req.body.spellDefense, req.body.utility);
+    }
+    await dbFunc.insertCardUrl(cardId, req.body.url);
+    console.log(req.body.url);
+    const data = await dbFunc.getCardInfo(cardId);
+    console.log(data[0].rarity);
+    res.render('cardViewPrintedPage', {
+      url: req.body.url,
+      rarity: data[0].rarity,
+      cardName: data[0].cardName,
+      manaCost: data[0].manaCost
+    });
   } catch (err) {
     // Handle errors that may occur during card generation, database interaction, or rendering
     res.send(`Something went wrong: ${err}`);

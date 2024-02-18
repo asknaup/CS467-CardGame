@@ -1,88 +1,99 @@
 dbFunc = require('./db-functions');
+helper = require('./helper-funcs')
 // Using RuleSet1
 
 // TODO get user deck and shuffle
-async function getDeck(userId, deckId) {
-    try {
-        var deckList = await dbFunc.getUserDeck(deckId);
-        
-        if (!deckList || deckList.length === 0 || !deckList[0].cardId) {
-            console.log("Error: No valid deck data found.");
-            return; 
+class Game{
+    constructor(userId, deckId) {
+        this.userId = userId;
+        this.deckId = deckId;
+        this.hand = [];
+        this.deck = [];
+        this.playerStage = [];
+        this.playerHealth = 100;
+    }
+
+    // Initialize the game
+    async initialize() {
+        this.deck = await this.getDeck();
+        this.drawInitialHand();
+    }
+
+    async getDeck() {
+        // Get the deck from the database
+        try {
+            var deckList = await dbFunc.getUserDeck(this.deckId);
+            if (!deckList || deckList.length == 0 || !deckList[0].cardId) {
+                console.log("Error: No valid deck data found.")
+                return [];
+            }
+
+            var deckJsonObject = JSON.parse(deckList[0].cardId);
+            var cardList = deckJsonObject.cardList;
+
+            // Shuffle the deck
+            if (cardList && Array.isArray(cardList)) {
+                return this.shuffleDeck(cardList);
+            }
+        } catch (error) {
+            console.error("Error while parsing deck data:", error)
+            return [];
+        }
+    }
+
+    shuffleDeck(deck) {
+        // Fischer-Yates Shuffle
+        for (let i = deck.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [deck[i], deck[j]] = [deck[j], deck[i]]
+        }
+        return deck;
+    }
+
+    drawInitialHand() {
+        // Draw initial hand with 7 cards
+        while (this.hand.length < 7 && this.deck.length > 0) {
+            this.hand.push(this.deck.pop());
+        }
+    }
+
+    playNextTurn() {
+        // Draw cards for the next turn
+        const result = this.drawCardsPerTurn();
+        // Other game logic for the next turn
+    }
+
+    drawCardsPerTurn() {
+        // Draw cards for the turn
+        const updatedHand = [...this.hand]; // Create a copy of the hand array
+        const updatedDeck = [...this.deck]; // Create a copy of the deck array
+
+        while (updatedHand.length < 7 && updatedDeck.length > 0) {
+            updatedHand.push(updatedDeck.pop());
         }
 
-        var deckJsonObject = JSON.parse(deckList[0].cardId);
-        var cardList = deckJsonObject.cardList;
-        
+        this.hand = updatedHand; // Update the hand
+        this.deck = updatedDeck; // Update the deck
 
-        // Shuffle Deck
-        if (cardList && Array.isArray(cardList)) {
-            cardList = shuffleDeck(cardList);
+        return { updatedHand, updatedDeck }; // Return the updated hand and deck as an object
+    }
+
+    playCard(cardId) {
+        // Play a card
+        let updatedHand = [...this.hand];
+        let updatedStage = [...this.playerStage];
+
+        if (!updatedHand.includes(cardId)) {
+            console.log("Error: Card is not in hand.");
+            return;
         }
-        
-        // Return shuffled Deck
-        return cardList;
-    } catch (error) {
-        console.error("Error while parsing deck data:", error);
+
+        updatedHand = updatedHand.filter(card => card !== cardId);
+        updatedStage.push(cardId);
+
+        this.hand = updatedHand; // Update the hand
+        this.playerStage = updatedStage; // Update the player stage
     }
-}
+};
 
-function shuffleDeck(deck) {
-    // Fisher-Yates Shuffle
-    for (let i = deck.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1)); 
-        [deck[i], deck[j]] = [deck[j], deck[i]]; 
-    }
-    return deck;
-}
-
-
-
-// Initalize Hand with 7 cards
-function drawCardsPerTurn(deck, hand) {  
-    const updatedHand = [...hand]; // Create a copy of the hand array
-    const updatedDeck = [...deck]; // Create a copy of the deck array
-
-    while (updatedHand.length < 7 && updatedDeck.length > 0) {
-        updatedHand.push(updatedDeck.pop());
-    }
-
-    return { updatedHand, updatedDeck }; // Return the updated hand and deck as an object
-}
-
-// Will draw to minimum number of cards per turn
-function playNextTurn(deck, hand) {
-    const {updatedHand, updatedDeck} = drawCardsPerTurn(deck, hand);
-    return drawCardsPerTurn(deck, hand);
-}
-
-function playCard(hand, cardId) {
-    const updatedHand = hand.filter(card => card !== cardId);
-    return updatedHand; 
-}
-
-// var hand = [];  // start off empty
-// var deck = [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18];
-// console.log("Initial hand:", hand);
-
-// var result = playNextTurn(deck, hand);
-// console.log("Updated hand:", result.updatedHand);
-// console.log("Updated deck:", result.updatedDeck);
-
-// hand = playCard(result.updatedHand, 16);
-// console.log("Updated hand:", hand);
-
-// var result = playNextTurn(result.updatedDeck, hand);
-// console.log("Updated hand:", result.updatedHand);
-// console.log("Updated deck:", result.updatedDeck);
-// hand = playCard(result.updatedHand, 16);
-// hand = playCard(hand, 11);
-// hand = playCard(hand, 17);
-// hand = playCard(hand, 13);
-// hand = playCard(hand, 12);
-// var result = playNextTurn(result.updatedDeck, hand);
-// console.log("Updated hand2:", result.updatedHand);
-// console.log("Updated deck2:", result.updatedDeck);
-
-
-module.exports.getDeck = getDeck;
+module.exports = Game;
