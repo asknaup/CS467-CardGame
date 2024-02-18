@@ -6,7 +6,6 @@ const session = require('express-session');     // Session control to save varia
 // const bcrypt = require('bcrypt');               // Encryption
 const router = new require('express').Router();
 const bodyParser = require('body-parser');
-// const ngrok = require("@ngrok/ngrok");
 const path = require('path');
 const fs = require('fs');
 
@@ -19,7 +18,7 @@ const gameGen = require('./database/game-gen');
 const Game1 = require('./database/game-play1');
 const hf = require('./database/helper-funcs');
 const card = require('./database/card');
-// const configFile = require('./database/config');
+const configFile = require('./database/config');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -395,6 +394,10 @@ app.post('/cardViewEditPage', async (req, res) => {
       }      
       res.render('cardViewEditPage', {
         val: values,
+        cardName: req.body.cardName,
+        cardType: req.body.cardType,
+        rarity: req.body.rarity,
+        manaCost: req.body.manaCost,
       });
     } else {
       // Authentication failed, render 'cardGenPage' with an error message
@@ -409,19 +412,23 @@ app.post('/cardViewEditPage', async (req, res) => {
 app.post('/cardViewPrintedPage', async (req, res) => {
   try {
     const user = req.session.user;
+    console.log(req.body.url, req.body.cardName);
     const cardId = await dbFunc.insertCard(req.body.cardName, req.body.cardType, user.userId, req.body.rarity, req.body.manaCost);    // returns cardId
-    //console.log(cardId)
+    console.log(cardId, req.body.rarity)
     if (req.body.cardType === "Creature") {
       await dbFunc.insertCreatureCard(cardId, req.body.creatureAttack, req.body.creatureDefense);
     } else {
       await dbFunc.insertSpellCard(cardId, req.body.spellType, req.body.spellAbility, req.body.spellAttack, req.body.spellDefense, req.body.utility);
     }
-    const url = await dbFunc.insertCardUrl(cardId, req.body.url);
-    const data = await dbFunc.getCardInfo(req.body.cardId);
-
+    await dbFunc.insertCardUrl(cardId, req.body.url);
+    console.log(req.body.url);
+    const data = await dbFunc.getCardInfo(cardId);
+    console.log(data[0].rarity);
     res.render('cardViewPrintedPage', {
-      url: url,
-      data: data
+      url: req.body.url,
+      rarity: data[0].rarity,
+      cardName: data[0].cardName,
+      manaCost: data[0].manaCost
     });
   } catch (err) {
     // Handle errors that may occur during card generation, database interaction, or rendering
