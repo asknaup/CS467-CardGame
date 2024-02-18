@@ -1,16 +1,64 @@
-dbFunc = require('./db-functions');
-helper = require('./helper-funcs')
+const dbFunc = require('./db-functions');
+const helper = require('./helper-funcs')
 // Using RuleSet1
 
-// TODO get user deck and shuffle
-class Game{
-    constructor(userId, deckId) {
+class Card {
+    constructor(id, name, type, description, mana, rarity) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.description = description;
+        this.mana = mana;
+        this.rarity = rarity;
+    }
+}
+
+class CreatureCard extends Card {
+    constructor(id, name, description, mana, rarity, attack, defense) {
+        super(id, name, description, mana, rarity);
+        this.attack = attack;
+        this.defense = defense;
+    }
+}
+
+class SpellCard extends Card {
+    constructor(id, name, description, mana, rarity, attack, defense, ability, utility) {
+        super(id, name, description, mana, rarity);
+        this.attack = attack;
+        this.defense = defense;
+        this.ability = ability;
+        this.utility = utility;
+    }
+}
+
+class User {
+    // Player starts with 100 Mana.
+    constructor(userId, username, mana = 100) {
         this.userId = userId;
+        this.username = username;
+        this.mana = mana;
+    }
+
+    // Method to decrease mana
+    decreaseMana(amount) {
+        this.mana -= amount;
+    }
+
+    // Method to check if user has lost
+    hasLost() {
+        // Will return True for loss
+        return this.mana <= 0;  // If mana <= 0 then they have lost 
+    }
+}
+class Game {
+    constructor(user, deckId, ruleSet, gameId) {
+        this.user = user;
         this.deckId = deckId;
+        this.ruleSet = ruleSet;
+        this.gameId = gameId;
         this.hand = [];
         this.deck = [];
         this.playerStage = [];
-        this.playerHealth = 100;
     }
 
     // Initialize the game
@@ -29,12 +77,36 @@ class Game{
             }
 
             var deckJsonObject = JSON.parse(deckList[0].cardId);
-            var cardList = deckJsonObject.cardList;
+            var cardIds = deckJsonObject.cardList;
+            console.log(cardIds);
+            const cardInstances = await Promise.all(cardIds.map(async cardId => {
 
-            // Shuffle the deck
-            if (cardList && Array.isArray(cardList)) {
-                return this.shuffleDeck(cardList);
-            }
+                const cardData = await dbFunc.getCardByCardId(cardId);
+                // console.log(cardData);
+                if (cardData[0].cardType.toLowerCase() === 'creature') {
+                    return new CreatureCard(
+                        cardId,
+                        cardData[0].cardName,
+                        "something creature",
+                        cardData[0].manaCost, 
+                        cardData[0].rarity, 
+                        cardData[0].attack, 
+                        cardData[0].defense);
+                } else {
+                    return new SpellCard(
+                        cardId, 
+                        cardData[0].spellType,
+                        cardData[0].manaCost, 
+                        cardData[0].rarity, 
+                        cardData[0].spellAttack, 
+                        cardData[0].spellDefense, 
+                        cardData[0].spellAbility, 
+                        cardData[0].utility)
+                }
+            }))
+            
+            return this.shuffleDeck(cardInstances);
+
         } catch (error) {
             console.error("Error while parsing deck data:", error)
             return [];
@@ -94,6 +166,11 @@ class Game{
         this.hand = updatedHand; // Update the hand
         this.playerStage = updatedStage; // Update the player stage
     }
+
+    // Method to check if game is over
+    isGameOver() {
+        return this.user.hasLost();
+    }
 };
 
-module.exports = Game;
+module.exports = { Game, User, Card, CreatureCard, SpellCard };
