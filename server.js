@@ -15,10 +15,13 @@ const port = 3000;
 const db = require('./database/db-connector');
 const dbFunc = require('./database/db-functions')
 const gameGen = require('./database/game-gen');
-const Game1 = require('./database/game-play1');
 const hf = require('./database/helper-funcs');
 const card = require('./database/card');
 const configFile = require('./database/config');
+
+// Import Game Classes
+const {Game, User, Card, CreatureCard, SpellCard} = require('./database/game-play1'); // Import the User class if not already imported
+
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -303,14 +306,16 @@ app.get('/game/', async (req, res) => {
   if (user) {
     // const deckList = await game1.getDeck(user.userId, deck.deckId);
     // console.log(deckList);
-    const game = new Game1(user.userId, deck.deckId);
-    await game.initialize();
+    const userInstance = new User(user.userId, user.username);
+    const gameInstance = new Game(userInstance, deck.deckId, game.ruleSet, game.gameId);
+
+    await gameInstance.initialize();
 
     res.render('gamePlay1', {
       gameId: game.gameId,
       ruleSet: game.ruleSet,
       hand: game.hand,
-      remainingDeckCards: game.deck.length
+      remainingDeckCards: gameInstance.deck.length
     });
   }
 });
