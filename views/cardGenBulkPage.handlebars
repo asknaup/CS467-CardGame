@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="global.css">
+</head>
+
+<body>
+  <div class="container1">
+    <br><br> 
+    <h1> Welcome to the Bulk Card Generation Page </h1>
+    <h3> Card Names, Rarity, Attack and Defense, and Mana Cost will be randomized </h3>
+    <div id="input-form">
+      {{!-- Links to generateCard post --}}
+      <form action="/cardViewEditBulk" method="post" id="cardForm">
+        <label for="number">Select Number of Cards to be Generated:</label>
+        <input name="number" type="number" placeholder="Number of Cards (< 20)">
+        <label for="cardType">Select Type of Card:</label>
+        <select id="cardType" name="cardType">
+          <option value="Creature">Creature</option>
+          <option value="Spell">Spell</option>
+        </select><br><br>
+        <label for="places">Select Setting or Theme:</label>
+        <select id="places">
+            <!-- Populated with places -->
+        </select>
+        <br><br>
+        <label for="creatures">Select Creature Type:</label>
+        <select id="creatures">
+            <!-- Populated -->
+        </select>
+        <br><br>
+        
+        <label for="colors">Select Color:</label>
+        <select id="colors">
+            <!-- Populated -->
+        </select>
+        <br><br>
+        <button id="gen-game-button-ggp" type="submit">Generate Bulk</button>
+        {{#if error}}
+        <p id="error">{{error}}</p>
+        {{/if}}
+      </form>
+    </div>
+    <script>
+    
+    const places = [
+        "African", "Ancient Babylon", "Ancient Ruins", "Ancient Egypt", "Antarctica", "Arabian", "Arctic Tundra", 
+        "Amazon Rainforest", "American", "Aztec", "Chinese Dynasty", "Corrupt", "Cyberpunk Dystopia", 
+        "Deep Sea Abyss", "Deep Space Outpost", "Desert Oasis", "Enchanted Castle", "Evil", "Fairy Kingdom", 
+        "Fairy Ring", "Fairy Tale Forest", "Futuristic", "Futuristic Megacity", "Galactic Arena", "Galactic", 
+        "Good", "Greek Mythology", "Haunted", "Himalayan", "Himalayan Mountains", "Industrial Revolution", 
+        "Lost City of Atlantis", "Lost Temple", "Lunar Colony", "Mars Colony", "Mayan", "Medieval Castle", 
+        "Medieval Europe", "Medieval Tournament", "Medieval Village", "Native American", "Ninjas", "Parallel Earth", 
+        "Planet", "Pirate", "Polynesian Island", "Post-Apocalyptic", "Roman Colosseum", "Roman Empire", 
+        "Renaissance Italy", "Robot Factory", "Samurai Dojo", "Samurai", "Space Colony Ship", "Space Exploration", 
+        "Space Opera", "Space Pirate", "Space Station", "Steampunk", "Submarine", "Subterranean City", 
+        "Time Travel", "Tropical Island", "Underwater", "Underworld Realm", "Viking", "Victorian London", 
+        "Western Saloon"
+        ];
+
+    const creatures = [
+        "Angel", "Banshee", "Basilisk", "Bigfoot", "Centaur", "Cerberus", "Chimera", "Chupacabra", "Cthulhu", "Cyclops",
+        "Demon", "Doppelganger", "Dragon", "Dwarf", "Elf", "Fairy", "Frost Giant", "Genie", "Ghost", "Gnome",
+        "Goblin", "Gremlin", "Griffin", "Harpie", "Hippogriff", "Hydra", "Imp", "Jinn", "Kelpie", "Kraken",
+        "Leprechaun", "Lich", "Manticore", "Mermaid", "Minotaur", "Mothman", "Naga", "Nymph", "Ogre", "Oni",
+        "Pegasus", "Peryton", "Phoenix", "Roc", "Sasquatch", "Satyr", "Sea Serpent", "Selkie", "Siren", "Skeleton",
+        "Specter", "Sphinx", "Sprite", "Tanuki", "Thunderbird", "Titan", "Troll", "Unicorn", "Valkyrie", "Vampire",
+        "Vampire Bat", "Vodyanoy", "Wendigo", "Werewolf", "Wight", "Will-o'-the-Wisp", "Witch", "Wizard", "Wraith",
+        "Wyrm", "Wyvern", "Xorn", "Yuki-onna", "Yeti", "Zaratan", "Ziz", "Zombie"
+        ];
+
+    const colors = [
+        "No Significant Color", "Blue", "Brown", "Gold",
+        "Green", "Magenta", "Maroon",
+        "Navy", "Orange", "Pink", "Purple", "Red",
+        "Silver", "Turquoise", "Violet", "Yellow"
+    ];
+
+    const creaturesDropdown = document.getElementById("creatures");
+    const placesDropdown = document.getElementById("places");
+    const colorsDropdown = document.getElementById('colors');
+
+    colors.forEach(color => {
+        const option = document.createElement("option");
+        option.text = color;
+        colorsDropdown.add(option)
+    })
+
+    creatures.forEach(creature => {
+        const option1 = document.createElement("option");
+        option1.text = creature;
+        creaturesDropdown.add(option1);
+    });
+
+    // Populate the dropdown menu with options
+    places.forEach(place => {
+        const option2 = document.createElement("option");
+        option2.text = place;
+        placesDropdown.add(option2);
+    });
+</script>
+</body>
+</html>

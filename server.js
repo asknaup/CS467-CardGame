@@ -140,6 +140,16 @@ app.get('/userDeck/:username', (req, res) => {
   }
 });
 
+app.get('/cardGenBulkPage', (req, res) => {
+  const user = req.session.user;
+  if (user) {
+    res.render('cardGenBulkPage');
+  } else {
+    // Redirect to homepage (index) to log in
+    res.redirect('/');
+  }
+});
+
 // TODO routing between gameGeneration, card Generation
 // TODO Work on corresponding edit pages, corresponding bulk pages
 // TODO Work on generating inputs
