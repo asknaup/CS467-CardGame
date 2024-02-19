@@ -10,10 +10,11 @@
   <div class="container1">
     <br><br> 
     <h1> Welcome to the Bulk Card Generation Page </h1>
-    <h3> Card Names, Rarity, Attack and Defense, and Mana Cost will be randomized </h3>
+    <br><br>
+    <h1> Card Names, Rarity, Attack and Defense, and Mana Cost will be randomized </h1>
     <div id="input-form">
       {{!-- Links to generateCard post --}}
-      <form action="/cardViewEditBulk" method="post" id="cardForm">
+      <form action="/cardViewPrintedBulkPage" method="post" id="cardForm">
         <label for="number">Select Number of Cards to be Generated:</label>
         <input name="number" type="number" placeholder="Number of Cards (< 20)">
         <label for="cardType">Select Type of Card:</label>
@@ -22,18 +23,18 @@
           <option value="Spell">Spell</option>
         </select><br><br>
         <label for="places">Select Setting or Theme:</label>
-        <select id="places">
+        <select id="places" name="places">
             <!-- Populated with places -->
         </select>
         <br><br>
         <label for="creatures">Select Creature Type:</label>
-        <select id="creatures">
+        <select id="creatures" name="creatures">
             <!-- Populated -->
         </select>
         <br><br>
         
         <label for="colors">Select Color:</label>
-        <select id="colors">
+        <select id="colors" name="colors">
             <!-- Populated -->
         </select>
         <br><br>
@@ -46,7 +47,7 @@
     <script>
     
     const places = [
-        "African", "Ancient Babylon", "Ancient Ruins", "Ancient Egypt", "Antarctica", "Arabian", "Arctic Tundra", 
+        "Random", "African", "Ancient Babylon", "Ancient Ruins", "Ancient Egypt", "Antarctica", "Arabian", "Arctic Tundra", 
         "Amazon Rainforest", "American", "Aztec", "Chinese Dynasty", "Corrupt", "Cyberpunk Dystopia", 
         "Deep Sea Abyss", "Deep Space Outpost", "Desert Oasis", "Enchanted Castle", "Evil", "Fairy Kingdom", 
         "Fairy Ring", "Fairy Tale Forest", "Futuristic", "Futuristic Megacity", "Galactic Arena", "Galactic", 
@@ -61,7 +62,7 @@
         ];
 
     const creatures = [
-        "Angel", "Banshee", "Basilisk", "Bigfoot", "Centaur", "Cerberus", "Chimera", "Chupacabra", "Cthulhu", "Cyclops",
+        "Random", "Angel", "Banshee", "Basilisk", "Bigfoot", "Centaur", "Cerberus", "Chimera", "Chupacabra", "Cthulhu", "Cyclops",
         "Demon", "Doppelganger", "Dragon", "Dwarf", "Elf", "Fairy", "Frost Giant", "Genie", "Ghost", "Gnome",
         "Goblin", "Gremlin", "Griffin", "Harpie", "Hippogriff", "Hydra", "Imp", "Jinn", "Kelpie", "Kraken",
         "Leprechaun", "Lich", "Manticore", "Mermaid", "Minotaur", "Mothman", "Naga", "Nymph", "Ogre", "Oni",
@@ -72,7 +73,7 @@
         ];
 
     const colors = [
-        "No Significant Color", "Blue", "Brown", "Gold",
+        "No Significant Color", "Random", "Blue", "Brown", "Gold",
         "Green", "Magenta", "Maroon",
         "Navy", "Orange", "Pink", "Purple", "Red",
         "Silver", "Turquoise", "Violet", "Yellow"
