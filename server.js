@@ -537,12 +537,14 @@ app.get('/game/', async (req, res) => {
     gameInstance[game.gameId] = new Game(userInstance, deck.deckId, game.ruleSet, game.gameId);
 
     await gameInstance[game.gameId].initialize();
-
+    console.log(gameInstance[game.gameId].hand)
     res.render('gamePlay1', {
       gameId: game.gameId,
       ruleSet: game.ruleSet,
       hand: gameInstance[game.gameId].hand,
-      remainingDeckCards: gameInstance[game.gameId].deck.length
+      remainingDeckCards: gameInstance[game.gameId].deck.length,
+      playerMana: gameInstance[game.gameId].user.mana,
+      opponentMana: gameInstance[game.gameId].opponent.mana
     });
   }
 });
@@ -553,9 +555,12 @@ app.post('/playCard', (req, res) => {
   const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
 
   if (gameInstance[game.gameId]) {
-    console.log(gameInstance[game.gameId].hand); 
+     
     gameInstance[game.gameId].playCard(parseInt(cardId));
 
-    res.json({ message: 'card played successfully', cardId });
+    // Include playerMana in the response
+    const playerMana = gameInstance[game.gameId].user.mana;
+
+    res.json({ message: 'card played successfully', cardId, playerMana });
   }
 })

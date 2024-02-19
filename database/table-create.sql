@@ -106,7 +106,7 @@ CREATE TABLE IF NOT EXISTS cards (
     cardName VARCHAR(500) NOT NULL,
     cardType VARCHAR(50) NOT NULL,
     rarity VARCHAR(50) NOT NULL,
-    manaCost INT NOT NULL,
+    manaCost INT NOT NULL DEFAULT 1,
 
     PRIMARY KEY (cardId)
 );

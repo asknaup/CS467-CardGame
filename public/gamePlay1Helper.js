@@ -63,6 +63,8 @@ document.addEventListener('DOMContentLoaded', function () {
                             pElement.style.display = 'none';
                         }
                         dropZone.appendChild(cardElement);
+
+                        document.querySelector('#playerMana').textContent = `Player Mana: ${data.playerMana}`;
                     } else {
                         // Handle error or display a message to the user
                         console.error('Error:', data.message);

@@ -3,27 +3,28 @@ const helper = require('../database/helper-funcs')
 // Using RuleSet1
 
 class Card {
-    constructor(id, name, type, description, mana, rarity) {
+    constructor(id, name, type, description, mana, rarity, imagePath) {
         this.id = id;
         this.name = name;
         this.type = type;
         this.description = description;
         this.mana = mana;
         this.rarity = rarity;
+        this.imagePath = imagePath;
     }
 }
 
 class CreatureCard extends Card {
-    constructor(id, name, description, mana, rarity, attack, defense) {
-        super(id, name, description, mana, rarity);
+    constructor(id, name, type, description, mana, rarity, imagePath, attack, defense) {
+        super(id, name, type, description, mana, rarity, imagePath);
         this.attack = attack;
         this.defense = defense;
     }
 }
 
 class SpellCard extends Card {
-    constructor(id, name, description, mana, rarity, attack, defense, ability, utility) {
-        super(id, name, description, mana, rarity);
+    constructor(id, name, type, description, mana, rarity, imagePath, attack, defense, ability, utility) {
+        super(id, name, type, description, mana, rarity, imagePath);
         this.attack = attack;
         this.defense = defense;
         this.ability = ability;
@@ -125,22 +126,27 @@ class Game {
             const cardInstances = await Promise.all(cardIds.map(async cardId => {
 
                 const cardData = await dbFunc.getCardByCardId(cardId);
-                // console.log(cardData);
+                console.log(cardData);
                 if (cardData[0].cardType.toLowerCase() === 'creature') {
-                    return new CreatureCard(
-                        cardId,
-                        cardData[0].cardName,
-                        "something creature",
+                    return new CreatureCard( //id, name, type, description, mana, rarity, imagePath, attack, defense
+                        cardId,                 // id
+                        cardData[0].cardName,   // name
+                        "something creature",   // type
+                        cardData[0].cardType,   // description
                         cardData[0].manaCost, 
                         cardData[0].rarity, 
+                        cardData[0].imagePath,
                         cardData[0].attack, 
                         cardData[0].defense);
                 } else if (cardData[0].cardType.toLowerCase() === 'spell') {
-                    return new SpellCard(
-                        cardId, 
-                        cardData[0].spellType,
+                    return new SpellCard( //id, name, type, description, mana, rarity, imagePath, attack, defense, ability, utility
+                        cardId,                     // id
+                        cardData[0].cardName,       // name
+                        cardData[0].spellType,      // type
+                        cardData[0].cardType,      // description
                         cardData[0].manaCost, 
                         cardData[0].rarity, 
+                        cardData[0].imagePath,
                         cardData[0].spellAttack, 
                         cardData[0].spellDefense, 
                         cardData[0].spellAbility, 
@@ -201,7 +207,12 @@ class Game {
             console.log("Error: Card is not in hand.");
             return;
         }
-    
+        
+        if (card.mana > this.user.mana) {
+            console.log("Error: Insufficient mana to play this card.");
+            return;
+        }
+
         let updatedHand = this.hand.filter(handCard => handCard.id !== cardId);
         let updatedStage = [...this.playerStage];
     
@@ -218,6 +229,7 @@ class Game {
     
         this.hand = updatedHand; // Update the hand
         this.playerStage = updatedStage; // Update the player stage
+        this.user.mana -= card.mana;
     }
 
     // Method to check if game is over

@@ -58,12 +58,16 @@
     <div id="hand" class="card-container">
         {{#each hand}}
         {{!-- TODO change card div when possible --}}
-        <div draggable="true" id="{{this.id}}" class="card">{{this.type}}</div>
+        <div draggable="true" id="{{this.id}}" class="card">{{this.name}} {{this.type}} 
+            mana: {{this.mana}}</div>
         {{/each}}
     </div>
+    {{!-- TODO : reformat game location variables below --}}
     <div>
         Remaining Deck Cards: {{remainingDeckCards}}
     </div>
+    <div id="playerMana">Player Mana: {{playerMana}} </div>
+    <div>Opponent Mana: {{opponentMana}} </div>
     <button id="endTurnButton">End Turn</button>
     <!-- Add other controls as needed -->
     <script src="/public/gamePlay1Helper.js"></script>
