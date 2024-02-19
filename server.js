@@ -14,13 +14,13 @@ const port = 3000;
 
 const db = require('./database/db-connector');
 const dbFunc = require('./database/db-functions')
-const gameGen = require('./database/game-gen');
+const gameGen = require('./game/game-gen');
 const hf = require('./database/helper-funcs');
 const card = require('./database/card');
-const configFile = require('./database/config');
+// const configFile = require('./database/config');
 
 // Import Game Classes
-const {Game, User, Card, CreatureCard, SpellCard} = require('./database/game-play1'); // Import the User class if not already imported
+const { Game, User, Card, CreatureCard, SpellCard } = require('./game/game-play1'); // Import the User class if not already imported
 
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -54,7 +54,8 @@ app.use(express.static(path.join(__dirname, 'public'),
   }));
 app.use(express.static(path.join(__dirname, 'images')))
 app.use('/public', express.static(path.join(__dirname, 'public')));
-app.use('/database', express.static(path.join(__dirname, 'public')));
+app.use('/database', express.static(path.join(__dirname, 'database')));
+app.use('/game', express.static(path.join(__dirname, 'game')));
 
 /*
 ROUTES
@@ -71,20 +72,20 @@ ROUTES
 
 app.get('/cards', async (req, res) => {
   try {
-      // Retrieve the user ID from the request query parameters
-      // const userId = req.query.userId;
-      const userId = 1001; //FIXME
-      // console.log(userId);
-      // Call the database function to get card data based on userId
-      const cardData = await dbFunc.getCardIdByUser(userId);
-      const cardsDict = hf.convertListToDict(cardData);
-      // console.log(cardsDict);
-      // Send card data as reponse
-      res.json(cardsDict);
+    // Retrieve the user ID from the request query parameters
+    // const userId = req.query.userId;
+    const userId = 1001; //FIXME
+    // console.log(userId);
+    // Call the database function to get card data based on userId
+    const cardData = await dbFunc.getCardIdByUser(userId);
+    const cardsDict = hf.convertListToDict(cardData);
+    // console.log(cardsDict);
+    // Send card data as reponse
+    res.json(cardsDict);
   } catch (error) {
-      // Handle errors that occur during data retrival
-      console.error('Error fetching card data:', error);
-      res.status(500).json({error: 'Internal server error'})
+    // Handle errors that occur during data retrival
+    console.error('Error fetching card data:', error);
+    res.status(500).json({ error: 'Internal server error' })
   }
 })
 
@@ -135,7 +136,7 @@ app.get('/userDeck/:username', (req, res) => {
   // TODO handlebars
   // Show user logged in user profile
   // const user = req.session.user;
-  user = {userId: 1001, username: 'admin'}
+  user = { userId: 1001, username: 'admin' }
   if (user) {
     res.render('currentDeck', { showLogoutButton: true })
   } else {
@@ -169,9 +170,9 @@ app.get('/buildDeck', (req, res) => {
   // Show user logged in user profile
   // FIXME
   // const user = req.session.user;
-  user = {userId: 1001, username: 'admin'}
+  user = { userId: 1001, username: 'admin' }
   if (user) {
-    res.render('buildDeck', { showLogoutButton: true , userId : 1001})
+    res.render('buildDeck', { showLogoutButton: true, userId: 1001 })
   } else {
     res.render('buildDeck', { showLogoutButton: false })
   }
@@ -181,7 +182,7 @@ app.get('/buildDeck', (req, res) => {
 app.get('/currentDeck', async (req, res) => {
   // Show user logged in user profile
   // FIXME
-  const user = {userId: 1001, username: 'admin'};
+  const user = { userId: 1001, username: 'admin' };
   // const user = req.session.user;
   if (user) {
     var exampleCards = await dbFunc.getCardIdByUser(1001);
@@ -269,7 +270,7 @@ app.get('/userProfile', (req, res) => {
 app.get('/cardViewPage', async (req, res) => {
   // TODO card currently hardcoded
   const user = req.session.user;
-  
+
   console.log(val[0]);
   if (user) {
     res.render('cardViewEditPage', { showLogoutButton: true, value: val })
@@ -290,35 +291,6 @@ app.get('/logout', (req, res) => {
     }
   })
 })
-
-// Game
-// FIXME change to '/game/:gameId'
-app.get('/game/', async (req, res) => {
-  // FIXME replace
-  // const user = req.session.user;
-  // const deck = req.session.deck;
-  // const game = req.session.game;
-  const user = { userId: 1001, username: 'admin' }
-  const deck = { deckId: 7001 }
-  const game = { ruleSet: 'ruleSet1', gameId: 1001 }
-  // TODO game handlebars file
-  // TODO game logic
-  if (user) {
-    // const deckList = await game1.getDeck(user.userId, deck.deckId);
-    // console.log(deckList);
-    const userInstance = new User(user.userId, user.username);
-    const gameInstance = new Game(userInstance, deck.deckId, game.ruleSet, game.gameId);
-
-    await gameInstance.initialize();
-
-    res.render('gamePlay1', {
-      gameId: game.gameId,
-      ruleSet: game.ruleSet,
-      hand: game.hand,
-      remainingDeckCards: gameInstance.deck.length
-    });
-  }
-});
 
 
 app.listen(port, () => {
@@ -387,16 +359,16 @@ app.post('/cardViewEditPage', async (req, res) => {
   const user = req.session.user;
   try {
     if (user) {
-      const aiCard = await card.createAICard(req.body.creatureType, req.body.theme, req.body.color, req.body.rarity);      
+      const aiCard = await card.createAICard(req.body.creatureType, req.body.theme, req.body.color, req.body.rarity);
       let values = [];
       async function delay(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
       }
       while (values.length == 0) {
-          values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId); //aiCard.sdGenerationJob.generationId
-          // console.log(values);
-          await delay(1000);
-      }      
+        values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId); //aiCard.sdGenerationJob.generationId
+        // console.log(values);
+        await delay(1000);
+      }
       res.render('cardViewEditPage', {
         val: values,
         cardName: req.body.cardName,
@@ -453,7 +425,7 @@ app.post('/gameGenerationPageAction', async (req, res) => {
 
       console.log(ruleSet);
       console.log(userDeckId);
-      
+
       // TODO insert into new game to get gameId
 
       // redirects to app.get('/game/:gameId)
@@ -496,3 +468,59 @@ app.post('/createNewCollection', async (req, res) => {
     res.send(`Something went wrong: ${err}`);
   }
 });
+
+
+
+
+
+
+///////////////////////////////////////////////
+// GAME PLAY
+///////////////////////////////////////////////
+
+// Game get - Initialize the game
+// FIXME change to '/game/:gameId'
+app.get('/game/', async (req, res) => {
+  // FIXME replace
+  // const user = req.session.user;
+  // const deck = req.session.deck;
+  // const game = req.session.game;
+  const user = { userId: 1001, username: 'admin' }
+  const deck = { deckId: 7001 }
+  const game = { ruleSet: 'ruleSet1', gameId: 1001 }
+
+  // If user we can intialize a game
+  if (user) {
+    const userInstance = new User(user.userId, user.username);
+    const gameInstance = new Game(userInstance, deck.deckId, game.ruleSet, game.gameId);
+
+    await gameInstance.initialize();
+
+    // Save game to current session
+    req.session.gameInstance = gameInstance;
+
+    res.render('gamePlay1', {
+      gameId: game.gameId,
+      ruleSet: game.ruleSet,
+      hand: gameInstance.hand,
+      remainingDeckCards: gameInstance.deck.length
+    });
+  }
+});
+
+// Play Card
+app.post('/playCard', (req, res) => {
+  const cardId = req.body.cardId;
+  // Update Game state based on cardId
+  const gameInstance = req.session.gameInstance;
+
+  console.log(gameInstance)
+
+  if (gameInstance && typeof gameInstance.playCard === 'function') {
+    console.log(gameInstance.hand);
+    gameInstance.playCard(cardId)
+    // console.log(gameInstance.hand.length)
+
+    res.json({ message: 'card played successfully', cardId });
+  }
+})

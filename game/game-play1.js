@@ -1,5 +1,5 @@
-const dbFunc = require('./db-functions');
-const helper = require('./helper-funcs')
+const dbFunc = require('../database/db-functions');
+const helper = require('../database/helper-funcs')
 // Using RuleSet1
 
 class Card {
@@ -33,36 +33,79 @@ class SpellCard extends Card {
 
 class User {
     // Player starts with 100 Mana.
-    constructor(userId, username, mana = 100) {
+    constructor(userId, username, health = 100, mana = 10) {
         this.userId = userId;
         this.username = username;
-        this.mana = mana;
+        this.health = health;  // total health 
+        this.mana = mana;  // mana per turn
     }
 
     // Method to decrease mana
-    decreaseMana(amount) {
-        this.mana -= amount;
+    decreaseHealth(amount) {
+        this.health -= amount;
     }
 
     // Method to check if user has lost
     hasLost() {
         // Will return True for loss
-        return this.mana <= 0;  // If mana <= 0 then they have lost 
+        return this.health <= 0;  // If mahealthna <= 0 then they have lost 
     }
 }
+
+// TODO finish filling out opponent
+class Opponent {
+    constructor(health = 100, mana = 10) {
+        this.health = health;  // total health 
+        this.mana = mana;  // mana per turn
+    }
+
+    async playTurn() {
+        // TODO
+    }
+}
+
+class ComputerOpponent extends Opponent{
+    constructor(health, mana) {
+        super(health, mana);
+    }
+
+    async playTurn() {
+        // TODO
+    }
+}
+
+class HumanOpponent extends Opponent{
+    constructor(health, mana) {
+        super(health, mana);
+    }
+
+    async playTurn() {
+        // TODO
+    }
+}
+
+
 class Game {
     constructor(user, deckId, ruleSet, gameId) {
         this.user = user;
+        this.opponent = null; // initialize as null
         this.deckId = deckId;
         this.ruleSet = ruleSet;
         this.gameId = gameId;
         this.hand = [];
+        this.opponentHand = [];
         this.deck = [];
         this.playerStage = [];
+        this.opponentHand = [];
     }
 
     // Initialize the game
-    async initialize() {
+    async initialize(computer = true, opponentId, opponentUsn) {
+        if (computer) {
+            // if computer is opponent
+            this.opponent = new ComputerOpponent();
+        } 
+
         this.deck = await this.getDeck();
         this.drawInitialHand();
     }
@@ -78,7 +121,7 @@ class Game {
 
             var deckJsonObject = JSON.parse(deckList[0].cardId);
             var cardIds = deckJsonObject.cardList;
-            console.log(cardIds);
+            // console.log(cardIds);
             const cardInstances = await Promise.all(cardIds.map(async cardId => {
 
                 const cardData = await dbFunc.getCardByCardId(cardId);
@@ -92,7 +135,7 @@ class Game {
                         cardData[0].rarity, 
                         cardData[0].attack, 
                         cardData[0].defense);
-                } else {
+                } else if (cardData[0].cardType.toLowerCase() === 'spell') {
                     return new SpellCard(
                         cardId, 
                         cardData[0].spellType,
@@ -127,6 +170,7 @@ class Game {
         while (this.hand.length < 7 && this.deck.length > 0) {
             this.hand.push(this.deck.pop());
         }
+        console.log(this.hand);
     }
 
     playNextTurn() {
@@ -160,8 +204,18 @@ class Game {
             return;
         }
 
-        updatedHand = updatedHand.filter(card => card !== cardId);
-        updatedStage.push(cardId);
+        updatedHand = updatedHand.filter(handCard => handCard.id !== cardId);
+
+        // Check type of card
+        if (card instanceof CreatureCard){
+            updatedStage.push(cardId);
+        } else if (card instanceof SpellCard){
+            // Handle playing spell
+            // TODO add logic for card type spell
+        } else {
+            console.log("Error: unknown card type.");
+            return;
+        }
 
         this.hand = updatedHand; // Update the hand
         this.playerStage = updatedStage; // Update the player stage
