@@ -170,10 +170,9 @@ class Game {
         while (this.hand.length < 7 && this.deck.length > 0) {
             this.hand.push(this.deck.pop());
         }
-        console.log(this.hand);
     }
 
-    playNextTurn() {
+    async playNextTurn() {
         // Draw cards for the next turn
         const result = this.drawCardsPerTurn();
         // Other game logic for the next turn
@@ -194,18 +193,18 @@ class Game {
         return { updatedHand, updatedDeck }; // Return the updated hand and deck as an object
     }
 
-    playCard(cardId) {
-        // Play a card
-        let updatedHand = [...this.hand];
-        let updatedStage = [...this.playerStage];
+    async playCard(cardId) {
+        // Find the card instance in hand based on cardId
+        const card = this.hand.find(card => card.id === cardId);
 
-        if (!updatedHand.includes(cardId)) {
+        if (!card) {
             console.log("Error: Card is not in hand.");
             return;
         }
-
-        updatedHand = updatedHand.filter(handCard => handCard.id !== cardId);
-
+    
+        let updatedHand = this.hand.filter(handCard => handCard.id !== cardId);
+        let updatedStage = [...this.playerStage];
+    
         // Check type of card
         if (card instanceof CreatureCard){
             updatedStage.push(cardId);
@@ -216,7 +215,7 @@ class Game {
             console.log("Error: unknown card type.");
             return;
         }
-
+    
         this.hand = updatedHand; // Update the hand
         this.playerStage = updatedStage; // Update the player stage
     }

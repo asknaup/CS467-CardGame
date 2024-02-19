@@ -29,31 +29,74 @@ document.addEventListener('DOMContentLoaded', function () {
     function drop(event) {
         event.preventDefault();
         const cardId = event.dataTransfer.getData('text/plain');
+        const dropZone = event.target;
 
-        
-        fetch ('/playCard', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ cardId: cardId }),  // returns req.session.cardId to server.js
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data.message); // Log the message from the server
-            // You can update the UI or perform other actions based on the response
-        })
-        .catch(error => {
-            console.error('Error playing the card:', error);
-        });
+        // Check if dropZone already contains a card
+        const existingCard = dropZone.querySelector('.card');
 
-        // Create card Element and append it to the drop zone
-        const cardElement = document.createElement('div');
-        cardElement.textContent = cardId;
-        event.target.appendChild(cardElement);
+        if (!existingCard) {
+            fetch('/playCard', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ cardId: cardId }),  // returns req.session.cardId to server.js
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data.message); // Log the message from the server
+                    // Update the UI based on the response
+                    if (data.message === 'card played successfully') {
+                        const handElement = document.getElementById('hand');
+                        const cardElement = document.getElementById(cardId);
 
-        // Identifying the drop zone
-        const dropZoneId = event.target.id;
-        console.log('Dropped into drop zone:', dropZoneId);
+                        if (handElement && cardElement) {
+                            handElement.removeChild(cardElement);
+                        }
+
+                        // Create new Card element and append it to the drop zone
+                        const dropZone = event.target;
+
+                        // Hide p when card is played
+                        const pElement = dropZone.querySelector('p');
+                        if (pElement) {
+                            pElement.style.display = 'none';
+                        }
+                        dropZone.appendChild(cardElement);
+                    } else {
+                        // Handle error or display a message to the user
+                        console.error('Error:', data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error playing the card:', error);
+                });
+        } else {
+            // If there is already a card in the drop zone, display an error message
+            const dropZoneId = dropZone.id;
+            const errorContainer = document.getElementById(`${dropZoneId}Error`);
+            console.log(errorContainer); // Log the error container for debugging
+            if (errorContainer) {
+                errorContainer.textContent = 'Error: There is already a card here';
+                errorContainer.classList.add('show'); // Show the error container
+            }
+    
+            // Set a timeout to hide the error message after 5 seconds
+            setTimeout(() => {
+                if (errorContainer) {
+                    errorContainer.textContent = ''; // Clear the error message
+                    errorContainer.classList.remove('show'); // Hide the error container
+                }
+            }, 5000);
+        }
     }
+
 })
+
+// // Remove the card from the drop zone
+// dropZone.removeChild(newCardElement);
+
+// // Make the <p> element reappear
+// if (pElement) {
+//     pElement.style.display = 'block';
+// }

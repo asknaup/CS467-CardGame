@@ -517,6 +517,8 @@ app.post('/createNewCollection', async (req, res) => {
 ///////////////////////////////////////////////
 // GAME PLAY
 ///////////////////////////////////////////////
+// Server initializion of game
+const gameInstance = {};
 
 // Game get - Initialize the game
 // FIXME change to '/game/:gameId'
@@ -532,18 +534,15 @@ app.get('/game/', async (req, res) => {
   // If user we can intialize a game
   if (user) {
     const userInstance = new User(user.userId, user.username);
-    const gameInstance = new Game(userInstance, deck.deckId, game.ruleSet, game.gameId);
+    gameInstance[game.gameId] = new Game(userInstance, deck.deckId, game.ruleSet, game.gameId);
 
-    await gameInstance.initialize();
-
-    // Save game to current session
-    req.session.gameInstance = gameInstance;
+    await gameInstance[game.gameId].initialize();
 
     res.render('gamePlay1', {
       gameId: game.gameId,
       ruleSet: game.ruleSet,
-      hand: gameInstance.hand,
-      remainingDeckCards: gameInstance.deck.length
+      hand: gameInstance[game.gameId].hand,
+      remainingDeckCards: gameInstance[game.gameId].deck.length
     });
   }
 });
@@ -551,15 +550,11 @@ app.get('/game/', async (req, res) => {
 // Play Card
 app.post('/playCard', (req, res) => {
   const cardId = req.body.cardId;
-  // Update Game state based on cardId
-  const gameInstance = req.session.gameInstance;
+  const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
 
-  console.log(gameInstance)
-
-  if (gameInstance && typeof gameInstance.playCard === 'function') {
-    console.log(gameInstance.hand);
-    gameInstance.playCard(cardId)
-    // console.log(gameInstance.hand.length)
+  if (gameInstance[game.gameId]) {
+    console.log(gameInstance[game.gameId].hand); 
+    gameInstance[game.gameId].playCard(parseInt(cardId));
 
     res.json({ message: 'card played successfully', cardId });
   }
