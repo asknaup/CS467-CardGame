@@ -143,6 +143,16 @@ app.get('/userDeck/:username', (req, res) => {
   }
 });
 
+app.get('/cardGenBulkPage', (req, res) => {
+  const user = req.session.user;
+  if (user) {
+    res.render('cardGenBulkPage');
+  } else {
+    // Redirect to homepage (index) to log in
+    res.redirect('/');
+  }
+});
+
 // TODO routing between gameGeneration, card Generation
 // TODO Work on corresponding edit pages, corresponding bulk pages
 // TODO Work on generating inputs
@@ -269,7 +279,6 @@ app.get('/userProfile', (req, res) => {
 app.get('/cardViewPage', async (req, res) => {
   // TODO card currently hardcoded
   const user = req.session.user;
-  
   console.log(val[0]);
   if (user) {
     res.render('cardViewEditPage', { showLogoutButton: true, value: val })
@@ -387,7 +396,7 @@ app.post('/cardViewEditPage', async (req, res) => {
   const user = req.session.user;
   try {
     if (user) {
-      const aiCard = await card.createAICard(req.body.creatureType, req.body.theme, req.body.color, req.body.rarity);      
+      const aiCard = await card.createAICard(req.body.creatureType, req.body.theme, req.body.color, req.body.rarity, 3);      
       let values = [];
       async function delay(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
@@ -414,21 +423,51 @@ app.post('/cardViewEditPage', async (req, res) => {
   }
 });
 
+
+app.post('/cardViewPrintedBulkPage', async (req, res) => {
+  const user = req.session.user;
+  async function delay(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+
+  try {
+    const num = parseInt(req.body.number); // Assuming req.body.number contains the number of cards to generate
+    const generatedCards = [];
+
+    for (let i = 0; i < num; i++) {
+      newCreature = card.createDataStructCreature(req.body.colors, req.body.creatures, req.body.places);
+      const aiCard = await card.createAICard(newCreature.creature, newCreature.place, newCreature.color, newCreature.rarity, 1);
+    
+      let values = [];
+      while (values.length === 0) {
+        values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId);
+        await delay(500); // Add a delay to avoid excessive requests
+      }
+      newCreature.URL = values
+      generatedCards.push(newCreature);
+    }   
+    console.log(generatedCards);
+    res.render('cardViewPrintedBulkPage', { cards: generatedCards });
+  } catch (err) {
+    // Handle errors
+    console.error(err);
+    res.status(500).send({ success: false, error: err.message });
+  }
+});
+
 app.post('/cardViewPrintedPage', async (req, res) => {
   try {
     const user = req.session.user;
-    console.log(req.body.url, req.body.cardName);
-    const cardId = await dbFunc.insertCard(req.body.cardName, req.body.cardType, user.userId, req.body.rarity, req.body.manaCost);    // returns cardId
-    console.log(cardId, req.body.rarity)
+    const cardId = await dbFunc.insertCard(req.body.cardName, req.body.cardType, user.userId, req.body.rarity, req.body.manaCost);
+    
     if (req.body.cardType === "Creature") {
       await dbFunc.insertCreatureCard(cardId, req.body.creatureAttack, req.body.creatureDefense);
     } else {
       await dbFunc.insertSpellCard(cardId, req.body.spellType, req.body.spellAbility, req.body.spellAttack, req.body.spellDefense, req.body.utility);
     }
+
     await dbFunc.insertCardUrl(cardId, req.body.url);
-    console.log(req.body.url);
     const data = await dbFunc.getCardInfo(cardId);
-    console.log(data[0].rarity);
+    //console.log(req.body.url, data[0].rarity);
+    
     res.render('cardViewPrintedPage', {
       url: req.body.url,
       rarity: data[0].rarity,
