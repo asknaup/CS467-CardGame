@@ -143,19 +143,20 @@ function createTradingCard(cardData) {
     var cardContent = document.createElement('div');
     cardContent.classList.add('cardContent');
 
-    // Card header
-    var cardHeader = document.createElement('div');
+    // Frame header
+    var frameHeader = document.createElement('div');
+    cardContent.classList.add('frameHeader');
 
     // cardId
     var cardId = document.createElement('p');
     cardId.textContent = cardData.cardId;
 
     // Name
-    var cardName = document.createElement('h2');
+    var cardName = document.createElement('h1');
     cardName.classList.add('cardName');
     cardName.textContent = cardData.cardName;
 
-    cardHeader.appendChild(cardName);
+    frameHeader.appendChild(cardName);
 
     // Card image
     var cardImage = document.createElement('div');
@@ -202,6 +203,14 @@ function createTradingCard(cardData) {
         attributesList.appendChild(spellDefense);
     }
 
+    var cardFrame = document.createElement('div');
+    cardFrame.classList.add('cardFrame');
+
+    var cardBackground = document.createElement('div');
+    cardBackground.classList.add('cardBackground');
+
+
+
     var attack = document.createElement('li');
     attack.innerHTML = `<strong>Attack:</strong> ${cardData.attack}`;
 
@@ -219,12 +228,16 @@ function createTradingCard(cardData) {
     cardDetails.appendChild(attributesList);
 
     // Append elements to card content
-    cardContent.appendChild(cardHeader);
+    cardContent.appendChild(frameHeader);
     cardContent.appendChild(cardImage);
     cardContent.appendChild(cardDetails);
 
+    cardFrame.appendChild(cardContent);
+
+    cardBackground.appendChild(cardFrame);
+
     // Append card content to card container
-    cardContainer.appendChild(cardContent);
+    cardContainer.appendChild(cardBackground);
 
     return cardContainer;
 }

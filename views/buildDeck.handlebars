@@ -29,29 +29,36 @@
         <script id="card-template" type="text/x-handlebars-template">
         {{#each cards}}
             <div class="card">
-                {{!-- Uncomment the following line if you want to display the cardName --}}
-                <h3>{{cardName}}</h3>
 
-                <img src="{{imagePath}}" alt="{{cardName}}" class="card-image">
+                <div class="cardBackground">
+                    <div class="cardFrame">
+                    
+                        <div class="frameHeader">
+                            <h1 class="cardName">{{cardName}}</h1>
+                        </div>
+                        
+                        <img src="{{imagePath}}" alt="{{cardName}}" class="card-image">
 
-                <p>Card Type: {{cardType}}</p>
-                <p>Attributes:</p>
-                <ul>
-                    <li>Card ID: {{cardId}}</li>
-                    <li>Rarity: {{rarity}}</li>
-                    <li>Mana Cost: {{manaCost}}</li>
+                        <p>Card Type: {{cardType}}</p>
+                        <p>Attributes:</p>
+                        <ul>
+                            <li>Card ID: {{cardId}}</li>
+                            <li>Rarity: {{rarity}}</li>
+                            <li>Mana Cost: {{manaCost}}</li>
 
-                    {{!-- Add other attributes as needed --}}
-                    {{#if (eq cardType "spell")}}
-                        <li>Spell Type: {{spellType}}</li>
-                        <li>Spell Ability: {{spellAbility}}</li>
-                        <li>Spell Attack: {{spellAttack}}</li>
-                        <li>Spell Defense: {{spellDefense}}</li>
-                    {{/if}}
+                            {{!-- Add other attributes as needed --}}
+                            {{#if (eq cardType "spell")}}
+                                <li>Spell Type: {{spellType}}</li>
+                                <li>Spell Ability: {{spellAbility}}</li>
+                                <li>Spell Attack: {{spellAttack}}</li>
+                                <li>Spell Defense: {{spellDefense}}</li>
+                            {{/if}}
 
-                    <li>Attack: {{attack}}</li>
-                    <li>Defense: {{defense}}</li>
-                </ul>
+                            <li>Attack: {{attack}}</li>
+                            <li>Defense: {{defense}}</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         {{/each}}
     </script>
