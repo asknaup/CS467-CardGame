@@ -8,8 +8,14 @@
 
 <body>
   <div class="container1">
-    <br><br>
+    <br><br> 
     <h1> Welcome to the Card Generation Page </h1>
+    <div id="input-form">
+    <form action="/cardGenBulkPage" method="get">
+      <p>Would you like to generate bulk cards? (More than one)?<p>
+      <button id="gen-game-button-ggp" type="submit">Generate Bulk Cards</button>
+    </form>
+    </div>
     <div id="input-form">
       {{!-- Links to generateCard post --}}
       <form action="/cardViewEditPage" method="post" id="cardForm">
@@ -70,6 +76,4 @@
       });
     </script>
 </body>
-
-
 </html>

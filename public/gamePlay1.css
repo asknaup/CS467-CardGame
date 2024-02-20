@@ -1,10 +1,11 @@
 .drop-zone {
-    width: 150px; /* Adjust the width as needed */
-    height: 210px; /* Adjust the height as needed */
+    width: 150px; 
+    height: 210px; 
     border: 2px dashed #000;
     margin: 10px;
     display: inline-block;
     flex-wrap: wrap;
+    position: relative;
 }
 
 .card {
@@ -13,6 +14,7 @@
     margin: 5px;
     border: 1px solid black; 
     cursor: pointer;
+    background-color: lightseagreen;
 }
 
 .board {
@@ -27,9 +29,31 @@
     display: flex; 
     flex-wrap: wrap; 
     justify-content: space-evenly;
+    position: relative;
 }
 
 .card-container {
     display: flex;
     justify-content: center;
+}
+
+.playerError {
+    display: none; 
+    position: absolute;
+    top: -20px; 
+    background-color: red; 
+    color: white; 
+    padding: 5px; 
+    height: 20px;
+}
+
+.playerError.show {
+    display: block; /* Show the error message */
+    height: 20px;
+}
+
+.greyed-out {
+    opacity: 0.6; /* Reduce opacity to make the card appear faded */
+    pointer-events: none; /* Disable pointer events so the card cannot be interacted with */
+    filter: grayscale(100%); /* Apply grayscale filter to make the card appear greyed out */
 }
