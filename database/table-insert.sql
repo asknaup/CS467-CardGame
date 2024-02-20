@@ -20,7 +20,7 @@ INSERT IGNORE INTO userCreds (username, pwd, accountStatus, email) VALUES
 -- -----------------------------------------------------
 -- Example 1 - spell
 INSERT INTO cards (cardName, cardType, rarity, manaCost) VALUES
-    ('Elemental Resonance', 'spell', 'Common', 20);
+    ('Elemental Resonance', 'spell', 'Common', 10);
 
 SET @lastCardId = LAST_INSERT_ID();
 
@@ -32,7 +32,7 @@ INSERT INTO cardSpell (cardId, spellType, spellAbility, spellAttack, spellDefens
 
 -- Example 2 - creature
 INSERT INTO cards (cardName, cardType, rarity, manaCost) VALUES
-    ('Elemental Resonance', 'spell', 'Common', 20);
+    ('Elemental Resonance', 'spell', 'Common', 5);
 
 SET @lastCardId = LAST_INSERT_ID();
 
@@ -56,7 +56,7 @@ INSERT INTO cardSpell (cardId, spellType, spellAbility, spellAttack, spellDefens
 
 -- Example 4 - creature
 INSERT INTO cards (cardName, cardType, rarity, manaCost) VALUES
-    ('Woods Spider', 'creature', 'Uncommon', 15);
+    ('Woods Spider', 'creature', 'Uncommon', 3);
 
 SET @lastCardId = LAST_INSERT_ID();
 
@@ -68,7 +68,7 @@ INSERT INTO cardCreature (cardId, attack, defense)
 
 -- Example 5 - spell
 INSERT INTO cards (cardName, cardType, rarity, manaCost) VALUES
-    ('Minor-Heal', 'spell', 'Common', 20);
+    ('Minor-Heal', 'spell', 'Common', 6);
 
 SET @lastCardId = LAST_INSERT_ID();
 
@@ -80,7 +80,7 @@ INSERT INTO cardSpell (cardId, spellType, spellAbility, spellAttack, spellDefens
 
 -- Example 6 - creature
 INSERT INTO cards (cardName, cardType, rarity, manaCost) VALUES
-    ('Armored Elephant', 'spell', 'Legendary', 20);
+    ('Armored Elephant', 'spell', 'Legendary', 10);
 
 SET @lastCardId = LAST_INSERT_ID();
 
@@ -116,7 +116,7 @@ INSERT INTO cardCreature (cardId, attack, defense)
 
 -- Example 9 - creature
 INSERT INTO cards (cardName, cardType, rarity, manaCost) VALUES
-    ('Spiked Turtle', 'creature', 'Rare', 15);
+    ('Spiked Turtle', 'creature', 'Rare', 7);
 
 SET @lastCardId = LAST_INSERT_ID();
 
@@ -128,7 +128,7 @@ INSERT INTO cardCreature (cardId, attack, defense)
 
 -- Example 10 - spell
 INSERT INTO cards (cardName, cardType, rarity, manaCost) VALUES
-    ('Quick Freeze', 'spell', 'Common', 20);
+    ('Quick Freeze', 'spell', 'Common', 2);
 
 SET @lastCardId = LAST_INSERT_ID();
 
@@ -140,7 +140,7 @@ INSERT INTO cardSpell (cardId, spellType, spellAbility, spellAttack, spellDefens
 
 -- Example 11 - spell
 INSERT INTO cards (cardName, cardType, rarity, manaCost) VALUES
-    ('Poison', 'spell', 'Common', 10);
+    ('Poison', 'spell', 'Common', 2);
 
 SET @lastCardId = LAST_INSERT_ID();
 
@@ -152,7 +152,7 @@ INSERT INTO cardSpell (cardId, spellType, spellAbility, spellAttack, spellDefens
 
 -- Example 12 - spell
 INSERT INTO cards (cardName, cardType, rarity, manaCost) VALUES
-    ('Cure', 'spell', 'Common', 10);
+    ('Cure', 'spell', 'Common', 1);
 
 SET @lastCardId = LAST_INSERT_ID();
 

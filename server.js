@@ -555,39 +555,39 @@ app.post('/playCard', async (req, res) => {
   const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
 
   if (gameInstance[game.gameId]) {
-      try {
-          const result = await gameInstance[game.gameId].playCard(parseInt(cardId));
+    try {
+      const result = await gameInstance[game.gameId].playCard(parseInt(cardId));
 
-          if (result && result.error) {
-            if(result.error === 'Insufficient mana to play this card.'){
-              res.json({message: 'Insufficient mana to play this card.'});
-            } else {
-              res.status(400).json({error: result.error});
-            }
-          } else {
+      if (result && result.error) {
+        if (result.error === 'Insufficient mana to play this card.') {
+          res.json({ message: 'Insufficient mana to play this card.' });
+        } else {
+          res.status(400).json({ error: result.error });
+        }
+      } else {
 
-          // Include playerMana in the response
-          const playerMana = gameInstance[game.gameId].user.mana;
-          const playerStage = gameInstance[game.gameId].playerStage; // Get the updated playerStage
+        // Include playerMana in the response
+        const playerMana = gameInstance[game.gameId].user.mana;
+        const playerStage = gameInstance[game.gameId].playerStage; // Get the updated playerStage
 
-          console.log(playerStage);
+        console.log(playerStage);
 
-          res.json({ message: 'card played successfully', cardId, playerMana, playerStage });
-          }
-
-      } catch (error) {
-          // Check if the error message is related to insufficient mana
-          if (error.message === "Insufficient mana to play this card.") {
-              // Send a 422 status code for unprocessable entity due to insufficient mana
-              res.status(422).json({ error: error.message });
-          } else {
-              // For other errors, send a 400 status code
-              res.status(400).json({ error: error.message });
-          }
+        res.json({ message: 'card played successfully', cardId, playerMana, playerStage });
       }
+
+    } catch (error) {
+      // Check if the error message is related to insufficient mana
+      if (error.message === "Insufficient mana to play this card.") {
+        // Send a 422 status code for unprocessable entity due to insufficient mana
+        res.status(422).json({ error: error.message });
+      } else {
+        // For other errors, send a 400 status code
+        res.status(400).json({ error: error.message });
+      }
+    }
   } else {
-      // Send a 404 status code if the game instance is not found
-      res.status(404).json({ error: "Game not found." });
+    // Send a 404 status code if the game instance is not found
+    res.status(404).json({ error: "Game not found." });
   }
 });
 
@@ -641,3 +641,24 @@ app.get('/getCardDetails', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+
+// End turn
+app.post('/endTurn', async (req, res) => {
+  const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
+
+  if (gameInstance[game.gameId]) {
+    try {
+      let gameInstance = gameInstance[game.gameId];
+
+      const result = await gameInstance.playComputerTurn();
+      console.log(result);
+      res.status(200).json({ message: 'Computer opponent\'s turn completed' });
+    } catch {
+      console.log("catch something")
+    }
+  } else {
+    // Send a 404 status code if the game instance is not found
+    res.status(404).json({ error: "Game not found." });
+  }
+})

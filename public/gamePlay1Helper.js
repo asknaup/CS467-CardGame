@@ -2,6 +2,8 @@
 // Game play for RuleSet 1
 // Client Side Javascript
 
+const { response } = require("express");
+
 document.addEventListener('DOMContentLoaded', function () {
     const hand = document.getElementById('hand');
     const handList = document.querySelectorAll("#hand .card");
@@ -69,6 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                     if (pElement) {
                                         pElement.style.display = 'none';
                                     }
+                                    cardElement.classList.add('greyed-out');
                                     dropZone.appendChild(cardElement);
 
                                     document.querySelector('#playerMana').textContent = `Player Mana: ${data.playerMana}`;
@@ -125,3 +128,21 @@ function displayErrorMessage(message, dropZoneId) {
 // if (pElement) {
 //     pElement.style.display = 'block';
 // }
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Add event listener for the end turn button
+    const endTurnButton = document.getElementById('endTurnButton');
+    endTurnButton.addEventListener('click', endTurn);
+
+    fetch('/endTurn', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ cardId: cardId }),  // returns req.session.cardId to server.js
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data.message)
+    })
+});

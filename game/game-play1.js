@@ -60,20 +60,49 @@ class Opponent {
         this.mana = mana;  // mana per turn
     }
 
-    async playTurn() {
-        // TODO
+
+    // Method to decrease mana
+    decreaseHealth(amount) {
+        this.health -= amount;
+    }
+
+    // Method to check if user has lost
+    hasLost() {
+        // Will return True for loss
+        return this.health <= 0;  // If mahealthna <= 0 then they have lost 
     }
 }
 
 class ComputerOpponent extends Opponent {
-    constructor(health, mana) {
+    constructor(health = 100, mana = 10) {
         super(health, mana);
+        this.playerStage = []; // Initialize playerStage for staging creature cards
     }
 
-    async playTurn() {
-        // TODO
+    async playTurn(hand) {
+        // Iterate through the computer opponent's hand
+        for (let i = 0; i < hand.length; i++) {
+            const card = hand[i];
+
+            // Check if the card is a creature card and if there's enough mana to play it
+            if (card instanceof CreatureCard && card.mana <= this.mana) {
+                // Play the creature card to the staging area
+                this.playerStage.push(card);
+                this.mana -= card.mana;
+
+                // Remove the card from the hand
+                hand.splice(i, 1);
+
+                // Adjust index since we removed a card from the hand
+                i--;
+
+                // Break the loop after playing a creature card
+                break;
+            }
+        }
     }
 }
+
 
 class HumanOpponent extends Opponent {
     constructor(health, mana) {
@@ -96,19 +125,24 @@ class Game {
         this.hand = [];
         this.opponentHand = [];
         this.deck = [];
+        this.opponentDeck = [];
         this.playerStage = [];
-        this.opponentHand = [];
+        this.opponentStage = [];
     }
 
     // Initialize the game
     async initialize(computer = true, opponentId, opponentUsn) {
+        this.deck = await this.getDeck();
+        this.drawInitialHand();
+
         if (computer) {
             // if computer is opponent
             this.opponent = new ComputerOpponent();
+            this.opponentDeck = this.shuffleDeck([...this.deck]);
+
+            this.drawInitialOpponentHand();
         }
 
-        this.deck = await this.getDeck();
-        this.drawInitialHand();
     }
 
     async getDeck() {
@@ -176,10 +210,23 @@ class Game {
         }
     }
 
+
+    async drawInitialOpponentHand() {
+        // Draw initial hand with 7 cards for the opponent
+        while (this.opponentHand.length < 7 && this.opponentDeck.length > 0) {
+            this.opponentHand.push(this.opponentDeck.pop());
+        }
+    }
+
     async playNextTurn() {
         // Draw cards for the next turn
         const result = this.drawCardsPerTurn();
-        // Other game logic for the next turn
+        
+        // Execute the computer opponent's turn
+        if (this.opponent instanceof ComputerOpponent) {
+            await this.opponent.playTurn(this)
+        }
+
     }
 
     drawCardsPerTurn() {
@@ -205,29 +252,29 @@ class Game {
         if (!card) {
             // console.log("Error: Card is not in hand.");
             // return;
-            return {error: "Card is not in hand."};
+            return { error: "Card is not in hand." };
         }
 
         console.log(this.user.mana)
         if (card.mana > this.user.mana) {
             // console.log("Insufficient mana to play this card.")
-            return {error: "Insufficient mana to play this card."}; // Return without playing the card
+            return { error: "Insufficient mana to play this card." }; // Return without playing the card
         }
 
         // Check type of card
         if (card instanceof CreatureCard) {
-            if(updatedStage.length < 5) {
+            if (updatedStage.length < 5) {
                 updatedStage.push(cardId);
             } else {
                 // console.log("Error: Maximum limit reached on the board");
-                return {error: "Maximum limit reached on the board"};
+                return { error: "Maximum limit reached on the board" };
             }
         } else if (card instanceof SpellCard) {
             // Handle playing spell
             // TODO add logic for card type spell
         } else {
             // console.log("Error: unknown card type.");
-            return {error: "unknown card type."}
+            return { error: "unknown card type." }
         }
 
         // remove card from hand
