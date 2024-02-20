@@ -1,5 +1,5 @@
-const db = require('./db-connector');
-const dbFunc = require('./db-functions')
+const db = require('../database/db-connector');
+const dbFunc = require('../database/db-functions')
 
 function generatedGameInfo() {
     return;
