@@ -10,25 +10,28 @@
   <div class="container1">
     <br><br> 
     <h1> Welcome to the Card Generation Page </h1>
+    
     <div id="input-form">
     <form action="/cardGenBulkPage" method="get">
-      <p>Would you like to generate bulk cards? (More than one)?<p>
       <button id="gen-game-button-ggp" type="submit">Generate Bulk Cards</button>
     </form>
     </div>
+
     <div id="input-form">
       {{!-- Links to generateCard post --}}
       <form action="/cardViewEditPage" method="post" id="cardForm">
+        <h3>Generate for which game?</h3><br>
+        <select>
+          {{#each vals}}
+            <option value="{{this.imageLocation}}">{{this.imageLocation}}</option>
+          {{/each}}
+        </select>
+        <br><br><p>---------------------------------</p><br>
         <label for="cardType">Select Type of Card:</label>
         <select id="cardType" name="cardType">
           <option value="Creature">Creature</option>
-          <option value="Spell">Spell</option>
+          {{!--<option value="Spell">Spell</option>--}}
         </select><br><br>
-        <input name="theme" type="text" placeholder="Card Theme or Setting">
-        <input name="cardName" type="text" placeholder="Card Name">
-        <input name="creatureType" type="text" placeholder="Type of Creature">
-        <input name="manaCost" type="number" placeholder="Mana Cost">
-        <input name="color" type="text" placeholder="Color">
         <label for="rarity">Select Card Rarity:</label>
         <select id="rarity" name="rarity">
           <option value="Common">Common</option>
@@ -36,10 +39,15 @@
           <option value="Rare">Rare</option>
           <option value="Legendary">Legendary</option>
         </select><br><br>
+        <input name="cardName" type="text" placeholder="Card Name">
+        <input name="creatureType" type="text" placeholder="Type of Creature">
+        <input name="theme" type="text" placeholder="Card Theme or Setting">
+        <input name="manaCost" type="number" placeholder="Mana Cost">
         <div id="creatureFields">
           <input type="number" id="creatureAttack" name="creatureAttack" placeholder="Attack"><br>
           <input type="number" id="creatureDefense" name="creatureDefense" placeholder="Defense"><br>
         </div>
+        <input name="color" type="text" placeholder="Color">
         <div id="spellFields" style="display: none;">
           <label for="spellType">Select Spell Type:</label>
           <select id="spellType" name="spellType">

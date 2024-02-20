@@ -14,11 +14,20 @@
     Inspect the Game
   </h1>
   <div>
-    {{ object1.[0] }}
-    <p>random image</p>
-    <p>input text</p>
+    <p> {{ game.[0].gameName }} </p>
+    <p>Game Owner{{ game.[0].ownerId }}</p>
+    <p>RuleSet {{ game.[0].ruleSet }} </p>
+    <p> List of Cards: {{ game.[0].cardList }} </p>
+    <p>{{ game.gameId }}</p>
+    
   </div>
-  <button>Edit</button>
-  <button>Delete</button>
+  <form action="/collect" method="POST">
+    <button>Build a Collection for this Game</button>
+    <input type="hidden" name="gameId" value="{{ game.gameId }}">
+  </form>
+  <form action="/cardGenPage" method="get">
+    <button>Build Cards for this Game</button>
+    <input type="hidden" name="gameId" value="{{ game.gameId }}">
+  </form>
 </body>
 </html>

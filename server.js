@@ -14,14 +14,13 @@ const port = 3000;
 
 const db = require('./database/db-connector');
 const dbFunc = require('./database/db-functions')
-const gameGen = require('./game/game-gen');
-const hf = require('./database/helper-funcs');
+const gameGen = require('./game/game-gen');         
+const hf = require('./database/helper-funcs');    // Could be moved
 const card = require('./database/card');
 // const configFile = require('./database/config');
 
 // Import Game Classes
 const { Game, User, Card, CreatureCard, SpellCard } = require('./game/game-play1'); // Import the User class if not already imported
-
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -45,13 +44,6 @@ app.set('view engine', 'handlebars');
 // Define the view directory path for Handlebars files
 app.set('views', path.join(__dirname, 'views'));
 
-app.use('/trading', express.static(path.join(__dirname, 'public'), 
-{
-  'extensions': ['js'],
-  'index': false,
-  'Content-Type': 'text/javascript'
-}));
-
 // Serve static file from public directory
 app.use(express.static(path.join(__dirname, 'public'),
   {
@@ -59,18 +51,30 @@ app.use(express.static(path.join(__dirname, 'public'),
     'index': false,
     'Content-Type': 'text/javascript'
   }));
+
 app.use(express.static(path.join(__dirname, 'images')))
 app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/database', express.static(path.join(__dirname, 'database')));
 app.use('/game', express.static(path.join(__dirname, 'game')));
+app.use('/trading', express.static(path.join(__dirname, 'public'), 
+{
+  'extensions': ['js'],
+  'index': false,
+  'Content-Type': 'text/javascript'
+}));
 
 /*
 ROUTES
 */
+// To DO
+// Generate Game Instances with Name
+// Generate Collection Instances of Games per User
+// Generate Decks of collection 
+
 
 app.get('/', (req, res) => {                       
   const user = req.session.user
-  if (req.session.user) {
+  if (user) {
     // If user then show homepage
     res.render('welcomePagePortal', {
       showLogoutButton: true,
@@ -107,7 +111,7 @@ app.get('/userDeck/:username', (req, res) => {
   if (user) {
     res.render('currentDeck', { showLogoutButton: true })
   } else {
-    res.render('/')
+    res.redirect('/')
   }
 });
 
@@ -122,10 +126,11 @@ app.get('/gamePlayPage', (req, res) => {
 });
 
 
-app.get('/cardGenBulkPage', (req, res) => {
+app.get('/cardGenBulkPage', async (req, res) => {
   const user = req.session.user;
   if (user) {
-    res.render('cardGenBulkPage');
+    const val_list = await dbFunc.getAllGeneratedGames();
+    res.render('cardGenBulkPage', { vals: val_list })
   } else {
     // Redirect to homepage (index) to log in
     res.redirect('/');
@@ -136,46 +141,49 @@ app.get('/gameGenPage', async (req, res) => {
   const user = req.session.user;
   try {
     if (user) {
-      const userDecks = await dbFunc.gatherUserDecks(user.userId);
-      res.render('gameGenPage', { showLogoutButton: true, decks: userDecks })
+      res.render('gameGenPage')
     } else {
-      res.render('/')
+      res.redirect('/');
     }
   } catch (err) {
     console.log(err);
   }
 });
 
-app.get('/buildDeck', (req, res) => {
 
+// NEEDS WORK
+app.get('/generatedGameView', async (req, res) => {
+  const user = req.session.user;
+  try {
+    if (user) {
+      gameStats = dbFunc.getGeneratedGameStats()
+      res.render('generatedGameView')
+    } else {
+      res.redirect('/');
+    }
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+// One of these to be deleted
+app.get('/buildDeck', (req, res) => {
   // Needs collection and game info
   const user = req.session.user;
   if (user) {
-    res.render('buildDeck', { showLogoutButton: true, userId: 1001 })
+    res.render('buildDeck', { userId: 1001 })
   } else {
     res.redirect('/', { showLogoutButton: false })
   }
 });
 
-
-app.get('/currentDeck', async (req, res) => {
-  // FIXME
-  const user = { userId: 1001, username: 'admin' };
-  // const user = req.session.user;
-  if (user) {
-    res.render('buildDeck', { showLogoutButton: true})
-  } else {
-    res.render('/');
-  }
-});
-
-// NEEDS WORK
+// NEEDS WORK and direction
 app.get('/browseGames', (req, res) => {
   const user = req.session.user;
   if (user) {
-    res.render('browseGames', { showLogoutButton: true })
+    res.render('browseGames')
   } else {
-    res.render('/');
+    res.redirect('/');
   }
 });
 
@@ -185,7 +193,7 @@ app.get('/newUser', (req, res) => {
   if (user) {
     res.render('newUser', { showLogoutButton: true })
   } else {
-    res.render('/')
+    res.redirect('/')
   }
 });
 
@@ -199,11 +207,11 @@ app.get('/resetPW', (req, res) => {
   }
 });
 
-
-app.get('/cardGenPage', (req, res) => {
+app.get('/cardGenPage', async (req, res) => {
   const user = req.session.user;
   if (user) {
-    res.render('cardGenPage', { showLogoutButton: true })
+    const val_list = await dbFunc.getAllGeneratedGames();
+    res.render('cardGenPage', { vals: val_list })
   } else {
     res.redirect('/');
   }
@@ -223,7 +231,7 @@ app.get('/collect', (req, res) => {
   if (user) {
     res.render('collect', { showLogoutButton: true })
   } else {
-    res.render('/')
+    res.redirect('/');
   }
 });
 
@@ -248,8 +256,6 @@ app.get('/logout', (req, res) => {
     }
   })
 })
-
-
 
 // FIXME change to '/game/:gameId'
 app.get('/game/', async (req, res) => {
@@ -326,11 +332,9 @@ app.post('/login', async (req, res) => {
     const user = await dbFunc.authenticateUser(username, enteredPassword);
     if (user) {
       req.session.user = { userId: user.userId, username: user.username };
-
-      // Redirects to userProfile
       res.redirect('userProfile');
     } else {
-      // Authentication failed, return results stating so
+      // Authentication failed
       res.render('welcomePagePortal', {
         error: 'Invalid credentials. Please try again.'
       });
@@ -351,7 +355,6 @@ app.post('/cardViewEditPage', async (req, res) => {
       }
       while (values.length == 0) {
         values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId); //aiCard.sdGenerationJob.generationId
-        // console.log(values);
         await delay(1000);
       }
       res.render('cardViewEditPage', {
@@ -362,11 +365,9 @@ app.post('/cardViewEditPage', async (req, res) => {
         manaCost: req.body.manaCost,
       });
     } else {
-      
       res.render('cardGenPage', { error: "Sorry! You cannot create a card without having an account" })
     }
   } catch (err) {
-    // Handle errors that may occur during card generation, database interaction, or rendering
     res.send(`Something went wrong: ${err}`);
   }
 });
@@ -439,65 +440,42 @@ app.post('/cardViewPrintedPage', async (req, res) => {
   }
 });
 
-app.post('/gameGenerationPageAction', async (req, res) => {
-  try {
-    if (req.session.user) {
-      const ruleSet = req.body.ruleSet;
-      const userDeckId = req.body.userDeckSelect;
-
-      // save deck and game inforamtion
-      req.session.deck = { deckId: userDeckId }
-      req.session.game = { ruleSet: ruleSet, gameId: 1001 }  // FIXME once table has been generated and returned gameId
-
-      console.log(ruleSet);
-      console.log(userDeckId);
-
-      // TODO insert into new game to get gameId
-
-      // redirects to app.get('/game/:gameId)
-      // res.redirect('/game/' + req.session.game.gameId);
-
-      // const object2 = await gameGen.sendNewGameToDB(req.session.user.userId, 0, 0, 'tbd');           // (ownerId, listCards, noCards, imageLocation) VALUES (?,?,?,?)';
-      // console.log(object2);                     // gameId?
-      // res.render('generatedGameView', {
-      //   object2: object2
-      // });
-    } else {
-      // Authentication failed, render 'welcomePagePortal' with an error message
-      res.render('welcomePagePortal', {
-        error: 'Invalid credentials. Please try again.'
+// NEEDS WORK!!
+app.post('/generatedGameView', async (req, res) => {
+  if (req.session.user) {
+    try {
+      const user = req.session.user;
+      const genGameId = await dbFunc.insertNewGeneratedGame(user.userId, req.body.ruleSet, '[]', req.body.name);
+      gameStats = await dbFunc.getGeneratedGameStats(genGameId);
+      res.render('generatedGameView', {
+        game: gameStats,
+        gameId: genGameId
       });
+    } catch (err) {
+      console.error(err);
+      res.send(`Something went wrong: ${err}`);
     }
-  } catch (err) {
-    // Handle errors that may occur during card generation, database interaction, or rendering
-    res.send(`Something went wrong: ${err}`);
+  } else {
+    // Authentication failed, redirect to login page
+    res.redirect('/');
   }
 });
 
-app.post('/createNewCollection', async (req, res) => {
-  try {
-    if (req.session.user.userId) {
-      const gameId = await dbFunc.createNewCollection(req.session.user.userId);
-      console.log(gameId);
-      res.render('currentDeck', {
-        gameId: gameId
-      });
-    }
-    else {
+// NEEDS OVERSIGHT
+app.post('/collect', async (req, res) => {
+  if (req.session.user) {
+      try {
+          const gameId = await dbFunc.createNewCollection(req.session.user.userId, req.body.gameId);
+          res.render('collect', { gameId: gameId });
+      }
+      catch (err) {
+          res.send(`Something went wrong: ${err}`);
+      }
+  } else {
       // Authentication failed, render 'welcomePagePortal' with an error message
-      res.render('welcomePagePortal', {
-        error: 'Invalid credentials. Please try again.'
-      });
-    }
-  } catch (err) {
-    // Handle errors that may occur during card generation, database interaction, or rendering
-    res.send(`Something went wrong: ${err}`);
+      res.redirect('/');
   }
 });
-
-
-
-
 
 
 ///////////////////////////////////////////////
