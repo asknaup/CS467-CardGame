@@ -259,9 +259,9 @@ async function insertCard(name, type, user, rarity, manaCost) {
     });
 }
 
-async function insertCreatureCard(cardId, creatureAttack, creatureDefense) {
+async function insertCreatureCard(cardId, creatureAttack, creatureDefense, cardType) {
     return new Promise((resolve, reject) => {
-        const query = 'INSERT INTO cardCreature (cardId, attack, defense) VALUES (?, ?, ?);';
+        const query = 'INSERT INTO cardCreature (cardId, attack, defense, cardType) VALUES (?, ?, ?, ?);';
         const vars = [cardId, creatureAttack, creatureDefense];
 
         db.pool.query(query, vars, (err, result) => {

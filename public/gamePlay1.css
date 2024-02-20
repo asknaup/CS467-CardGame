@@ -25,7 +25,7 @@
     justify-content: space-evenly;
 }
 
-.computer, .player {
+.opponent, .player {
     display: flex; 
     flex-wrap: wrap; 
     justify-content: space-evenly;

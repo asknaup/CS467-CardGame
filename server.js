@@ -597,7 +597,7 @@ app.get('/getCardDetails', async (req, res) => {
 
   try {
     // Retrieve card details from the database based on the cardId
-    const cardData = await dbFunc.getCardByCardId(cardId);
+    const cardData = await dbFunc.getCardByCardId(parseInt(cardId));
 
     // Check if cardData exists
     if (cardData.length === 0) {
@@ -611,9 +611,9 @@ app.get('/getCardDetails', async (req, res) => {
         cardId,                 // id
         cardData[0].cardName,   // name
         cardData[0].cardType,   // type
-        "something creature",   // description
+        cardData[0].creatureType,   // description
         cardData[0].manaCost,
-        cardData[0].rarity,
+        cardData[0].rarity, 
         cardData[0].imagePath,
         cardData[0].attack,
         cardData[0].defense);
@@ -621,7 +621,7 @@ app.get('/getCardDetails', async (req, res) => {
       card = new SpellCard( //id, name, type, description, mana, rarity, imagePath, attack, defense, ability, utility
         cardId,                     // id
         cardData[0].cardName,       // name
-        cardData[0].cardType,       // type
+        cardData[0].cardType,      // type
         cardData[0].spellType,      // description
         cardData[0].manaCost,
         cardData[0].rarity,
@@ -629,7 +629,7 @@ app.get('/getCardDetails', async (req, res) => {
         cardData[0].spellAttack,
         cardData[0].spellDefense,
         cardData[0].spellAbility,
-        cardData[0].utility)
+        cardData[0].utility);
     } else {
       return res.status(400).json({ error: 'Unknown card type' });
     }
@@ -649,13 +649,14 @@ app.post('/endTurn', async (req, res) => {
 
   if (gameInstance[game.gameId]) {
     try {
-      let gameInstance = gameInstance[game.gameId];
-
-      const result = await gameInstance.playComputerTurn();
-      console.log(result);
-      res.status(200).json({ message: 'Computer opponent\'s turn completed' });
-    } catch {
-      console.log("catch something")
+      // let game = gameInstance[game.gameId];
+      await gameInstance[game.gameId].playNextTurn();
+      // console.log(gameInstance[game.gameId].opponent.playerStage)
+      let opponentStage = gameInstance[game.gameId].opponent.playerStage;
+      
+      res.status(200).json({ message: 'Computer opponent\'s turn completed', opponentStage});
+    } catch (error) {
+      console.log("error: ", error)
     }
   } else {
     // Send a 404 status code if the game instance is not found
