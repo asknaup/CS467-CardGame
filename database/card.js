@@ -129,11 +129,6 @@ function getRandomElement(arr) {
         "Silver", "Turquoise", "Violet", "Yellow"
     ];
 
-
-
-
-
-
 /*
 (async () => {
     const aiCard = await createAICard('samurai', 'dark', 'gold', 'rare');
@@ -153,14 +148,15 @@ const result = "your image URL";
  const writeFileToDisc = fs.writeFileSync(filePath, buffer);
 */
 
-module.exports.getImageUrlFromLeonardo = getImageUrlFromLeonardo;
-module.exports.createAICard = createAICard;
-module.exports.createDataStructCreature = createDataStructCreature;
-
-
 /*   Models available
     fetch('https://cloud.leonardo.ai/api/rest/v1/platformModels', options5)
     .then(response => response.json())
     .then(response => console.log(response))
     .catch(err => console.error(err)); 
 */
+
+module.exports.getImageUrlFromLeonardo = getImageUrlFromLeonardo;
+module.exports.createAICard = createAICard;
+module.exports.createDataStructCreature = createDataStructCreature;
+
+

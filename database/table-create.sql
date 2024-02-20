@@ -145,6 +145,7 @@ CREATE TABLE IF NOT EXISTS cardCreature (
     cardId INT UNIQUE NOT NULL,
     attack INT DEFAULT NULL,
     defense INT DEFAULT NULL,
+    creatureType VARCHAR(100),
 
     PRIMARY KEY (cardId),
     FOREIGN KEY (cardId)
@@ -259,7 +260,6 @@ CREATE TABLE IF NOT EXISTS generatedGame (
     FOREIGN KEY (ownerId) 
         REFERENCES userProfile(userId) 
 );
-
 
 ALTER TABLE generatedGame AUTO_INCREMENT=5000;
 
