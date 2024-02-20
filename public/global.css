@@ -238,3 +238,23 @@ p {
 .dropdown:hover .dropdown-menu {
   display: block;
 }
+
+#usernameH, #usernameI {
+  text-transform: capitalize;
+}
+
+.center {
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  align-items: center; /* Center items horizontally */
+}
+
+.center form {
+  margin-bottom: 10px; /* Adjust spacing between buttons */
+}
+
+.userStats {
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  align-items: center; /* Center items horizontally */
+}
