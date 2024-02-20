@@ -376,11 +376,11 @@ app.post('/cardViewPrintedBulkPage', async (req, res) => {
       newCreature.URL = values
       generatedCards.push(newCreature);
     }   
-    console.log(generatedCards);
+    // console.log(generatedCards);
 
     generatedCards.forEach( async (card) => {
       try {
-        const cardId = await dbFunc.insertCard(card.cardName, card.cardType, user.userId, "rare", card.manaCost);
+        const cardId = await dbFunc.insertCard("Sir Gwendyn", card.cardType, user.userId, "rare", card.manaCost);
         await dbFunc.insertCreatureCard(cardId, card.attack, card.defense, card.creatureType);
         await dbFunc.insertCardUrl(cardId, card.URL);
       } catch (err) {
