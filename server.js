@@ -91,12 +91,20 @@ app.get('/userProfile', async (req, res) => {
   const user = req.session.user;
   if (user) {
     const userProf = await dbFunc.getUserProfile(user.userId);
-    const val_list = await dbFunc.getAllGeneratedGames();
+    const valList = await dbFunc.getAllGeneratedGamesByUser(user.userId);
+    const genLen = valList ? valList.length : 0;
+
+    const collect = await dbFunc.getAllCollectionsByUser(user.userId);
+    const collectLen = collect ? collect.length : 0;
+
+    const deck = await dbFunc.getAllDecksByUser(user.userId);
+    const deckLen = deck ? deck.length : 0;
+
     res.render('userProfile', {
       username: user.username, gameCount: userProf[0].gameCount,
       wins: userProf[0].wins, losses: userProf[0].losses,
-      showLogoutButton: true, vals: val_list
-      // Collections, Decks, Games
+      showLogoutButton: true, vals: valList, gameLen: genLen, collectLength: collectLen,
+      deckLen: deckLen
     })
   } else {
     res.redirect('/')
