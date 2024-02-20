@@ -530,6 +530,32 @@ async function getAllGeneratedGames() {
     });
 }
 
+async function getOneGeneratedGame(gameId) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM generatedGame where gameId = ?';
+        db.pool.query(query, gameId, (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+}
+
+async function getAllCollectionsByUser(userId) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM collections where playerId = ?';
+        db.pool.query(query, userId, (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+}
+
 // function updateGameWinner({ params }) {
 //     // Initialize a new game -> winner has not been decided
 //     return new Promise((resolve, reject) => {
@@ -567,3 +593,5 @@ module.exports.getCardByCardId = getCardByCardId;
 module.exports.insertNewGeneratedGame = insertNewGeneratedGame;
 module.exports.getGeneratedGameStats = getGeneratedGameStats;
 module.exports.getAllGeneratedGames = getAllGeneratedGames;
+module.exports.getAllCollectionsByUser =getAllCollectionsByUser;
+module.exports.getOneGeneratedGame = getOneGeneratedGame; 

@@ -87,21 +87,18 @@ app.get('/', (req, res) => {
   }
 });
 
-// Will change based on user logged in
-// Might want to be able to view other users
-app.get('/userProfile/:username', async (req, res) => {
+app.get('/userProfile', async (req, res) => {
   const user = req.session.user;
   if (user) {
-    // If user is defined, user shown will be loggedin user
     const userProf = await dbFunc.getUserProfile(user.userId);
+    const val_list = await dbFunc.getAllGeneratedGames();
     res.render('userProfile', {
-      username: user.username, gameCount: userProf[0].game_count,
+      username: user.username, gameCount: userProf[0].gameCount,
       wins: userProf[0].wins, losses: userProf[0].losses,
-      showLogoutButton: true
+      showLogoutButton: true, vals: val_list
       // Collections, Decks, Games
     })
   } else {
-    // Route to homepage (index) to login
     res.redirect('/')
   }
 });
@@ -149,7 +146,6 @@ app.get('/gameGenPage', async (req, res) => {
     console.log(err);
   }
 });
-
 
 // NEEDS WORK
 app.get('/generatedGameView', async (req, res) => {
@@ -217,6 +213,16 @@ app.get('/cardGenPage', async (req, res) => {
   }
 });
 
+app.get('/help', async (req, res) => {
+  const user = req.session.user;
+  if (user) {
+    res.render('help')
+  } else {
+    res.redirect('/');
+  }
+});
+
+
 app.get('/trading', (req, res) => {
   const user = req.session.user;
   if (user) {
@@ -226,26 +232,21 @@ app.get('/trading', (req, res) => {
   }
 });
 
-app.get('/collect', (req, res) => {
+// Needs Work, collection db issue
+app.get('/collect', async (req, res) => {
   const user = req.session.user;
-  if (user) {
-    res.render('collect', { showLogoutButton: true })
+  if (user) { 
+    const collect = await dbFunc.getAllCollectionsByUser(user.userId);
+    console.log(collect);
+    //const something = await dbFunc.getOneGeneratedGame(collect.gameId)   // Need to build collections
+    res.render('collect', { 
+      collect: collect
+    })
   } else {
     res.redirect('/');
   }
 });
 
-app.get('/userProfile', (req, res) => {
-  // Redirects to userProfile/:username
-  const user = req.session.user;
-  if (user) {
-    res.redirect('/userProfile/' + req.session.user.username)
-  } else {
-    res.redirect('/')
-  }
-});
-
-// Log out
 app.get('/logout', (req, res) => {
   req.session.destroy(err => {
     if (err) {
@@ -440,7 +441,7 @@ app.post('/cardViewPrintedPage', async (req, res) => {
   }
 });
 
-// NEEDS WORK!!
+// ??
 app.post('/generatedGameView', async (req, res) => {
   if (req.session.user) {
     try {
@@ -456,7 +457,6 @@ app.post('/generatedGameView', async (req, res) => {
       res.send(`Something went wrong: ${err}`);
     }
   } else {
-    // Authentication failed, redirect to login page
     res.redirect('/');
   }
 });

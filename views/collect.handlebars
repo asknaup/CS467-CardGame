@@ -10,6 +10,9 @@
 
 <body>
     <h1>Open a Pack to bolster your collection</h1>
+    {{#each collect}}
+        <option value="{{ this.gameId }}">{{ this.playerId }}</option>
+    {{/each}}
     <div class="instructions">
         <p>Here you can see your collection.</p>
     </div>
