@@ -12,15 +12,13 @@
   <div class="container">
       <h1> Create a new Trading Card Game Below </h1>
       <div id="input-form">
-        <form action="/gameGenerationPageAction" method="post">
+        <form action="/generatedGameView" method="post">
           <input name="name" type="text" placeholder="What's the Game's Name?"> 
           <label for="ruleSet">What's the rule set?</label>
           <select id="ruleSet" name="ruleSet">
             <option value="ruleSet1">Rule Set #1 (Creatures and Spells)</option>
             <option value="ruleSet2">Rule Set #2 (Combat Mechanics)</option>
           </select>
-          <br><br>
-          <input name="bool" type="text" placeholder="Would you like to auto-generate twenty creatures?">
           <button id="generateGame" type="submit">Generate New Game</button>
         </form>
     </div>

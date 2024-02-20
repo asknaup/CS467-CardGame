@@ -170,7 +170,7 @@ function insertNewGameIntoGames() {
     });
 }
 
-function createNewCollection(userId) {
+function createNewCollection(userId, gameId) {
     // Initialize a new game -> winner has not been decided
     return new Promise((resolve, reject) => {
         db.pool.query('START TRANSACTION', (beginTransactionErr) => {
@@ -179,10 +179,11 @@ function createNewCollection(userId) {
                 return;
             }
 
-            const insertQuery = 'INSERT INTO decks (playerId) VALUES (?)';
-            const selectQuery = 'SELECT LAST_INSERT_ID() as newGameId';
+            const insertQuery = 'INSERT INTO collections (gameId, playerId, cardId) VALUES (?, ?, ?)';
+            const selectQuery = 'SELECT LAST_INSERT_ID() as newCollectId';
+            const vals = [gameId, userId, '[]']
 
-            db.pool.query(insertQuery, userId, (insertErr, insertResult) => {
+            db.pool.query(insertQuery, vals, (insertErr, insertResult) => {
                 if (insertErr) {
                     db.pool.query('ROLLBACK', () => {
                         reject(insertErr);
@@ -204,7 +205,7 @@ function createNewCollection(userId) {
                                 reject(commitErr);
                             });
                         } else {
-                            resolve(selectResult[0].newGameId);
+                            resolve(selectResult[0].newCollectId);
                         }
                     });
                 });
@@ -402,23 +403,6 @@ async function createNewGame(ruleSet, userId, userDeckId) {
     });
 }
 
-//function insertIntoCollection(deckId, userId, cardId) { }
-
-// function updateGameWinner({ params }) {
-//     // Initialize a new game -> winner has not been decided
-//     return new Promise((resolve, reject) => {
-//         const sql = 'INSERT INTO game (startTime, endTime, winnerID) VALUES (CURRENT_TIMESTAMP, NULL, NULL)'                                // Games Database
-//         const vals = params
-//         db.pool.query(sql, vals, (err, result) => {
-//             if (err) {
-//                 reject(err);
-//             } else {
-//                 resolve(result);
-//             }
-//         });
-//     });
-// }
-
 async function getCardIdByUser(userId) {
     return new Promise((resolve, reject) => {
 
@@ -474,6 +458,94 @@ function insertNewDeck(userId, deckName, cardList) {
     });
 }
 
+// Hacked, inserting ruleSet into noCards, and gameName into imageLocation
+async function insertNewGeneratedGame(ownerId, numCards, listCards, gameName) {
+    return new Promise((resolve, reject) => {
+        db.pool.query('START TRANSACTION', (beginTransactionErr) => {
+            if (beginTransactionErr) {
+                reject(beginTransactionErr)
+                return;
+            }
+
+            const insertQuery = 'INSERT into generatedGame (ownerId, noCards, listCards, imageLocation) VALUES (?, ?, ?, ?)';;
+            const selectQuery = 'SELECT LAST_INSERT_ID() as genGameId';
+            const values = [ownerId, numCards, listCards, gameName];
+
+            db.pool.query(insertQuery, values, (insertErr, insertResult) => {
+                if (insertErr) {
+                    db.pool.query('ROLLBACK', () => {
+                        reject(insertErr);
+                    });
+                    return;
+                }
+
+                db.pool.query(selectQuery, (selectErr, selectResult) => {
+                    if (selectErr) {
+                        db.pool.query('ROLLBACK', () => {
+                            reject(selectErr);
+                        });
+                        return;
+                    }
+
+                    db.pool.query('COMMIT', (commitErr) => {
+                        if (commitErr) {
+                            db.pool.query('ROLLBACK', () => {
+                                reject(commitErr);
+                            });
+                        } else {
+                            resolve(selectResult[0].genGameId);
+                        }
+                    });
+                });
+            });
+        });
+    });
+}
+
+// Hacked, inserting ruleSet into noCards, and gameName into imageLocation
+async function getGeneratedGameStats(genGameId) {
+    return new Promise((resolve, reject) => {
+
+        const query = 'SELECT ownerId, noCards as ruleSet, listCards, imageLocation as gameName FROM generatedGame WHERE gameId = ?'
+        db.pool.query(query, genGameId, (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+}
+
+async function getAllGeneratedGames() {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM generatedGame';
+        db.pool.query(query, (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+}
+
+// function updateGameWinner({ params }) {
+//     // Initialize a new game -> winner has not been decided
+//     return new Promise((resolve, reject) => {
+//         const sql = 'INSERT INTO game (startTime, endTime, winnerID) VALUES (CURRENT_TIMESTAMP, NULL, NULL)'                                // Games Database
+//         const vals = params
+//         db.pool.query(sql, vals, (err, result) => {
+//             if (err) {
+//                 reject(err);
+//             } else {
+//                 resolve(result);
+//             }
+//         });
+//     });
+// }
+
+
 module.exports.insertNewUserIntoDB = insertNewUserIntoDB;
 module.exports.getUserProfile = getUserProfile;
 module.exports.getUserId = getUserId;
@@ -492,3 +564,6 @@ module.exports.getCardById = getCardById;
 module.exports.createNewGame = createNewGame;
 module.exports.getCardIdByUser = getCardIdByUser;
 module.exports.getCardByCardId = getCardByCardId;
+module.exports.insertNewGeneratedGame = insertNewGeneratedGame;
+module.exports.getGeneratedGameStats = getGeneratedGameStats;
+module.exports.getAllGeneratedGames = getAllGeneratedGames;
