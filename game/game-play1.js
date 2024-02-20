@@ -65,7 +65,7 @@ class Opponent {
     }
 }
 
-class ComputerOpponent extends Opponent{
+class ComputerOpponent extends Opponent {
     constructor(health, mana) {
         super(health, mana);
     }
@@ -75,7 +75,7 @@ class ComputerOpponent extends Opponent{
     }
 }
 
-class HumanOpponent extends Opponent{
+class HumanOpponent extends Opponent {
     constructor(health, mana) {
         super(health, mana);
     }
@@ -105,7 +105,7 @@ class Game {
         if (computer) {
             // if computer is opponent
             this.opponent = new ComputerOpponent();
-        } 
+        }
 
         this.deck = await this.getDeck();
         this.drawInitialHand();
@@ -122,21 +122,19 @@ class Game {
 
             var deckJsonObject = JSON.parse(deckList[0].cardId);
             var cardIds = deckJsonObject.cardList;
-            // console.log(cardIds);
             const cardInstances = await Promise.all(cardIds.map(async cardId => {
 
                 const cardData = await dbFunc.getCardByCardId(cardId);
-                console.log(cardData);
                 if (cardData[0].cardType.toLowerCase() === 'creature') {
                     return new CreatureCard( //id, name, type, description, mana, rarity, imagePath, attack, defense
                         cardId,                 // id
                         cardData[0].cardName,   // name
                         "something creature",   // type
                         cardData[0].cardType,   // description
-                        cardData[0].manaCost, 
-                        cardData[0].rarity, 
+                        cardData[0].manaCost,
+                        cardData[0].rarity,
                         cardData[0].imagePath,
-                        cardData[0].attack, 
+                        cardData[0].attack,
                         cardData[0].defense);
                 } else if (cardData[0].cardType.toLowerCase() === 'spell') {
                     return new SpellCard( //id, name, type, description, mana, rarity, imagePath, attack, defense, ability, utility
@@ -144,16 +142,16 @@ class Game {
                         cardData[0].cardName,       // name
                         cardData[0].spellType,      // type
                         cardData[0].cardType,      // description
-                        cardData[0].manaCost, 
-                        cardData[0].rarity, 
+                        cardData[0].manaCost,
+                        cardData[0].rarity,
                         cardData[0].imagePath,
-                        cardData[0].spellAttack, 
-                        cardData[0].spellDefense, 
-                        cardData[0].spellAbility, 
+                        cardData[0].spellAttack,
+                        cardData[0].spellDefense,
+                        cardData[0].spellAbility,
                         cardData[0].utility)
                 }
             }))
-            
+
             return this.shuffleDeck(cardInstances);
 
         } catch (error) {
@@ -202,34 +200,43 @@ class Game {
     async playCard(cardId) {
         // Find the card instance in hand based on cardId
         const card = this.hand.find(card => card.id === cardId);
+        let updatedStage = [...this.playerStage];
 
         if (!card) {
-            console.log("Error: Card is not in hand.");
-            return;
-        }
-        
-        if (card.mana > this.user.mana) {
-            console.log("Error: Insufficient mana to play this card.");
-            return;
+            // console.log("Error: Card is not in hand.");
+            // return;
+            return {error: "Card is not in hand."};
         }
 
-        let updatedHand = this.hand.filter(handCard => handCard.id !== cardId);
-        let updatedStage = [...this.playerStage];
-    
+        console.log(this.user.mana)
+        if (card.mana > this.user.mana) {
+            // console.log("Insufficient mana to play this card.")
+            return {error: "Insufficient mana to play this card."}; // Return without playing the card
+        }
+
         // Check type of card
-        if (card instanceof CreatureCard){
-            updatedStage.push(cardId);
-        } else if (card instanceof SpellCard){
+        if (card instanceof CreatureCard) {
+            if(updatedStage.length < 5) {
+                updatedStage.push(cardId);
+            } else {
+                // console.log("Error: Maximum limit reached on the board");
+                return {error: "Maximum limit reached on the board"};
+            }
+        } else if (card instanceof SpellCard) {
             // Handle playing spell
             // TODO add logic for card type spell
         } else {
-            console.log("Error: unknown card type.");
-            return;
+            // console.log("Error: unknown card type.");
+            return {error: "unknown card type."}
         }
-    
+
+        // remove card from hand
+        let updatedHand = this.hand.filter(handCard => handCard.id !== cardId);
+
         this.hand = updatedHand; // Update the hand
         this.playerStage = updatedStage; // Update the player stage
         this.user.mana -= card.mana;
+        console.log(this.user.mana)
     }
 
     // Method to check if game is over

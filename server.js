@@ -369,7 +369,7 @@ app.post('/cardViewEditPage', async (req, res) => {
   const user = req.session.user;
   try {
     if (user) {
-      const aiCard = await card.createAICard(req.body.creatureType, req.body.theme, req.body.color, req.body.rarity, 3);      
+      const aiCard = await card.createAICard(req.body.creatureType, req.body.theme, req.body.color, req.body.rarity, 3);
       let values = [];
       async function delay(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
@@ -408,7 +408,7 @@ app.post('/cardViewPrintedBulkPage', async (req, res) => {
     for (let i = 0; i < num; i++) {
       newCreature = card.createDataStructCreature(req.body.colors, req.body.creatures, req.body.places);
       const aiCard = await card.createAICard(newCreature.creature, newCreature.place, newCreature.color, newCreature.rarity, 1);
-    
+
       let values = [];
       while (values.length === 0) {
         values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId);
@@ -416,7 +416,7 @@ app.post('/cardViewPrintedBulkPage', async (req, res) => {
       }
       newCreature.URL = values
       generatedCards.push(newCreature);
-    }   
+    }
     console.log(generatedCards);
     res.render('cardViewPrintedBulkPage', { cards: generatedCards });
   } catch (err) {
@@ -430,7 +430,7 @@ app.post('/cardViewPrintedPage', async (req, res) => {
   try {
     const user = req.session.user;
     const cardId = await dbFunc.insertCard(req.body.cardName, req.body.cardType, user.userId, req.body.rarity, req.body.manaCost);
-    
+
     if (req.body.cardType === "Creature") {
       await dbFunc.insertCreatureCard(cardId, req.body.creatureAttack, req.body.creatureDefense);
     } else {
@@ -440,7 +440,7 @@ app.post('/cardViewPrintedPage', async (req, res) => {
     await dbFunc.insertCardUrl(cardId, req.body.url);
     const data = await dbFunc.getCardInfo(cardId);
     //console.log(req.body.url, data[0].rarity);
-    
+
     res.render('cardViewPrintedPage', {
       url: req.body.url,
       rarity: data[0].rarity,
@@ -537,7 +537,7 @@ app.get('/game/', async (req, res) => {
     gameInstance[game.gameId] = new Game(userInstance, deck.deckId, game.ruleSet, game.gameId);
 
     await gameInstance[game.gameId].initialize();
-    console.log(gameInstance[game.gameId].hand)
+    // console.log(gameInstance[game.gameId].hand)
     res.render('gamePlay1', {
       gameId: game.gameId,
       ruleSet: game.ruleSet,
@@ -550,17 +550,94 @@ app.get('/game/', async (req, res) => {
 });
 
 // Play Card
-app.post('/playCard', (req, res) => {
+app.post('/playCard', async (req, res) => {
   const cardId = req.body.cardId;
   const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
 
   if (gameInstance[game.gameId]) {
-     
-    gameInstance[game.gameId].playCard(parseInt(cardId));
+      try {
+          const result = await gameInstance[game.gameId].playCard(parseInt(cardId));
 
-    // Include playerMana in the response
-    const playerMana = gameInstance[game.gameId].user.mana;
+          if (result && result.error) {
+            if(result.error === 'Insufficient mana to play this card.'){
+              res.json({message: 'Insufficient mana to play this card.'});
+            } else {
+              res.status(400).json({error: result.error});
+            }
+          } else {
 
-    res.json({ message: 'card played successfully', cardId, playerMana });
+          // Include playerMana in the response
+          const playerMana = gameInstance[game.gameId].user.mana;
+          const playerStage = gameInstance[game.gameId].playerStage; // Get the updated playerStage
+
+          console.log(playerStage);
+
+          res.json({ message: 'card played successfully', cardId, playerMana, playerStage });
+          }
+
+      } catch (error) {
+          // Check if the error message is related to insufficient mana
+          if (error.message === "Insufficient mana to play this card.") {
+              // Send a 422 status code for unprocessable entity due to insufficient mana
+              res.status(422).json({ error: error.message });
+          } else {
+              // For other errors, send a 400 status code
+              res.status(400).json({ error: error.message });
+          }
+      }
+  } else {
+      // Send a 404 status code if the game instance is not found
+      res.status(404).json({ error: "Game not found." });
   }
-})
+});
+
+// Get card details
+app.get('/getCardDetails', async (req, res) => {
+  const cardId = req.query.cardId;
+
+  try {
+    // Retrieve card details from the database based on the cardId
+    const cardData = await dbFunc.getCardByCardId(cardId);
+
+    // Check if cardData exists
+    if (cardData.length === 0) {
+      return res.status(404).json({ error: 'Card not found' });
+    }
+
+    // Determine the type of card and create an instance accordingly
+    let card;
+    if (cardData[0].cardType.toLowerCase() === 'creature') {
+      card = new CreatureCard( //id, name, type, description, mana, rarity, imagePath, attack, defense
+        cardId,                 // id
+        cardData[0].cardName,   // name
+        cardData[0].cardType,   // type
+        "something creature",   // description
+        cardData[0].manaCost,
+        cardData[0].rarity,
+        cardData[0].imagePath,
+        cardData[0].attack,
+        cardData[0].defense);
+    } else if (cardData[0].cardType.toLowerCase() === 'spell') {
+      card = new SpellCard( //id, name, type, description, mana, rarity, imagePath, attack, defense, ability, utility
+        cardId,                     // id
+        cardData[0].cardName,       // name
+        cardData[0].cardType,       // type
+        cardData[0].spellType,      // description
+        cardData[0].manaCost,
+        cardData[0].rarity,
+        cardData[0].imagePath,
+        cardData[0].spellAttack,
+        cardData[0].spellDefense,
+        cardData[0].spellAbility,
+        cardData[0].utility)
+    } else {
+      return res.status(400).json({ error: 'Unknown card type' });
+    }
+
+    // Send the card details as JSON response
+    res.json(card);
+  } catch (error) {
+    console.error('Error fetching card details:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
