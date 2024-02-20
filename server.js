@@ -150,12 +150,10 @@ app.get('/buildDeck', (req, res) => {
 
   // Needs collection and game info
   const user = req.session.user;
-
-  user = { userId: 1001, username: 'admin' }
   if (user) {
     res.render('buildDeck', { showLogoutButton: true, userId: 1001 })
   } else {
-    res.render('buildDeck', { showLogoutButton: false })
+    res.redirect('/', { showLogoutButton: false })
   }
 });
 
