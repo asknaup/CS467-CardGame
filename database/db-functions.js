@@ -530,6 +530,20 @@ async function getAllGeneratedGames() {
     });
 }
 
+async function getAllGeneratedGamesByUser(userId) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM generatedGame where ownerId = ?';
+        db.pool.query(query, userId, (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+}
+
+
 async function getOneGeneratedGame(gameId) {
     return new Promise((resolve, reject) => {
         const query = 'SELECT * FROM generatedGame where gameId = ?';
@@ -556,6 +570,18 @@ async function getAllCollectionsByUser(userId) {
     });
 }
 
+async function getAllDecksByUser(userId) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM decks where playerId = ?';
+        db.pool.query(query, userId, (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+}
 // function updateGameWinner({ params }) {
 //     // Initialize a new game -> winner has not been decided
 //     return new Promise((resolve, reject) => {
@@ -593,5 +619,7 @@ module.exports.getCardByCardId = getCardByCardId;
 module.exports.insertNewGeneratedGame = insertNewGeneratedGame;
 module.exports.getGeneratedGameStats = getGeneratedGameStats;
 module.exports.getAllGeneratedGames = getAllGeneratedGames;
+module.exports.getAllGeneratedGamesByUser = getAllGeneratedGamesByUser;
 module.exports.getAllCollectionsByUser =getAllCollectionsByUser;
 module.exports.getOneGeneratedGame = getOneGeneratedGame; 
+module.exports.getAllDecksByUser = getAllDecksByUser;
