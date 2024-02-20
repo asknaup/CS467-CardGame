@@ -159,9 +159,9 @@ app.get('/buildDeck', (req, res) => {
 app.get('/browseGames', (req, res) => {
   const user = req.session.user;
   if (user) {
-    res.render('lookatGames', { showLogoutButton: true })
+    res.render('browseGames', { showLogoutButton: true })
   } else {
-    res.render('lookatGames');
+    res.render('/');
   }
 });
 
@@ -171,7 +171,7 @@ app.get('/newUser', (req, res) => {
   if (user) {
     res.render('newUser', { showLogoutButton: true })
   } else {
-    res.render('newUser', { showLogoutButton: false })
+    res.render('/')
   }
 });
 
@@ -191,7 +191,7 @@ app.get('/cardGenPage', (req, res) => {
   if (user) {
     res.render('cardGenPage', { showLogoutButton: true })
   } else {
-    res.render('/');
+    res.redirect('/');
   }
 });
 
@@ -200,7 +200,7 @@ app.get('/trading', (req, res) => {
   if (user) {
     res.render('trading', { showLogoutButton: true })
   } else {
-    res.render('/');
+    res.redirect('/');
   }
 });
 
@@ -235,7 +235,7 @@ app.get('/logout', (req, res) => {
   })
 })
 
-// NEEDS WORK
+
 // FIXME change to '/game/:gameId'
 app.get('/game/', async (req, res) => {
   // FIXME replace
@@ -347,7 +347,7 @@ app.post('/cardViewEditPage', async (req, res) => {
         manaCost: req.body.manaCost,
       });
     } else {
-      // Authentication failed, render 'cardGenPage' with an error message
+      
       res.render('cardGenPage', { error: "Sorry! You cannot create a card without having an account" })
     }
   } catch (err) {
@@ -377,6 +377,17 @@ app.post('/cardViewPrintedBulkPage', async (req, res) => {
       generatedCards.push(newCreature);
     }   
     console.log(generatedCards);
+
+    generatedCards.forEach( async (card) => {
+      try {
+        const cardId = await dbFunc.insertCard(card.cardName, card.cardType, user.userId, "rare", card.manaCost);
+        await dbFunc.insertCreatureCard(cardId, card.attack, card.defense, card.creatureType);
+        await dbFunc.insertCardUrl(cardId, card.URL);
+      } catch (err) {
+        console.error(err);
+      }
+    })
+
     res.render('cardViewPrintedBulkPage', { cards: generatedCards });
   } catch (err) {
     // Handle errors
@@ -386,12 +397,13 @@ app.post('/cardViewPrintedBulkPage', async (req, res) => {
 });
 
 app.post('/cardViewPrintedPage', async (req, res) => {
+  
+  const user = req.session.user;
   try {
-    const user = req.session.user;
     const cardId = await dbFunc.insertCard(req.body.cardName, req.body.cardType, user.userId, req.body.rarity, req.body.manaCost);
     
     if (req.body.cardType === "Creature") {
-      await dbFunc.insertCreatureCard(cardId, req.body.creatureAttack, req.body.creatureDefense);
+      await dbFunc.insertCreatureCard(cardId, req.body.creatureAttack, req.body.creatureDefense, "samurai" );     // Hard coded
     } else {
       await dbFunc.insertSpellCard(cardId, req.body.spellType, req.body.spellAbility, req.body.spellAttack, req.body.spellDefense, req.body.utility);
     }

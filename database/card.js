@@ -52,10 +52,10 @@ async function getImageUrlFromLeonardo(imageId) {
     }
 }
 
-function createDataStructCreature(colors, creatures, places) {
+function createDataStructCreature(colors, creatures, places, rarity) {
     const data_struct = {
         name: 'Joe Smith',
-        creature: creatures,
+        creatureType: creatures,
         place: places,
         color: colors,
         URL: null,
@@ -64,7 +64,8 @@ function createDataStructCreature(colors, creatures, places) {
         attack: 2,
         defense: 2,
         manaCost: 3,
-        enter_effect: null
+        enter_effect: null,
+        rarity: rarity
     };
 
     let newStruct = { ...data_struct };
