@@ -314,7 +314,7 @@ async function getCardInfo(cardId) {
                 resolve(selectResult);
             }
         })
-    }); 
+    });
 }
 
 // Get all decks from user
@@ -422,12 +422,12 @@ async function createNewGame(ruleSet, userId, userDeckId) {
 async function getCardIdByUser(userId) {
     return new Promise((resolve, reject) => {
 
-        const query = 'select ci.cardId, cardName, imagePath, cardType, rarity, manaCost, spellType, spellAbility, spellAttack, spellDefense, utility, attack, defense from cardInstance as ci ' +
-            'join cards as c on c.cardId = ci.cardId ' +
-            'left join cardUrl as cu on ci.cardId = cu.cardId ' +
-            'left join cardSpell as cs on ci.cardId = cs.cardId ' +
-            'left join cardCreature as cc on ci.cardId = cc.cardId ' +
-            'WHERE ci.ownerUserId = ?';
+        const query = `select ci.cardId, cardName, imagePath, c.cardType as cardType, rarity, manaCost, spellType, spellAbility, spellAttack, spellDefense, utility, cc.cardType as creatureType, attack, defense from cardInstance as ci 
+            join cards as c on c.cardId = ci.cardId 
+            left join cardUrl as cu on ci.cardId = cu.cardId 
+            left join cardSpell as cs on ci.cardId = cs.cardId 
+            left join cardCreature as cc on ci.cardId = cc.cardId 
+            WHERE ci.ownerUserId = ?`;
 
         db.pool.query(query, userId, (selectErr, selectResult) => {
             if (selectErr) {
@@ -442,12 +442,12 @@ async function getCardIdByUser(userId) {
 async function getCardByCardId(cardId) {
     return new Promise((resolve, reject) => {
 
-        const query = 'select ci.cardId, cardName, imagePath, cardType, rarity, manaCost, spellType, spellAbility, spellAttack, spellDefense, utility, attack, defense from cardInstance as ci ' +
-            'join cards as c on c.cardId = ci.cardId ' +
-            'left join cardUrl as cu on ci.cardId = cu.cardId ' +
-            'left join cardSpell as cs on ci.cardId = cs.cardId ' +
-            'left join cardCreature as cc on ci.cardId = cc.cardId ' +
-            'WHERE ci.cardId = ?';
+        const query = `select ci.cardId, cardName, imagePath, c.cardType as cardType, rarity, manaCost, spellType, spellAbility, spellAttack, spellDefense, utility, cc.cardType as creatureType, attack, defense from cardInstance as ci 
+            join cards as c on c.cardId = ci.cardId 
+            left join cardUrl as cu on ci.cardId = cu.cardId 
+            left join cardSpell as cs on ci.cardId = cs.cardId 
+            left join cardCreature as cc on ci.cardId = cc.cardId 
+            WHERE ci.cardId = ?`
 
         db.pool.query(query, cardId, (selectErr, selectResult) => {
             if (selectErr) {

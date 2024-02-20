@@ -106,7 +106,7 @@ CREATE TABLE IF NOT EXISTS cards (
     cardName VARCHAR(500) NOT NULL,
     cardType VARCHAR(50) NOT NULL,
     rarity VARCHAR(50) NOT NULL,
-    manaCost INT NOT NULL,
+    manaCost INT NOT NULL DEFAULT 1,
 
     PRIMARY KEY (cardId)
 );
@@ -143,9 +143,10 @@ DROP TABLE IF EXISTS cardCreature;
 
 CREATE TABLE IF NOT EXISTS cardCreature (
     cardId INT UNIQUE NOT NULL,
-    attack INT DEFAULT NULL,
-    defense INT DEFAULT NULL,
-    creatureType VARCHAR(100),
+    attack INT DEFAULT 0,
+    defense INT DEFAULT 0,
+    cardType VARCHAR(100),
+
 
     PRIMARY KEY (cardId),
     FOREIGN KEY (cardId)
@@ -176,6 +177,22 @@ CREATE TABLE IF NOT EXISTS cardSpell (
 );
 
 -- -----------------------------------------------------
+-- Create Collections Table
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS collections;
+
+CREATE TABLE IF NOT EXISTS collections (
+    collectionId INT,
+    playerId INT,
+    gameId INT,
+    cardId VARCHAR(5000), 
+
+    PRIMARY KEY (collectionId, playerId, gameId),
+    FOREIGN KEY (gameId) REFERENCES game(gameId),
+    FOREIGN KEY (playerId) REFERENCES userProfile(userId)
+);
+
+-- -----------------------------------------------------
 -- Create Image URL table
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS cardUrl;
@@ -200,7 +217,7 @@ CREATE TABLE IF NOT EXISTS decks (
     deckId INT AUTO_INCREMENT,
     playerId INT NOT NULL,
     deckName VARCHAR(200),
-    cardId VARCHAR(5000),  --json of list of card {"cardList": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]}
+    cardId VARCHAR(5000),  
     -- quantity INT,
 
     PRIMARY KEY (deckId),
