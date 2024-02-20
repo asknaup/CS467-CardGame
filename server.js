@@ -45,6 +45,13 @@ app.set('view engine', 'handlebars');
 // Define the view directory path for Handlebars files
 app.set('views', path.join(__dirname, 'views'));
 
+app.use('/trading', express.static(path.join(__dirname, 'public'), 
+{
+  'extensions': ['js'],
+  'index': false,
+  'Content-Type': 'text/javascript'
+}));
+
 // Serve static file from public directory
 app.use(express.static(path.join(__dirname, 'public'),
   {
@@ -60,41 +67,8 @@ app.use('/game', express.static(path.join(__dirname, 'game')));
 /*
 ROUTES
 */
-// TODO Home button should go to user's specifc profile
-// TODO CardGenPage - sends the card generates the image, need image urls for cardGen, for userProfile
-// TODO createNewCollection - needs further development
-// TODO fix redundency for req.session.user and others
-// TODO footer adjustments
-// TODO add color to htmls
-// TODO cardview page bulk - bulk generation?
-// TODO homepage that's not the welcome page
-// TODO Need better navigation -> navigation to card generation page as maybe a subclass under make. route to make game, make card
 
-app.get('/cards', async (req, res) => {
-  try {
-    // Retrieve the user ID from the request query parameters
-    // const userId = req.query.userId;
-    const userId = 1001; //FIXME
-    // console.log(userId);
-    // Call the database function to get card data based on userId
-    const cardData = await dbFunc.getCardIdByUser(userId);
-    const cardsDict = hf.convertListToDict(cardData);
-    // console.log(cardsDict);
-    // Send card data as reponse
-    res.json(cardsDict);
-  } catch (error) {
-    // Handle errors that occur during data retrival
-    console.error('Error fetching card data:', error);
-    res.status(500).json({ error: 'Internal server error' })
-  }
-})
-
-app.get('/favico.ico', (req, res) => {
-  res.sendStatus(404);
-});
-
-app.get('/', (req, res) => {                        // This code needs work
-  // Pull session user
+app.get('/', (req, res) => {                       
   const user = req.session.user
   if (req.session.user) {
     // If user then show homepage
@@ -112,17 +86,15 @@ app.get('/', (req, res) => {                        // This code needs work
 // Will change based on user logged in
 // Might want to be able to view other users
 app.get('/userProfile/:username', async (req, res) => {
-  // Show user logged in user profile
   const user = req.session.user;
   if (user) {
     // If user is defined, user shown will be loggedin user
     const userProf = await dbFunc.getUserProfile(user.userId);
     res.render('userProfile', {
-      username: user.username,
-      gameCount: userProf[0].game_count,
-      wins: userProf[0].wins,
-      losses: userProf[0].losses,
+      username: user.username, gameCount: userProf[0].game_count,
+      wins: userProf[0].wins, losses: userProf[0].losses,
       showLogoutButton: true
+      // Collections, Decks, Games
     })
   } else {
     // Route to homepage (index) to login
@@ -131,18 +103,24 @@ app.get('/userProfile/:username', async (req, res) => {
 });
 
 app.get('/userDeck/:username', (req, res) => {
-  // TODO show different decks
-  // TODO insert deck as json into db
-  // TODO handlebars
-  // Show user logged in user profile
-  // const user = req.session.user;
-  user = { userId: 1001, username: 'admin' }
+  const user = req.session.user;
   if (user) {
     res.render('currentDeck', { showLogoutButton: true })
   } else {
-    res.render('currentDeck', { showLogoutButton: false })
+    res.render('/')
   }
 });
+
+app.get('/gamePlayPage', (req, res) => {
+  const user = req.session.user;
+  if (user) {
+    res.render('gamePlayPage');
+  } else {
+    // Redirect to homepage (index) to log in
+    res.redirect('/');
+  }
+});
+
 
 app.get('/cardGenBulkPage', (req, res) => {
   const user = req.session.user;
@@ -154,62 +132,50 @@ app.get('/cardGenBulkPage', (req, res) => {
   }
 });
 
-// TODO routing between gameGeneration, card Generation
-// TODO Work on corresponding edit pages, corresponding bulk pages
-// TODO Work on generating inputs
-// TODO html formatting
 app.get('/gameGenPage', async (req, res) => {
-  // Show user logged in user profile
-  // const user = req.session.user;
-  user = { userId: 1001, username: 'admin' }  // FIXME replace when ready
+  const user = req.session.user;
   try {
     if (user) {
       const userDecks = await dbFunc.gatherUserDecks(user.userId);
-      console.log(userDecks)
       res.render('gameGenPage', { showLogoutButton: true, decks: userDecks })
     } else {
-      res.render('gameGenPage', { showLogoutButton: false })
+      res.render('/')
     }
   } catch (err) {
     console.log(err);
   }
 });
 
-// TODO Deck generation page
 app.get('/buildDeck', (req, res) => {
-  // Show user logged in user profile
-  // FIXME
-  // const user = req.session.user;
-  user = { userId: 1001, username: 'admin' }
+
+  // Needs collection and game info
+  const user = req.session.user;
   if (user) {
     res.render('buildDeck', { showLogoutButton: true, userId: 1001 })
   } else {
-    res.render('buildDeck', { showLogoutButton: false })
+    res.redirect('/', { showLogoutButton: false })
   }
 });
 
-// Add to deck, delete, deck stats
+
 app.get('/currentDeck', async (req, res) => {
-  // Show user logged in user profile
   // FIXME
   const user = { userId: 1001, username: 'admin' };
   // const user = req.session.user;
   if (user) {
-    var exampleCards = await dbFunc.getCardIdByUser(1001);
-    console.log(exampleCards);
-    res.render('currentDeck', { showLogoutButton: true })
+    res.render('buildDeck', { showLogoutButton: true})
   } else {
-    res.render('currentDeck', { showLogoutButton: false })
+    res.render('/');
   }
 });
 
+// NEEDS WORK
 app.get('/browseGames', (req, res) => {
-  // Show user logged in user profile
   const user = req.session.user;
   if (user) {
-    res.render('lookatGames', { showLogoutButton: true })
+    res.render('browseGames', { showLogoutButton: true })
   } else {
-    res.render('lookatGames', { showLogoutButton: false })
+    res.render('/');
   }
 });
 
@@ -219,7 +185,7 @@ app.get('/newUser', (req, res) => {
   if (user) {
     res.render('newUser', { showLogoutButton: true })
   } else {
-    res.render('newUser', { showLogoutButton: false })
+    res.render('/')
   }
 });
 
@@ -233,59 +199,41 @@ app.get('/resetPW', (req, res) => {
   }
 });
 
-app.get('/gamePlayPage', (req, res) => {
-  // Show user logged in user profile
-  const user = req.session.user;
-  if (user) {
-    res.render('gamePlayPage', { showLogoutButton: true })
-  } else {
-    res.render('gamePlayPage', { showLogoutButton: false })
-  }
-});
 
-// TODO other image ai sources
-// TODO prompt restriction for better image generation
 app.get('/cardGenPage', (req, res) => {
-  // Show user logged in user profile
   const user = req.session.user;
   if (user) {
     res.render('cardGenPage', { showLogoutButton: true })
   } else {
-    res.render('cardGenPage', { showLogoutButton: false })
+    res.redirect('/');
   }
 });
 
 app.get('/trading', (req, res) => {
-  // Show user logged in user profile
   const user = req.session.user;
-  res.render('trading', { showLogoutButton: true })
   if (user) {
     res.render('trading', { showLogoutButton: true })
   } else {
-    res.render('trading', { showLogoutButton: false })
+    res.redirect('/');
+  }
+});
+
+app.get('/collect', (req, res) => {
+  const user = req.session.user;
+  if (user) {
+    res.render('collect', { showLogoutButton: true })
+  } else {
+    res.render('/')
   }
 });
 
 app.get('/userProfile', (req, res) => {
   // Redirects to userProfile/:username
-  // Show user logged in user profile
   const user = req.session.user;
   if (user) {
     res.redirect('/userProfile/' + req.session.user.username)
   } else {
     res.redirect('/')
-  }
-});
-
-app.get('/cardViewPage', async (req, res) => {
-  // TODO card currently hardcoded
-  const user = req.session.user;
-
-  console.log(val[0]);
-  if (user) {
-    res.render('cardViewEditPage', { showLogoutButton: true, value: val })
-  } else {
-    res.render('cardViewEditPage', { showLogoutButton: false, value: val })
   }
 });
 
@@ -296,12 +244,40 @@ app.get('/logout', (req, res) => {
       console.error('Error destroying session:', err);
       res.redirect('/');
     } else {
-      // Redirect to welcome page
       res.redirect('/');
     }
   })
 })
 
+
+
+// FIXME change to '/game/:gameId'
+app.get('/game/', async (req, res) => {
+  // FIXME replace
+  // const user = req.session.user;
+  // const deck = req.session.deck;
+  // const game = req.session.game;
+  const user = { userId: 1001, username: 'admin' }
+  const deck = { deckId: 7001 }
+  const game = { ruleSet: 'ruleSet1', gameId: 1001 }
+  // TODO game handlebars file
+  // TODO game logic
+  if (user) {
+    // const deckList = await game1.getDeck(user.userId, deck.deckId);
+    // console.log(deckList);
+    const userInstance = new User(user.userId, user.username);
+    const gameInstance = new Game(userInstance, deck.deckId, game.ruleSet, game.gameId);
+
+    await gameInstance.initialize();
+
+    res.render('gamePlay1', {
+      gameId: game.gameId,
+      ruleSet: game.ruleSet,
+      hand: game.hand,
+      remainingDeckCards: gameInstance.deck.length
+    });
+  }
+});
 
 app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
@@ -364,7 +340,6 @@ app.post('/login', async (req, res) => {
   }
 });
 
-
 app.post('/cardViewEditPage', async (req, res) => {
   const user = req.session.user;
   try {
@@ -387,7 +362,7 @@ app.post('/cardViewEditPage', async (req, res) => {
         manaCost: req.body.manaCost,
       });
     } else {
-      // Authentication failed, render 'cardGenPage' with an error message
+      
       res.render('cardGenPage', { error: "Sorry! You cannot create a card without having an account" })
     }
   } catch (err) {
@@ -395,7 +370,6 @@ app.post('/cardViewEditPage', async (req, res) => {
     res.send(`Something went wrong: ${err}`);
   }
 });
-
 
 app.post('/cardViewPrintedBulkPage', async (req, res) => {
   const user = req.session.user;
@@ -416,8 +390,19 @@ app.post('/cardViewPrintedBulkPage', async (req, res) => {
       }
       newCreature.URL = values
       generatedCards.push(newCreature);
-    }
-    console.log(generatedCards);
+    }   
+    // console.log(generatedCards);
+
+    generatedCards.forEach( async (card) => {
+      try {
+        const cardId = await dbFunc.insertCard("Sir Gwendyn", card.cardType, user.userId, "rare", card.manaCost);
+        await dbFunc.insertCreatureCard(cardId, card.attack, card.defense, card.creatureType);
+        await dbFunc.insertCardUrl(cardId, card.URL);
+      } catch (err) {
+        console.error(err);
+      }
+    })
+
     res.render('cardViewPrintedBulkPage', { cards: generatedCards });
   } catch (err) {
     // Handle errors
@@ -427,12 +412,13 @@ app.post('/cardViewPrintedBulkPage', async (req, res) => {
 });
 
 app.post('/cardViewPrintedPage', async (req, res) => {
+  
+  const user = req.session.user;
   try {
-    const user = req.session.user;
     const cardId = await dbFunc.insertCard(req.body.cardName, req.body.cardType, user.userId, req.body.rarity, req.body.manaCost);
 
     if (req.body.cardType === "Creature") {
-      await dbFunc.insertCreatureCard(cardId, req.body.creatureAttack, req.body.creatureDefense);
+      await dbFunc.insertCreatureCard(cardId, req.body.creatureAttack, req.body.creatureDefense, "samurai" );     // Hard coded
     } else {
       await dbFunc.insertSpellCard(cardId, req.body.spellType, req.body.spellAbility, req.body.spellAttack, req.body.spellDefense, req.body.utility);
     }

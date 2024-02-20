@@ -52,10 +52,10 @@ async function getImageUrlFromLeonardo(imageId) {
     }
 }
 
-function createDataStructCreature(colors, creatures, places) {
+function createDataStructCreature(colors, creatures, places, rarity) {
     const data_struct = {
         name: 'Joe Smith',
-        creature: creatures,
+        creatureType: creatures,
         place: places,
         color: colors,
         URL: null,
@@ -64,7 +64,8 @@ function createDataStructCreature(colors, creatures, places) {
         attack: 2,
         defense: 2,
         manaCost: 3,
-        enter_effect: null
+        enter_effect: null,
+        rarity: rarity
     };
 
     let newStruct = { ...data_struct };
@@ -129,11 +130,6 @@ function getRandomElement(arr) {
         "Silver", "Turquoise", "Violet", "Yellow"
     ];
 
-
-
-
-
-
 /*
 (async () => {
     const aiCard = await createAICard('samurai', 'dark', 'gold', 'rare');
@@ -153,14 +149,15 @@ const result = "your image URL";
  const writeFileToDisc = fs.writeFileSync(filePath, buffer);
 */
 
-module.exports.getImageUrlFromLeonardo = getImageUrlFromLeonardo;
-module.exports.createAICard = createAICard;
-module.exports.createDataStructCreature = createDataStructCreature;
-
-
 /*   Models available
     fetch('https://cloud.leonardo.ai/api/rest/v1/platformModels', options5)
     .then(response => response.json())
     .then(response => console.log(response))
     .catch(err => console.error(err)); 
 */
+
+module.exports.getImageUrlFromLeonardo = getImageUrlFromLeonardo;
+module.exports.createAICard = createAICard;
+module.exports.createDataStructCreature = createDataStructCreature;
+
+
