@@ -247,13 +247,13 @@ let otherPlayerObj = {primaryKeyArr: [], cardDict: {}, stagedCardCount: 0, start
 /* Create Example Dummy Cards */
 // Example cards data (you can add more)
 var exampleCards = [
-    {primaryKey: "goblin", cardName: "Goblin", image: 'images/goblin-willow-tree.jpg', 
+    {primaryKey: "goblin", cardName: "Goblin", image: '/images/goblin-willow-tree.jpg', 
             description: 'A small forest goblin.', cardType:'Creature', 
             attributes: {hp:50, atk:50, def:30, specialAbility:'Cooking', goldCost:5}},
-    {primaryKey: "wizard", cardName: 'Fire Ball Scroll', image: 'images/dark-wizard.png',  
+    {primaryKey: "wizard", cardName: 'Fire Ball Scroll', image: '/images/dark-wizard.png',  
                 description:'A powerful fire ball.', cardType: 'Spell', 
                 attributes: {hp:80, atk:60, def:20, specialAbility:'Fire Ball', goldCost:7}},
-    {primaryKey: "iceDragon", cardName: 'Ice Dragon', image: 'images/ice-dragon.png', 
+    {primaryKey: "iceDragon", cardName: 'Ice Dragon', image: '/images/ice-dragon.png', 
                 description: 'An ice dragon from the North.', cardType: 'Creature', 
                 attributes: {hp:120, atk:100, def:80, specialAbility:'Flying', goldCost:9}}
     // Add more cards as needed
