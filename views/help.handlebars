@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>{{username}}'s Profile</title>
+  <link rel="stylesheet" type="text/css" href="/global.css">
+  <link rel="stylesheet" type="text/css" href="/styles.css">
+  <base href="http://localhost:3000">
+</head>
+{{!-- #TODO add number of decks --}}
+{{!-- #TODO add option to brows between collections and decks --}}
+<body>
+  <br>
+  <h1 id="usernameH">Welcome to the Help Page</h1>
+  <br>
+  <div class="userContainer">
+    
+  </div>
+  <br>
+  <div class="center">
+     <form action="/gameGenPage" method="get">
+      <button id="gen-game-button-ggp" type="submit">Create a New Trading Card Game</button>
+    </form>
+    <form action="/collect" method="get">
+      <button id="gen-game-button-ggp" type="submit">Browse your collection for {x game}</button>
+    </form>
+    <form action="/buildDeck" method="get">
+      <button id="gen-game-button-ggp" type="submit">Edit your Play Deck from your Collection for {x game}</button>
+    </form>
+    <form action="/gamePlayPage" method="get">
+      <button id="gen-game-button-ggp" type="submit">Play with your created Deck against an opponent</button>
+    </form>
+    <br>
+    <form action="/gamePlayPage" method="get">
+      <button id="gen-game-button-ggp" type="submit">Help! I'm Lost</button>
+    </form>
+  </div>
+</body>
+
+</html>

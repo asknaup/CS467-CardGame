@@ -170,7 +170,7 @@ function insertNewGameIntoGames() {
     });
 }
 
-function createNewCollection(userId) {
+function createNewCollection(userId, gameId) {
     // Initialize a new game -> winner has not been decided
     return new Promise((resolve, reject) => {
         db.pool.query('START TRANSACTION', (beginTransactionErr) => {
@@ -179,10 +179,11 @@ function createNewCollection(userId) {
                 return;
             }
 
-            const insertQuery = 'INSERT INTO decks (playerId) VALUES (?)';
-            const selectQuery = 'SELECT LAST_INSERT_ID() as newGameId';
+            const insertQuery = 'INSERT INTO collections (gameId, playerId, cardId) VALUES (?, ?, ?)';
+            const selectQuery = 'SELECT LAST_INSERT_ID() as newCollectId';
+            const vals = [gameId, userId, '[]']
 
-            db.pool.query(insertQuery, userId, (insertErr, insertResult) => {
+            db.pool.query(insertQuery, vals, (insertErr, insertResult) => {
                 if (insertErr) {
                     db.pool.query('ROLLBACK', () => {
                         reject(insertErr);
@@ -204,7 +205,7 @@ function createNewCollection(userId) {
                                 reject(commitErr);
                             });
                         } else {
-                            resolve(selectResult[0].newGameId);
+                            resolve(selectResult[0].newCollectId);
                         }
                     });
                 });
@@ -213,8 +214,7 @@ function createNewCollection(userId) {
     });
 }
 
-
-function insertCard(name, type, user, rarity, manaCost) {
+async function insertCard(name, type, user, rarity, manaCost) {
     return new Promise((resolve, reject) => {
         db.pool.query('START TRANSACTION', (startTransactionErr) => {
             if (startTransactionErr) {
@@ -260,10 +260,10 @@ function insertCard(name, type, user, rarity, manaCost) {
     });
 }
 
-function insertCreatureCard(cardId, creatureAttack, creatureDefense) {
+async function insertCreatureCard(cardId, creatureAttack, creatureDefense, cardType) {
     return new Promise((resolve, reject) => {
-        const query = 'INSERT INTO cardCreature (cardId, attack, defense) VALUES (?, ?, ?);';
-        const vars = [cardId, creatureAttack, creatureDefense];
+        const query = 'INSERT INTO cardCreature (cardId, attack, defense, cardType) VALUES (?, ?, ?, ?);';
+        const vars = [cardId, creatureAttack, creatureDefense, cardType];
 
         db.pool.query(query, vars, (err, result) => {
             if (err) {
@@ -275,7 +275,7 @@ function insertCreatureCard(cardId, creatureAttack, creatureDefense) {
     });
 }
 
-function insertSpellCard(cardId, spellType, spellAbility, spellAttack, spellDefense, utility) {
+async function insertSpellCard(cardId, spellType, spellAbility, spellAttack, spellDefense, utility) {
     return new Promise((resolve, reject) => {
         const query = 'INSERT INTO cardSpell (cardId, spellType, spellAbility, spellAttack, spellDefense, utility) VALUES (?, ?, ?, ?, ?, ?);';
         const vars = [cardId, spellType, spellAbility, spellAttack, spellDefense, utility];
@@ -290,7 +290,7 @@ function insertSpellCard(cardId, spellType, spellAbility, spellAttack, spellDefe
     });
 }
 
-function insertCardUrl(cardId, url) {
+async function insertCardUrl(cardId, url) {
     return new Promise((resolve, reject) => {
         const query = 'INSERT INTO cardUrl (cardId, imagePath) VALUES (?, ?);';
         const vars = [cardId, url];
@@ -302,6 +302,19 @@ function insertCardUrl(cardId, url) {
                 resolve(result);
             }
         });
+    });
+}
+
+async function getCardInfo(cardId) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM cards where cardId = ?'
+        db.pool.query(query, cardId, (selectErr, selectResult) => {
+            if (selectErr) {
+                reject(selectErr);
+            } else {
+                resolve(selectResult);
+            }
+        })
     });
 }
 
@@ -323,6 +336,19 @@ async function gatherUserDecks(userId) {
 async function getUserDeck(deckId) {
     return new Promise((resolve, reject) => {
         const query = 'SELECT cardId FROM decks WHERE deckId = ?';
+        db.pool.query(query, deckId, (selectErr, selectResult) => {
+            if (selectErr) {
+                reject(selectErr);
+            } else {
+                resolve(selectResult);
+            }
+        });
+    });
+}
+
+async function getCardById(userId) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT cardId FROM cardInstance WHERE ownerUserId = ?';
         db.pool.query(query, deckId, (selectErr, selectResult) => {
             if (selectErr) {
                 reject(selectErr);
@@ -377,36 +403,37 @@ async function createNewGame(ruleSet, userId, userDeckId) {
     });
 }
 
-//function insertIntoCollection(deckId, userId, cardId) { }
-
-// function updateGameWinner({ params }) {
-//     // Initialize a new game -> winner has not been decided
-//     return new Promise((resolve, reject) => {
-//         const sql = 'INSERT INTO game (startTime, endTime, winnerID) VALUES (CURRENT_TIMESTAMP, NULL, NULL)'                                // Games Database
-//         const vals = params
-//         db.pool.query(sql, vals, (err, result) => {
-//             if (err) {
-//                 reject(err);
-//             } else {
-//                 resolve(result);
-//             }
-//         });
-//     });
-// }
-
 async function getCardIdByUser(userId) {
     return new Promise((resolve, reject) => {
 
-        const query = `SELECT ci.cardId, cardName, imagePath, cardType, rarity, manaCost, spellType, spellAbility, 
-                        spellAttack, spellDefense, utility, attack, defense 
-                 FROM cardInstance AS ci 
-                 JOIN cards AS c ON c.cardId = ci.cardId 
-                 LEFT JOIN cardUrl AS cu ON ci.cardId = cu.cardId 
-                 LEFT JOIN cardSpell AS cs ON ci.cardId = cs.cardId 
-                 LEFT JOIN cardCreature AS cc ON ci.cardId = cc.cardId 
-                 WHERE ci.ownerUserId = ?`;
+        const query = `select ci.cardId, cardName, imagePath, c.cardType as cardType, rarity, manaCost, spellType, spellAbility, spellAttack, spellDefense, utility, cc.cardType as creatureType, attack, defense from cardInstance as ci 
+            join cards as c on c.cardId = ci.cardId 
+            left join cardUrl as cu on ci.cardId = cu.cardId 
+            left join cardSpell as cs on ci.cardId = cs.cardId 
+            left join cardCreature as cc on ci.cardId = cc.cardId 
+            WHERE ci.ownerUserId = ?`;
 
         db.pool.query(query, userId, (selectErr, selectResult) => {
+            if (selectErr) {
+                reject(selectErr);
+            } else {
+                resolve(selectResult);
+            }
+        });
+    });
+}
+
+async function getCardByCardId(cardId) {
+    return new Promise((resolve, reject) => {
+
+        const query = `select ci.cardId, cardName, imagePath, c.cardType as cardType, rarity, manaCost, spellType, spellAbility, spellAttack, spellDefense, utility, cc.cardType as creatureType, attack, defense from cardInstance as ci 
+            join cards as c on c.cardId = ci.cardId 
+            left join cardUrl as cu on ci.cardId = cu.cardId 
+            left join cardSpell as cs on ci.cardId = cs.cardId 
+            left join cardCreature as cc on ci.cardId = cc.cardId 
+            WHERE ci.cardId = ?`
+
+        db.pool.query(query, cardId, (selectErr, selectResult) => {
             if (selectErr) {
                 reject(selectErr);
             } else {
@@ -431,7 +458,144 @@ function insertNewDeck(userId, deckName, cardList) {
     });
 }
 
+// Hacked, inserting ruleSet into noCards, and gameName into imageLocation
+async function insertNewGeneratedGame(ownerId, numCards, listCards, gameName) {
+    return new Promise((resolve, reject) => {
+        db.pool.query('START TRANSACTION', (beginTransactionErr) => {
+            if (beginTransactionErr) {
+                reject(beginTransactionErr)
+                return;
+            }
 
+            const insertQuery = 'INSERT into generatedGame (ownerId, noCards, listCards, imageLocation) VALUES (?, ?, ?, ?)';;
+            const selectQuery = 'SELECT LAST_INSERT_ID() as genGameId';
+            const values = [ownerId, numCards, listCards, gameName];
+
+            db.pool.query(insertQuery, values, (insertErr, insertResult) => {
+                if (insertErr) {
+                    db.pool.query('ROLLBACK', () => {
+                        reject(insertErr);
+                    });
+                    return;
+                }
+
+                db.pool.query(selectQuery, (selectErr, selectResult) => {
+                    if (selectErr) {
+                        db.pool.query('ROLLBACK', () => {
+                            reject(selectErr);
+                        });
+                        return;
+                    }
+
+                    db.pool.query('COMMIT', (commitErr) => {
+                        if (commitErr) {
+                            db.pool.query('ROLLBACK', () => {
+                                reject(commitErr);
+                            });
+                        } else {
+                            resolve(selectResult[0].genGameId);
+                        }
+                    });
+                });
+            });
+        });
+    });
+}
+
+// Hacked, inserting ruleSet into noCards, and gameName into imageLocation
+async function getGeneratedGameStats(genGameId) {
+    return new Promise((resolve, reject) => {
+
+        const query = 'SELECT ownerId, noCards as ruleSet, listCards, imageLocation as gameName FROM generatedGame WHERE gameId = ?'
+        db.pool.query(query, genGameId, (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+}
+
+async function getAllGeneratedGames() {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM generatedGame';
+        db.pool.query(query, (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+}
+
+async function getAllGeneratedGamesByUser(userId) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM generatedGame where ownerId = ?';
+        db.pool.query(query, userId, (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+}
+
+
+async function getOneGeneratedGame(gameId) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM generatedGame where gameId = ?';
+        db.pool.query(query, gameId, (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+}
+
+async function getAllCollectionsByUser(userId) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM collections where playerId = ?';
+        db.pool.query(query, userId, (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+}
+
+async function getAllDecksByUser(userId) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM decks where playerId = ?';
+        db.pool.query(query, userId, (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+}
+// function updateGameWinner({ params }) {
+//     // Initialize a new game -> winner has not been decided
+//     return new Promise((resolve, reject) => {
+//         const sql = 'INSERT INTO game (startTime, endTime, winnerID) VALUES (CURRENT_TIMESTAMP, NULL, NULL)'                                // Games Database
+//         const vals = params
+//         db.pool.query(sql, vals, (err, result) => {
+//             if (err) {
+//                 reject(err);
+//             } else {
+//                 resolve(result);
+//             }
+//         });
+//     });
+// }
 
 
 module.exports.insertNewUserIntoDB = insertNewUserIntoDB;
@@ -442,11 +606,20 @@ module.exports.insertNewUser = insertNewUser;
 module.exports.authenticateUser = authenticateUser;
 module.exports.createNewCollection = createNewCollection;
 module.exports.insertCard = insertCard;
+module.exports.getCardInfo = getCardInfo;
 module.exports.insertCreatureCard = insertCreatureCard;
 module.exports.insertSpellCard = insertSpellCard;
 module.exports.insertCardUrl = insertCardUrl;
 module.exports.gatherUserDecks = gatherUserDecks;
 module.exports.getUserDeck = getUserDeck;
+module.exports.getCardById = getCardById;
 module.exports.createNewGame = createNewGame;
 module.exports.getCardIdByUser = getCardIdByUser;
-module.exports.insertNewDeck = insertNewDeck;
+module.exports.getCardByCardId = getCardByCardId;
+module.exports.insertNewGeneratedGame = insertNewGeneratedGame;
+module.exports.getGeneratedGameStats = getGeneratedGameStats;
+module.exports.getAllGeneratedGames = getAllGeneratedGames;
+module.exports.getAllGeneratedGamesByUser = getAllGeneratedGamesByUser;
+module.exports.getAllCollectionsByUser =getAllCollectionsByUser;
+module.exports.getOneGeneratedGame = getOneGeneratedGame; 
+module.exports.getAllDecksByUser = getAllDecksByUser;
