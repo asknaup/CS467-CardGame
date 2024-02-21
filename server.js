@@ -57,7 +57,6 @@ app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/database', express.static(path.join(__dirname, 'database')));
 app.use('/game', express.static(path.join(__dirname, 'game')));
 
-
 /*
 ROUTES
 */
@@ -65,7 +64,6 @@ ROUTES
 // Generate Game Instances with Name
 // Generate Collection Instances of Games per User
 // Generate Decks of collection 
-
 
 app.get('/', (req, res) => {                       
   const user = req.session.user
@@ -120,7 +118,6 @@ app.get('/gamePlayPage', (req, res) => {
   if (user) {
     res.render('gamePlayPage');
   } else {
-    // Redirect to homepage (index) to log in
     res.redirect('/');
   }
 });
@@ -132,7 +129,6 @@ app.get('/cardGenBulkPage', async (req, res) => {
     const val_list = await dbFunc.getAllGeneratedGames();
     res.render('cardGenBulkPage', { vals: val_list })
   } else {
-    // Redirect to homepage (index) to log in
     res.redirect('/');
   }
 });
@@ -165,9 +161,8 @@ app.get('/generatedGameView', async (req, res) => {
   }
 });
 
-// One of these to be deleted
+// Needs collection and game info
 app.get('/buildDeck', (req, res) => {
-  // Needs collection and game info
   const user = req.session.user;
   if (user) {
     res.render('buildDeck', { userId: 1001 })
@@ -206,6 +201,7 @@ app.get('/resetPW', (req, res) => {
   }
 });
 
+// Will need minor work
 app.get('/cardGenPage', async (req, res) => {
   const user = req.session.user;
   if (user) {
@@ -216,6 +212,7 @@ app.get('/cardGenPage', async (req, res) => {
   }
 });
 
+// Add stuff
 app.get('/help', async (req, res) => {
   const user = req.session.user;
   if (user) {
@@ -225,7 +222,7 @@ app.get('/help', async (req, res) => {
   }
 });
 
-
+// Add database logic
 app.get('/trading', (req, res) => {
   const user = req.session.user;
   if (user) {
