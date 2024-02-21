@@ -250,6 +250,20 @@ app.get('/collect', async (req, res) => {
   }
 });
 
+// Needs Work!
+app.get('/openPack', async (req, res) => {
+  const user = req.session.user;
+  if (user) { 
+    //const collect = await dbFunc.getAllCollectionsByUser(user.userId);
+    // console.log(collect);
+    //const something = await dbFunc.getOneGeneratedGame(collect.gameId)   // Need to build collections
+    res.render('openPack', { 
+    })
+  } else {
+    res.redirect('/');
+  }
+});
+
 app.get('/logout', (req, res) => {
   req.session.destroy(err => {
     if (err) {
