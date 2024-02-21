@@ -45,13 +45,6 @@ app.set('view engine', 'handlebars');
 // Define the view directory path for Handlebars files
 app.set('views', path.join(__dirname, 'views'));
 
-app.use('/trading', express.static(path.join(__dirname, 'public'), 
-{
-  'extensions': ['js'],
-  'index': false,
-  'Content-Type': 'text/javascript'
-}));
-
 // Serve static file from public directory
 app.use(express.static(path.join(__dirname, 'public'),
   {
