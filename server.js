@@ -14,7 +14,7 @@ const port = 3000;
 
 const db = require('./database/db-connector');
 const dbFunc = require('./database/db-functions')
-const gameGen = require('./game/game-gen');         
+const gameGen = require('./game/game-gen');
 const hf = require('./database/helper-funcs');    // Could be moved
 const card = require('./database/card');
 // const configFile = require('./database/config');
@@ -67,7 +67,7 @@ ROUTES
 // Generate Decks of collection 
 
 
-app.get('/', (req, res) => {                       
+app.get('/', (req, res) => {
   const user = req.session.user
   if (user) {
     // If user then show homepage
@@ -168,11 +168,47 @@ app.get('/generatedGameView', async (req, res) => {
 // One of these to be deleted
 app.get('/buildDeck', (req, res) => {
   // Needs collection and game info
-  const user = req.session.user;
+  // const user = req.session.user;
+  user = { userId: 1001, username: 'admin' };
+  // FIXME: Switch back to const user = req.session.user; once buildDeck complete
   if (user) {
-    res.render('buildDeck', { userId: 1001 })
+    res.render('buildDeck', { userId: user.userId });
   } else {
-    res.redirect('/', { showLogoutButton: false })
+    res.redirect('/')
+  }
+});
+
+app.get('/cards', async (req, res) => {
+  try {
+    // Retrieve the user ID from the request query parameters
+    // const userId = req.query.userId;
+    // Needs collection and game info
+    // const user = req.session.user;
+    user = { userId: 1001, username: 'admin' }; //FIXME
+    // Call the database function to get card data based on userId
+    const cardData = await dbFunc.getCardIdByUser(user.userId);
+    const cardsDict = hf.convertListToDict(cardData);
+    // Send card data as reponse
+    res.json(cardsDict);
+  } catch (error) {
+    // Handle errors that occur during data retrival
+    console.error('Error fetching card data:', error);
+    res.status(500).json({ error: 'Internal server error' })
+  }
+});
+
+app.post('/decksubmitted', async (req, res) =>{
+  // const user = req.session.user;
+
+  user = { userId: 1001, username: 'admin' }; //FIXME
+  // insertNewDeck(userId, deckName, cardList)
+
+  try {
+    const receivedData = req.body;
+    console.log(receivedData);
+    dbFunc.insertNewDeck(user.userId, receivedData.deckName,JSON.stringify({'cardList':receivedData.deckList}));
+  } catch (error) {
+    console.error("Error - Deck Not Saved", error);
   }
 });
 
@@ -238,11 +274,11 @@ app.get('/trading', (req, res) => {
 // Needs Work, collection db issue
 app.get('/collect', async (req, res) => {
   const user = req.session.user;
-  if (user) { 
+  if (user) {
     const collect = await dbFunc.getAllCollectionsByUser(user.userId);
     console.log(collect);
     //const something = await dbFunc.getOneGeneratedGame(collect.gameId)   // Need to build collections
-    res.render('collect', { 
+    res.render('collect', {
       collect: collect
     })
   } else {
@@ -253,11 +289,11 @@ app.get('/collect', async (req, res) => {
 // Needs Work!
 app.get('/openPack', async (req, res) => {
   const user = req.session.user;
-  if (user) { 
+  if (user) {
     //const collect = await dbFunc.getAllCollectionsByUser(user.userId);
     // console.log(collect);
     //const something = await dbFunc.getOneGeneratedGame(collect.gameId)   // Need to build collections
-    res.render('openPack', { 
+    res.render('openPack', {
     })
   } else {
     res.redirect('/');
@@ -409,10 +445,10 @@ app.post('/cardViewPrintedBulkPage', async (req, res) => {
       }
       newCreature.URL = values
       generatedCards.push(newCreature);
-    }   
+    }
     // console.log(generatedCards);
 
-    generatedCards.forEach( async (card) => {
+    generatedCards.forEach(async (card) => {
       try {
         const cardId = await dbFunc.insertCard("Sir Gwendyn", card.cardType, user.userId, "rare", card.manaCost);
         await dbFunc.insertCreatureCard(cardId, card.attack, card.defense, card.creatureType);
@@ -431,13 +467,13 @@ app.post('/cardViewPrintedBulkPage', async (req, res) => {
 });
 
 app.post('/cardViewPrintedPage', async (req, res) => {
-  
+
   const user = req.session.user;
   try {
     const cardId = await dbFunc.insertCard(req.body.cardName, req.body.cardType, user.userId, req.body.rarity, req.body.manaCost);
 
     if (req.body.cardType === "Creature") {
-      await dbFunc.insertCreatureCard(cardId, req.body.creatureAttack, req.body.creatureDefense, "samurai" );     // Hard coded
+      await dbFunc.insertCreatureCard(cardId, req.body.creatureAttack, req.body.creatureDefense, "samurai");     // Hard coded
     } else {
       await dbFunc.insertSpellCard(cardId, req.body.spellType, req.body.spellAbility, req.body.spellAttack, req.body.spellDefense, req.body.utility);
     }
@@ -481,16 +517,16 @@ app.post('/generatedGameView', async (req, res) => {
 // NEEDS OVERSIGHT
 app.post('/collect', async (req, res) => {
   if (req.session.user) {
-      try {
-          const gameId = await dbFunc.createNewCollection(req.session.user.userId, req.body.gameId);
-          res.render('collect', { gameId: gameId });
-      }
-      catch (err) {
-          res.send(`Something went wrong: ${err}`);
-      }
+    try {
+      const gameId = await dbFunc.createNewCollection(req.session.user.userId, req.body.gameId);
+      res.render('collect', { gameId: gameId });
+    }
+    catch (err) {
+      res.send(`Something went wrong: ${err}`);
+    }
   } else {
-      // Authentication failed, render 'welcomePagePortal' with an error message
-      res.redirect('/');
+    // Authentication failed, render 'welcomePagePortal' with an error message
+    res.redirect('/');
   }
 });
 

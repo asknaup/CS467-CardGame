@@ -18,6 +18,11 @@ main {
     overflow-x: auto;
 }
 
+.staging-row {
+    flex-wrap: wrap;
+    display: flex;
+}
+
 .stagingArea {
     border: 1px solid #ccc;
     background-color: #d8eece;

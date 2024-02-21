@@ -54,11 +54,18 @@ document.addEventListener('DOMContentLoaded', function () {
                         const stagedCardElement = row.querySelector(`[data-card-id="${cardId}"]`);
                         if (stagedCardElement) {
                             row.removeChild(stagedCardElement);
-                            // Append the card back to the cardContainer
-                            cardContainer.appendChild(cardElement);
-                            // Add the card to the carousel row
-                            const carouselRow = document.querySelector('.carouselRow');
-                            carouselRow.appendChild(cardElement);
+                            // Ensure only 6 cards are displayed in each row in the staging area horizontally
+                            const carouselRow = document.querySelectorAll('.carouselRow');
+                            let lastRow = carouselRow[carouselRow.length - 1];
+
+                            if (!lastRow || lastRow.childElementCount >= cardsPerRow) {
+                                // Create a new row if the last one is full or doesn't exist
+                                lastRow = document.createElement('div');
+                                lastRow.classList.add('carouselRow');
+                                cardContainer.appendChild(lastRow);
+                            }
+
+                            lastRow.appendChild(cardElement);
                         }
                     });
                 } else {
@@ -104,10 +111,10 @@ document.addEventListener('DOMContentLoaded', function () {
             const cardData = {};
 
             // Extract cardId from selectedCards array
-            cardData.cardId = cardId;
+            // cardData.cardId = cardId;
 
             // Add card data to the array
-            deckData.push(cardData);
+            deckData.push(parseInt(cardId));
         });
 
         // Prompt the user to enter a name for the deck
@@ -118,7 +125,27 @@ document.addEventListener('DOMContentLoaded', function () {
             const jsonDeck = JSON.stringify({ deckName, cards: deckData });
 
             // Log or use the JSON deck data as needed
-            console.log(jsonDeck);
+            // console.log(jsonDeck);
+            fetch('/decksubmitted', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ deckName: deckName, deckList: deckData})
+            })
+
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error('Network response was not ok.');
+                })
+                .then(data => {
+                    // Handle the response from the server if needed
+                    console.log('Server response:', data);
+                })
+                .catch(error => {
+                    // Handle errors that may occur during the request
+                    console.error('Error:', error);
+                });
         }
     }
 
@@ -127,8 +154,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (saveDeckButton) {
         saveDeckButton.addEventListener('click', () => saveDeck(selectedCards));
     }
-
-    // ... (Your existing code)
 
 });
 

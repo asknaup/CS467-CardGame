@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, intial-scale=1.0">
+    {{!-- <meta name="viewport" content="width=device-width, intial-scale=1.0"> --}}
     <title>Build Deck</title>
     <link rel="stylesheet" type="text/css" href="/global.css">
     <link rel="stylesheet" type="text/css" href="/buildDeck.css">
@@ -30,9 +30,8 @@
     <br><br><br>
     <!-- Handlebars template for card -->
     <div class="cardContainer" id="cardContainer">
-        <script id="card-template" type="text/x-handlebars-template">
         {{#each cards}}
-            <div class="card">
+            <div id={{cardId}} class="card">
 
                 <div class="cardBackground">
                     <div class="cardFrame">

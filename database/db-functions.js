@@ -623,3 +623,4 @@ module.exports.getAllGeneratedGamesByUser = getAllGeneratedGamesByUser;
 module.exports.getAllCollectionsByUser =getAllCollectionsByUser;
 module.exports.getOneGeneratedGame = getOneGeneratedGame; 
 module.exports.getAllDecksByUser = getAllDecksByUser;
+module.exports.insertNewDeck = insertNewDeck;
