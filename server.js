@@ -56,12 +56,7 @@ app.use(express.static(path.join(__dirname, 'images')))
 app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/database', express.static(path.join(__dirname, 'database')));
 app.use('/game', express.static(path.join(__dirname, 'game')));
-app.use('/trading', express.static(path.join(__dirname, 'public'), 
-{
-  'extensions': ['js'],
-  'index': false,
-  'Content-Type': 'text/javascript'
-}));
+
 
 /*
 ROUTES
