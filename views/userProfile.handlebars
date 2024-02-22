@@ -10,240 +10,50 @@
 {{!-- #TODO add number of decks --}}
 {{!-- #TODO add option to brows between collections and decks --}}
 <body>
-  <h1>{{ username }}'s Profile</h1>
+  <br>
+  <h1 id="usernameH">Welcome to {{ username }}'s Profile</h1>
+  <br>
   <div class="userContainer">
-
     <div class="userStats">
-      <h2>{{username}}'s Statistics</h2>
-      <p>Game Count: {{ gameCount }}</p>
+      <p>Number of Games Played: {{ gameCount }}</p>
       <p>Wins: {{ wins }}</p>
       <p>Losses: {{ losses }}</p>
-    </div>
-
-    <div class="userBrowsing">
-      {{!-- #TODO: Restructure Prowse User Collection, sends where it's currently sending  --}}
-      <a href="/tradeAndCollect"><button type="button" class="userCollection">Browse User Game Collection</button></a>
-      <div id="userGames">
-        <div id="userGameMatrix" class="matrix"></div>
-
-        <script>
-          // Example placeholder data for user games
-          var userGamesData = [
-            {
-              "image": "https://placekitten.com/200/200",
-              "name": "Game 1",
-              "ruleset": "https://example.com/ruleset1.pdf"
-            },
-            {
-              "image": "https://placekitten.com/201/200",
-              "name": "Game 2",
-              "ruleset": "https://example.com/ruleset2.pdf"
-            },
-            {
-              "image": "https://placekitten.com/202/200",
-              "name": "Game 3",
-              "ruleset": "https://example.com/ruleset1.pdf"
-            },
-            {
-              "image": "https://placekitten.com/203/200",
-              "name": "Game 4",
-              "ruleset": "https://example.com/ruleset2.pdf"
-            },
-            {
-              "image": "https://placekitten.com/204/200",
-              "name": "Game 5",
-              "ruleset": "https://example.com/ruleset1.pdf"
-            },
-            {
-              "image": "https://placekitten.com/205/200",
-              "name": "Game 6",
-              "ruleset": "https://example.com/ruleset2.pdf"
-            },
-            {
-              "image": "https://placekitten.com/206/200",
-              "name": "Game 7",
-              "ruleset": "https://example.com/ruleset1.pdf"
-            },
-            {
-              "image": "https://placekitten.com/207/200",
-              "name": "Game 8",
-              "ruleset": "https://example.com/ruleset2.pdf"
-            },
-            {
-              "image": "https://placekitten.com/208/200",
-              "name": "Game 9",
-              "ruleset": "https://example.com/ruleset1.pdf"
-            },
-            {
-              "image": "https://placekitten.com/209/200",
-              "name": "Game 10",
-              "ruleset": "https://example.com/ruleset2.pdf"
-            },
-            {
-              "image": "https://placekitten.com/210/200",
-              "name": "Game 11",
-              "ruleset": "https://example.com/ruleset1.pdf"
-            },
-            {
-              "image": "https://placekitten.com/211/200",
-              "name": "Game 12",
-              "ruleset": "https://example.com/ruleset2.pdf"
-            },
-
-          ];
-
-          // Populate display matrix for user games
-          function populateUserMatrix() {
-            var userMatrixContainer = document.getElementById('userGameMatrix');
-
-            userGamesData.forEach(function (game) {
-              // Create cell
-              var cell = document.createElement('div');
-              cell.className = 'matrix-cell';
-
-              // Add game name above the image
-              var gameName = document.createElement('div');
-              gameName.className = 'game-name'; // Class for styling
-              gameName.textContent = game.name;
-              cell.appendChild(gameName);
-
-              // Add image
-              var image = document.createElement('img');
-              image.src = game.image;
-              cell.appendChild(image);
-
-              // Add ruleset button below the image
-              var rulesetButton = document.createElement('button');
-              rulesetButton.textContent = 'Ruleset';
-              rulesetButton.onclick = function () {
-                window.location.href = game.ruleset;
-              };
-              cell.appendChild(rulesetButton);
-
-              // Append the cell to the matrix container
-              userMatrixContainer.appendChild(cell);
-            });
-          }
-
-          populateUserMatrix();
-        </script>
-      </div>
-    </div>
-
-    <div class="userBrowsing">
-      <a href="/"><button type="button" class="otherCollections">Browse Other Collections</button></a>
-      <!-- #TODO: browse user deckks and send you somewhere else -->
-      <div id="otherGames"> 
-        <div id="otherGameMatrix" class="matrix"></div>
-
-        <script>
-          // Example placeholder data for other collections
-          var otherGamesData = [
-            {
-              "image": "https://placekitten.com/200/200",
-              "name": "Game 1",
-              "ruleset": "https://example.com/ruleset1.pdf"
-            },
-            {
-              "image": "https://placekitten.com/201/200",
-              "name": "Game 2",
-              "ruleset": "https://example.com/ruleset2.pdf"
-            },
-            {
-              "image": "https://placekitten.com/202/200",
-              "name": "Game 3",
-              "ruleset": "https://example.com/ruleset1.pdf"
-            },
-            {
-              "image": "https://placekitten.com/203/200",
-              "name": "Game 4",
-              "ruleset": "https://example.com/ruleset2.pdf"
-            },
-            {
-              "image": "https://placekitten.com/204/200",
-              "name": "Game 5",
-              "ruleset": "https://example.com/ruleset1.pdf"
-            },
-            {
-              "image": "https://placekitten.com/205/200",
-              "name": "Game 6",
-              "ruleset": "https://example.com/ruleset2.pdf"
-            },
-            {
-              "image": "https://placekitten.com/206/200",
-              "name": "Game 7",
-              "ruleset": "https://example.com/ruleset1.pdf"
-            },
-            {
-              "image": "https://placekitten.com/207/200",
-              "name": "Game 8",
-              "ruleset": "https://example.com/ruleset2.pdf"
-            },
-            {
-              "image": "https://placekitten.com/208/200",
-              "name": "Game 9",
-              "ruleset": "https://example.com/ruleset1.pdf"
-            },
-            {
-              "image": "https://placekitten.com/209/200",
-              "name": "Game 10",
-              "ruleset": "https://example.com/ruleset2.pdf"
-            },
-            {
-              "image": "https://placekitten.com/210/200",
-              "name": "Game 11",
-              "ruleset": "https://example.com/ruleset1.pdf"
-            },
-            {
-              "image": "https://placekitten.com/211/200",
-              "name": "Game 12",
-              "ruleset": "https://example.com/ruleset2.pdf"
-            },
-
-          ];
-
-          // Populate display matrix for other collections
-          function populateOtherMatrix() {
-            var otherMatrixContainer = document.getElementById('otherGameMatrix');
-
-            otherGamesData.forEach(function (game) {
-              // Create cell
-              var cell = document.createElement('div');
-              cell.className = 'matrix-cell';
-
-              // Add game name above the image
-              var gameName = document.createElement('div');
-              gameName.className = 'game-name'; // Class for styling
-              gameName.textContent = game.name;
-              cell.appendChild(gameName);
-
-              // Add image
-              var image = document.createElement('img');
-              image.src = game.image;
-              cell.appendChild(image);
-
-              // Add ruleset button below the image
-              var rulesetButton = document.createElement('button');
-              rulesetButton.textContent = 'Ruleset';
-              rulesetButton.onclick = function () {
-                window.location.href = game.ruleset;
-              };
-              cell.appendChild(rulesetButton);
-
-              // Append the cell to the matrix container
-              otherMatrixContainer.appendChild(cell);
-            });
-          }
-
-          populateOtherMatrix();
-        </script>
-      </div>
+      <p>Number of Generated Games: {{ gameLen }}</p>
+      <p>Number of Collections: {{ collectLength }}</p>
+      <p>Number of Decks: {{ deckLen }}</p>
+      <br>
     </div>
   </div>
-
-
+  <br>
+  <div class="center">
+     <form action="/gameGenPage" method="get">
+      <button id="gen-game-button-ggp" type="submit">Create a New Trading Card Game</button>
+    </form>
+    <form action="/collect" method="get">
+    <button id="gen-game-button-ggp" type="submit">Create or Browse your collection for </button>
+    <select name="gameId">
+        {{#each vals}}
+        <option value="{{ this.gameId }}">{{ this.imageLocation }}</option>
+        {{/each}}
+    </select>
+    </form>
+    <form action="/buildDeck" method="get">
+      <button id="gen-game-button-ggp" type="submit">Edit your Play Deck from your Collection for</button>
+      <select name="gameId">
+        {{#each vals}}
+        <option value="{{ this.gameId }}">{{ this.imageLocation }}</option>
+        {{/each}}
+    </select>
+    </form>
+    <form action="/gamePlayPage" method="get">
+      <button id="gen-game-button-ggp" type="submit">Play with your created Deck against an opponent</button>
+    </form>
+    <br>
+    <form action="/help" method="get">
+      <button id="gen-game-button-ggp" type="submit">Help! I'm Lost</button>
+    </form>
+    <button id="gen-game-button-ggp" type="submit">LOGOUT! NEEDS WORK</button>
   </div>
-
 </body>
 
 </html>

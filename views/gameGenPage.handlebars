@@ -6,197 +6,22 @@
   <meta name="viewport" content="width=device-width, intial-scale=1.0">
   <title>Game Generation Page</title>
   <link rel="stylesheet" href="global.css">
-  <link rel="stylesheet" href="gameGenPage.css">
 </head>
 
 <body>
-  <div class="containerNC">
-    <div class="leftPane">
-      <h1>Welcome to the Game Generation Page</h1>
-      <br><br>
-      <h2>Rule Sets</h2>
-      <br><br>
-      <h3>Rule Set 1: Creatures and Spells</h3>
-      <h4>Creatures</h4>
-      <ol>
-        <li>Each player can have a maximum of 5 creatures on the battlefield at any given time.</li>
-        <li>Creatures have Attack and Defense values, representing their offensive and defensive capabilities.</li>
-        <li>Creatures may have special abilities or effects that trigger under certain conditions.</li>
-        <li>Players can summon creatures by paying the required mana cost, which is indicated on the card.</li>
-        <li>Creatures can attack the opponent directly or other creatures controlled by the opponent.</li>
-        <li>If a creature's defense reaches zero or below, it is destroyed and placed into the graveyard.</li>
-        <li>Recommended Number of cards: 50-100</li>
-        <li>Distribution:
-          <ul>
-            <li>Common: 50%</li>
-            <li>Uncommon: 30%</li>
-            <li>Rare: 15%</li>
-            <li>Legendary: 5%</li>
-          </ul>
-        </li>
-      </ol>
-      <h4>Spells</h4>
-      <ol>
-        <li>Spells are magical cards with various effects that can impact the game.</li>
-        <li>Spells may include offensive spells that deal damage to creatures or players,
-          defensive spells that protect creatures or players, and utility spells that
-          manipulate the game state.</li>
-        <li>Players can cast spells by paying the required mana cost, which is indicated
-          on the card.</li>
-        <li>Some spells may have instant effects that resolve immediately upon casting,
-          while others may have ongoing effects that last for a specified duration.</li>
-        <li>Recommended Number of cards: 25-50</li>
-        <li>Distribution:</li>
-        <ul>
-          <li>Offensive: 40%</li>
-          <li>Defensive: 30%</li>
-          <li>Utility: 30%</li>
-        </ul>
-      </ol>
-      <br><br>
-      <h3>Rule Set 2: Combat Mechanics</h3>
-      <h4>Combat Phase</h4>
-      <ol>
-        <li>Each turn consists of a combat phase where players can attack with their creatures.</li>
-        <li>During the combat phase, the active player declares their attacking creatures
-          and selects targets for their attacks.</li>
-        <li>The defending player can choose to block attacking creatures with their own
-          creatures or allow the attack to go through.</li>
-        <li>If a creature is blocked, it deals damage to the blocking creature equal
-          to its attack value, and vice versa.</li>
-        <li>If a creature is unblocked, it deals damage to the defending player equal to its
-          attack value.</li>
-        <li>Damage dealt to creatures reduces their defense value. If a creature's defense
-          reaches zero or below, it is destroyed and placed into the graveyard.</li>
-        <li>After the combat phase, players proceed to the next phase of the turn.</li>
-        <li>Recommended Number of Cards: 50-100</li>
-        <li>Distribution:</li>
-        <ul>
-          <li>Combat Enhancements: 40%</li>
-          <li>Defensive Tactics: 30%</li>
-          <li>Offensive Maneuvers: 20%</li>
-          <li>Special Tactics: 10%</li>
-        </ul>
-      </ol>
-    </div>
-    <div class="rightPane">
-      <br><br>
-      <h1> Please Enter Game Generation Inputs </h1>
+  <div class="container">
+      <h1> Create a new Trading Card Game Below </h1>
       <div id="input-form">
-        <form action="/gameGenerationPageAction" method="post">
-          <label for="ruleSet">Select Rule Set:</label>
+        <form action="/generatedGameView" method="post">
+          <input name="name" type="text" placeholder="What's the Game's Name?"> 
+          <label for="ruleSet">What's the rule set?</label>
           <select id="ruleSet" name="ruleSet">
             <option value="ruleSet1">Rule Set #1 (Creatures and Spells)</option>
             <option value="ruleSet2">Rule Set #2 (Combat Mechanics)</option>
           </select>
-          <br><br>
-          <label for="userDeckSelect">Select User Deck:</label>
-          <select id="userDeckSelect" name="userDeckSelect">
-            {{#each decks}}
-            <option value="{{deckId}}">{{deckName}}</option>
-            {{/each}}
-          </select>
-          {{!-- <div id="ruleSet1">
-            <h2>Creature Cards</h2>
-            <div id="creatureCards">
-              <div class="label-input-pair">
-                <label for="creatureCards">Total Number of Cards</label>
-                <input type="number" id="creatureCards" name="creatureCards" min="0" value="50">
-              </div>
-              <div class="label-input-pair">
-                <label for="creatureCommon">Common Cards</label>
-                <input type="range" id="creatureCommon" name="creatureCommon" min="0" max="100" value="50">
-                <span id="creatureCommonValue">50</span>
-              </div>
-              <div class="label-input-pair">
-                <label for="creatureUncommon">Uncommon Cards</label>
-                <input type="range" id="creatureUncommon" name="creatureUncommon" min="0" max="100" value="30">
-                <span id="creatureUncommonValue">30</span>
-              </div>
-              <div class="label-input-pair">
-                <label for="creatureRare">Rare Cards</label>
-                <input type="range" id="creatureRare" name="creatureRare" min="0" max="100" value="15">
-                <span id="creatureRareValue">15</span>
-              </div>
-              <div class="label-input-pair">
-                <label for="creatureLegendary">Legendary Cards</label>
-                <input type="range" id="creatureLegendary" name="creatureLegendary" min="0" max="100" value="5">
-                <span id="creatureLegendaryValue">5</span>
-              </div>
-              <button id="resetCreatureCards">Reset Creature Cards</button>
-            </div>
-            <h2>Spell Cards</h2>
-            <div id="spellCards">
-              <div class="label-input-pair">
-                <label for="spellCards">Total Number of Cards</label>
-                <input type="number" id="spellCards" name="creatureCards" min="0" value="25">
-              </div>
-              <div class="label-input-pair">
-                <label for="spellOffensive">Offensive Cards</label>
-                <input type="range" id="spellOffensive" name="spellOffensive" min="0" max="100" value="40">
-              </div>
-              <div class="label-input-pair">
-                <label for="spellDefensive">Defensive Cards</label>
-                <input type="range" id="spellDefensive" name="spellDefensive" min="0" max="100" value="30">
-              </div>
-              <div class="label-input-pair">
-                <label for="spellUtility">Utility Cards</label>
-                <input type="range" id="spellUtility" name="spellUtility" min="0" max="100" value="30">
-              </div>
-              <button id="resetSpellCards">Reset Spell Cards</button>
-            </div>
-          </div>
-          <div id="ruleSet2" style="display: none;">
-
-          </div> --}}
-          {{!-- <input id="theme" type="text" placeholder="Game Theme (use several descriptive words)"> --}}
-          {{!-- <input id="number" type="text" placeholder="Number of Cards per Deck"> --}}
-          {{!-- <label for="slider">Distribution of cards:</label>
-          <input type="range" id="slider" name="slider" min="0" max="100" value="50">
-          <input id="attributes" type="text" placeholder="Game Attributes"> --}}
-          <br><br>
-          <button id="gen-game-button-ggp" type="submit">Generate New Game</button>
+          <button id="generateGame" type="submit">Generate New Game</button>
         </form>
-      </div>
     </div>
   </div>
-
-
-  {{!--
-  <script>
-    document.getElementById('ruleSet1').addEventListener('change', function () {
-      var cardType = this.value;
-      var creatureFields = document.getElementById('creatureFields');
-      var spellFields = document.getElementById('spellFields');
-
-      if (cardType === 'ruleSet1') {
-        ruleSet1.style.display = 'block';
-        ruleSet2.style.display = 'none';
-      } else if (cardType === 'ruleSet2') {
-        ruleSet1.style.display = 'none';
-        ruleSet2.style.display = 'block';
-      }
-    });
-
-    // Select all range input elements
-    const sliders = document.querySelectorAll('#ruleSet1 input[type="range"]');
-
-    // Iterate over each slider
-    sliders.forEach(slider => {
-      // Get the corresponding span element by ID
-      const valueSpan = document.getElementById(`${slider.id}Value%`);
-
-      // Update the span element's text content with the current value of the slider
-      valueSpan.textContent = slider.value;
-
-      // Add an input event listener to each slider
-      slider.addEventListener('input', function () {
-        // Update the span element's text content with the updated value of the slider
-        valueSpan.textContent = this.value;
-      });
-    });
-  </script> --}}
-  <script src="game-gen.js"></script>
 </body>
-
 </html>

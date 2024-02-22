@@ -54,40 +54,54 @@ async function getImageUrlFromLeonardo(imageId) {
 
 function createDataStructCreature(colors, creatures, places) {
     const data_struct = {
-        name: 'Joe Smith',
-        creature: creatures,
+        name: '_',
+        creatureType: creatures,
         place: places,
         color: colors,
         URL: null,
-        description: '',
-        cardType: 'Creature',
-        attack: 2,
-        defense: 2,
-        manaCost: 3,
-        enter_effect: null
+        description: '_',
+        cardType: '_',
+        attack: 0,
+        defense: 0,
+        manaCost: 0,
+        enter_effect: null,
+        rarity: getRandomElement(["Common", "Common", "Common", "Common", "Uncommon", "Uncommon", "Uncommon", "Rare", "Rare", "Legendary"])
     };
 
     let newStruct = { ...data_struct };
+    newStruct.name = getRandomElement(fantasyFirstNames);
+    
+    if (rare == "Common") {
+        newStruct.attack = getRandomElement([0,1,2,3]);
+        newStruct.defense = getRandomElement([1,2,3]);
+        newStruct.manaCost = getRandomElement([1,2,3])
+    } else if (rare == "Uncommon") {
+        newStruct.attack = getRandomElement([2,3,4,5]);
+        newStruct.defense = getRandomElement([2,3,4,5]);
+        newStruct.manaCost = getRandomElement([2,3,4])
+    } else if (rare == "Rare") {
+        newStruct.attack = getRandomElement([4,5,6,7]);
+        newStruct.defense = getRandomElement([4,5,6,7,8]);
+        newStruct.manaCost = getRandomElement([4,5,6])
+    }  else if (rare == "Legendary") {
+        newStruct.attack = getRandomElement([7,8,9]);
+        newStruct.defense = getRandomElement([7,8,9]);
+        newStruct.manaCost = getRandomElement([6,7,8,9])
+    }  
 
     if (colors == "Random") {
         newStruct.color = getRandomElement(colors1);
     } else if (colors == "None") {
         newStruct.color = "";
-    } else {
-        newStruct.color = colors;
-    }
-
+    } else { newStruct.color = colors;} 
+    
     if (creatures == "Random") {
         newStruct.creature = getRandomElement(creatures1);
-    } else {
-        newStruct.creature = creatures;
-    }
-
+    } else { newStruct.creature = creatures; } 
     if (places == "Random") {
         newStruct.place = getRandomElement(places1);
-    } else {
-        newStruct.place = places;
-    }
+    } else { newStruct.place = places;}
+
     return newStruct;
 }
 
@@ -129,38 +143,35 @@ function getRandomElement(arr) {
         "Silver", "Turquoise", "Violet", "Yellow"
     ];
 
+    const fantasyFirstNames = [
+        "Aelar", "Lyra", "Tharin", "Elowen", "Draven", "Sylas", "Isolde", "Finnian", "Seraphina", "Rowan",
+        "Alaric", "Aurora", "Caelum", "Elysia", "Galadriel", "Tristan", "Lysander", "Aria", "Kael", "Elara",
+        "Thalia", "Orion", "Aerin", "Amara", "Roran", "Eowyn", "Arion", "Isolde", "Lirael", "Darian",
+        "Eira", "Branwen", "Icarus", "Eirwyn", "Morrigan", "Eirlys", "Finley", "Eirian", "Thorne",
+        "Auriel", "Riven", "Selene", "Thaddeus", "Keira", "Elric", "Valerian", "Drystan", "Oberon", "Iseult",
+        "Lyric", "Kaelan", "Arianwen", "Niamh", "Riordan", "Eirwen", "Aurelia", "Caius", "Eirika", "Ronan",
+        "Ferelith", "Taliesin", "Eira", "Ailith", "Eirian", "Eirlys", "Elidor", "Iseabal", "Ivailo", "Ivaylo",
+        "Kasim", "Iridian", "Lachtna", "Luighseach", "Meabh", "Niall", "Odran", "Sibeal", "Sibéal", "Siobhán",
+        "Tuathal", "Uilliam", "Orlaith", "Rioghnach", "Roibhilín", "Róisín", "Sadbh", "Saoirse", "Seaghán",
+        "Seán", "Senán", "Síofra", "Síthmaith", "Sorcha", "Tadgh", "Tadhg", "Tadhgan", "Teagan", "Tómas",
+        "Tomás", "Uinseann", "Yseult", "Adeon", "Aderyn", "Aeron", "Aidan", "Alair", "Alasdair", "Alastair",
+        "Alroy", "Angus", "Aoibheann", "Beathan", "Braeden", "Brann", "Brannon", "Brennan", "Brodie", "Caelan",
+        "Caelum", "Cahan", "Callum", "Ciaran", "Cormac", "Cuan", "Cuán", "Curran", "Darcy", "Diarmaid",
+        "Dillon", "Donal", "Donnacha", "Dougal", "Dughall", "Dylan", "Eamonn", "Eion", "Fergus", "Finian",
+        "Fionn", "Frang", "Galen", "Gareth", "Gavin", "Gillean", "Greagoir", "Gregor", "Guaire", "Guillem",
+        "Hamish", "Iagan", "Iain", "Ianto", "Ian", "Irvine", "Kade", "Kane", "Kellan", "Kieran", "Lachlan",
+        "Laird", "Lathan", "Liam", "Logan", "Lorcan", "Macsen", "Mael", "Malcolm", "Math", "Mathew",
+        "Murdock", "Myles", "Niall", "Nolan", "Odhran", "Oisin", "Oswyn", "Owen", "Padraig", "Padruig",
+        "Pàl", "Pádraig", "Peadar", "Quinlan", "Raghnall", "Ronan", "Rory", "Rowan", "Ruairi", "Ryder",
+        "Seamus", "Sean", "Sebastian", "Séimí", "Séimí Óg", "Séimíne", "Sìm", "Sloan", "Tadhg", "Tomas",
+        "Torin", "Turlough", "Uilliam", "Vaughan", "Warren", "Wynne", "Zander", "Alessia", "Anya", "Arabel",
+        "Arabella", "Aria", "Arianell", "Arianwen", "Ariella", "Arielle", "Aurora", "Brigid", "Bronwen",
+        "Caitrìona", "Catriona", "Cordelia", "Daisy", "Eilidh", "Elara", "Elena", "Elspeth", "Enid", "Felicity",
+        "Ffion", "Fiona"];
 
-
-
-
-
-/*
-(async () => {
-    const aiCard = await createAICard('samurai', 'dark', 'gold', 'rare');
-    console.log(aiCard.sdGenerationJob);
-    const val = await getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId); // aiCard.sdGenerationJob.generationId
-    console.log(val);
-})();
-*/
-
-/*
-const result = "your image URL";
-  const fetchFile = await fetch(result);
-  const responseBlob = await fetchFile.blob();
-  const arrayBuffer = await responseBlob.arrayBuffer();
-  const buffer = Buffer.from(arrayBuffer);
- const filePath = path.join(__dirname, './' + new Date() + ".png");
- const writeFileToDisc = fs.writeFileSync(filePath, buffer);
-*/
 
 module.exports.getImageUrlFromLeonardo = getImageUrlFromLeonardo;
 module.exports.createAICard = createAICard;
 module.exports.createDataStructCreature = createDataStructCreature;
 
 
-/*   Models available
-    fetch('https://cloud.leonardo.ai/api/rest/v1/platformModels', options5)
-    .then(response => response.json())
-    .then(response => console.log(response))
-    .catch(err => console.error(err)); 
-*/
