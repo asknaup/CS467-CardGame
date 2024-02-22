@@ -9,6 +9,7 @@
 </head>
 
 <body>
+    <br>
     <h1>Open a Pack to bolster your collection</h1>
     <p>big old pack picture</p>
     <br><br>
@@ -20,7 +21,9 @@
     {{/each}}
     </form>
     <div class="instructions">
-        <p>Here you can see your collection.</p>
+        <p>Collection_Id: {{collect.[0].collectionId}}</p>
+        <p>List of Cards: {{collect.[1].cardId}}</p>
+        <p> ---- Will need to grab userName and gameName to create CollectionId Name --- </p>
     </div>
     <header>Collection</header>
     <div class="stagingArea" id="stagingArea"></div>
