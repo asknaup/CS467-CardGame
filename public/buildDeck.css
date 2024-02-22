@@ -1,3 +1,8 @@
+#cardList {
+    border: 1px solid #ccc;
+    min-height: 200px;
+}
+
 main {
     display: flex;
     flex-direction: column;
@@ -7,27 +12,58 @@ main {
     height: 100vh;
 }
 
+.carouselRow {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+}
+
+.staging-row {
+    flex-wrap: wrap;
+    display: flex;
+}
+
 .stagingArea {
-    border: 2px dashed #e74c3c;
-    background-color: #f2dede;
-    padding: 10px;
-    margin-bottom: 20px;
-    /* Add margin between staging area and card carousel */
-    min-height: 200px;
-    max-height: 400px;
-    width: 80%;
+    border: 1px solid #ccc;
+    background-color: #d8eece;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    /* Adjust gap as needed for spacing between cards */
+    justify-content: flex-start;
+    align-items: flex-start;
+    height: 350px;
+    /* Fixed height */
+    min-height: 400px;
+    width: 100%;
+    /* Fixed width */
+    overflow-y: auto;
+    /* Add this if you want a vertical scrollbar if the content overflows */
+}
+
+.stagingArea .cardContainer {
+    flex: 0 0 calc(16.666% - 10px);
+    /* Set to approximately 100% / 6 with gap in mind */
+    box-sizing: border-box;
+    /* Include padding and border in the width calculation */
 }
 
 .cardContainer {
+    max-width: 100%;
+    margin: 0 auto;
+    /* Center the container */
+}
+
+#cardContainer {
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .card {
-    width: 184px;
+    width: 250px;
     height: 350px;
     /* Card container height */
-    background-color: beige;
     border: 2px solid #000;
     border-radius: 8px;
     overflow: hidden;
@@ -35,7 +71,34 @@ main {
     transition: transform 0.3s ease-in-out;
     margin-right: 10px;
     margin-bottom: 20px;
+    background-color: #bbb;
+    z-index: 0;
     /* Add margin between cards */
+}
+
+.cardBackground {
+    height: 100%;
+    margin: 10px 10px 10px 10px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    border-bottom-left-radius: 8%;
+    border-bottom-right-radius: 8%;
+    background-image: url(https://image.ibb.co/e1XKAS/green_background.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+}
+
+.cardFrame {
+    z-index: 1;
+    position: relative;
+    height: 350px;
+    max-width: 97%;
+    left: 1%;
+    top: 0.5%;
+    left: 1.2%;
+    display: flex;
+    flex-direction: column;
 }
 
 .card:last-child {
@@ -47,20 +110,53 @@ main {
     transform: scale(1.05);
 }
 
-.cardContent {
-    padding: 10px;
-}
-
 .cardName {
+    font-size: 1.2em;
+    font-family: fancy;
+    font-weight: 600;
     margin: 0;
     color: #000;
-    font-size: 16px;
     font-weight: bold;
 }
 
-.cardImage img {
+/* .cardImage img {
     width: 100%;
-    height: auto;
+    height: 100%;
+} */
+
+.cardImage {
+    height: 50%;
+    width: 50%;
+    overflow: hidden;
+    margin: 0 10px;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+}
+
+.frameHeader,
+.cardImage {
+    background:
+        linear-gradient(0deg, rgba(201, 216, 201, .3), rgba(201, 216, 209, .3)),
+        url(https://image.ibb.co/jKByZn/tile_bg_1.jpg);
+    display: flex;
+    margin-top: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    padding: 8px 0;
+    justify-content: space-between;
+    border-radius: 18px/40px;
+}
+
+.frame-header,
+.frame-art,
+.frame-type-line {
+    box-shadow:
+        0 0 0 2px #171314,
+        0 0 0 5px #26714A,
+        -3px 3px 2px 5px #171314;
+
+    margin-bottom: 7px;
 }
 
 .attributes {
@@ -80,7 +176,8 @@ button {
     /* Margin between buttons */
 }
 
-h1, header {
+h1,
+header {
     font-size: xx-large;
     font-weight: bold;
     background-image: linear-gradient(to left, #449a3c, #a7d393);
@@ -92,22 +189,6 @@ h1, header {
 #carouselCounter {
     margin: 15px 10px;
     /* Margin to the carousel counter */
-}
-
-.stagingArea {
-    display: flex;
-    /* Arrange cards in a row */
-    justify-content: flex-start;
-    /* Align cards to the start (left) of the flex container */
-    align-items: center;
-    /* Center cards vertically in the flex container */
-    border: 2px dashed #e74c3c;
-    background-color: #f2dede;
-    padding: 10px;
-    margin-bottom: 20px;
-    min-height: 200px;
-    max-height: 400px;
-    width: 80%;
 }
 
 .stagedCard {
@@ -122,4 +203,3 @@ h1, header {
 #prevBtn {
     align-items: center;
 }
-

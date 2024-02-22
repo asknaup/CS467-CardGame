@@ -741,3 +741,4 @@ module.exports.getAllDecksByUser = getAllDecksByUser;
 module.exports.insertOrSelectCollectionByUserIdandGameId = insertOrSelectCollectionByUserIdandGameId;
 module.exports.grabListOfCardsFromCollection = grabListOfCardsFromCollection;
 module.exports.updateListOfCollection = updateListOfCollection;
+module.exports.insertNewDeck = insertNewDeck;
