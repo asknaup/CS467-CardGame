@@ -184,7 +184,7 @@ app.get('/cards', async (req, res) => {
     // const userId = req.query.userId;
     // Needs collection and game info
     // const user = req.session.user;
-    user = { userId: 1001, username: 'admin' }; //FIXME
+    user = { userId: 1007, username: 'admin' }; //FIXME
     // Call the database function to get card data based on userId
     const cardData = await dbFunc.getCardIdByUser(user.userId);
     const cardsDict = hf.convertListToDict(cardData);
@@ -200,7 +200,7 @@ app.get('/cards', async (req, res) => {
 app.post('/decksubmitted', async (req, res) =>{
   // const user = req.session.user;
 
-  user = { userId: 1001, username: 'admin' }; //FIXME
+  user = { userId: 1007, username: 'admin' }; //FIXME
   // insertNewDeck(userId, deckName, cardList)
 
   try {

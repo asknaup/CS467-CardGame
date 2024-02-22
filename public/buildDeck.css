@@ -119,12 +119,23 @@ main {
     font-weight: bold;
 }
 
-.cardImage img {
+/* .cardImage img {
     width: 100%;
-    height: auto;
+    height: 100%;
+} */
+
+.cardImage {
+    height: 50%;
+    width: 50%;
+    overflow: hidden;
+    margin: 0 10px;
+    justify-content: center;
+    display: flex;
+    align-items: center;
 }
 
-.frameHeader {
+.frameHeader,
+.cardImage {
     background:
         linear-gradient(0deg, rgba(201, 216, 201, .3), rgba(201, 216, 209, .3)),
         url(https://image.ibb.co/jKByZn/tile_bg_1.jpg);
@@ -135,6 +146,17 @@ main {
     padding: 8px 0;
     justify-content: space-between;
     border-radius: 18px/40px;
+}
+
+.frame-header,
+.frame-art,
+.frame-type-line {
+    box-shadow:
+        0 0 0 2px #171314,
+        0 0 0 5px #26714A,
+        -3px 3px 2px 5px #171314;
+
+    margin-bottom: 7px;
 }
 
 .attributes {
@@ -154,7 +176,8 @@ button {
     /* Margin between buttons */
 }
 
-h1, header {
+h1,
+header {
     font-size: xx-large;
     font-weight: bold;
     background-image: linear-gradient(to left, #449a3c, #a7d393);
@@ -180,4 +203,3 @@ h1, header {
 #prevBtn {
     align-items: center;
 }
-

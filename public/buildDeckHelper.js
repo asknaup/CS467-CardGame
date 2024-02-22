@@ -170,7 +170,7 @@ function createTradingCard(cardData) {
 
     // Frame header
     var frameHeader = document.createElement('div');
-    cardContent.classList.add('frameHeader');
+    frameHeader.classList.add('frameHeader');
 
     // cardId
     var cardId = document.createElement('p');

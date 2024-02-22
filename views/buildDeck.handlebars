@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="utf-8" />
-    {{!-- <meta name="viewport" content="width=device-width, intial-scale=1.0"> --}}
+    {{!--
+    <meta name="viewport" content="width=device-width, intial-scale=1.0"> --}}
     <title>Build Deck</title>
     <link rel="stylesheet" type="text/css" href="/global.css">
     <link rel="stylesheet" type="text/css" href="/buildDeck.css">
@@ -31,40 +32,38 @@
     <!-- Handlebars template for card -->
     <div class="cardContainer" id="cardContainer">
         {{#each cards}}
-            <div id={{cardId}} class="card">
+        <div id={{cardId}} class="card">
 
-                <div class="cardBackground">
-                    <div class="cardFrame">
-                    
-                        <div class="frameHeader">
-                            <h1 class="cardName">{{cardName}}</h1>
-                        </div>
-                        
-                        <img src="{{imagePath}}" alt="{{cardName}}" class="card-image">
+            <div class="cardBackground">
+                <div class="cardFrame">
 
-                        <p>Card Type: {{cardType}}</p>
-                        <p>Attributes:</p>
-                        <ul>
-                            <li>Card ID: {{cardId}}</li>
-                            <li>Rarity: {{rarity}}</li>
-                            <li>Mana Cost: {{manaCost}}</li>
+                    <h1 class="cardName">{{cardName}}</h1>
 
-                            {{!-- Add other attributes as needed --}}
-                            {{#if (eq cardType "spell")}}
-                                <li>Spell Type: {{spellType}}</li>
-                                <li>Spell Ability: {{spellAbility}}</li>
-                                <li>Spell Attack: {{spellAttack}}</li>
-                                <li>Spell Defense: {{spellDefense}}</li>
-                            {{/if}}
+                    <img src="{{imagePath}}" alt="{{cardName}}" class="card-image">
 
-                            <li>Attack: {{attack}}</li>
-                            <li>Defense: {{defense}}</li>
-                        </ul>
-                    </div>
+                    <p>Card Type: {{cardType}}</p>
+                    <p>Attributes:</p>
+                    <ul>
+                        <li>Card ID: {{cardId}}</li>
+                        <li>Rarity: {{rarity}}</li>
+                        <li>Mana Cost: {{manaCost}}</li>
+
+                        {{!-- Add other attributes as needed --}}
+                        {{#if (eq cardType "spell")}}
+                        <li>Spell Type: {{spellType}}</li>
+                        <li>Spell Ability: {{spellAbility}}</li>
+                        <li>Spell Attack: {{spellAttack}}</li>
+                        <li>Spell Defense: {{spellDefense}}</li>
+                        {{/if}}
+
+                        <li>Attack: {{attack}}</li>
+                        <li>Defense: {{defense}}</li>
+                    </ul>
                 </div>
             </div>
+        </div>
         {{/each}}
-    </script>
+        </script>
     </div>
 
     <!-- Scripts and styles -->
