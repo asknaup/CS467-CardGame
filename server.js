@@ -231,15 +231,9 @@ app.get('/trading', (req, res) => {
 app.get('/collect', async (req, res) => {
   const user = req.session.user;
   if (user) { 
-    const thisCollectId = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, req.body.gameId);
     const collect = await dbFunc.getAllCollectionsByUser(user.userId);
-    const listCards = await dbFunc.grabListOfCardsFromCollection(thisCollectId);
-    console.log(collect);
-
     res.render('collect', { 
-      thisCollectId: collect,
       collect: collect,
-      listCards: listCards
     })
   } else {
     res.redirect('/');
@@ -425,13 +419,14 @@ app.post('/cardViewPrintedBulkPage', async (req, res) => {
     generatedCards.forEach( async (card) => {
       try {
         const cardId = await dbFunc.insertCard(card.name, card.cardType, user.userId, card.rarity, card.manaCost);
-        await dbFunc.insertCreatureCard(cardId, card.attack, card.defense, card.creatureType);
+        // console.log(cardId, card.attack, card.defense, card.creatureType);
+        await dbFunc.insertCreatureCard(cardId, card.attack, card.defense, card.creature);
         await dbFunc.insertCardUrl(cardId, card.URL);
       } catch (err) {
         console.error(err);
       }
     })
-    
+
     res.render('cardViewPrintedBulkPage', { cards: generatedCards });
   } catch (err) {
     // Handle errors

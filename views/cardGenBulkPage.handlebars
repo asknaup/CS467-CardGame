@@ -27,7 +27,22 @@
         <label for="cardType">Select Type of Card:</label>
         <select id="cardType" name="cardType">
           <option value="Creature">Creature</option>
-          {{!-- <option value="Spell">Spell</option> --}}
+          <option value="Spell">Spell</option>
+
+        <div id="spellFields" style="display: none;">
+          <label for="spellType">Select Spell Type:</label>
+          <select id="spellType" name="spellType">
+            <option value="Offensive">Offensive</option>
+            <option value="Defensive">Defensive</option>
+          </select> <br><br>
+          <input type="number" id="spellAttack" name="spellAttack" placeholder="Attack"><br>
+          <input type="number" id="spellDefense" name="spellDefense" placeholder="Defense"><br>
+          <input name="spellAbility" type="text" placeholder="Spell Ability">
+          <label for="utility">Utility:</label><input type="checkbox" id="utility" name="utility">
+          <br>
+        
+
+        
         </select><br><br>
         <label for="places">Select Setting or Theme:</label>
         <select id="places" name="places">
@@ -50,6 +65,7 @@
         <p id="error">{{error}}</p>
         {{/if}}
       </form>
+    </div>
     </div>
     <script>
     
@@ -108,6 +124,21 @@
         option2.text = place;
         placesDropdown.add(option2);
     });
+
+    document.getElementById('cardType').addEventListener('change', function () {
+        var cardType = this.value;
+        var creatureFields = document.getElementById('creatureFields');
+        var spellFields = document.getElementById('spellFields');
+
+        if (cardType === 'Creature') {
+          creatureFields.style.display = 'block';
+          spellFields.style.display = 'none';
+        } else if (cardType === 'Spell') {
+          creatureFields.style.display = 'none';
+          spellFields.style.display = 'block';
+        }
+      });
+
 </script>
 </body>
 </html>
