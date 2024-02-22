@@ -1,0 +1,346 @@
+/* Page-Specific CSS Code */
+
+/* general card css */
+.cardContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.card {
+    width: 10.5vw;
+    height: 18.5vw;
+    /* Card container height */
+    background-color: beige;
+    border: 3px solid #000;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+    margin-right: 10px;
+    margin-bottom: 20px;
+    /* Add margin between cards */
+    z-index: 2;
+}
+
+.card:last-child {
+    margin-right: 0;
+    /* Remove margin from the last card */
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.cardContent {
+    padding: 10px;
+}
+
+.cardName {
+    margin: 0;
+    color: #000;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.cardImage img {
+    width: 100%;
+    height: auto;
+}
+
+.attributes {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 14px;
+}
+
+/* main.handlebars */
+.bottomButtonsMain {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    /* Adjust as needed */
+}
+
+/* lookAtGames.handlebars */
+.game-name {
+    font-size: x-large;
+    font-weight: bold;
+}
+
+#lookAtGames img {
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+    /* Add margin to separate image and name */
+    margin-bottom: 10px;
+    /* Add margin to separate image and ruleset button */
+}
+
+/* TradeAndCollect Page */
+#noteToProgrammers{
+    padding: 2vh;
+}
+
+#tradePopUpForm{
+    display: none;
+    position: absolute;
+    top: 33%;
+    left: 6%;
+    width: 88%;
+    height: 40%;
+    padding: 1vh;
+    margin: 0vh;
+    background-color: rgb(177, 200, 204);
+    border-radius: 10px;
+    z-index: 100;
+}
+
+#tradeRequest{
+    padding: 1vw;
+    margin: 0vw;
+}
+
+#tradeButtonSection {
+    position: absolute;
+    bottom: 1vh;
+}
+
+#otherPlayerTradeSection, #userTradeSection{
+    display: inline-block;
+    width: 49%;
+}
+
+#otherPlayerTradeSlots, #userTradeSlots{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+}
+
+.tradeButtons{
+    display: inline-block;
+    background-color: #4caf50;
+}
+
+#declineTradeButton{
+    background-color: rgb(196, 63, 63);
+}
+
+#otherTradedCardsTitle, #userTradedCardsTitle{
+    font-size: 1em;
+    padding-bottom: .5em;
+    color: black;
+}
+
+#stageArea{
+    display: flex;
+    flex-direction: row;
+    position: relative;
+}
+
+.otherStageAreaClass, .userStageAreaClass {
+    display: flex;
+    flex-direction: row;
+    width: 50%;
+    position: relative;
+    height: 20vw;
+    color: grey;
+    z-index:  10;
+    margin: 1vh 0vh;
+}
+
+.otherStageAreaClass {
+    border:  5px dashed grey;
+}
+
+.userStageAreaClass {
+    border-width: 5px 5px 5px 0px;
+    border-style: dashed;
+    border-color: grey;
+}
+
+.otherTopStageText {
+    position: absolute;
+    top: 2vw;
+    width: 50%;
+    text-align: center;
+}
+
+.userTopStageText {
+    position: absolute;
+    top: 2vw;
+    right: 0vw;
+    width: 50%;
+    text-align: center;
+}
+
+.otherBottomStageText {
+    position: absolute;
+    bottom: 2vw;
+    width: 50%;
+    text-align: center;
+}
+
+.userBottomStageText {
+    position: absolute;
+    bottom: 2vw;
+    right: 0vw;
+    width: 50%;
+    text-align: center;
+}
+
+#otherPlayerTitle{
+    position: absolute;
+    top: 9vw;
+    width: 50%;
+    text-align: center;
+}
+
+#userTitle{
+    position: absolute;
+    top: 9vw;
+    right: 0vw;
+    width: 50%;
+    text-align: center;
+}
+
+#otherPlayerTitle h2{
+    color: rgb(173, 124, 173);
+}
+
+#userTitle h2{
+    color: #a7d393;
+}
+
+#otherPlayerDeck {
+    color: purple;
+    width: 100%;
+    text-align: center;
+    margin: 1vw;
+}
+
+#userDeck{
+    color: #0ba710;
+    width: 100%;
+    text-align: center;
+    margin: 1vw;
+}
+
+#startTradeButton {
+    position: absolute;
+    left: -6vw;
+    top: -12vw;
+}
+
+#userScrollDeck, #otherScrollDeck{
+    position: relative;
+}
+
+#userScrollLeft, #otherScrollLeft{
+    position: absolute;
+    left: -3vw;
+}
+
+#userScrollRight, #otherScrollRight{
+    position: absolute;
+    right: -3vw;
+}
+
+#userScrollLeft, #userScrollRight{
+    top: 9vw;
+}
+
+#otherScrollLeft, #otherScrollRight{
+    background-color: purple;
+    top: 7vw;
+}
+
+#userCardSlots, #otherCardSlots{
+    display: flex;
+    flex-direction: row;
+}
+
+
+/* userProfile */
+.userBrowsing {
+    width: 50%;
+
+    padding: 20px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    text-align: center;
+}
+
+.userContainer {
+    display: flex;
+}
+
+.userCollection,
+.otherCollections {
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+
+}
+
+.userStats {
+    width: calc(33.33% - 30px);
+    margin: 20px auto;
+    padding: 15px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.userStats p {
+    margin: 10px 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.userStats p:first-child {
+    font-weight: bold;
+}
+
+.userStats p:last-child {
+    margin-bottom: 0;
+}
+
+.userStats:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Login homepage */
+#loginButton {
+    border: 1px solid rgba(10, 180, 180, 1);
+    background: #4caf50;
+    font-size: 18px;
+    color: white;
+    margin-top: 20px;
+    padding: 10px 50px;
+    cursor: pointer;
+    transition: .4s;
+
+    &:hover {
+        background: rgba(0, 136, 169, 1);
+        padding: 10px 80px;
+    }
+}
+
+.iconContainer {
+    position: relative;
+}
+
+.material-icons {
+    position: absolute;
+    top: 35%;
+    left: 93%;
+    transform: translateY(-50%);
+    color: #757575;
+    /* Adjust the color as needed */
+}
