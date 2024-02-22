@@ -65,6 +65,7 @@ ROUTES
 // Generate Collection Instances of Games per User
 // Generate Decks of collection 
 
+
 app.get('/', (req, res) => {
   const user = req.session.user
   if (user) {
@@ -269,7 +270,6 @@ app.get('/collect', async (req, res) => {
   const user = req.session.user;
   if (user) {
     const collect = await dbFunc.getAllCollectionsByUser(user.userId);
-    console.log(collect);
     //const something = await dbFunc.getOneGeneratedGame(collect.gameId)   // Need to build collections
     res.render('collect', {
       collect: collect
@@ -453,10 +453,10 @@ app.post('/cardViewPrintedBulkPage', async (req, res) => {
       }
       newCreature.URL = values
       generatedCards.push(newCreature);
-    }
-    // console.log(generatedCards);
 
-    generatedCards.forEach(async (card) => {
+    }   
+    console.log(generatedCards);
+    generatedCards.forEach( async (card) => {
       try {
         const cardId = await dbFunc.insertCard(card.name, card.cardType, user.userId, card.rarity, card.manaCost);
         // console.log(cardId, card.attack, card.defense, card.creatureType);
@@ -483,9 +483,9 @@ app.post('/cardViewPrintedPage', async (req, res) => {
     const cardId = await dbFunc.insertCard(stringCard.name, stringCard.cardType, user.userId, stringCard.rarity, stringCard.manaCost); 
 
     if (req.body.cardType === "Creature") {
-      await dbFunc.insertCreatureCard(cardId, req.body.creatureAttack, req.body.creatureDefense, "samurai");     // Hard coded
-    } else {
-      await dbFunc.insertSpellCard(cardId, req.body.spellType, req.body.spellAbility, req.body.spellAttack, req.body.spellDefense, req.body.utility);
+      await dbFunc.insertCreatureCard(cardId, stringCard.creatureAttack, stringCard.creatureDefense, stringCard.creatureType );     // Hard coded
+    } else { // Needs Work
+      await dbFunc.insertSpellCard(cardId, req.body.spellType, req.body.spellAbility, req.body.spellAttack, req.body.spellDefense, req.body.utility); // Needs work
     }
 
     await dbFunc.updateListOfCollection(req.session.collectionId, cardId);                // New Function
@@ -540,7 +540,7 @@ app.post('/collect', async (req, res) => {
     })
   } else {
     // Authentication failed, render 'welcomePagePortal' with an error message
-    res.redirect('/');
+
     res.redirect('/');
   }
 });
