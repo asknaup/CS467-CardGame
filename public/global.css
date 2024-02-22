@@ -36,6 +36,7 @@ header {
 .nav__links li {
   display: inline-block;
   padding: 0px 20px;
+  z-index: 9999;
 }
 
 .nav__links li a {
@@ -43,7 +44,7 @@ header {
 }
 
 .nav__links li a:hover {
-  color: #0088a0
+  color: #0088a0;
 }
 
 button {
