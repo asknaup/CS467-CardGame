@@ -270,10 +270,6 @@ app.get('/collect', async (req, res) => {
   const user = req.session.user;
   if (user) {
     const collect = await dbFunc.getAllCollectionsByUser(user.userId);
-
-    res.render('collect', { 
-      collect: collect,
-    console.log(collect);
     //const something = await dbFunc.getOneGeneratedGame(collect.gameId)   // Need to build collections
     res.render('collect', {
       collect: collect
