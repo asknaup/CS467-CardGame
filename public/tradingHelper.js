@@ -1,72 +1,23 @@
 class Card{
-    constructor(primaryKey, cardName, image, description, cardType, attributes){
-        this.primaryKey = primaryKey;
+    constructor(primaryKey, cardName, imagePath, cardType, 
+        spellType, spellAbility, spellAttack, spellDefense, attack, defense, manaCost){
+        this.cardId = primaryKey;
         this.cardName = cardName;
-        this.image = image;
-        this.description = description;
+        this.imagePath = imagePath;
         this.cardType = cardType;
-        this.attributes = attributes;
+        this.description = "";
+        this.rarity = 0;
+        this.spellType = spellType;
+        this.specialAbility = spellAbility;
+        this.spellAttack = spellAttack;
+        this.spellDefense = spellDefense;
+        this.attack = attack;
+        this.defense = defense;
+        this.manaCost = manaCost;
         this.isStaged = false;
     }
 }
 
-
-
-function addStagedCardFunctionality(playerObj, primaryIndex){
-    playerObj.startIndex = Math.floor(primaryIndex / numScrollCards) * numScrollCards;
-    playerObj.endIndex = playerObj.startIndex + (numScrollCards - 1);
-    if (playerObj.endIndex > playerObj.primaryKeyArr.length - 1){
-        playerObj.endIndex = playerObj.primaryKeyArr.length - 1
-    }
-    displayScrollCards(playerObj);
-}
-
-
-function createAndAppendStagedCard(playerObj, primaryIndex, cardData){
-    var stageArea = document.getElementById(playerObj.stageAreaId);
-    let stagedCard = createTradingCardWithId(cardData.primaryKey + playerObj.stagedCardName, cardData);
-    stagedCard.onclick = function(){addStagedCardFunctionality(playerObj, primaryIndex)};
-    stageArea.appendChild(stagedCard);
-}
-
-
-function addScrollCardFunctionality(playerObj, primaryIndex, cardData, scrollCard){
-        if (cardData.isStaged == false){
-            if(playerObj.stagedCardCount < 4){
-                highlightCard(true, playerObj.isUser, scrollCard);
-                createAndAppendStagedCard(playerObj, primaryIndex, cardData);
-                cardData.isStaged = true;
-                playerObj.stagedCardCount += 1;
-            }
-        } else {
-            highlightCard(false, playerObj.isUser, scrollCard);
-            var stagedCard = document.getElementById(cardData.primaryKey + playerObj.stagedCardName);
-            stagedCard.remove();
-            cardData.isStaged = false;
-            playerObj.stagedCardCount -= 1;
-        }
-    };
-
-
-function displayScrollCards(playerObj){
-    // Clear out old card elements
-    var cardSlots = document.getElementById(playerObj.cardSlots);
-    while(cardSlots.firstChild){
-        cardSlots.removeChild(cardSlots.firstChild);
-    }
-    for (let index = playerObj.startIndex; index <= playerObj.endIndex; index++){
-        let primaryKey = playerObj.primaryKeyArr[index];
-        let cardData = playerObj.cardDict[primaryKey];
-        let scrollCard = createTradingCardWithId(primaryKey, cardData);
-        scrollCard.onclick = function () {addScrollCardFunctionality(playerObj, index, cardData, scrollCard)};
-        if (cardData.isStaged == true){
-            highlightCard(true, playerObj.isUser, scrollCard);
-        }else{
-            highlightCard(false, playerObj.isUser, scrollCard);
-        }
-        cardSlots.appendChild(scrollCard);
-    }
-}
 
 
 function getStagedCards(userObj, otherPlayerObj){
@@ -159,15 +110,15 @@ let otherPlayerObj = {isUser: false, primaryKeyArr: [], cardDict: {}, stagedCard
 /* Create Example Dummy Cards */
 // Example cards data (you can add more)
 var exampleCards = [
-    {primaryKey: "goblin", cardName: "Goblin", image: '/images/goblin-willow-tree.jpg', 
-            description: 'A small forest goblin.', cardType:'Creature', 
-            attributes: {hp:50, atk:50, def:30, specialAbility:'Cooking', goldCost:5}},
-    {primaryKey: "wizard", cardName: 'Fire Ball Scroll', image: '/images/dark-wizard.png',  
-                description:'A powerful fire ball.', cardType: 'Spell', 
-                attributes: {hp:80, atk:60, def:20, specialAbility:'Fire Ball', goldCost:7}},
-    {primaryKey: "iceDragon", cardName: 'Ice Dragon', image: '/images/ice-dragon.png', 
-                description: 'An ice dragon from the North.', cardType: 'Creature', 
-                attributes: {hp:120, atk:100, def:80, specialAbility:'Flying', goldCost:9}}
+    {cardId: "goblin", cardName: "Goblin", imagePath: '/images/goblin-willow-tree.jpg', 
+    cardType:'Creature', spellType: "", spellAbility: "", spellAttack: "", spellDefense: "",
+    attack:50, defense:30, manaCost:5},
+    {cardId: "wizard", cardName: 'Fire Ball Scroll', imagePath: '/images/dark-wizard.png',  
+    cardType: 'Spell', spellType: "", spellAbility: "", spellAttack: "", spellDefense: "",
+    attack:60, defense:20, manaCost:7},
+    {cardId: "iceDragon", cardName: 'Ice Dragon', imagePath: '/images/ice-dragon.png', 
+    cardType: 'Creature', spellType: "", spellAbility: "", spellAttack: "", spellDefense: "",
+    attack:100, defense:80,  manaCost:9}
     // Add more cards as needed
 ];
 
@@ -178,15 +129,18 @@ for (let index = 0; index<=33; index++){
     let cardData = exampleCards[randomIndex];
     let uniquePrimaryKey = cardData.primaryKey + index.toString()
     userObj.primaryKeyArr.push(uniquePrimaryKey);
-    userObj.cardDict[uniquePrimaryKey] = new Card(uniquePrimaryKey, cardData.cardName, cardData.image,
-                cardData.description, cardData.cardType, cardData.attributes);
+    userObj.cardDict[uniquePrimaryKey] = new Card(uniquePrimaryKey, cardData.cardName, cardData.imagePath, cardData.cardType, 
+        cardData.spellType, cardData.spellAbility, cardData.spellAttack, cardData.spellDefense, 
+        cardData.attack, cardData.defense, cardData.manaCost);
     // now create other player's card set
     let otherRandomIndex = (randomIndex + 1) %  exampleCards.length;
     let otherCardData = exampleCards[otherRandomIndex];
     let otherUniquePrimaryKey = otherCardData.primaryKey + index.toString()
     otherPlayerObj.primaryKeyArr.push(otherUniquePrimaryKey);
-    otherPlayerObj.cardDict[otherUniquePrimaryKey]= new Card(otherUniquePrimaryKey, otherCardData.cardName, otherCardData.image,
-                otherCardData.description, otherCardData.cardType, otherCardData.attributes);
+    otherPlayerObj.cardDict[otherUniquePrimaryKey]= new Card(otherUniquePrimaryKey, otherCardData.cardName, otherCardData.imagePath, 
+        otherCardData.cardType, otherCardData.spellType, otherCardData.spellAbility, otherCardData.spellAttack, otherCardData.spellDefense, 
+        otherCardData.attack, otherCardData.defense, otherCardData.manaCost);
+        
 }
 
 /* above are hardcoded cards
