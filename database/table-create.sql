@@ -246,7 +246,7 @@ CREATE TABLE IF NOT EXISTS moves (
 ALTER TABLE moves AUTO_INCREMENT=1;
 
 -- -----------------------------------------------------
--- CREATE generateGame Table
+-- CREATE Game Table
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS game;
 
