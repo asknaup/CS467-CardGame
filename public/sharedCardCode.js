@@ -1,3 +1,17 @@
+// add green or purple border to card when selected
+function highlightCard(isHighlighted, isUser, scrollCard){
+    if (isHighlighted){
+        if(isUser){
+            scrollCard.style.border = "6px solid #65f76b";
+        }else{
+            scrollCard.style.border = "6px solid #f06cf0";
+        }
+    }else{
+        scrollCard.style.border = "3px solid black";
+    }
+}
+
+
 // Function to create a trading card
 function createTradingCard(cardData) {
     // Card container

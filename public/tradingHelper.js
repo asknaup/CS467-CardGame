@@ -11,18 +11,6 @@ class Card{
 }
 
 
-function highlightCard(isHighlighted, playerObj, scrollCard){
-    if (isHighlighted){
-        if(playerObj.stageAreaId === "userStageAreaId"){
-            scrollCard.style.border = "6px solid #65f76b";
-        }else{
-            scrollCard.style.border = "6px solid #f06cf0";
-        }
-    }else{
-        scrollCard.style.border = "3px solid black";
-    }
-}
-
 
 function addStagedCardFunctionality(playerObj, primaryIndex){
     playerObj.startIndex = Math.floor(primaryIndex / numScrollCards) * numScrollCards;
@@ -45,13 +33,13 @@ function createAndAppendStagedCard(playerObj, primaryIndex, cardData){
 function addScrollCardFunctionality(playerObj, primaryIndex, cardData, scrollCard){
         if (cardData.isStaged == false){
             if(playerObj.stagedCardCount < 4){
-                highlightCard(true, playerObj, scrollCard);
+                highlightCard(true, playerObj.isUser, scrollCard);
                 createAndAppendStagedCard(playerObj, primaryIndex, cardData);
                 cardData.isStaged = true;
                 playerObj.stagedCardCount += 1;
             }
         } else {
-            highlightCard(false, playerObj, scrollCard);
+            highlightCard(false, playerObj.isUser, scrollCard);
             var stagedCard = document.getElementById(cardData.primaryKey + playerObj.stagedCardName);
             stagedCard.remove();
             cardData.isStaged = false;
@@ -72,9 +60,9 @@ function displayScrollCards(playerObj){
         let scrollCard = createTradingCardWithId(primaryKey, cardData);
         scrollCard.onclick = function () {addScrollCardFunctionality(playerObj, index, cardData, scrollCard)};
         if (cardData.isStaged == true){
-            highlightCard(true, playerObj, scrollCard);
+            highlightCard(true, playerObj.isUser, scrollCard);
         }else{
-            highlightCard(false, playerObj, scrollCard);
+            highlightCard(false, playerObj.isUser, scrollCard);
         }
         cardSlots.appendChild(scrollCard);
     }
@@ -139,7 +127,7 @@ function removeIsStagedStatusAndItsEffects(playerObj, index, stagedCardsArr){
     scrollCardObj.isStaged = false;
     playerObj.stagedCardCount -= 1;
     var scrollCard = document.getElementById(primaryKey);
-    highlightCard(false, playerObj, scrollCard);
+    highlightCard(false, playerObj.isUser, scrollCard);
 }
 
 
@@ -162,9 +150,9 @@ function simulateTrade(userObj, otherPlayerObj){
 below are hardcoded cards  */
 
 var numScrollCards = 8;
-let userObj = {primaryKeyArr: [], cardDict: {}, stagedCardCount: 0, startIndex: 0, endIndex: 7, cardSlots: "userCardSlots", 
+let userObj = {isUser: true, primaryKeyArr: [], cardDict: {}, stagedCardCount: 0, startIndex: 0, endIndex: 7, cardSlots: "userCardSlots", 
             stageAreaId: "userStageAreaId", stageAreaClass: "userStageAreaClass", stagedCardName: "userStagedCard"};
-let otherPlayerObj = {primaryKeyArr: [], cardDict: {}, stagedCardCount: 0, startIndex: 0, endIndex: 7, cardSlots: "otherCardSlots", 
+let otherPlayerObj = {isUser: false, primaryKeyArr: [], cardDict: {}, stagedCardCount: 0, startIndex: 0, endIndex: 7, cardSlots: "otherCardSlots", 
             stageAreaId: "otherStageAreaId", stageAreaClass: "otherStageAreaClass", stagedCardName: "otherStagedCard"};
 
 
