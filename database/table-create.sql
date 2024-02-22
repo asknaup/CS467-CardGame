@@ -15,6 +15,7 @@ DROP TABLE IF EXISTS cardInstance;
 DROP TABLE IF EXISTS cardUrl;
 
 -- Tables with foreign keys
+DROP TABLE IF EXISTS collections;
 DROP TABLE IF EXISTS gameInstance;
 DROP TABLE IF EXISTS generatedGame;
 DROP TABLE IF EXISTS decks;
@@ -186,8 +187,8 @@ CREATE TABLE IF NOT EXISTS collections (
     gameId INT,
     cardId VARCHAR(5000), 
 
-    PRIMARY KEY (collectionId, playerId, gameId),
-    FOREIGN KEY (gameId) REFERENCES game(gameId),
+    PRIMARY KEY (collectionId, playerId , gameId),
+    FOREIGN KEY (gameId) REFERENCES generatedGame(gameId),
     FOREIGN KEY (playerId) REFERENCES userProfile(userId)
 );
 
