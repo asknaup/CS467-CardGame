@@ -10,39 +10,22 @@
 </head>
 
 <body>
-  <h1>
-    Inspect the Card
-  </h1>
-  <div>
-    <form id="imageForm" action="/cardViewPrintedPage" method="POST">
-      <img src="{{ val.[0].url }}" alt="Image">
-      <input type="hidden" name="cardName" value="{{ cardName }}">
-      <input type="hidden" name="cardType" value="{{ cardType }}">
-      <input type="hidden" name="rarity" value="{{ rarity }}">
-      <input type="hidden" name="manaCost" value="{{ manaCost }}">
-      <input type="hidden" name="url" value="{{ val.[0].url }}">
-      <input type="submit" value="Print">
-    </form>
-    <form id="imageForm" action="/cardViewPrintedPage" method="POST">
-      <img src="{{ val.[1].url }}" alt="Image">
-      <input type="hidden" name="cardName" value="{{ cardName }}">
-      <input type="hidden" name="cardType" value="{{ cardType }}">
-      <input type="hidden" name="rarity" value="{{ rarity }}">
-      <input type="hidden" name="manaCost" value="{{ manaCost }}">
-      <input type="hidden" name="url" value="{{ val.[1].url }}">
-      <input type="submit" value="Print">
-    </form>
-    <form id="imageForm" action="/cardViewPrintedPage" method="POST">
-      <img src="{{ val.[2].url }}" alt="Image">
-      <input type="hidden" name="cardName" value="{{ cardName }}">
-      <input type="hidden" name="cardType" value="{{ cardType }}">
-      <input type="hidden" name="rarity" value="{{ rarity }}">
-      <input type="hidden" name="manaCost" value="{{ manaCost }}">
-      <input type="hidden" name="url" value="{{ val.[2].url }}">
-      <input type="submit" value="Print">
-    </form>
-  </div>
-  <button>Edit</button>
-  <button>Delete</button>
+<h1>Card Generation Results</h1>
+<h2>Pick your favorite card to save to your collection and the master list collection</h2>
+<h4>The others will disappear</h4>
+    <div id="cardContainer">
+        {{#each card}}
+        <form action="/cardViewPrintedPage" method="post">
+        <div class="card">
+            <img src="{{URL.[0].url}}" alt="Card Image">
+            <p>Name: {{name}}</p>
+            <p>Creature: {{creature}}</p>
+
+        </div>
+        <input type="hidden" name="cardstring" value="{{stringed}}">
+        <button id="printCard" type="submit">Save this one only!</button>
+        </form>
+        {{/each}}
+    </div>
 </body>
 </html>

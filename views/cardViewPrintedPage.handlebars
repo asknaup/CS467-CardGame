@@ -10,16 +10,16 @@
 </head>
 
 <body>
-  <h1>
-    Inspect the Card
-  </h1>
-  <div>
-    <img src="{{ url }}" alt="Image">
-    <p>{{ cardName }}</p>
-    <p>{{ rarity }}</p>
-    <p>{{ manaCost }}</p>
+  <h2>{{ card.name}} the {{ card.creature}} was added to your collection</h2>
+  <div id="cardContainer">
+    <div class="card">
+          <img src="{{ card.URL.[0].url }}" alt="Card Image">
+          <p>Name: {{ card.name}}</p>
+          <p>Creature: {{ card.creature}}</p>
+    </div>
+    <a href="/cardGenPage">
+      <button>Generate another Card</button>
+    </a>
   </div>
-  <button>Edit</button>
-  <button>Delete</button>
 </body>
 </html>

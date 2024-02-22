@@ -543,7 +543,6 @@ async function getAllGeneratedGamesByUser(userId) {
     });
 }
 
-
 async function getOneGeneratedGame(gameId) {
     return new Promise((resolve, reject) => {
         const query = 'SELECT * FROM generatedGame where gameId = ?';
@@ -582,6 +581,122 @@ async function getAllDecksByUser(userId) {
         });
     });
 }
+
+//   '{cardList: []}'
+//   const collectionDataJsonString = results[0].collectionData;
+//   const collectionDataObject = JSON.parse(collectionDataJsonString);
+//   console.log(collectionDataObject); 
+async function insertOrSelectCollectionByUserIdandGameId(userId, gameId) {
+    return new Promise((resolve, reject) => {
+        db.pool.query('START TRANSACTION', (startTransactionErr) => {
+            if (startTransactionErr) {
+                connection.release();
+                reject(startTransactionErr);
+                return;
+            }
+
+            const checkCollectionQuery = 'SELECT collectionId FROM collections WHERE playerId = ? AND gameId = ?';
+            const insertQuery = 'INSERT INTO collections (playerId, gameId, cardId) VALUES (?, ?, ?)';
+            const selectLastInsertIdQuery = 'SELECT LAST_INSERT_ID() as newCollectId';
+            const vals = [userId, gameId, '{cardList: []}'];
+
+            db.pool.query(checkCollectionQuery, [userId, gameId], (checkCollectionErr, checkCollectionResult) => {
+                if (checkCollectionErr) {
+                    db.pool.query('ROLLBACK', () => {
+                        reject(checkCollectionErr);
+                    });
+                    return;
+                }
+
+                if (checkCollectionResult.length > 0) {
+                    // Collection exists, return collectionId
+                    const collectionId = checkCollectionResult[0].collectionId;
+                    db.pool.query('COMMIT', (commitErr) => {
+                        if (commitErr) {
+                            db.pool.query('ROLLBACK', () => {
+                                reject(commitErr);
+                            });
+                            return;
+                        }
+                        console.log(collectionId);
+                        resolve(collectionId);
+                    });
+                } else {
+                    // Collection doesn't exist, create a new one
+                    db.pool.query(insertQuery, vals, (insertErr, insertResult) => {
+                        if (insertErr) {
+                            db.pool.query('ROLLBACK', () => {
+                                reject(insertErr);
+                            });
+                            return;
+                        }
+
+                        db.pool.query(selectLastInsertIdQuery, (selectErr, selectResult) => {
+                            if (selectErr) {
+                                db.pool.query('ROLLBACK', () => {
+                                    reject(selectErr);
+                                });
+                                return;
+                            }
+
+                            db.pool.query('COMMIT', (commitErr) => {
+                                if (commitErr) {
+                                    db.pool.query('ROLLBACK', () => {
+                                        reject(commitErr);
+                                    });
+                                } else {
+                                    resolve(selectResult[0].newCollectId);
+                                }
+                            });
+                        });
+                    });
+                }
+            });
+        });
+    });
+}
+
+// CardId is json list of cards
+async function grabListOfCardsFromCollection(collectId) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT cardId FROM collections where collectionId = ?';
+        db.pool.query(query, collectId, (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+}
+
+async function updateListOfCollection(collectId, cardIds) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT cardId FROM collections WHERE collectionId = ?';
+
+        db.pool.query(query, [collectId], (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                let existingCardIds = JSON.parse(results[0].cardId).cardList;
+                existingCardIds = existingCardIds.concat(cardIds); // Concatenate new cardIds with existing ones
+
+                // Update the collections table with the new list of cardIds
+                const updateQuery = 'UPDATE collections SET cardId = ? WHERE collectionId = ?';
+                db.pool.query(updateQuery, [existingCardIds, collectId], (err, updateResult) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(updateResult);
+                    }
+                });
+            }
+        });
+    });
+}
+
+
+
 // function updateGameWinner({ params }) {
 //     // Initialize a new game -> winner has not been decided
 //     return new Promise((resolve, reject) => {
@@ -623,3 +738,6 @@ module.exports.getAllGeneratedGamesByUser = getAllGeneratedGamesByUser;
 module.exports.getAllCollectionsByUser =getAllCollectionsByUser;
 module.exports.getOneGeneratedGame = getOneGeneratedGame; 
 module.exports.getAllDecksByUser = getAllDecksByUser;
+module.exports.insertOrSelectCollectionByUserIdandGameId = insertOrSelectCollectionByUserIdandGameId;
+module.exports.grabListOfCardsFromCollection = grabListOfCardsFromCollection;
+module.exports.updateListOfCollection = updateListOfCollection;

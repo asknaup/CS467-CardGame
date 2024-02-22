@@ -16,7 +16,7 @@
       {{!-- Links to generateCard post --}}
       <form action="/cardViewPrintedBulkPage" method="post" id="cardForm">
         <h3>Generate for which game?</h3><br>
-        <select>
+        <select id="whichgame" name="whichgame">
           {{#each vals}}
             <option value="{{this.imageLocation}}">{{this.imageLocation}}</option>
           {{/each}}

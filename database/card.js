@@ -1,4 +1,4 @@
-// const configFile = require('./config');
+const configFile = require('./config');
 
 const attributes = ['strong', 'weak', 'small', 'tall', 'fast', 'slow', 'clever', 'clumsy', 'brave', 'timid'];
 const colors = ["red", "orange", "yellow", "green", "blue", "indigo", "violet", "black", "white", "pink"];
@@ -52,15 +52,15 @@ async function getImageUrlFromLeonardo(imageId) {
     }
 }
 
-function createDataStructCreature(colors, creatures, places) {
-    const data_struct = {
+async function createDataStructCreature(colors, creatures, places, cardType) {
+    let data_struct = {
         name: '_',
         creatureType: creatures,
         place: places,
         color: colors,
         URL: null,
         description: '_',
-        cardType: '_',
+        cardType: cardType,
         attack: 0,
         defense: 0,
         manaCost: 0,
@@ -71,19 +71,19 @@ function createDataStructCreature(colors, creatures, places) {
     let newStruct = { ...data_struct };
     newStruct.name = getRandomElement(fantasyFirstNames);
     
-    if (rare == "Common") {
+    if (newStruct.rarity == "Common") {
         newStruct.attack = getRandomElement([0,1,2,3]);
         newStruct.defense = getRandomElement([1,2,3]);
         newStruct.manaCost = getRandomElement([1,2,3])
-    } else if (rare == "Uncommon") {
+    } else if (newStruct.rarity == "Uncommon") {
         newStruct.attack = getRandomElement([2,3,4,5]);
         newStruct.defense = getRandomElement([2,3,4,5]);
         newStruct.manaCost = getRandomElement([2,3,4])
-    } else if (rare == "Rare") {
+    } else if (newStruct.rarity == "Rare") {
         newStruct.attack = getRandomElement([4,5,6,7]);
         newStruct.defense = getRandomElement([4,5,6,7,8]);
         newStruct.manaCost = getRandomElement([4,5,6])
-    }  else if (rare == "Legendary") {
+    }  else if (newStruct.rarity == "Legendary") {
         newStruct.attack = getRandomElement([7,8,9]);
         newStruct.defense = getRandomElement([7,8,9]);
         newStruct.manaCost = getRandomElement([6,7,8,9])

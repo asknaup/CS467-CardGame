@@ -22,12 +22,12 @@
     
   </div>
   <form action="/collect" method="POST">
-    <button>Build a Collection for this Game</button>
-    <input type="hidden" name="gameId" value="{{ game.gameId }}">
+    <button>View the Collection for this Game</button>
+    <input type="hidden" name="gameId" value="{{ genGameId }}">
   </form>
   <form action="/cardGenPage" method="get">
     <button>Build Cards for this Game</button>
-    <input type="hidden" name="gameId" value="{{ game.gameId }}">
+    <input type="hidden" name="gameId" value="{{ gameId }}">
   </form>
 </body>
 </html>
