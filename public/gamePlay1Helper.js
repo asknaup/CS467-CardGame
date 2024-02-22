@@ -2,8 +2,6 @@
 // Game play for RuleSet 1
 // Client Side Javascript
 
-const { response } = require("express");
-
 document.addEventListener('DOMContentLoaded', function () {
     const hand = document.getElementById('hand');
     const handList = document.querySelectorAll("#hand .card");
@@ -133,16 +131,80 @@ document.addEventListener('DOMContentLoaded', function () {
     // Add event listener for the end turn button
     const endTurnButton = document.getElementById('endTurnButton');
     endTurnButton.addEventListener('click', endTurn);
+});
 
+function endTurn() {
     fetch('/endTurn', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ cardId: cardId }),  // returns req.session.cardId to server.js
+        body: JSON.stringify({}),  // Send an empty body since no additional data is needed
     })
     .then(response => response.json())
     .then(data => {
-        console.log(data.message)
+        console.log(data.message); // Log the message from the server
+        console.log(data.opponentStage);
+        // Update the UI based on the opponent's move
+        if (data.opponentStage) {
+            updateOpponentStageUI(data.opponentStage);
+        }
+        // Handle any additional actions if necessary
     })
-});
+    .catch(error => {
+        console.error('Error ending turn:', error);
+    });
+}
+
+function updateOpponentStageUI(opponentStage) {
+    // Assuming opponentStage is an array of card IDs
+    const dropZones = document.querySelectorAll('.opponent .drop-zone');
+    const emptyDropZones = [];
+
+    // Check each drop zone for a card
+    dropZones.forEach(dropZone => {
+        const cardElement = dropZone.querySelector('.card');
+        if (!cardElement) {
+            emptyDropZones.push(dropZone.id); // Add drop zone ID to the emptyDropZones array if no card is found
+        } else {
+            // Check if the card is greyed out
+            const isGreyedOut = cardElement.classList.contains('greyed-out');
+            console.log(`Drop zone ${dropZone.id} contains a card${isGreyedOut ? ' (greyed out)' : ''}`);
+        }
+    });
+
+    console.log(opponentStage)
+    
+    if (opponentStage.length > 0 && emptyDropZones.length > 0) {
+        opponentStage.forEach(card => {
+            // Randomly select an empty drop zone
+            const randomIndex = Math.floor(Math.random() * emptyDropZones.length);
+            const selectedDropZone = emptyDropZones[randomIndex];
+    
+            // Select the drop zone container element
+            const selectedDropZoneContainer = document.getElementById(selectedDropZone);
+            console.log('Selected drop zone:', selectedDropZone);
+
+            // Create a new card element
+            const cardElement = document.createElement('div');cardElement.classList.add('card');
+            cardElement.draggable = true; // Make the card draggable
+            cardElement.id = card.id; // Set the ID of the card element
+            cardElement.textContent = `${card.name} ${card.type} mana: ${card.mana}`;
+            
+            cardElement.classList.add('card');
+            cardElement.id = card; // Set the ID of the card element
+    
+            // Append the card element to the selected drop zone
+            selectedDropZoneContainer.appendChild(cardElement);
+    
+            console.log(`Placed card ${card} in drop zone ${selectedDropZoneContainer.id}`);
+    
+            // Remove the selected drop zone from the emptyDropZones array
+            emptyDropZones.splice(randomIndex, 1);
+        });
+    
+        // Clear opponentStage since all cards have been placed
+        opponentStage = [];
+    }
+
+}
