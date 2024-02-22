@@ -32,6 +32,7 @@ function getStagedCards(userObj, otherPlayerObj){
     return stagedCardsDict;
 }
 
+
 function removeOldCardsFromPopUpForm(){
     // Clear out old card elements
     var otherPlayerTradeCardSlots = document.getElementById("otherPlayerTradeSlots");
@@ -44,6 +45,7 @@ function removeOldCardsFromPopUpForm(){
         userTradeCardSlots.removeChild(userTradeCardSlots.firstChild);
     }
 }
+
 
 function createPopUpForm(stagedCardsDict){
     let tradePopUpForm = document.getElementById("tradePopUpForm");
@@ -96,130 +98,85 @@ function simulateTrade(userObj, otherPlayerObj){
 }
 
 
-/* above are function definitions
-========================================================================================================================
-below are hardcoded cards  */
+function addLeftScroll(playerObj, scrollLeftButton){
+    scrollLeftButton.addEventListener("click", () => {
+        if (playerObj.startIndex > 0){
+            playerObj.endIndex = playerObj.startIndex - 1;
+            playerObj.startIndex -= numScrollCards;
+            if(playerObj.startIndex < 0){
+                playerObj.startIndex = 0;
+            }
+            console.log(playerObj.startIndex);
+            console.log(playerObj.endIndex);
+            displayScrollCards(playerObj);
+        }
+    });
+}
 
+
+function addRightScroll(playerObj, scrollRightButton){
+    scrollRightButton.addEventListener("click", () => {
+        if (playerObj.endIndex < playerObj.primaryKeyArr.length - 1){
+            playerObj.startIndex = playerObj.endIndex + 1;
+            playerObj.endIndex += numScrollCards;
+            if (playerObj.endIndex > playerObj.primaryKeyArr.length - 1){
+                playerObj.endIndex = playerObj.primaryKeyArr.length - 1
+            }
+            console.log(playerObj.startIndex);
+            console.log(playerObj.endIndex);
+            displayScrollCards(playerObj);
+        }
+    });
+}
+
+function createCardsForBothPlayers(exampleCards){
+    for (let index = 0; index<=33; index++){
+        let numCards = exampleCards.length;
+        let randomIndex = Math.floor(Math.random() * numCards);
+        let cardData = exampleCards[randomIndex];
+        let uniquePrimaryKey = cardData.cardId + index.toString()
+        userObj.primaryKeyArr.push(uniquePrimaryKey);
+        userObj.cardDict[uniquePrimaryKey] = new Card(uniquePrimaryKey, cardData.cardName, cardData.imagePath, cardData.cardType, 
+            cardData.spellType, cardData.spellAbility, cardData.spellAttack, cardData.spellDefense, 
+            cardData.attack, cardData.defense, cardData.manaCost);
+        // now create other player's card set
+        let otherRandomIndex = (randomIndex + 1) %  exampleCards.length;
+        let otherCardData = exampleCards[otherRandomIndex];
+        let otherUniquePrimaryKey = otherCardData.cardId + index.toString()
+        otherPlayerObj.primaryKeyArr.push(otherUniquePrimaryKey);
+        otherPlayerObj.cardDict[otherUniquePrimaryKey]= new Card(otherUniquePrimaryKey, otherCardData.cardName, otherCardData.imagePath, 
+            otherCardData.cardType, otherCardData.spellType, otherCardData.spellAbility, otherCardData.spellAttack, otherCardData.spellDefense, 
+            otherCardData.attack, otherCardData.defense, otherCardData.manaCost);   
+    }
+}
+
+/*main code for trading */
 var numScrollCards = 8;
 let userObj = {isUser: true, primaryKeyArr: [], cardDict: {}, stagedCardCount: 0, startIndex: 0, endIndex: 7, cardSlots: "userCardSlots", 
             stageAreaId: "userStageAreaId", stageAreaClass: "userStageAreaClass", stagedCardName: "userStagedCard"};
 let otherPlayerObj = {isUser: false, primaryKeyArr: [], cardDict: {}, stagedCardCount: 0, startIndex: 0, endIndex: 7, cardSlots: "otherCardSlots", 
             stageAreaId: "otherStageAreaId", stageAreaClass: "otherStageAreaClass", stagedCardName: "otherStagedCard"};
 
-
-/* Create Example Dummy Cards */
-// Example cards data (you can add more)
-
-var exampleCards = [
-    {cardId: "goblin", cardName: "Goblin", imagePath: '/images/goblin-willow-tree.jpg', 
-    cardType:'Creature', spellType: "", spellAbility: "", spellAttack: "", spellDefense: "",
-    attack:50, defense:30, manaCost:5},
-    {cardId: "wizard", cardName: 'Fire Ball Scroll', imagePath: '/images/dark-wizard.png',  
-    cardType: 'Spell', spellType: "", spellAbility: "", spellAttack: "", spellDefense: "",
-    attack:60, defense:20, manaCost:7},
-    {cardId: "iceDragon", cardName: 'Ice Dragon', imagePath: '/images/ice-dragon.png', 
-    cardType: 'Creature', spellType: "", spellAbility: "", spellAttack: "", spellDefense: "",
-    attack:100, defense:80,  manaCost:9}
-    // Add more cards as needed
-];
-
-/*
-let exampleCards = fetch('/cards').then(response => response.json());
-console.log(exampleCards)
-*/
-
-
-
-/* populate the players' card dictionaries with card objs */
-for (let index = 0; index<=33; index++){
-    let numCards = exampleCards.length;
-    let randomIndex = Math.floor(Math.random() * numCards);
-    let cardData = exampleCards[randomIndex];
-    let uniquePrimaryKey = cardData.cardId + index.toString()
-    userObj.primaryKeyArr.push(uniquePrimaryKey);
-    /*    constructor(primaryKey, cardName, imagePath, cardType, 
-    spellType, spellAbility, spellAttack, spellDefense, attack, defense, manaCost){
-        */
-    userObj.cardDict[uniquePrimaryKey] = new Card(uniquePrimaryKey, cardData.cardName, cardData.imagePath, cardData.cardType, 
-        cardData.spellType, cardData.spellAbility, cardData.spellAttack, cardData.spellDefense, 
-        cardData.attack, cardData.defense, cardData.manaCost);
-    // now create other player's card set
-    let otherRandomIndex = (randomIndex + 1) %  exampleCards.length;
-    let otherCardData = exampleCards[otherRandomIndex];
-    let otherUniquePrimaryKey = otherCardData.cardId + index.toString()
-    otherPlayerObj.primaryKeyArr.push(otherUniquePrimaryKey);
-    otherPlayerObj.cardDict[otherUniquePrimaryKey]= new Card(otherUniquePrimaryKey, otherCardData.cardName, otherCardData.imagePath, 
-        otherCardData.cardType, otherCardData.spellType, otherCardData.spellAbility, otherCardData.spellAttack, otherCardData.spellDefense, 
-        otherCardData.attack, otherCardData.defense, otherCardData.manaCost);   
-}
-
-/* above are hardcoded cards
-========================================================================================================================
-below is the setup of event listeners and the code that executes for this file  */
-
-/*main code for trading */
-displayScrollCards(otherPlayerObj);
-displayScrollCards(userObj);
-
-
-var otherScrollRightButton = document.getElementById("otherScrollRight");
-otherScrollRightButton.addEventListener("click", () => {
-    if (otherPlayerObj.endIndex < otherPlayerObj.primaryKeyArr.length - 1){
-        otherPlayerObj.startIndex = otherPlayerObj.endIndex + 1;
-        otherPlayerObj.endIndex += numScrollCards;
-        if (otherPlayerObj.endIndex > otherPlayerObj.primaryKeyArr.length - 1){
-            otherPlayerObj.endIndex = otherPlayerObj.primaryKeyArr.length - 1
-        }
-        console.log(otherPlayerObj.startIndex);
-        console.log(otherPlayerObj.endIndex);
-        displayScrollCards(otherPlayerObj);
-    }
-});
-
-
 var otherScrollLeftButton = document.getElementById("otherScrollLeft");
-otherScrollLeftButton.addEventListener("click", () => {
-    if (otherPlayerObj.startIndex > 0){
-        otherPlayerObj.endIndex = otherPlayerObj.startIndex - 1;
-        otherPlayerObj.startIndex -= numScrollCards;
-        if(otherPlayerObj.startIndex < 0){
-            otherPlayerObj.startIndex = 0;
-        }
-        console.log(otherPlayerObj.startIndex);
-        console.log(otherPlayerObj.endIndex);
-        displayScrollCards(otherPlayerObj);
-    }
-});
-
-
-var userScrollRightButton = document.getElementById("userScrollRight");
-userScrollRightButton.addEventListener("click", () => {
-    if (userObj.endIndex < userObj.primaryKeyArr.length - 1){
-        userObj.startIndex = userObj.endIndex + 1;
-        userObj.endIndex += numScrollCards;
-        if (userObj.endIndex > userObj.primaryKeyArr.length - 1){
-            userObj.endIndex = userObj.primaryKeyArr.length - 1
-        }
-        console.log(userObj.startIndex);
-        console.log(userObj.endIndex);
-        displayScrollCards(userObj);
-    }
-});
-
-
+var otherScrollRightButton = document.getElementById("otherScrollRight");
 var userScrollLeftButton = document.getElementById("userScrollLeft");
-userScrollLeftButton.addEventListener("click", () => {
-    if (userObj.startIndex > 0){
-        userObj.endIndex = userObj.startIndex - 1;
-        userObj.startIndex -= numScrollCards;
-        if(userObj.startIndex < 0){
-            userObj.startIndex = 0;
-        }
-        console.log(userObj.startIndex);
-        console.log(userObj.endIndex);
-        displayScrollCards(userObj);
-    }
-});
+var userScrollRightButton = document.getElementById("userScrollRight");
+
+async function setupTradingPage(){
+    let exampleCards = []
+    const response = await fetch('/cards');
+    let collection = await response.json()
+    Object.keys(collection).forEach(key => {exampleCards.push(collection[key])})
+    console.log(exampleCards)
+    createCardsForBothPlayers(exampleCards)
+    displayScrollCards(otherPlayerObj);
+    displayScrollCards(userObj);
+    addRightScroll(otherPlayerObj, otherScrollRightButton)
+    addRightScroll(userObj, userScrollRightButton)
+    addLeftScroll(otherPlayerObj, otherScrollLeftButton)
+    addLeftScroll(userObj, userScrollLeftButton)
+}
+setupTradingPage();
 
 
 var startTradeButton = document.getElementById("startTradeButton");
