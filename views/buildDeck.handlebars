@@ -34,7 +34,11 @@
         {{#each cards}}
         <div id={{cardId}} class="card">
 
-            <div class="cardBackground">
+            <img src="{{imagePath}}" alt="{{cardName}}" class="card-image">
+            <h1>{{cardName}}</h1>
+            <p>{{cardType}}</p>
+
+            {{!-- <div class="cardBackground">
                 <div class="cardFrame">
 
                     <h1 class="cardName">{{cardName}}</h1>
@@ -60,7 +64,7 @@
                         <li>Defense: {{defense}}</li>
                     </ul>
                 </div>
-            </div>
+            </div> --}}
         </div>
         {{/each}}
         </script>
