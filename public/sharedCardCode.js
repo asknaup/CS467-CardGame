@@ -118,79 +118,7 @@ function createTradingCard(cardData) {
 }
 */
 
-
-function addStagedCardFunctionality(playerObj, primaryIndex){
-    playerObj.startIndex = Math.floor(primaryIndex / numScrollCards) * numScrollCards;
-    playerObj.endIndex = playerObj.startIndex + (numScrollCards - 1);
-    if (playerObj.endIndex > playerObj.primaryKeyArr.length - 1){
-        playerObj.endIndex = playerObj.primaryKeyArr.length - 1
-    }
-    displayScrollCards(playerObj);
-}
-
-
-function createAndAppendStagedCard(playerObj, primaryIndex, cardData){
-    var stageArea = document.getElementById(playerObj.stageAreaId);
-    let stagedCard = createTradingCardWithId(cardData.primaryKey + playerObj.stagedCardName, cardData);
-    stagedCard.onclick = function(){addStagedCardFunctionality(playerObj, primaryIndex)};
-    stageArea.appendChild(stagedCard);
-}
-
-
-function addScrollCardFunctionality(playerObj, primaryIndex, cardData, scrollCard){
-        if (cardData.isStaged == false){
-            if(playerObj.stagedCardCount < 4){
-                highlightCard(true, playerObj.isUser, scrollCard);
-                createAndAppendStagedCard(playerObj, primaryIndex, cardData);
-                cardData.isStaged = true;
-                playerObj.stagedCardCount += 1;
-            }
-        } else {
-            highlightCard(false, playerObj.isUser, scrollCard);
-            var stagedCard = document.getElementById(cardData.primaryKey + playerObj.stagedCardName);
-            stagedCard.remove();
-            cardData.isStaged = false;
-            playerObj.stagedCardCount -= 1;
-        }
-    };
-
-
-function displayScrollCards(playerObj){
-    // Clear out old card elements
-    var cardSlots = document.getElementById(playerObj.cardSlots);
-    while(cardSlots.firstChild){
-        cardSlots.removeChild(cardSlots.firstChild);
-    }
-    for (let index = playerObj.startIndex; index <= playerObj.endIndex; index++){
-        let primaryKey = playerObj.primaryKeyArr[index];
-        let cardData = playerObj.cardDict[primaryKey];
-        let scrollCard = createTradingCardWithId(primaryKey, cardData);
-        scrollCard.onclick = function () {addScrollCardFunctionality(playerObj, index, cardData, scrollCard)};
-        if (cardData.isStaged == true){
-            highlightCard(true, playerObj.isUser, scrollCard);
-        }else{
-            highlightCard(false, playerObj.isUser, scrollCard);
-        }
-        cardSlots.appendChild(scrollCard);
-    }
-}
-
-
-// add green or purple border to card when selected
-function highlightCard(isHighlighted, isUser, scrollCard){
-    if (isHighlighted){
-        if(isUser){
-            scrollCard.style.border = "6px solid #65f76b";
-        }else{
-            scrollCard.style.border = "6px solid #f06cf0";
-        }
-    }else{
-        scrollCard.style.border = "3px solid black";
-    }
-}
-
-
-// Function to create a trading card
+// OLD!!!! createTradingCard() func for prototype/testing purposes
 function createTradingCard(cardData) {
     // Card container
     var cardContainer = document.createElement('div');
@@ -264,4 +192,75 @@ function createTradingCardWithId(id, cardData){
     let cardContainer = createTradingCard(cardData);
     cardContainer.setAttribute('id', id);
     return cardContainer;
+}
+
+
+function addStagedCardFunctionality(playerObj, primaryIndex){
+    playerObj.startIndex = Math.floor(primaryIndex / numScrollCards) * numScrollCards;
+    playerObj.endIndex = playerObj.startIndex + (numScrollCards - 1);
+    if (playerObj.endIndex > playerObj.primaryKeyArr.length - 1){
+        playerObj.endIndex = playerObj.primaryKeyArr.length - 1
+    }
+    displayScrollCards(playerObj);
+}
+
+
+function createAndAppendStagedCard(playerObj, primaryIndex, cardData){
+    var stageArea = document.getElementById(playerObj.stageAreaId);
+    let stagedCard = createTradingCardWithId(cardData.cardId + playerObj.stagedCardName, cardData);
+    stagedCard.onclick = function(){addStagedCardFunctionality(playerObj, primaryIndex)};
+    stageArea.appendChild(stagedCard);
+}
+
+
+function addScrollCardFunctionality(playerObj, primaryIndex, cardData, scrollCard){
+        if (cardData.isStaged == false){
+            if(playerObj.stagedCardCount < 4){
+                highlightCard(true, playerObj.isUser, scrollCard);
+                createAndAppendStagedCard(playerObj, primaryIndex, cardData);
+                cardData.isStaged = true;
+                playerObj.stagedCardCount += 1;
+            }
+        } else {
+            highlightCard(false, playerObj.isUser, scrollCard);
+            var stagedCard = document.getElementById(cardData.primaryKey + playerObj.stagedCardName);
+            stagedCard.remove();
+            cardData.isStaged = false;
+            playerObj.stagedCardCount -= 1;
+        }
+    };
+
+
+function displayScrollCards(playerObj){
+    // Clear out old card elements
+    var cardSlots = document.getElementById(playerObj.cardSlots);
+    while(cardSlots.firstChild){
+        cardSlots.removeChild(cardSlots.firstChild);
+    }
+    for (let index = playerObj.startIndex; index <= playerObj.endIndex; index++){
+        let primaryKey = playerObj.primaryKeyArr[index];
+        let cardData = playerObj.cardDict[primaryKey];
+        let scrollCard = createTradingCardWithId(primaryKey, cardData);
+        scrollCard.onclick = function () {addScrollCardFunctionality(playerObj, index, cardData, scrollCard)};
+        if (cardData.isStaged == true){
+            highlightCard(true, playerObj.isUser, scrollCard);
+        }else{
+            highlightCard(false, playerObj.isUser, scrollCard);
+        }
+        cardSlots.appendChild(scrollCard);
+    }
+}
+
+
+// add green or purple border to card when selected
+function highlightCard(isHighlighted, isUser, scrollCard){
+    if (isHighlighted){
+        if(isUser){
+            scrollCard.style.border = "6px solid #65f76b";
+        }else{
+            scrollCard.style.border = "6px solid #f06cf0";
+        }
+    }else{
+        scrollCard.style.border = "3px solid black";
+    }
 }

@@ -19,7 +19,6 @@ class Card{
 }
 
 
-
 function getStagedCards(userObj, otherPlayerObj){
     let stagedCardsDict = {"otherStagedCardsArr": [], "userStagedCardsArr": []};
     var otherStageArea= document.getElementById(otherPlayerObj.stageAreaId);
@@ -74,6 +73,7 @@ function removeIsStagedStatusAndItsEffects(playerObj, index, stagedCardsArr){
     let stagedCardId = stagedCardsArr[index].id;
     // now with primary key we can access both the stagedCardObj and stagedCard document element
     let primaryKey = stagedCardId.substring(0, stagedCardId.length - playerObj.stagedCardName.length);
+    console.log(stagedCardsArr);
     let scrollCardObj = playerObj.cardDict[primaryKey];
     scrollCardObj.isStaged = false;
     playerObj.stagedCardCount -= 1;
@@ -109,6 +109,7 @@ let otherPlayerObj = {isUser: false, primaryKeyArr: [], cardDict: {}, stagedCard
 
 /* Create Example Dummy Cards */
 // Example cards data (you can add more)
+
 var exampleCards = [
     {cardId: "goblin", cardName: "Goblin", imagePath: '/images/goblin-willow-tree.jpg', 
     cardType:'Creature', spellType: "", spellAbility: "", spellAttack: "", spellDefense: "",
@@ -122,25 +123,34 @@ var exampleCards = [
     // Add more cards as needed
 ];
 
+/*
+let exampleCards = fetch('/cards').then(response => response.json());
+console.log(exampleCards)
+*/
+
+
+
 /* populate the players' card dictionaries with card objs */
 for (let index = 0; index<=33; index++){
     let numCards = exampleCards.length;
     let randomIndex = Math.floor(Math.random() * numCards);
     let cardData = exampleCards[randomIndex];
-    let uniquePrimaryKey = cardData.primaryKey + index.toString()
+    let uniquePrimaryKey = cardData.cardId + index.toString()
     userObj.primaryKeyArr.push(uniquePrimaryKey);
+    /*    constructor(primaryKey, cardName, imagePath, cardType, 
+    spellType, spellAbility, spellAttack, spellDefense, attack, defense, manaCost){
+        */
     userObj.cardDict[uniquePrimaryKey] = new Card(uniquePrimaryKey, cardData.cardName, cardData.imagePath, cardData.cardType, 
         cardData.spellType, cardData.spellAbility, cardData.spellAttack, cardData.spellDefense, 
         cardData.attack, cardData.defense, cardData.manaCost);
     // now create other player's card set
     let otherRandomIndex = (randomIndex + 1) %  exampleCards.length;
     let otherCardData = exampleCards[otherRandomIndex];
-    let otherUniquePrimaryKey = otherCardData.primaryKey + index.toString()
+    let otherUniquePrimaryKey = otherCardData.cardId + index.toString()
     otherPlayerObj.primaryKeyArr.push(otherUniquePrimaryKey);
     otherPlayerObj.cardDict[otherUniquePrimaryKey]= new Card(otherUniquePrimaryKey, otherCardData.cardName, otherCardData.imagePath, 
         otherCardData.cardType, otherCardData.spellType, otherCardData.spellAbility, otherCardData.spellAttack, otherCardData.spellDefense, 
-        otherCardData.attack, otherCardData.defense, otherCardData.manaCost);
-        
+        otherCardData.attack, otherCardData.defense, otherCardData.manaCost);   
 }
 
 /* above are hardcoded cards
