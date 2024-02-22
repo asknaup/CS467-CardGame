@@ -95,9 +95,6 @@ class ComputerOpponent extends Opponent {
 
                 // Adjust index since we removed a card from the hand
                 i--;
-
-                // Break the loop after playing a creature card
-                break;
             }
         }
     }
@@ -163,10 +160,10 @@ class Game {
                     return new CreatureCard( //id, name, type, description, mana, rarity, imagePath, attack, defense
                         cardId,                 // id
                         cardData[0].cardName,   // name
-                        "something creature",   // type
-                        cardData[0].cardType,   // description
+                        cardData[0].cardType,   // type
+                        cardData[0].creatureType,   // description
                         cardData[0].manaCost,
-                        cardData[0].rarity,
+                        cardData[0].rarity, 
                         cardData[0].imagePath,
                         cardData[0].attack,
                         cardData[0].defense);
@@ -174,15 +171,15 @@ class Game {
                     return new SpellCard( //id, name, type, description, mana, rarity, imagePath, attack, defense, ability, utility
                         cardId,                     // id
                         cardData[0].cardName,       // name
-                        cardData[0].spellType,      // type
-                        cardData[0].cardType,      // description
+                        cardData[0].cardType,      // type
+                        cardData[0].spellType,      // description
                         cardData[0].manaCost,
                         cardData[0].rarity,
                         cardData[0].imagePath,
                         cardData[0].spellAttack,
                         cardData[0].spellDefense,
                         cardData[0].spellAbility,
-                        cardData[0].utility)
+                        cardData[0].utility);
                 }
             }))
 
@@ -219,12 +216,13 @@ class Game {
     }
 
     async playNextTurn() {
-        // Draw cards for the next turn
-        const result = this.drawCardsPerTurn();
-        
+        // Draw cards for the next turn for user
+        this.drawCardsPerTurn();
+
         // Execute the computer opponent's turn
         if (this.opponent instanceof ComputerOpponent) {
-            await this.opponent.playTurn(this)
+            await this.opponent.playTurn(this.opponentHand)
+            this.opponentStage = this.opponent.playerStage;
         }
 
     }
@@ -240,8 +238,6 @@ class Game {
 
         this.hand = updatedHand; // Update the hand
         this.deck = updatedDeck; // Update the deck
-
-        return { updatedHand, updatedDeck }; // Return the updated hand and deck as an object
     }
 
     async playCard(cardId) {
@@ -255,7 +251,6 @@ class Game {
             return { error: "Card is not in hand." };
         }
 
-        console.log(this.user.mana)
         if (card.mana > this.user.mana) {
             // console.log("Insufficient mana to play this card.")
             return { error: "Insufficient mana to play this card." }; // Return without playing the card
@@ -283,7 +278,6 @@ class Game {
         this.hand = updatedHand; // Update the hand
         this.playerStage = updatedStage; // Update the player stage
         this.user.mana -= card.mana;
-        console.log(this.user.mana)
     }
 
     // Method to check if game is over

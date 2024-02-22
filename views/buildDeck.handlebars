@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, intial-scale=1.0">
+    {{!--
+    <meta name="viewport" content="width=device-width, intial-scale=1.0"> --}}
     <title>Build Deck</title>
     <link rel="stylesheet" type="text/css" href="/global.css">
     <link rel="stylesheet" type="text/css" href="/buildDeck.css">
@@ -23,18 +24,53 @@
             to remove them from your deck and click cards in the card carousel to add them to your deck. Once you're
             finished, click Done, name your new deck and click Save.</p>
     </div>
-    <header>Build Your Deck</header>
-    <div class="stagingArea" id="stagingArea"></div>
-    <div class="cardContainer" id="cardContainer"></div>
-    <div class="navigation">
-        <button id="prevBtn" onclick="navigateCards(-3)">Previous</button>
-
-        <button id="nextBtn" onclick="navigateCards(3)">Next</button>
+    <h1>Build Your Deck</h1>
+    <div class="stagingArea" id="stagingArea">
     </div>
 
-    <span id="carouselCounter">1</span>
-    <button id="resetBtn" onclick="resetGame()">Reset</button>
+    <br><br><br>
+    <!-- Handlebars template for card -->
+    <div class="cardContainer" id="cardContainer">
+        {{#each cards}}
+        <div id={{cardId}} class="card">
 
-    <script type="module" src="/buildDeck.mjs"></script>
-    <link rel="stylesheet" type="text/css" href="/styles.css">
+            <div class="cardBackground">
+                <div class="cardFrame">
+
+                    <h1 class="cardName">{{cardName}}</h1>
+
+                    <img src="{{imagePath}}" alt="{{cardName}}" class="card-image">
+
+                    <p>Card Type: {{cardType}}</p>
+                    <p>Attributes:</p>
+                    <ul>
+                        <li>Card ID: {{cardId}}</li>
+                        <li>Rarity: {{rarity}}</li>
+                        <li>Mana Cost: {{manaCost}}</li>
+
+                        {{!-- Add other attributes as needed --}}
+                        {{#if (eq cardType "spell")}}
+                        <li>Spell Type: {{spellType}}</li>
+                        <li>Spell Ability: {{spellAbility}}</li>
+                        <li>Spell Attack: {{spellAttack}}</li>
+                        <li>Spell Defense: {{spellDefense}}</li>
+                        {{/if}}
+
+                        <li>Attack: {{attack}}</li>
+                        <li>Defense: {{defense}}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+        </script>
+    </div>
+
+    <!-- Scripts and styles -->
+    <script src="/buildDeckHelper.js"></script>
+
+    <button id="resetButton" onclick="resetGame()">Reset</button>
+    <button id="saveDeckButton">Save Deck</button>
+
+
 </body>

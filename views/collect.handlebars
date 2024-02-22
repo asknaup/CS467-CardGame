@@ -10,6 +10,15 @@
 
 <body>
     <h1>Open a Pack to bolster your collection</h1>
+    <p>big old pack picture</p>
+    <br><br>
+    <form action="/openPack" method="'get">
+    
+    <button id="gen-game-button-ggp" type="submit">Open a Pack of 5 New Cards</button>
+    {{#each collect}}
+        <option value="{{ this.gameId }}">{{ this.playerId }}</option>
+    {{/each}}
+    </form>
     <div class="instructions">
         <p>Here you can see your collection.</p>
     </div>

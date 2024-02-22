@@ -15,14 +15,12 @@
   <br>
   <div class="userContainer">
     <div class="userStats">
-      <h2 id="usernameI"> {{ username }} Statistics</h2>
-      <br>
       <p>Number of Games Played: {{ gameCount }}</p>
       <p>Wins: {{ wins }}</p>
       <p>Losses: {{ losses }}</p>
-      <p>Number of Games:</p>
-      <p>Number of Collections:</p>
-      <p>Number of Decks:</p>
+      <p>Number of Generated Games: {{ gameLen }}</p>
+      <p>Number of Collections: {{ collectLength }}</p>
+      <p>Number of Decks: {{ deckLen }}</p>
       <br>
     </div>
   </div>
@@ -32,18 +30,29 @@
       <button id="gen-game-button-ggp" type="submit">Create a New Trading Card Game</button>
     </form>
     <form action="/collect" method="get">
-      <button id="gen-game-button-ggp" type="submit">Browse your collection for {x game}</button>
+    <button id="gen-game-button-ggp" type="submit">Create or Browse your collection for </button>
+    <select name="gameId">
+        {{#each vals}}
+        <option value="{{ this.gameId }}">{{ this.imageLocation }}</option>
+        {{/each}}
+    </select>
     </form>
     <form action="/buildDeck" method="get">
-      <button id="gen-game-button-ggp" type="submit">Edit your Play Deck from your Collection for {x game}</button>
+      <button id="gen-game-button-ggp" type="submit">Edit your Play Deck from your Collection for</button>
+      <select name="gameId">
+        {{#each vals}}
+        <option value="{{ this.gameId }}">{{ this.imageLocation }}</option>
+        {{/each}}
+    </select>
     </form>
     <form action="/gamePlayPage" method="get">
       <button id="gen-game-button-ggp" type="submit">Play with your created Deck against an opponent</button>
     </form>
     <br>
-    <form action="/gamePlayPage" method="get">
+    <form action="/help" method="get">
       <button id="gen-game-button-ggp" type="submit">Help! I'm Lost</button>
     </form>
+    <button id="gen-game-button-ggp" type="submit">LOGOUT! NEEDS WORK</button>
   </div>
 </body>
 
