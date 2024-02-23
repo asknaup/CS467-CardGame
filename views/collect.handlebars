@@ -23,11 +23,14 @@
         <p>List of Cards: </p>
         <p> ---- Will need to grab userName and gameName to create CollectionId Name --- </p>
     </div -->
-    <header>Collection</header>
-    <div class="stagingArea" id="stagingArea"></div>
-    <div class="cardContainer" id="cardContainer"></div>
+    <h2 id="collectionTitle">Collection</h2>
 
-    <span id="carouselCounter">1</span>
+    <div id="collection">
+        <button type="button" id="collectionScrollLeft"> &lt; </button>
+        <button type="button" id="collectionScrollRight"> &gt; </button>
+        <div  id="collectionContainer"></div>
+    </div>
 
+    <script src="/sharedCardCode.js"></script>
     <script src="/collectionHelper.js"></script>
 </body>
