@@ -526,15 +526,18 @@ app.post('/generatedGameView', async (req, res) => {
 
 // Current Work
 app.post('/collect', async (req, res) => {
+  const user = req.session.user;
+  if (user) { 
+    const thisCollectId = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, req.body.gameId);
+    const collect = await dbFunc.getAllCollectionsByUser(user.userId);
+    const listCards = await dbFunc.grabListOfCardsFromCollection(thisCollectId);
+    console.log(collect, listCards);
 
-  if (req.session.user) {
-    try {
-      const gameId = await dbFunc.createNewCollection(req.session.user.userId, req.body.gameId);
-      res.render('collect', { gameId: gameId });
-    }
-    catch (err) {
-      res.send(`Something went wrong: ${err}`);
-    }
+    res.render('collect', { 
+      thisCollectId: collect,
+      collect: collect,
+      listCards: listCards
+    })
   } else {
     // Authentication failed, render 'welcomePagePortal' with an error message
 
