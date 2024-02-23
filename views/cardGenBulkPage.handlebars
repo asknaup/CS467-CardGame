@@ -28,33 +28,19 @@
         <select id="cardType" name="cardType">
           <option value="Creature">Creature</option>
           <option value="Spell">Spell</option>
-
-        <div id="spellFields" style="display: none;">
-          <label for="spellType">Select Spell Type:</label>
-          <select id="spellType" name="spellType">
-            <option value="Offensive">Offensive</option>
-            <option value="Defensive">Defensive</option>
-          </select> <br><br>
-          <input type="number" id="spellAttack" name="spellAttack" placeholder="Attack"><br>
-          <input type="number" id="spellDefense" name="spellDefense" placeholder="Defense"><br>
-          <input name="spellAbility" type="text" placeholder="Spell Ability">
-          <label for="utility">Utility:</label><input type="checkbox" id="utility" name="utility">
-          <br>
-        
-
-        
         </select><br><br>
         <label for="places">Select Setting or Theme:</label>
         <select id="places" name="places">
             <!-- Populated with places -->
         </select>
         <br><br>
+        <div id="creatureFields">
         <label for="creatures">Select Creature Type:</label>
         <select id="creatures" name="creatures">
             <!-- Populated -->
         </select>
-        <br><br>
-        
+        </div>
+        <br>        
         <label for="colors">Select Color:</label>
         <select id="colors" name="colors">
             <!-- Populated -->
@@ -68,7 +54,18 @@
     </div>
     </div>
     <script>
-    
+      document.getElementById('cardType').addEventListener('change', function () {
+        var cardType = this.value;
+        var creatureFields = document.getElementById('creatureFields');
+
+
+        if (cardType === 'Creature') {
+          creatureFields.style.display = 'block';
+        } else if (cardType === 'Spell') {
+          creatureFields.style.display = 'none';
+        }
+      });
+
     const places = [
         "Random", "African", "Ancient Babylon", "Ancient Ruins", "Ancient Egypt", "Antarctica", "Arabian", "Arctic Tundra", 
         "Amazon Rainforest", "American", "Aztec", "Chinese Dynasty", "Corrupt", "Cyberpunk Dystopia", 

@@ -582,9 +582,7 @@ async function getAllDecksByUser(userId) {
     });
 }
 
-//   '{"cardList": []}'
-//   const collectionDataJsonString = results[0].collectionData;
-//   const collectionDataObject = JSON.parse(collectionDataJsonString);
+//   '{"cardList": []}' MAYBE
 //   console.log(collectionDataObject); 
 async function insertOrSelectCollectionByUserIdandGameId(userId, gameId) {
     return new Promise((resolve, reject) => {
@@ -598,7 +596,7 @@ async function insertOrSelectCollectionByUserIdandGameId(userId, gameId) {
             const checkCollectionQuery = 'SELECT collectionId FROM collections WHERE playerId = ? AND gameId = ?';
             const insertQuery = 'INSERT INTO collections (playerId, gameId, cardId) VALUES (?, ?, ?)';
             const selectLastInsertIdQuery = 'SELECT LAST_INSERT_ID() as newCollectId';
-            const vals = [userId, gameId, '{"cardList": []}'];
+            const vals = [userId, gameId, '[]'];
 
             db.pool.query(checkCollectionQuery, [userId, gameId], (checkCollectionErr, checkCollectionResult) => {
                 if (checkCollectionErr) {
@@ -618,7 +616,6 @@ async function insertOrSelectCollectionByUserIdandGameId(userId, gameId) {
                             });
                             return;
                         }
-                        console.log(collectionId);
                         resolve(collectionId);
                     });
                 } else {
@@ -656,6 +653,64 @@ async function insertOrSelectCollectionByUserIdandGameId(userId, gameId) {
     });
 }
 
+
+async function sometrhing2(userId, gameId) {
+    try {
+        // Start Transaction
+        await new Promise((resolve, reject) => {
+            db.pool.query('START TRANSACTION', (beginTransactionErr) => {
+                if (beginTransactionErr) {
+                    reject(beginTransactionErr);
+                } else {
+                    resolve();
+                }
+            });
+        });
+
+        // Check if collection already exists for the user and game
+        const selectQuery = 'SELECT collectionId FROM collections WHERE playerId = ? AND gameId = ?';
+        const selectResult = await db.pool.query(selectQuery, [userId, gameId]);
+
+        // If collection doesn't exist, insert a new one
+        if (selectResult.length === 0) {
+            const insertQuery = 'INSERT INTO collections (playerId, gameId, cardId) VALUES (?, ?, ?)';
+            const insertResult = await db.pool.query(insertQuery, [userId, gameId, '[]']);
+
+            // Get the ID of the newly inserted collection
+            const newCollectionId = insertResult.insertId;
+            return newCollectionId;
+        } else {
+            // Collection already exists, return its ID
+            return selectResult[0].collectionId;
+        }
+        
+        // Commit Transaction
+        await new Promise((resolve, reject) => {
+            db.pool.query('COMMIT', (commitErr) => {
+                if (commitErr) {
+                    reject(commitErr);
+                } else {
+                    resolve();
+                }
+            });
+        });
+    } catch (error) {
+        // Rollback Transaction if an error occurs
+        await new Promise((resolve, reject) => {
+            db.pool.query('ROLLBACK', (rollbackErr) => {
+                if (rollbackErr) {
+                    reject(rollbackErr);
+                } else {
+                    resolve();
+                }
+            });
+        });
+        throw error;
+    }
+}
+
+
+
 // CardId is json list of cards
 async function grabListOfCardsFromCollection(collectId) {
     return new Promise((resolve, reject) => {
@@ -670,27 +725,15 @@ async function grabListOfCardsFromCollection(collectId) {
     });
 }
 
+// You already have new list of cards to add
 async function updateListOfCollection(collectId, cardIds) {
     return new Promise((resolve, reject) => {
-        const query = 'SELECT cardId FROM collections WHERE collectionId = ?';
-
-        db.pool.query(query, [collectId], (err, results) => {
+        const updateQuery = 'UPDATE collections SET cardId = ? WHERE collectionId = ?';
+        db.pool.query(updateQuery, [cardIds, collectId], (err, updateResult) => {
             if (err) {
                 reject(err);
             } else {
-                let existingCardIds = JSON.parse(results[0].cardId);
-                console.log(existCardsIds.cardList)
-                existingCardIds = existingCardIds.cardList.concat(cardIds); // Concatenate new cardIds with existing ones
-                console.log(existingCardIds.cardList);
-                // Update the collections table with the new list of cardIds
-                const updateQuery = 'UPDATE collections SET cardId = ? WHERE collectionId = ?';
-                db.pool.query(updateQuery, [existingCardIds, collectId], (err, updateResult) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(updateResult);
-                    }
-                });
+                resolve(updateResult);
             }
         });
     });

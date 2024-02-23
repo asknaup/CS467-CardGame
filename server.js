@@ -203,7 +203,7 @@ app.post('/decksubmitted', async (req, res) =>{
   try {
     const receivedData = req.body;
     console.log(receivedData);
-    dbFunc.insertNewDeck(user.userId, receivedData.deckName,JSON.stringify({'cardList':receivedData.deckList}));
+    dbFunc.insertNewDeck(user.userId, receivedData.deckName, JSON.stringify({'cardList':receivedData.deckList}));
   } catch (error) {
     console.error("Error - Deck Not Saved", error);
   }
@@ -399,11 +399,12 @@ app.post('/cardViewEditPage', async (req, res) => {
       const generatedCards = [];
       const collectionId = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, req.body.whichgame)
       req.session.collectionId = collectionId;
+      console.log(collectionId, user.userId, req.body.whichgame);
       req.session.gameId = req.body.whichgame;
 
       if (req.body.cardType == "Creature") {
           // Generate for Creature
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 1; i++) {
           let values = [];
           let newCreature = await card.createDataStructCreature(req.body.color, req.body.creatureType, req.body.theme, req.body.cardType);
           const aiCard = await card.createAICard(newCreature.creature, newCreature.place, newCreature.color, newCreature.rarity, 1);
@@ -441,7 +442,7 @@ app.post('/cardViewEditPage', async (req, res) => {
               values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId);
               await delay(500); // Add a delay to avoid excessive requests
             }
-            
+      
             newSpell.URL = values[0].url
             let stringed = JSON.stringify(newSpell);
             newSpell.stringed = stringed;
@@ -459,65 +460,36 @@ app.post('/cardViewEditPage', async (req, res) => {
   }
 });
 
-app.post('/cardViewPrintedBulkPage', async (req, res) => {
-  const user = req.session.user;
-  // Need Collection ID
-  // Need to add Spells
-
-  async function delay(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
-  try {
-    const num = parseInt(req.body.number); // Assuming req.body.number contains the number of cards to generate
-    const generatedCards = [];
-
-    for (let i = 0; i < num; i++) {
-      let newCreature = await card.createDataStructCreature(req.body.colors, req.body.creatures, req.body.places, req.body.cardType);
-      const aiCard = await card.createAICard(newCreature.creature, newCreature.place, newCreature.color, newCreature.rarity, 1);
-
-      let values = [];
-      while (values === null || values.length === 0 ) {
-        values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId);
-        await delay(500); // Add a delay to avoid excessive requests
-      }
-      newCreature.URL = values[0].url
-      generatedCards.push(newCreature);
-
-    }   
-    console.log(generatedCards);
-    generatedCards.forEach( async (card) => {
-      try {
-        const cardId = await dbFunc.insertCard(card.name, card.cardType, user.userId, card.rarity, card.manaCost);
-        // console.log(cardId, card.attack, card.defense, card.creatureType);
-        await dbFunc.insertCreatureCard(cardId, card.attack, card.defense, card.creature);
-        await dbFunc.insertCardUrl(cardId, card.URL);
-      } catch (err) {
-        console.error(err);
-      }
-    })
-
-    res.render('cardViewPrintedBulkPage', { cards: generatedCards });
-  } catch (err) {
-    // Handle errors
-    console.error(err);
-    res.status(500).send({ success: false, error: err.message });
-  }
-});
-
 app.post('/cardViewPrintedPage', async (req, res) => {
   const user = req.session.user;
   try {
     const stringCard = JSON.parse(req.body.cardstring);
     const cardId = await dbFunc.insertCard(stringCard.name, stringCard.cardType, user.userId, stringCard.rarity, stringCard.manaCost); 
+    await dbFunc.insertCardUrl(cardId, stringCard.URL);
 
     if (req.body.cardType == "Creature") {
       await dbFunc.insertCreatureCard(cardId, stringCard.creatureAttack, stringCard.creatureDefense, stringCard.creatureType );     // Hard coded
-    } else { // Needs Work
+    } else { 
       await dbFunc.insertSpellCard(cardId, stringCard.spellType, stringCard.ability, stringCard.attack, stringCard.defense, stringCard.utility); // Needs work
     } 
-    
 
-    // await dbFunc.updateListOfCollection(req.session.collectionId, cardId);                // New Function
-    console.log(stringCard, stringCard.URL)
-    await dbFunc.insertCardUrl(cardId, stringCard.URL);
+    // Needs Work
+    /*
+    try {
+      // Fetch the list of card IDs from the collection
+      let returnList = await dbFunc.grabListOfCardsFromCollection(req.session.collectionId);
+      console.log(returnList);
+      returnList.push(cardId);
+      console.log(returnList);
+      //const updatedListString = JSON.stringify(cardIds);
+      await dbFunc.updateListOfCollection(req.session.collectionId, returnList);
+      console.log("Updated collection with new card ID:", cardId);
+     } catch (error) {
+      // Error occurred while updating the collection
+      console.error("Error updating collection:", error);
+    }
+    */
+    
     const data = await dbFunc.getCardInfo(cardId);
     res.render('cardViewPrintedPage', {
       card: stringCard,
@@ -526,6 +498,72 @@ app.post('/cardViewPrintedPage', async (req, res) => {
   } catch (err) {
     // Handle errors that may occur during card generation, database interaction, or rendering
     res.send(`Something went wrong: ${err}`);
+  }
+});
+
+
+
+
+app.post('/cardViewPrintedBulkPage', async (req, res) => {
+  const user = req.session.user;
+  // Need Collection ID
+
+  async function delay(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+  try {
+    const num = parseInt(req.body.number); // Assuming req.body.number contains the number of cards to generate
+    const generatedCards = [];
+
+    for (let i = 0; i < num; i++) {
+      if (req.body.cardType == "Creature") {
+        let newCreature = await card.createDataStructCreature(req.body.colors, req.body.creatures, req.body.places, req.body.cardType);
+        const aiCard = await card.createAICard(newCreature.creature, newCreature.place, newCreature.color, newCreature.rarity, 1);
+        let values = [];
+          while ( !values || values.length === 0 ) {
+            values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId);
+            await delay(1000); // Add a delay to avoid excessive requests 
+          }
+        newCreature.URL = values[0].url
+        generatedCards.push(newCreature);
+
+      } else if (req.body.cardType == "Spell") {
+        let newSpell = await card.createDataStructSpell(req.body.color, req.body.theme, req.body.cardType, "Offensive"); // Hard coded
+        const aiCard = await card.createAICard("abstract spell", newSpell.place, newSpell.color, newSpell.rarity, 1);
+        let values = [];
+          while (!values || values.length === 0 ) {
+            values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId);
+            await delay(1000); // Add a delay to avoid excessive requests
+          }
+        newSpell.URL = values[0].url
+        generatedCards.push(newSpell);
+    }   
+  }
+    console.log(generatedCards);
+    generatedCards.forEach( async (card) => {
+      try {
+        const cardId = await dbFunc.insertCard(card.name, card.cardType, user.userId, card.rarity, card.manaCost);
+        await dbFunc.insertCardUrl(cardId, card.URL);
+        if (card.cardType == "Spell") {
+          await dbFunc.insertSpellCard(cardId, card.spellType, card.ability, card.attack, card.defense, card.utility);
+        } else if (card.cardType == "Creature") {
+          await dbFunc.insertCreatureCard(cardId, card.attack, card.defense, card.creature); 
+        }
+
+        /* NEEDS WORK
+
+        // await dbFunc.updateListOfCollection(req.session.collectionId, cardId); 
+
+        */
+
+      } catch (err) {
+        console.error(err);
+      }
+    })
+    res.render('cardViewPrintedBulkPage', { cards: generatedCards });
+  
+  } catch (err) {
+    // Handle errors
+    console.error(err);
+    res.status(500).send({ success: false, error: err.message });
   }
 });
 

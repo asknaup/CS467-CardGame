@@ -95,7 +95,7 @@ async function createDataStructCreature(colors, creatures, places, cardType) {
     } else { newStruct.color = colors;} 
     
     if (creatures == "Random") {
-        newStruct.creature = getRandomElement(creatures1);
+        newStruct.creatureType = getRandomElement(creatures1);
     } else { newStruct.creature = creatures; } 
     if (places == "Random") {
         newStruct.place = getRandomElement(places1);
@@ -129,7 +129,7 @@ function getRandomElement(arr) {
 }
 
     const places1 = [
-        "Random", "African", "Ancient Babylon", "Ancient Ruins", "Ancient Egypt", "Antarctica", "Arabian", "Arctic Tundra", 
+        "African", "Ancient Babylon", "Ancient Ruins", "Ancient Egypt", "Antarctica", "Arabian", "Arctic Tundra", 
         "Amazon Rainforest", "American", "Aztec", "Chinese Dynasty", "Corrupt", "Cyberpunk Dystopia", 
         "Deep Sea Abyss", "Deep Space Outpost", "Desert Oasis", "Enchanted Castle", "Evil", "Fairy Kingdom", 
         "Fairy Ring", "Fairy Tale Forest", "Futuristic", "Futuristic Megacity", "Galactic Arena", "Galactic", 
@@ -144,7 +144,7 @@ function getRandomElement(arr) {
         ];
 
     const creatures1 = [
-        "Random", "Angel", "Banshee", "Basilisk", "Bigfoot", "Centaur", "Cerberus", "Chimera", "Chupacabra", "Cthulhu", "Cyclops",
+        "Angel", "Banshee", "Basilisk", "Bigfoot", "Centaur", "Cerberus", "Chimera", "Chupacabra", "Cthulhu", "Cyclops",
         "Demon", "Doppelganger", "Dragon", "Dwarf", "Elf", "Fairy", "Frost Giant", "Genie", "Ghost", "Gnome",
         "Goblin", "Gremlin", "Griffin", "Harpie", "Hippogriff", "Hydra", "Imp", "Jinn", "Kelpie", "Kraken",
         "Leprechaun", "Lich", "Manticore", "Mermaid", "Minotaur", "Mothman", "Naga", "Nymph", "Ogre", "Oni",
@@ -155,7 +155,7 @@ function getRandomElement(arr) {
         ];
 
     const colors1 = [
-        "No Significant Color", "Random", "Blue", "Brown", "Gold",
+        "Blue", "Brown", "Gold",
         "Green", "Magenta", "Maroon",
         "Navy", "Orange", "Pink", "Purple", "Red",
         "Silver", "Turquoise", "Violet", "Yellow"
