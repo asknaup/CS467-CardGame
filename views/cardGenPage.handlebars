@@ -27,11 +27,6 @@
           {{/each}}
         </select>
         <br><br><p>---------------------------------</p><br>
-        <label for="cardType">Select Type of Card:</label>
-        <select id="cardType" name="cardType">
-          <option value="Creature">Creature</option>
-          <option value="Spell">Spell</option>
-        </select><br><br>
         <label for="rarity">Select Card Rarity:</label>
         <select id="rarity" name="rarity">
           <option value="Common">Common</option>
@@ -40,14 +35,19 @@
           <option value="Legendary">Legendary</option>
         </select><br><br>
         <input name="cardName" type="text" placeholder="Card Name">
-        <input name="creatureType" type="text" placeholder="Type of Creature">
         <input name="theme" type="text" placeholder="Card Theme or Setting">
         <input name="manaCost" type="number" placeholder="Mana Cost">
+        <input name="color" type="text" placeholder="Color (currently None)">
+        <label for="cardType">Select Type of Card:</label>
+        <select id="cardType" name="cardType">
+          <option value="Creature">Creature</option>
+          <option value="Spell">Spell</option>
+        </select><br><br>
         <div id="creatureFields">
+          <input name="creatureType" type="text" placeholder="Type of Creature">
           <input type="number" id="creatureAttack" name="creatureAttack" placeholder="Attack"><br>
           <input type="number" id="creatureDefense" name="creatureDefense" placeholder="Defense"><br>
         </div>
-        <input name="color" type="text" placeholder="Color (currently None)">
         <div id="spellFields" style="display: none;">
           <label for="spellType">Select Spell Type:</label>
           <select id="spellType" name="spellType">

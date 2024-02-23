@@ -27,7 +27,6 @@ async function createAICard(prompt, theme, color, rarity, num) {
     try {
         const response = await fetch('https://cloud.leonardo.ai/api/rest/v1/generations', option_post);
         const data = await response.json();
-        //console.log(data);
         return data;
     } catch (error) {
         console.error(error);
@@ -96,7 +95,7 @@ async function createDataStructCreature(colors, creatures, places, cardType) {
     } else { newStruct.color = colors;} 
     
     if (creatures == "Random") {
-        newStruct.creature = getRandomElement(creatures1);
+        newStruct.creatureType = getRandomElement(creatures1);
     } else { newStruct.creature = creatures; } 
     if (places == "Random") {
         newStruct.place = getRandomElement(places1);
@@ -105,13 +104,32 @@ async function createDataStructCreature(colors, creatures, places, cardType) {
     return newStruct;
 }
 
+async function createDataStructSpell(colors, place, cardType, spellType) {
+    let data_struct = {
+        name: '_',
+        place: place,
+        color: colors,
+        URL: null,
+        description: '_',
+        cardType: cardType,
+        attack: 0,
+        defense: 0,
+        manaCost: 0,
+        ability: "_",
+        utility: "_",
+        spellType: spellType,
+        rarity: getRandomElement(["Common", "Common", "Common", "Common", "Uncommon", "Uncommon", "Uncommon", "Rare", "Rare", "Legendary"])
+    };
+    return data_struct;
+}
+
 // Helper function to get a random element from an array
 function getRandomElement(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
 }
 
     const places1 = [
-        "Random", "African", "Ancient Babylon", "Ancient Ruins", "Ancient Egypt", "Antarctica", "Arabian", "Arctic Tundra", 
+        "African", "Ancient Babylon", "Ancient Ruins", "Ancient Egypt", "Antarctica", "Arabian", "Arctic Tundra", 
         "Amazon Rainforest", "American", "Aztec", "Chinese Dynasty", "Corrupt", "Cyberpunk Dystopia", 
         "Deep Sea Abyss", "Deep Space Outpost", "Desert Oasis", "Enchanted Castle", "Evil", "Fairy Kingdom", 
         "Fairy Ring", "Fairy Tale Forest", "Futuristic", "Futuristic Megacity", "Galactic Arena", "Galactic", 
@@ -126,7 +144,7 @@ function getRandomElement(arr) {
         ];
 
     const creatures1 = [
-        "Random", "Angel", "Banshee", "Basilisk", "Bigfoot", "Centaur", "Cerberus", "Chimera", "Chupacabra", "Cthulhu", "Cyclops",
+        "Angel", "Banshee", "Basilisk", "Bigfoot", "Centaur", "Cerberus", "Chimera", "Chupacabra", "Cthulhu", "Cyclops",
         "Demon", "Doppelganger", "Dragon", "Dwarf", "Elf", "Fairy", "Frost Giant", "Genie", "Ghost", "Gnome",
         "Goblin", "Gremlin", "Griffin", "Harpie", "Hippogriff", "Hydra", "Imp", "Jinn", "Kelpie", "Kraken",
         "Leprechaun", "Lich", "Manticore", "Mermaid", "Minotaur", "Mothman", "Naga", "Nymph", "Ogre", "Oni",
@@ -137,7 +155,7 @@ function getRandomElement(arr) {
         ];
 
     const colors1 = [
-        "No Significant Color", "Random", "Blue", "Brown", "Gold",
+        "Blue", "Brown", "Gold",
         "Green", "Magenta", "Maroon",
         "Navy", "Orange", "Pink", "Purple", "Red",
         "Silver", "Turquoise", "Violet", "Yellow"
@@ -173,5 +191,6 @@ function getRandomElement(arr) {
 module.exports.getImageUrlFromLeonardo = getImageUrlFromLeonardo;
 module.exports.createAICard = createAICard;
 module.exports.createDataStructCreature = createDataStructCreature;
+module.exports.createDataStructSpell = createDataStructSpell;
 
 
