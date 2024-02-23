@@ -107,7 +107,7 @@ async function createDataStructCreature(colors, creatures, places, cardType) {
 async function createDataStructSpell(colors, place, cardType, spellType) {
     let data_struct = {
         name: '_',
-        place: place,
+        places: place,
         color: colors,
         URL: null,
         description: '_',
@@ -125,8 +125,8 @@ async function createDataStructSpell(colors, place, cardType, spellType) {
     newStruct.name = getRandomElement(spellNames);
 
     if (place == "Random") {
-        newStruct.place = getRandomElement(places1);
-    } else { newStruct.place = place;}
+        newStruct.places = getRandomElement(places1);
+    } else { newStruct.places = place;}
     
     if (colors == "Random") {
         newStruct.color = getRandomElement(colors1);
