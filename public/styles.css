@@ -77,7 +77,41 @@
     /* Add margin to separate image and ruleset button */
 }
 
-/* TradeAndCollect Page */
+/* Collection Page */
+#collection{
+    position: relative;
+    width: 100%;
+}
+
+#collectionTitle{
+    width: 100%;
+    text-align: center;
+    color: #4caf50;
+    font-size: 3em;
+}
+
+#collectionContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 6.5vh;
+    margin: 0vh;
+}
+
+#collectionScrollLeft{
+    position: absolute;
+    left: -2vh;
+    top: 50%;
+}
+
+#collectionScrollRight{
+    position: absolute;
+    right: -2vh;
+    top: 50%;
+}
+
+/* Trading Page */
 #noteToProgrammers{
     padding: 2vh;
 }
