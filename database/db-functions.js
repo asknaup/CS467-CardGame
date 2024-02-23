@@ -582,7 +582,7 @@ async function getAllDecksByUser(userId) {
     });
 }
 
-//   '{cardList: []}'
+//   '{"cardList": []}'
 //   const collectionDataJsonString = results[0].collectionData;
 //   const collectionDataObject = JSON.parse(collectionDataJsonString);
 //   console.log(collectionDataObject); 
@@ -598,7 +598,7 @@ async function insertOrSelectCollectionByUserIdandGameId(userId, gameId) {
             const checkCollectionQuery = 'SELECT collectionId FROM collections WHERE playerId = ? AND gameId = ?';
             const insertQuery = 'INSERT INTO collections (playerId, gameId, cardId) VALUES (?, ?, ?)';
             const selectLastInsertIdQuery = 'SELECT LAST_INSERT_ID() as newCollectId';
-            const vals = [userId, gameId, '{cardList: []}'];
+            const vals = [userId, gameId, '{"cardList": []}'];
 
             db.pool.query(checkCollectionQuery, [userId, gameId], (checkCollectionErr, checkCollectionResult) => {
                 if (checkCollectionErr) {
@@ -678,9 +678,10 @@ async function updateListOfCollection(collectId, cardIds) {
             if (err) {
                 reject(err);
             } else {
-                let existingCardIds = JSON.parse(results[0].cardId).cardList;
-                existingCardIds = existingCardIds.concat(cardIds); // Concatenate new cardIds with existing ones
-
+                let existingCardIds = JSON.parse(results[0].cardId);
+                console.log(existCardsIds.cardList)
+                existingCardIds = existingCardIds.cardList.concat(cardIds); // Concatenate new cardIds with existing ones
+                console.log(existingCardIds.cardList);
                 // Update the collections table with the new list of cardIds
                 const updateQuery = 'UPDATE collections SET cardId = ? WHERE collectionId = ?';
                 db.pool.query(updateQuery, [existingCardIds, collectId], (err, updateResult) => {

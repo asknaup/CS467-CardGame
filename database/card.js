@@ -27,7 +27,6 @@ async function createAICard(prompt, theme, color, rarity, num) {
     try {
         const response = await fetch('https://cloud.leonardo.ai/api/rest/v1/generations', option_post);
         const data = await response.json();
-        //console.log(data);
         return data;
     } catch (error) {
         console.error(error);
@@ -105,6 +104,25 @@ async function createDataStructCreature(colors, creatures, places, cardType) {
     return newStruct;
 }
 
+async function createDataStructSpell(colors, place, cardType, spellType) {
+    let data_struct = {
+        name: '_',
+        place: place,
+        color: colors,
+        URL: null,
+        description: '_',
+        cardType: cardType,
+        attack: 0,
+        defense: 0,
+        manaCost: 0,
+        ability: "_",
+        utility: "_",
+        spellType: spellType,
+        rarity: getRandomElement(["Common", "Common", "Common", "Common", "Uncommon", "Uncommon", "Uncommon", "Rare", "Rare", "Legendary"])
+    };
+    return data_struct;
+}
+
 // Helper function to get a random element from an array
 function getRandomElement(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
@@ -173,5 +191,6 @@ function getRandomElement(arr) {
 module.exports.getImageUrlFromLeonardo = getImageUrlFromLeonardo;
 module.exports.createAICard = createAICard;
 module.exports.createDataStructCreature = createDataStructCreature;
+module.exports.createDataStructSpell = createDataStructSpell;
 
 

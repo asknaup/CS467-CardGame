@@ -18,7 +18,6 @@ class Card{
     }
 }
 
-
 function getStagedCards(userObj, otherPlayerObj){
     let stagedCardsDict = {"otherStagedCardsArr": [], "userStagedCardsArr": []};
     var otherStageArea= document.getElementById(otherPlayerObj.stageAreaId);

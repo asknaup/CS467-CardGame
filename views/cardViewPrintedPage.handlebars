@@ -10,12 +10,12 @@
 </head>
 
 <body>
-  <h2>{{ card.name}} the {{ card.creature}} was added to your collection</h2>
+  <h2>{{ card.name}} the {{ card.rarity}} was added to your collection</h2>
   <div id="cardContainer">
     <div class="card">
           <img src="{{ card.URL.[0].url }}" alt="Card Image">
           <p>Name: {{ card.name}}</p>
-          <p>Creature: {{ card.creature}}</p>
+          <p>Creature: {{ card.rarity}}</p>
     </div>
     <a href="/cardGenPage">
       <button>Generate another Card</button>
