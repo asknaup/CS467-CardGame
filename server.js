@@ -418,7 +418,7 @@ app.post('/cardViewEditPage', async (req, res) => {
             values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId);
             await delay(500); // Add a delay to avoid excessive requests
           }
-          newCreature.URL = values
+          newCreature.URL = values[0].url
           let stringed = JSON.stringify(newCreature);
           newCreature.stringed = stringed;
           generatedCards.push(newCreature);
@@ -441,8 +441,8 @@ app.post('/cardViewEditPage', async (req, res) => {
               values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId);
               await delay(500); // Add a delay to avoid excessive requests
             }
-
-            newSpell.URL = values
+            
+            newSpell.URL = values[0].url
             let stringed = JSON.stringify(newSpell);
             newSpell.stringed = stringed;
             generatedCards.push(newSpell);
@@ -478,7 +478,7 @@ app.post('/cardViewPrintedBulkPage', async (req, res) => {
         values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId);
         await delay(500); // Add a delay to avoid excessive requests
       }
-      newCreature.URL = values
+      newCreature.URL = values[0].url
       generatedCards.push(newCreature);
 
     }   
@@ -513,9 +513,11 @@ app.post('/cardViewPrintedPage', async (req, res) => {
     } else { // Needs Work
       await dbFunc.insertSpellCard(cardId, stringCard.spellType, stringCard.ability, stringCard.attack, stringCard.defense, stringCard.utility); // Needs work
     } 
+    
 
-    await dbFunc.updateListOfCollection(req.session.collectionId, cardId);                // New Function
-    await dbFunc.insertCardUrl(cardId, stringCard.URL[0].url);
+    // await dbFunc.updateListOfCollection(req.session.collectionId, cardId);                // New Function
+    console.log(stringCard, stringCard.URL)
+    await dbFunc.insertCardUrl(cardId, stringCard.URL);
     const data = await dbFunc.getCardInfo(cardId);
     res.render('cardViewPrintedPage', {
       card: stringCard,
