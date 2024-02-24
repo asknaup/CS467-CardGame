@@ -17,19 +17,23 @@ document.addEventListener('DOMContentLoaded', function () {
         cardId.textContent = cardData.cardId;
 
         // Tooltip for attributes
-        var toolTip = document.createElement('div');
-        toolTip.classList.add('toolTip');
+        // var toolTip = document.createElement('div');
+        // toolTip.classList.add('toolTip');
 
-        var toolTipText = document.createElement('span');
-        toolTipText.classList.add('toolTipText');
+        // var toolTipText = document.createElement('span');
+        // toolTipText.classList.add('toolTipText');
 
         // Name
         var cardName = document.createElement('h1');
         cardName.classList.add('cardName');
         cardName.textContent = cardData.cardName;
 
-        var textOverlay = document.createElement('div');
-        textOverlay.classList.add('textOverlay');
+        // Text overlays
+        var textOverlayBottom = document.createElement('div');
+        textOverlayBottom.classList.add('textOverlayBottom');
+
+        var textOverlayTop = document.createElement('div');
+        textOverlayTop.classList.add('textOverlayTop');
 
         // Card image
         var cardImage = document.createElement('div');
@@ -52,8 +56,10 @@ document.addEventListener('DOMContentLoaded', function () {
         var manaCost = document.createElement('p');
         manaCost.innerHTML = `<strong>Mana Cost:</strong> ${cardData.manaCost}`;
 
-        toolTipText.appendChild(rarity);
-        toolTipText.appendChild(manaCost);
+        // toolTipText.appendChild(rarity);
+        // toolTipText.appendChild(manaCost);
+        textOverlayBottom.appendChild(rarity);
+        textOverlayBottom.appendChild(manaCost);
 
         if (cardData.cardType == "Spell") {
             var spellType = document.createElement('p');
@@ -68,10 +74,15 @@ document.addEventListener('DOMContentLoaded', function () {
             var spellDefense = document.createElement('p');
             spellDefense.innerHTML = `<strong>Spell Defense:</strong> ${cardData.spellDefense}`;
 
-            toolTipText.appendChild(spellType);
-            toolTipText.appendChild(spellAbility);
-            toolTipText.appendChild(spellAttack);
-            toolTipText.appendChild(spellDefense);
+            textOverlayBottom.appendChild(spellType);
+            textOverlayBottom.appendChild(spellAbility);
+            textOverlayBottom.appendChild(spellAttack);
+            textOverlayBottom.appendChild(spellDefense);
+            // toolTipText.appendChild(spellType);
+            // toolTipText.appendChild(spellAbility);
+            // toolTipText.appendChild(spellAttack);
+            // toolTipText.appendChild(spellDefense);
+
         } else {
             var attack = document.createElement('p');
             attack.innerHTML = `<strong>Attack:</strong> ${cardData.attack}`;
@@ -79,17 +90,24 @@ document.addEventListener('DOMContentLoaded', function () {
             var defense = document.createElement('p');
             defense.innerHTML = `<strong>Defense:</strong> ${cardData.defense}`;
 
-            toolTipText.appendChild(attack);
-            toolTipText.appendChild(defense);
+            textOverlayBottom.appendChild(attack);
+            textOverlayBottom.appendChild(defense);
+            // toolTipText.appendChild(attack);
+            // toolTipText.appendChild(defense);
         }
 
-        toolTip.appendChild(toolTipText);
-        textOverlay.appendChild(cardName);
-        textOverlay.appendChild(cardType);
-        card.appendChild(cardImage);
-        card.appendChild(textOverlay);
+        // toolTip.appendChild(toolTipText);
+        // textOverlayBottom.appendChild(cardName);
+        // textOverlayBottom.appendChild(cardType);
+        textOverlayTop.appendChild(cardName);
+        textOverlayTop.appendChild(cardType);
 
-        card.appendChild(toolTip);
+        card.appendChild(textOverlayBottom);
+        card.appendChild(cardImage);
+        // card.appendChild(textOverlayBottom);
+        card.appendChild(textOverlayTop);
+
+        // card.appendChild(toolTip);
 
         return card;
     }

@@ -31,19 +31,7 @@
     <br><br><br>
     <!-- Handlebars template for card -->
     <div class="cardContainer" id="cardContainer">
-        {{#each cards}}
-        <div id={{cardId}} class="card">
-
-            <img src="{{imagePath}}" alt="{{cardName}}" class="card-image">
-            <h1>{{cardName}}</h1>
-            <p>{{cardType}}</p>
-
-        </div>
-        {{/each}}
-        </script>
     </div>
-
-
 
     <button id="resetButton" onclick="confirmReset()">Reset</button>
     <button id="saveDeckButton">Save Deck</button>

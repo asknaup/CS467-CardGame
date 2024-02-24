@@ -105,14 +105,26 @@ main {
     /* Add margin between cards */
 }
 
-.textOverlay {
+.textOverlayBottom {
     position: absolute;
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    background-color: rgb(226, 180, 180);
+    background-color: rgb(226, 180, 180, 0.7);
     /* Add a semi-transparent background */
-    padding: 10px;
+    padding: 5px;
+    text-align: center;
+    width: 100%;
+}
+
+.textOverlayTop {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgb(226, 180, 180, 0.7);
+    /* Add a semi-transparent background */
+    padding: 0px;
     text-align: center;
     width: 100%;
 }
