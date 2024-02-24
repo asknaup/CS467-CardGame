@@ -240,9 +240,16 @@ document.addEventListener('DOMContentLoaded', function () {
     if (saveDeckButton) {
         saveDeckButton.addEventListener('click', () => saveDeck(selectedCards));
     }
-
 });
 
+function confirmReset() {
+    var userConfirmation = confirm("Are you sure you want to reset the deck build? This will unstage all cards without saving any changes.");
 
-
-
+    // Check user's response
+    if (userConfirmation) {
+        // If the user confirms, reload the page
+        location.reload();
+    } else {
+        console.log("Reset canceled by the user.");
+    }
+}
