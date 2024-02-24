@@ -537,17 +537,42 @@ app.get('/game/', async (req, res) => {
     gameInstance[game.gameId] = new Game(userInstance, deck.deckId, game.ruleSet, game.gameId);
 
     await gameInstance[game.gameId].initialize();
-    // console.log(gameInstance[game.gameId].hand)
+
     res.render('gamePlay1', {
       gameId: game.gameId,
       ruleSet: game.ruleSet,
-      hand: gameInstance[game.gameId].hand,
+      // hand: handData,
       remainingDeckCards: gameInstance[game.gameId].deck.length,
       playerMana: gameInstance[game.gameId].user.mana,
       opponentMana: gameInstance[game.gameId].opponent.mana
     });
   }
 });
+
+// Get Hand
+app.get('/getHand', async (req, res) => {
+  const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
+  gameInst = gameInstance[game.gameId];
+
+  if (gameInstance[game.gameId]) {
+    console.log(gameInstance[game.gameId].hand)
+    const handData = gameInstance[game.gameId].hand.map(card => {
+      return {
+        id: card.id,
+        name: card.name,
+        type: card.type,
+        mana: card.mana,
+        attack: card.attack,
+        defense: card.defense,
+        spellAttack: card.spellAttack,
+        spellDefense: card.spellDefense
+      };
+    });
+  
+    res.status(200).json({hand: handData});
+
+  }
+}) 
 
 // Play Card
 app.post('/playCard', async (req, res) => {
@@ -653,8 +678,13 @@ app.post('/endTurn', async (req, res) => {
       await gameInstance[game.gameId].playNextTurn();
       // console.log(gameInstance[game.gameId].opponent.playerStage)
       let opponentStage = gameInstance[game.gameId].opponent.playerStage;
-      
-      res.status(200).json({ message: 'Computer opponent\'s turn completed', opponentStage});
+      let updatedHand = gameInstance[game.gameId].hand;
+      const playerMana = gameInstance[game.gameId].user.mana;
+      const opponentHand = gameInstance[game.gameId].opponentHand;
+      console.log("playerMana", playerMana)
+      console.log("opponentHand", opponentHand.length)
+      res.status(200).json({ message: 'Computer opponent\'s turn completed', opponentStage, updatedHand, playerMana, opponentHand });
+
     } catch (error) {
       console.log("error: ", error)
     }

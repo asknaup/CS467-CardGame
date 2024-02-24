@@ -186,11 +186,14 @@ CREATE TABLE IF NOT EXISTS collections (
     playerId INT,
     gameId INT,
     cardId VARCHAR(5000), 
+    collectionName VARCHAR(200),
 
     PRIMARY KEY (collectionId, playerId , gameId),
     FOREIGN KEY (gameId) REFERENCES generatedGame(gameId),
     FOREIGN KEY (playerId) REFERENCES userProfile(userId)
 );
+
+ALTER TABLE collections AUTO_INCREMENT=8000;
 
 -- -----------------------------------------------------
 -- Create Image URL table

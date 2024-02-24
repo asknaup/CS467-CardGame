@@ -218,13 +218,18 @@ class Game {
     async playNextTurn() {
         // Draw cards for the next turn for user
         this.drawCardsPerTurn();
+        console.log(this.hand.length)
 
         // Execute the computer opponent's turn
         if (this.opponent instanceof ComputerOpponent) {
-            await this.opponent.playTurn(this.opponentHand)
+            this.drawOpponentsCardsPerTurn();
+            await this.opponent.playTurn(this.opponentHand);
             this.opponentStage = this.opponent.playerStage;
         }
 
+        // Reset players mana to 10
+        this.user.mana = 10;
+        this.opponent.mana = 10;
     }
 
     drawCardsPerTurn() {
@@ -238,6 +243,19 @@ class Game {
 
         this.hand = updatedHand; // Update the hand
         this.deck = updatedDeck; // Update the deck
+    }
+
+    drawOpponentsCardsPerTurn() {
+        // Draw cards for the turn
+        const updatedHand = [...this.opponentHand]; // Create a copy of the hand array
+        const updatedDeck = [...this.opponentDeck]; // Create a copy of the deck array
+
+        while (updatedHand.length < 7 && updatedDeck.length > 0) {
+            updatedHand.push(updatedDeck.pop());
+        }
+
+        this.opponentHand = updatedHand; // Update the hand
+        this.opponentDeck = updatedDeck; // Update the deck
     }
 
     async playCard(cardId) {
@@ -259,6 +277,7 @@ class Game {
         // Check type of card
         if (card instanceof CreatureCard) {
             if (updatedStage.length < 5) {
+                console.log(cardId)
                 updatedStage.push(cardId);
             } else {
                 // console.log("Error: Maximum limit reached on the board");

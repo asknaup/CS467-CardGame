@@ -1,0 +1,6 @@
+<script>
+    // Register Handlebars helper
+    Handlebars.registerHelper('isCreature', function(type, options) {
+        return type.toLowerCase() === 'creature' ? options.fn(this) : options.inverse(this);
+    });
+</script>

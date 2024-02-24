@@ -56,11 +56,23 @@
     </div>
 
     <div id="hand" class="card-container">
-        {{#each hand}}
-        {{!-- TODO change card div when possible --}}
-        <div draggable="true" id="{{this.id}}" class="card">{{this.name}} {{this.type}} 
-            mana: {{this.mana}}</div>
-        {{/each}}
+        {{!-- {{#each hand}}
+            <div draggable="true" id="{{this.id}}" class="card">
+                {{#if (isCreature this.type)}}
+                    <p>{{this.name}}</p>
+                    <p>Type: {{this.type}}</p>
+                    <p>Mana: {{this.mana}}</p>
+                    <p>Attack: {{this.attack}}</p>
+                    <p>Defense: {{this.defense}}</p>
+                {{else}}
+                    <p>{{this.name}}</p>
+                    <p>Type: {{this.type}}</p>
+                    <p>Mana: {{this.mana}}</p>
+                    <p>Spell Attack: {{this.spellAttack}}</p>
+                    <p>Spell Defense: {{this.spellDefense}}</p>
+                {{/if}}
+            </div>
+        {{/each}} --}}
     </div>
     {{!-- TODO : reformat game location variables below --}}
     <div>
