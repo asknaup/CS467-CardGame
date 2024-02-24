@@ -81,6 +81,8 @@
 #collection{
     position: relative;
     width: 100%;
+    background-color: #d8eece;
+    border-radius: 15px;
 }
 
 #collectionTitle{
