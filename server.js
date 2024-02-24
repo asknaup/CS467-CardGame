@@ -404,22 +404,23 @@ app.post('/cardViewEditPage', async (req, res) => {
 
       if (req.body.cardType == "Creature") {
           // Generate for Creature
+
         for (let i = 0; i < 1; i++) {
           let values = [];
           let newCreature = await card.createDataStructCreature(req.body.color, req.body.creatureType, req.body.theme, req.body.cardType);
-          const aiCard = await card.createAICard(newCreature.creature, newCreature.place, newCreature.color, newCreature.rarity, 1);
-          
           newCreature.manaCost = req.body.manaCost;
           newCreature.attack = req.body.creatureAttack;
           newCreature.defense = req.body.creatureDefense
           newCreature.rarity = req.body.rarity
           newCreature.name = req.body.cardName
-
-          while (values.length == 0 || values == null ) {
+          
+          const aiCard = await card.createAICard(newCreature.creature, newCreature.place, newCreature.color, newCreature.rarity, 1);
+          while (!values || values.length === 0) {
             values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId);
-            await delay(500); // Add a delay to avoid excessive requests
+            await delay(700); // Add a delay to avoid excessive requests
           }
-          newCreature.URL = values[0].url
+          console.log(values);
+          newCreature.URL = values[0].url;
           let stringed = JSON.stringify(newCreature);
           newCreature.stringed = stringed;
           generatedCards.push(newCreature);
@@ -438,12 +439,12 @@ app.post('/cardViewEditPage', async (req, res) => {
             
             const aiCard = await card.createAICard("abstract spell", newSpell.place, newSpell.color, newSpell.rarity, 1);            
 
-            while (values.length == 0 || values == null ) {
+            while (!values || values.length === 0 ) {
               values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId);
-              await delay(500); // Add a delay to avoid excessive requests
+              await delay(700); // Add a delay to avoid excessive requests
             }
       
-            newSpell.URL = values[0].url
+            newSpell.URL = values[0].url;
             let stringed = JSON.stringify(newSpell);
             newSpell.stringed = stringed;
             generatedCards.push(newSpell);
@@ -502,8 +503,6 @@ app.post('/cardViewPrintedPage', async (req, res) => {
 });
 
 
-
-
 app.post('/cardViewPrintedBulkPage', async (req, res) => {
   const user = req.session.user;
   // Need Collection ID
@@ -520,9 +519,9 @@ app.post('/cardViewPrintedBulkPage', async (req, res) => {
         let values = [];
           while ( !values || values.length === 0 ) {
             values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId);
-            await delay(1000); // Add a delay to avoid excessive requests 
+            await delay(700); // Add a delay to avoid excessive requests 
           }
-        newCreature.URL = values[0].url
+        newCreature.URL = values[0].url;
         generatedCards.push(newCreature);
 
       } else if (req.body.cardType == "Spell") {
@@ -531,9 +530,9 @@ app.post('/cardViewPrintedBulkPage', async (req, res) => {
         let values = [];
           while (!values || values.length === 0 ) {
             values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId);
-            await delay(1000); // Add a delay to avoid excessive requests
+            await delay(700); // Add a delay to avoid excessive requests
           }
-        newSpell.URL = values[0].url
+        newSpell.URL = values[0].url;
         generatedCards.push(newSpell);
     }   
   }
