@@ -555,8 +555,8 @@ app.get('/getHand', async (req, res) => {
   gameInst = gameInstance[game.gameId];
 
   if (gameInstance[game.gameId]) {
-    console.log(gameInstance[game.gameId].hand)
     const handData = gameInstance[game.gameId].hand.map(card => {
+      console.log(card)
       return {
         id: card.id,
         name: card.name,
@@ -676,7 +676,6 @@ app.post('/endTurn', async (req, res) => {
     try {
       // let game = gameInstance[game.gameId];
       await gameInstance[game.gameId].playNextTurn();
-      // console.log(gameInstance[game.gameId].opponent.playerStage)
       let opponentStage = gameInstance[game.gameId].opponent.playerStage;
       let updatedHand = gameInstance[game.gameId].hand;
       const playerMana = gameInstance[game.gameId].user.mana;

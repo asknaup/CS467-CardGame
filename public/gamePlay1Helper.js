@@ -58,9 +58,18 @@ function drop(event) {
                             console.error('Error playing the card:', error);
                         });
                 } else if (cardData.type.toLowerCase() === 'spell') {
-                    // Display an error message for spell cards being played in the drop zone
-                    const dropZoneId = dropZone.id;
-                    displayErrorMessage('Error: Cannot play Spell card in staging area. Must be applied to player or Creature card', dropZoneId);
+                    // Check if the drop zone is the staging area
+                    if (dropZone.parentElement.classList.contains('staging')) {
+                        // Display an error message for spell cards being played in the staging area
+                        const dropZoneId = dropZone.id;
+                        displayErrorMessage('Error: Cannot play Spell card in staging area. Must be applied to player or Creature card', dropZoneId);
+                    } else {
+                        // Determine the target zone (player or opponent)
+                        const targetZone = dropZone.parentElement.classList.contains('player') ? 'player' : 'opponent';
+                        
+                        // Apply spell effect based on the target zone
+                        applySpellEffect(cardData, targetZone, dropZone); // Pass dropZone as a parameter
+                    }
                 }
             });
     } else {
@@ -123,7 +132,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
          // Define handList after the hand cards are rendered
          const handList = handContainer.querySelectorAll('.card');
-         console.log("handList", handList);
  
          // Add event listeners for the hand cards
          handList.forEach(card => {
@@ -134,18 +142,15 @@ document.addEventListener('DOMContentLoaded', function () {
     // const hand = document.getElementById('hand');
     const handList = hand.querySelectorAll('.card');
     const playerDropZones = document.querySelectorAll(".player .drop-zone");
-    // console.log("handList", handList);
-    // console.log(handData)
 
     handList.forEach(card => {
         card.addEventListener('dragstart', dragStart);
     })
 
     function dragStart(event) {
-        console.log(event.target.id)
         event.dataTransfer.setData('text/plain', event.target.id);
     }
-    console.log(handList);
+    
     playerDropZones.forEach(zone => {
         zone.addEventListener('dragover', dragOver);
         zone.addEventListener('drop', drop);
@@ -211,7 +216,6 @@ function renderHand(handData) {
 
     // Iterate over the hand data and create card elements
     handData.forEach(card => {
-        console.log(card)
         const cardElement = document.createElement('div');
         cardElement.draggable = true;
         cardElement.id = card.id;
@@ -258,8 +262,8 @@ function endTurn() {
     })
         .then(response => response.json())
         .then(data => {
-            console.log(data.message); // Log the message from the server
-            console.log(data.opponentStage);
+            // console.log(data.message); // Log the message from the server
+            // console.log(data.opponentStage);
 
             // Fetch and render Players hand
             fetchAndRenderHand();
@@ -344,3 +348,22 @@ function updateOpponentStageUI(opponentStage) {
     attachDragDropListeners();
 }
 
+function applySpellEffect(spellCard, targetZone, dropZone) {
+    const targetCreatureId = dropZone.querySelector(".card").id;
+    fetch(`/getCreatureDetails?creatureId=${targetCreatureId}`)
+    .then(response => response.json())
+    .then(creatureData => {
+        if (targetZone === 'player') {
+            creatureData.attack += spellData.spellAttack;
+            creatureData.defense += spellData.spellDefese;
+        } else {
+            creatureData.attack -= spellData.spellDefense;
+
+            if (creatureData.defense < 0) {
+                removeCreatureFromBoard(targetCreatureId);
+            }
+        }
+
+        updateCreatureDetails(creatureData);
+    })
+}
