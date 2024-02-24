@@ -8,7 +8,7 @@
 
 .card {
     width: 10.5vw;
-    height: 18.5vw;
+    height: 100%;
     /* Card container height */
     background-color: beige;
     border: 3px solid #000;
@@ -17,7 +17,6 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease-in-out;
     margin-right: 10px;
-    margin-bottom: 20px;
     /* Add margin between cards */
     z-index: 2;
 }
@@ -81,6 +80,8 @@
 #collection{
     position: relative;
     width: 100%;
+    background-color: #d8eece;
+    border-radius: 15px;
 }
 
 #collectionTitle{
@@ -268,25 +269,32 @@
 
 #userScrollDeck, #otherScrollDeck{
     position: relative;
+    padding: 1%;
 }
 
 #userScrollLeft, #otherScrollLeft{
     position: absolute;
-    left: -3vw;
+    left: -4vw;
+    width: 4%;
+    height: 16%;
+    z-index:  100;
 }
 
 #userScrollRight, #otherScrollRight{
     position: absolute;
-    right: -3vw;
+    right: -4vw;
+    width: 4%;
+    height: 16%;
+    z-index: 100;
 }
 
 #userScrollLeft, #userScrollRight{
-    top: 9vw;
+    top: 42%;
 }
 
 #otherScrollLeft, #otherScrollRight{
     background-color: purple;
-    top: 7vw;
+    top: 42%;
 }
 
 #userCardSlots, #otherCardSlots{

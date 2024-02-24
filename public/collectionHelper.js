@@ -65,24 +65,49 @@ function displayCardCollection(userObj){
 }
 
 
+function switchToGivenCollection(collectionKey){
+    userObj.primaryKeyArr = userObj.primaryKeysForCollections[collectionKey];
+    userObj.cardDict = userObj.collections[collectionKey];
+}
+
+
 function createExampleCardsForCollection(exampleCards){
-    for (let index = 0; index <= 23; index++){
+    for (let index = 0; index <= 100; index++){
         let numCards = exampleCards.length;
         let randomIndex = Math.floor(Math.random() * numCards);
         let cardData = exampleCards[randomIndex];
         let uniquePrimaryKey = cardData.cardId + index.toString()
-        userObj.primaryKeyArr.push(uniquePrimaryKey);
-        userObj.cardDict[uniquePrimaryKey] = new Card(uniquePrimaryKey, cardData.cardName, cardData.imagePath, cardData.cardType, 
+       
+        if (index < 50){
+            if (index === 0){
+                userObj.collections[0] = {};
+                userObj.primaryKeysForCollections[0] = [];
+            }
+            userObj.primaryKeysForCollections[0].push(uniquePrimaryKey);
+            userObj.collections[0][uniquePrimaryKey] = new Card(uniquePrimaryKey, cardData.cardName, cardData.imagePath, cardData.cardType, 
             cardData.spellType, cardData.spellAbility, cardData.spellAttack, cardData.spellDefense, 
             cardData.attack, cardData.defense, cardData.manaCost); 
+        } else{
+            if (index === 50){
+                userObj.collections[1] = {};
+                userObj.primaryKeysForCollections[1] = [];
+            }
+            userObj.primaryKeysForCollections[1].push(uniquePrimaryKey);
+            userObj.collections[1][uniquePrimaryKey] = new Card(uniquePrimaryKey, cardData.cardName, cardData.imagePath, cardData.cardType, 
+            cardData.spellType, cardData.spellAbility, cardData.spellAttack, cardData.spellDefense, 
+            cardData.attack, cardData.defense, cardData.manaCost); 
+        }
     }
+    // initialize primaryKeyArr and cardDict with first collection
+    userObj.primaryKeyArr = userObj.primaryKeysForCollections[0];
+    userObj.cardDict = userObj.collections[0];
 }
 
 
 /*main code for collection */
 var numCardsInView = 21;
-let userObj = {isUser: true, primaryKeyArr: [], cardDict: {},  startIndex: 0, endIndex: 20, cardSlots: "userCardSlots", 
-            collectionContainer: "collectionContainer"};
+let userObj = {isUser: true, primaryKeyArr: [], cardDict: {}, primaryKeysForCollections: {}, collections: {}, 
+        startIndex: 0, endIndex: 20, cardSlots: "userCardSlots", collectionContainer: "collectionContainer"};
 
 var collectionScrollLeftButton = document.getElementById("collectionScrollLeft");
 var collectionScrollRightButton = document.getElementById("collectionScrollRight");
@@ -100,4 +125,8 @@ async function setupCollectionPage(){
 }
 setupCollectionPage();
 
-
+var collectionSwitchButton = document.getElementById("collectionSwitch");
+collectionSwitchButton.addEventListener('click', () => {
+    switchToGivenCollection(1);
+    displayCardCollection(userObj);
+})
