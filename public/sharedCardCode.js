@@ -223,7 +223,7 @@ function addScrollCardFunctionality(playerObj, primaryIndex, cardData, scrollCar
             }
         } else {
             highlightCard(false, playerObj.isUser, scrollCard);
-            var stagedCard = document.getElementById(cardData.primaryKey + playerObj.stagedCardName);
+            var stagedCard = document.getElementById(cardData.cardId + playerObj.stagedCardName);
             stagedCard.remove();
             cardData.isStaged = false;
             playerObj.stagedCardCount -= 1;
