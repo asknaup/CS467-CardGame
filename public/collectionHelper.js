@@ -103,6 +103,13 @@ function createExampleCardsForCollection(exampleCards){
     userObj.cardDict = userObj.collections[0];
 }
 
+function collectionSelectHandler(collectionSelect){
+    collectionSelect.addEventListener("change", () => {
+        let collectionKey = parseInt(collectionSelect.value);
+        switchToGivenCollection(collectionKey);
+        displayCardCollection(userObj);
+    })
+}
 
 /*main code for collection */
 var numCardsInView = 21;
@@ -111,7 +118,7 @@ let userObj = {isUser: true, primaryKeyArr: [], cardDict: {}, primaryKeysForColl
 
 var collectionScrollLeftButton = document.getElementById("collectionScrollLeft");
 var collectionScrollRightButton = document.getElementById("collectionScrollRight");
-
+var collectionSelect = document.getElementById("collectionSelect");
 async function setupCollectionPage(){
     let exampleCards = []
     const response = await fetch('/cards');
@@ -125,8 +132,5 @@ async function setupCollectionPage(){
 }
 setupCollectionPage();
 
-var collectionSwitchButton = document.getElementById("collectionSwitch");
-collectionSwitchButton.addEventListener('click', () => {
-    switchToGivenCollection(1);
-    displayCardCollection(userObj);
-})
+var collectionSelect = document.getElementById("collectionSelect");
+collectionSelectHandler(collectionSelect)

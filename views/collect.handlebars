@@ -10,12 +10,12 @@
 
 <body>
     <br>
-    <h1>Open a Pack to bolster your collection</h1>
+    <h1 id="openPackTitle">Open A Pack To Bolster Your Collection</h1>
     <p>big old pack picture</p>
     <br><br>
     <form action="/openPack" method="'get">
     
-    <button id="gen-game-button-ggp" type="submit">Open a Pack of 5 New Cards</button>
+    <button id="gen-game-button-ggp" class="openPackButton" type="submit">Open a Pack of 5 New Cards</button>
 
     </form>
     <!--div class="instructions">
@@ -24,7 +24,11 @@
         <p> ---- Will need to grab userName and gameName to create CollectionId Name --- </p>
     </div -->
     <h2 id="collectionTitle">Collection</h2>
-    <button type="button" id="collectionSwitch"> collectionSwitch </button>
+    
+    <select id="collectionSelect">
+        <option id="collection1" class="collectionOptions" value="0">Collection 1</option>
+        <option id="collection2" class="collectionOptions" value="1">Collection 2</option>
+    </select>
     <div id="collection">
         <button type="button" id="collectionScrollLeft"> &lt; </button>
         <button type="button" id="collectionScrollRight"> &gt; </button>
