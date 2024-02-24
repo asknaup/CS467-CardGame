@@ -107,7 +107,7 @@ async function createDataStructCreature(colors, creatures, places, cardType) {
 async function createDataStructSpell(colors, place, cardType, spellType) {
     let data_struct = {
         name: '_',
-        place: place,
+        places: place,
         color: colors,
         URL: null,
         description: '_',
@@ -120,7 +120,38 @@ async function createDataStructSpell(colors, place, cardType, spellType) {
         spellType: spellType,
         rarity: getRandomElement(["Common", "Common", "Common", "Common", "Uncommon", "Uncommon", "Uncommon", "Rare", "Rare", "Legendary"])
     };
-    return data_struct;
+
+    let newStruct = { ...data_struct };
+    newStruct.name = getRandomElement(spellNames);
+
+    if (place == "Random") {
+        newStruct.places = getRandomElement(places1);
+    } else { newStruct.places = place;}
+    
+    if (colors == "Random") {
+        newStruct.color = getRandomElement(colors1);
+    } else if (colors == "None") {
+        newStruct.color = "";
+    } else { newStruct.color = colors;}
+
+    if (newStruct.rarity == "Common") {
+        newStruct.attack = getRandomElement([0,1]);
+        newStruct.defense = getRandomElement([1,2]);
+        newStruct.manaCost = getRandomElement([1,2])
+    } else if (newStruct.rarity == "Uncommon") {
+        newStruct.attack = getRandomElement([2,3,]);
+        newStruct.defense = getRandomElement([2,3]);
+        newStruct.manaCost = getRandomElement([2,3])
+    } else if (newStruct.rarity == "Rare") {
+        newStruct.attack = getRandomElement([4,]);
+        newStruct.defense = getRandomElement([4,]);
+        newStruct.manaCost = getRandomElement([4,])
+    }  else if (newStruct.rarity == "Legendary") {
+        newStruct.attack = getRandomElement([5]);
+        newStruct.defense = getRandomElement([5]);
+        newStruct.manaCost = getRandomElement([4])
+    }  
+    return newStruct;
 }
 
 // Helper function to get a random element from an array
@@ -187,6 +218,12 @@ function getRandomElement(arr) {
         "Caitrìona", "Catriona", "Cordelia", "Daisy", "Eilidh", "Elara", "Elena", "Elspeth", "Enid", "Felicity",
         "Ffion", "Fiona"];
 
+    const spellNames = [
+        "Fireball", "Lightning Bolt", "Healing Touch", "Summon Familiar", "Ice Shard",
+        "Teleport", "Invisibility", "Explosion", "Earthquake", "Arcane Missile",
+        "Frost Nova", "Chain Lightning", "Holy Smite", "Shadow Cloak", "Meteor Shower",
+        "Poison Cloud", "Mind Control", "Divine Shield", "Time Warp", "Gravity Surge"
+    ];
 
 module.exports.getImageUrlFromLeonardo = getImageUrlFromLeonardo;
 module.exports.createAICard = createAICard;
