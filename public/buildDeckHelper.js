@@ -12,14 +12,6 @@ document.addEventListener('DOMContentLoaded', function () {
         var card = document.createElement('div');
         card.classList.add('card');
 
-        // Card content
-        // var cardContent = document.createElement('div');
-        // cardContent.classList.add('cardContent');
-
-        // // Frame header
-        // var frameHeader = document.createElement('div');
-        // frameHeader.classList.add('frameHeader');
-
         // cardId
         var cardId = document.createElement('p');
         cardId.textContent = cardData.cardId;
@@ -39,8 +31,6 @@ document.addEventListener('DOMContentLoaded', function () {
         var textOverlay = document.createElement('div');
         textOverlay.classList.add('textOverlay');
 
-        // frameHeader.appendChild(cardName);
-
         // Card image
         var cardImage = document.createElement('div');
         cardImage.classList.add('cardImage');
@@ -50,10 +40,6 @@ document.addEventListener('DOMContentLoaded', function () {
         imageElement.alt = 'Card Image';
 
         cardImage.appendChild(imageElement);
-
-        // // Card details
-        // var cardDetails = document.createElement('div');
-        // cardDetails.classList.add('cardDetails');
 
         // TODO: Replace with creature
         var cardType = document.createElement('p');
@@ -69,75 +55,41 @@ document.addEventListener('DOMContentLoaded', function () {
         toolTipText.appendChild(rarity);
         toolTipText.appendChild(manaCost);
 
-        // var attributesList = document.createElement('ul');
-        // attributesList.classList.add('attributes');
-
-        if (cardData.cardType == "spell") {
-            var spellType = document.createElement('li');
+        if (cardData.cardType == "Spell") {
+            var spellType = document.createElement('p');
             spellType.innerHTML = `<strong>Spell Type:</strong> ${cardData.spellType}`;
 
-            var spellAbility = document.createElement('li');
+            var spellAbility = document.createElement('p');
             spellAbility.innerHTML = `<strong>Spell Ability:</strong> ${cardData.spellAbility}`;
 
-            var spellAttack = document.createElement('li');
+            var spellAttack = document.createElement('p');
             spellAttack.innerHTML = `<strong>Spell Attack:</strong> ${cardData.spellAttack}`;
 
-            var spellDefense = document.createElement('li');
+            var spellDefense = document.createElement('p');
             spellDefense.innerHTML = `<strong>Spell Defense:</strong> ${cardData.spellDefense}`;
 
-            // attributesList.appendChild(spellType);
-            // attributesList.appendChild(spellAbility);
-            // attributesList.appendChild(spellAttack);
-            // attributesList.appendChild(spellDefense);
             toolTipText.appendChild(spellType);
             toolTipText.appendChild(spellAbility);
             toolTipText.appendChild(spellAttack);
             toolTipText.appendChild(spellDefense);
+        } else {
+            var attack = document.createElement('p');
+            attack.innerHTML = `<strong>Attack:</strong> ${cardData.attack}`;
+
+            var defense = document.createElement('p');
+            defense.innerHTML = `<strong>Defense:</strong> ${cardData.defense}`;
+
+            toolTipText.appendChild(attack);
+            toolTipText.appendChild(defense);
         }
 
-        // var cardFrame = document.createElement('div');
-        // cardFrame.classList.add('cardFrame');
-
-        // var cardBackground = document.createElement('div');
-        // cardBackground.classList.add('cardBackground');
-
-        var attack = document.createElement('li');
-        attack.innerHTML = `<strong>Attack:</strong> ${cardData.attack}`;
-
-        var defense = document.createElement('li');
-        defense.innerHTML = `<strong>Defense:</strong> ${cardData.defense}`;
-
-        toolTipText.appendChild(attack);
-        toolTipText.appendChild(defense);
-        // attributesList.appendChild(attack);
-        // attributesList.appendChild(defense);
-
+        toolTip.appendChild(toolTipText);
         textOverlay.appendChild(cardName);
         textOverlay.appendChild(cardType);
         card.appendChild(cardImage);
         card.appendChild(textOverlay);
-        toolTip.appendChild(toolTipText);
+
         card.appendChild(toolTip);
-        // cardContainer.appendChild(cardId);
-
-        // Build card body
-        // cardDetails.appendChild(cardId);
-        // cardDetails.appendChild(cardType);
-        // cardDetails.appendChild(rarity);
-        // cardDetails.appendChild(manaCost);
-        // cardDetails.appendChild(attributesList);
-
-        // Append elements to card content
-        // cardContent.appendChild(frameHeader);
-        // cardContent.appendChild(cardImage);
-        // cardContent.appendChild(cardDetails);
-
-        // cardFrame.appendChild(cardContent);
-
-        // cardBackground.appendChild(cardFrame);
-
-        // Append card content to card container
-        // cardContainer.appendChild(cardBackground);
 
         return card;
     }
