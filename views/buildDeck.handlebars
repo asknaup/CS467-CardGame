@@ -12,10 +12,17 @@
 
 <body>
     <h1>Instructions</h1>
-    <h3>Which Deck are you selecting</h3>
-    <p>drop down menu</p>
+    <div>
+        <label for="deckDropdown">Select Deck:</label>
+        <select id="deckDropdown" onchange="loadDeck()">
+            {{#each decks}}
+            <option value="{{deckId}}">{{deckName}}</option>
+            {{/each}}
+        </select>
+    </div>
 
     <p>Maybe from which game?</p>
+
     <br>
     <div class="instructions">
         <p>Here you can build your deck depending on what game you wish to play. First select the game

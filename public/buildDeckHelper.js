@@ -271,3 +271,22 @@ function confirmReset() {
         console.log("Reset canceled by the user.");
     }
 }
+
+function loadDeck() {
+    let selectedDeck = document.getElementById('deckDropdown').value;
+
+    // Fetch cards for the selected deck from the server's /deckCards endpoint
+    fetch(`/deckCards?deck=${selectedDeck}`)
+        .then(response => response.json())
+        .then(data => {
+            // Update your staging area with the fetched cards
+            updateStagingArea(data.cards);
+        })
+        .catch(error => console.error(`Error fetching cards for ${selectedDeck}:`, error));
+}
+
+function updateStagingArea(cards) {
+    // Implement code to update your staging area with the fetched cards
+    // You might want to clear the existing cards and add the new ones
+    // Use your existing logic for staging/unstaging cards
+}

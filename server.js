@@ -165,14 +165,29 @@ app.get('/generatedGameView', async (req, res) => {
   }
 });
 
-// One of these to be deleted
-app.get('/buildDeck', (req, res) => {
+// Sample user data (replace with your authentication mechanism)
+const currentUser = { userId: 1001, username: 'admin' };
+
+// TODO: One of these to be deleted
+app.get('/buildDeck', async (req, res) => {
   // Needs collection and game info
   // const user = req.session.user;
-  user = { userId: 1001, username: 'admin' };
+
   // FIXME: Switch back to const user = req.session.user; once buildDeck complete
-  if (user) {
-    res.render('buildDeck', { userId: user.userId });
+  try {
+    if (currentUser) {
+      const userDecks = await dbFunc.gatherUserDecks(currentUser.userId);
+      console.log(userDecks)
+      res.render('buildDeck', { showLogoutButton: true, decks: userDecks, userId: currentUser.userId })
+    } else {
+      res.render('builDeck', { showLogoutButton: false })
+    }
+  } catch (err) {
+    console.log(err);
+  }
+
+  if (currentUser) {
+    res.render('buildDeck', { userId: currentUser.userId });
   } else {
     res.redirect('/')
   }
@@ -184,9 +199,9 @@ app.get('/cards', async (req, res) => {
     // const userId = req.query.userId;
     // Needs collection and game info
     // const user = req.session.user;
-    user = { userId: 1005, username: 'admin' }; //FIXME
+
     // Call the database function to get card data based on userId
-    const cardData = await dbFunc.getCardIdByUser(user.userId);
+    const cardData = await dbFunc.getCardIdByUser(currentUser.userId);
     const cardsDict = hf.convertListToDict(cardData);
     // Send card data as reponse
     res.json(cardsDict);
@@ -197,22 +212,60 @@ app.get('/cards', async (req, res) => {
   }
 });
 
-app.post('/decksubmitted', async (req, res) =>{
+app.post('/decksubmitted', async (req, res) => {
   // const user = req.session.user;
-
-  user = { userId: 1005, username: 'admin' }; //FIXME
   // insertNewDeck(userId, deckName, cardList)
 
   try {
     const receivedData = req.body;
     console.log(receivedData);
-    dbFunc.insertNewDeck(user.userId, receivedData.deckName,JSON.stringify({'cardList':receivedData.deckList}));
+    dbFunc.insertNewDeck(currentUser.userId, receivedData.deckName, JSON.stringify({ 'cardList': receivedData.deckList }));
   } catch (error) {
     console.error("Error - Deck Not Saved", error);
   }
 });
 
-// NEEDS WORK and direction
+// Deck pull from db and editing endpoints
+// Endpoint to get deck names for the current user
+app.get('/deckNames', async (req, res) => {
+
+  // try {
+  //   if (currentUser) {
+  //     const userDecks = await dbFunc.gatherUserDecks(currentUser.userId);
+  //     console.log(userDecks)
+  //     res.render('buildDeck', { showLogoutButton: true, decks: userDecks })
+  //   } else {
+  //     res.render('builDeck', { showLogoutButton: false })
+  //   }
+  // } catch (err) {
+  //   console.log(err);
+  // }
+});
+
+
+// Endpoint to get cards for a specific deck for the current user
+app.get('/deckCards', (req, res) => {
+  const selectedDeck = req.query.deck;
+
+  // Fetch cardIds for the selected deck and current user from the database
+  db.get('SELECT cardIds FROM decks WHERE userId = ? AND deckName = ?', [currentUser.userId, selectedDeck], (err, row) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Internal Server Error' });
+      return;
+    }
+
+    if (row) {
+      const cards = row.cardIds.split(',').map(Number);
+      res.json({ cards });
+    } else {
+      res.status(404).json({ error: 'Deck not found' });
+    }
+  });
+});
+
+
+// TODO: NEEDS WORK and direction
 app.get('/browseGames', (req, res) => {
   const user = req.session.user;
   if (user) {
