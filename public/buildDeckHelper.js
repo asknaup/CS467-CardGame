@@ -299,5 +299,57 @@ function loadDeck() {
 }
 
 
-function updateStagingArea(cards) {
+function updateStagingArea() {
+    // Retrieve the deckId from sessionStorage
+    const deckId = sessionStorage.getItem('deckId');
+
+    // Check if deckId is present in sessionStorage
+    if (!deckId) {
+        console.error('Deck ID not found in sessionStorage');
+        return; // Abort updating staging area if deckId is not found
+    }
+
+    // Fetch cardIds associated with the deckId (Replace this with your actual logic)
+    const cardIds = fetchCardIdsFromServer(deckId);
+
+    // Assuming you have a staging area container with an id of 'stagingArea'
+    const stagingArea = document.getElementById('stagingArea');
+
+    // Clear existing content
+    stagingArea.innerHTML = '';
+
+    // Update with new content based on deckId and cardIds
+    // Add your logic to create and append elements as needed
+    // For example, you might create divs for each card and append them to the staging area
+    cardIds.forEach(cardId => {
+        const cardElement = document.createElement('div');
+        cardElement.textContent = cardId;
+        stagingArea.appendChild(cardElement);
+    });
 }
+
+// Example function to fetch cardIds from the server
+async function fetchCardIdsFromServer(deckId) {
+    try {
+        console.log("TEST TEST TEST")
+        // Make a fetch request to your server endpoint
+        const response = await fetch(`/deckCards`);
+        console.log("TEST TEST TEST")
+        // Check if the response status is OK (status code 200-299)
+        if (!response.ok) {
+            throw new Error(`Failed to fetch cardIds. Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('Server Response:', data);
+
+        // Return the cardIds from the server response
+        return data.cardIds; // Adjust the property name based on your server response
+    } catch (error) {
+        console.error('Error fetching cardIds:', error.message);
+        return []; // Return an empty array or handle the error as needed
+    }
+}
+
+// Call the updateStagingArea function when the page loads or when needed
+updateStagingArea();

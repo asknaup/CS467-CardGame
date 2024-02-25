@@ -235,13 +235,14 @@ app.get('/deckNames', async (req, res) => {
 
 app.post('/deckCards', async (req, res) => {
   const selectedDeck = req.body.deckId;
+  console.log("/deckcard here:", selectedDeck);
 
   try {
-    console.log(selectedDeck);
+    console.log("/deckCards here:", selectedDeck);
 
     // Fetch cardIds for the selected deck and current user from the database using a Promise
     const row = await new Promise((resolve, reject) => {
-      dbFunc.getUserDeck(selectedDeck, [currentUser.userId, selectedDeck], (err, row) => {
+      dbFunc.getUserDeck(selectedDeck, [selectedDeck], (err, row) => {
         if (err) {
           reject(err);
         } else {
@@ -250,16 +251,26 @@ app.post('/deckCards', async (req, res) => {
       });
     });
 
+    console.log("row", row);
+
     if (row) {
-      const cards = row.cardIds.split(',').map(Number);
-      res.json({ cards });
+      // Parse the cardList property from the JSON-like structure
+      const cardList = row.cardIds.cardList || [];
+
+      // Check if cardList is an array
+      if (Array.isArray(cardList)) {
+        res.json({ cards: cardList });
+      } else {
+        // If cardList is not found or not an array, return a 404 status
+        res.status(404).json({ error: 'Card list not found or invalid format' });
+      }
     } else {
-      // If deck is not found, return a 404 status and end the response
+      // If deck is not found, return a 404 status
       res.status(404).json({ error: 'Deck not found' });
     }
   } catch (error) {
     console.error(error);
-    // If there is an error, return a 500 status and end the response
+    // If there is an error, return a 500 status
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
