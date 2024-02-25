@@ -4,16 +4,12 @@ async function loadDeck() {
     const dropdown = document.getElementById('deckDropdown');
     const selectedDeckId = dropdown.value;
 
-    console.log("selected deck id:", selectedDeckId);
-
     try {
         // Fetch cardIds associated with the selected deckId
         const newCardIds = await fetchCardIdsFromServer(selectedDeckId);
 
         // Update the initialCardIds array with the new cardIds
         initialCardIds = newCardIds;
-
-        console.log("new card ids:", newCardIds);
 
         // Fetch deck details
         const deckDetails = await fetch('/deckCards', {
@@ -24,8 +20,6 @@ async function loadDeck() {
             },
         });
 
-        console.log("deckDetails loadDeck:", deckDetails);
-
         // Call the function to update the staging area
         const cardData = await getCardData();
         updateStagingArea(cardData);
@@ -34,6 +28,88 @@ async function loadDeck() {
     }
 }
 
+// Updated function to create a trading card based on getCardInfo output
+function createTradingCardFromInfo(cardInfo) {
+
+    console.log('Creating Card Element (cardInfo[0]):', cardInfo[0]);
+
+    var card = document.createElement('div');
+    card.classList.add('card');
+
+    var cardId = document.createElement('p');
+    cardId.textContent = cardInfo[0].cardId;
+
+    var cardName = document.createElement('h1');
+    cardName.classList.add('cardName');
+    cardName.textContent = cardInfo[0].cardName;
+
+    console.log("card name output", cardInfo[0].cardName);
+
+    var textOverlayBottom = document.createElement('div');
+    textOverlayBottom.classList.add('textOverlayBottom');
+
+    var textOverlayTop = document.createElement('div');
+    textOverlayTop.classList.add('textOverlayTop');
+
+    var cardImage = document.createElement('div');
+    cardImage.classList.add('cardImage');
+
+    var imageElement = document.createElement('img');
+    imageElement.src = cardInfo[0].imagePath;
+    imageElement.alt = 'Card Image';
+
+    cardImage.appendChild(imageElement);
+
+    var cardType = document.createElement('p');
+    cardType.classList.add('cardType');
+    cardType.textContent = cardInfo[0].cardType;
+
+    var rarity = document.createElement('p');
+    rarity.textContent = cardInfo[0].rarity;
+
+    var manaCost = document.createElement('p');
+    manaCost.innerHTML = `<strong>Mana Cost:</strong> ${cardInfo[0].manaCost}`;
+
+    textOverlayBottom.appendChild(rarity);
+    textOverlayBottom.appendChild(manaCost);
+
+    if (cardInfo[0].cardType == "Spell") {
+        var spellType = document.createElement('p');
+        spellType.innerHTML = `<strong>Spell Type:</strong> ${cardInfo[0].spellType}`;
+
+        var spellAbility = document.createElement('p');
+        spellAbility.innerHTML = `<strong>Spell Ability:</strong> ${cardInfo[0].spellAbility}`;
+
+        var spellAttack = document.createElement('p');
+        spellAttack.innerHTML = `<strong>Spell Attack:</strong> ${cardInfo[0].spellAttack}`;
+
+        var spellDefense = document.createElement('p');
+        spellDefense.innerHTML = `<strong>Spell Defense:</strong> ${cardInfo[0].spellDefense}`;
+
+        textOverlayBottom.appendChild(spellType);
+        textOverlayBottom.appendChild(spellAbility);
+        textOverlayBottom.appendChild(spellAttack);
+        textOverlayBottom.appendChild(spellDefense);
+    } else {
+        var attack = document.createElement('p');
+        attack.innerHTML = `<strong>Attack:</strong> ${cardInfo[0].attack}`;
+
+        var defense = document.createElement('p');
+        defense.innerHTML = `<strong>Defense:</strong> ${cardInfo[0].defense}`;
+
+        textOverlayBottom.appendChild(attack);
+        textOverlayBottom.appendChild(defense);
+    }
+
+    textOverlayTop.appendChild(cardName);
+    textOverlayTop.appendChild(cardType);
+
+    card.appendChild(textOverlayBottom);
+    card.appendChild(cardImage);
+    card.appendChild(textOverlayTop);
+
+    return card;
+}
 
 function updateCardDisplay(userCards) {
     // Clear existing cards
@@ -241,7 +317,7 @@ document.addEventListener('DOMContentLoaded', function () {
     fetch('/cards')
         .then(response => response.json())
         .then(userCards => {
-
+            updateStagingAreaFromInfo(userCards);
             updateCardDisplay(userCards);
 
         });
@@ -313,43 +389,6 @@ function confirmReset() {
     }
 }
 
-// async function updateStagingArea() {
-//     try {
-//         // Fetch the deckId from the server (Replace this with your actual logic)
-//         const deckId = await fetchDeckIdFromServer();
-//         console.log("updateStagingArea deckid:", deckId);
-
-//         // Check if deckId is present
-//         if (!deckId) {
-//             console.error('Deck ID not found');
-//             return;
-//         }
-
-//         // Fetch cardIds associated with the deckId
-//         const cardIds = await fetchCardIdsFromServer(deckId);
-//         console.log('card ids', cardIds);
-
-//         // Assuming you have a staging area container with an id of 'stagingArea'
-//         const stagingArea = document.getElementById('stagingArea');
-
-//         // Clear existing content
-//         stagingArea.innerHTML = '';
-
-//         // Update with new content based on deckId and cardIds
-//         // Add your logic to create and append elements as needed
-//         // For example, you might create divs for each card and append them to the staging area
-//         if (cardIds) {
-//             cardIds.forEach(cardId => {
-//                 const cardElement = document.createElement('div');
-//                 cardElement.textContent = cardId;
-//                 stagingArea.appendChild(cardElement);
-//             });
-//         }
-//     } catch (error) {
-//         console.error('Error updating staging area:', error);
-//     }
-// }
-
 // Example function to fetch the deckId from the server
 
 async function fetchDeckIdFromServer() {
@@ -377,7 +416,77 @@ async function fetchCardIdsFromServer(deckId) {
     }
 }
 
-// Updated getCardInfo function
+// Updated getCardData function
+async function getCardData(selectedDeck) {
+    try {
+        // Use the initial cardIds when the page is loaded
+        const cardIds = initialCardIds;
+        console.log("getCardData card id check", cardIds);
+
+        // Check if cardIds is defined before proceeding
+        if (!cardIds || !Array.isArray(cardIds)) {
+            console.error('CardIds is undefined, null, or not an array.');
+            return null;  // or return some default value
+        }
+
+        // Use Promise.all to wait for all asynchronous calls to complete
+        const cardPromises = cardIds.map(async (cardId) => {
+            const cardData = await getCardInfo(cardId, selectedDeck);  // Pass selectedDeck here
+            return cardData; // Assuming you only expect one result per cardId
+        });
+
+        // Resolve all promises and get the card data
+        const cardDataArray = await Promise.all(cardPromises);
+
+        return cardDataArray;
+    } catch (error) {
+        // Handle errors if any of the promises are rejected
+        console.error("Error fetching card data:", error);
+        return null; // or return some default value
+    }
+}
+
+async function updateStagingAreaFromInfo() {
+    try {
+        // Fetch the deckId from the server (Replace this with your actual logic)
+        const deckId = await fetchDeckIdFromServer();
+
+        // Check if deckId is present
+        if (!deckId) {
+            console.error('Deck ID not found');
+            return;
+        }
+
+        // Fetch cardIds associated with the deckId
+        const cardIds = await fetchCardIdsFromServer(deckId);
+
+        // Assuming you have a staging area container with an id of 'stagingArea'
+        const stagingArea = document.getElementById('stagingArea');
+
+        // Clear existing content
+        stagingArea.innerHTML = '';
+
+        // Update with new content based on deckId and cardIds
+        // Add your logic to create and append elements as needed
+        // For example, you might create divs for each card and append them to the staging area
+        if (cardIds) {
+            cardIds.forEach(async (cardId) => {
+                // Fetch card info for each cardId
+                const cardInfo = await getCardInfo(cardId);
+
+                // Create trading card element from cardInfo
+                const cardElement = createTradingCardFromInfo(cardInfo);
+
+                // Append cardElement to the staging area
+                stagingArea.appendChild(cardElement);
+            });
+        }
+    } catch (error) {
+        console.error('Error updating staging area:', error);
+    }
+}
+
+
 async function getCardInfo(cardId, selectedDeck) {
     try {
         const response = await fetch('/getCardInfo', {
@@ -389,12 +498,94 @@ async function getCardInfo(cardId, selectedDeck) {
         });
 
         const data = await response.json();
+
         return data;
     } catch (error) {
         console.error('Error fetching card info:', error.message);
         return null;
     }
 }
+
+
+// // Your updated getCardData function
+// async function getCardData() {
+//     try {
+//         // Use the initial cardIds when the page is loaded
+//         const cardIds = initialCardIds;
+//         console.log("getCardData card id check", cardIds);
+
+//         // Check if cardIds is defined before proceeding
+//         if (!cardIds || !Array.isArray(cardIds)) {
+//             console.error('CardIds is undefined, null, or not an array.');
+//             return null;  // or return some default value
+//         }
+
+//         // Use Promise.all to wait for all asynchronous calls to complete
+//         const cardPromises = cardIds.map(async (cardId) => {
+//             const cardData = await getCardInfo(cardId);
+//             console.log("carddata obj", cardData);
+//             return cardData; // Assuming you only expect one result per cardId
+//         });
+
+//         // Resolve all promises and get the card data
+//         const cardDataArray = await Promise.all(cardPromises);
+
+//         return cardDataArray;
+//     } catch (error) {
+//         // Handle errors if any of the promises are rejected
+//         console.error("Error fetching card data:", error);
+//         return null; // or return some default value
+//     }
+// }
+
+// // Function to update the staging area based on getCardInfo output
+// async function updateStagingAreaFromInfo(userCards) {
+//     const stagingArea = document.getElementById('stagingArea');
+//     stagingArea.innerHTML = '';
+
+//     const cardIds = Object.keys(userCards);
+
+//     for (const cardId of cardIds) {
+//         // Ensure cardId is defined
+//         if (cardId) {
+//             const cardInfo = await getCardInfo(cardId);
+
+//             // Ensure cardInfo is not null before creating the card element
+//             if (cardInfo) {
+//                 const cardElement = createTradingCardFromInfo(cardInfo);
+//                 cardElement.dataset.cardId = cardId;
+//                 cardElement.draggable = true;
+//                 cardElement.addEventListener('click', () => selectCard(cardId));
+
+//                 stagingArea.appendChild(cardElement);
+//             } else {
+//                 console.error(`Card info not found for card with ID: ${cardId}`);
+//             }
+//         } else {
+//             console.error('Card ID is undefined');
+//         }
+//     }
+// }
+
+
+// // Updated getCardInfo function
+// async function getCardInfo(cardId, selectedDeck) {
+//     try {
+//         const response = await fetch('/getCardInfo', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//             },
+//             body: JSON.stringify({ cardId: cardId, selectedDeck: selectedDeck }),
+//         });
+
+//         const data = await response.json();
+//         return data;
+//     } catch (error) {
+//         console.error('Error fetching card info:', error.message);
+//         return null;
+//     }
+// }
 
 let initialCardIds = [];
 
@@ -419,12 +610,13 @@ async function updateStagingArea() {
         stagingArea.innerHTML = '';
 
         // Update with new content based on deckId and cardIds
-        // Add your logic to create and append elements as needed
-        // For example, you might create divs for each card and append them to the staging area
+        // Create and append elements using createTradingCardFromInfo function
         if (initialCardIds) {
-            initialCardIds.forEach(cardId => {
-                const cardElement = document.createElement('div');
-                cardElement.textContent = cardId;
+            initialCardIds.forEach(async cardId => {
+                // Fetch card information using getCardInfo
+                const cardInfo = await getCardInfo(cardId);
+                // Create card element using createTradingCardFromInfo
+                const cardElement = createTradingCardFromInfo(cardInfo);
                 stagingArea.appendChild(cardElement);
             });
         }
@@ -433,35 +625,5 @@ async function updateStagingArea() {
     }
 }
 
-// Your updated getCardData function
-async function getCardData() {
-    try {
-        // Use the initial cardIds when the page is loaded
-        const cardIds = initialCardIds;
-        console.log("getCardData card id check", cardIds);
-
-        // Check if cardIds is defined before proceeding
-        if (!cardIds || !Array.isArray(cardIds)) {
-            console.error('CardIds is undefined, null, or not an array.');
-            return null;  // or return some default value
-        }
-
-        // Use Promise.all to wait for all asynchronous calls to complete
-        const cardPromises = cardIds.map(async (cardId) => {
-            const cardData = await getCardInfo(cardId);
-            console.log("carddata obj", cardData);
-            return cardData; // Assuming you only expect one result per cardId
-        });
-
-        // Resolve all promises and get the card data
-        const cardDataArray = await Promise.all(cardPromises);
-
-        return cardDataArray;
-    } catch (error) {
-        // Handle errors if any of the promises are rejected
-        console.error("Error fetching card data:", error);
-        return null; // or return some default value
-    }
-}
 
 updateStagingArea();
