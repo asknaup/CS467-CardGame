@@ -227,42 +227,44 @@ app.post('/decksubmitted', async (req, res) => {
 
 // Deck pull from db and editing endpoints
 // Endpoint to get deck names for the current user
+// TODO: Why does deleting this break the dropdown? 
 app.get('/deckNames', async (req, res) => {
 
-  // try {
-  //   if (currentUser) {
-  //     const userDecks = await dbFunc.gatherUserDecks(currentUser.userId);
-  //     console.log(userDecks)
-  //     res.render('buildDeck', { showLogoutButton: true, decks: userDecks })
-  //   } else {
-  //     res.render('builDeck', { showLogoutButton: false })
-  //   }
-  // } catch (err) {
-  //   console.log(err);
-  // }
 });
 
 
-// Endpoint to get cards for a specific deck for the current user
-app.get('/deckCards', (req, res) => {
-  const selectedDeck = req.query.deck;
+app.post('/deckCards', async (req, res) => {
+  const selectedDeck = req.body.deckId;
 
-  // Fetch cardIds for the selected deck and current user from the database
-  db.get('SELECT cardIds FROM decks WHERE userId = ? AND deckName = ?', [currentUser.userId, selectedDeck], (err, row) => {
-    if (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Internal Server Error' });
-      return;
-    }
+  try {
+    console.log(selectedDeck);
+
+    // Fetch cardIds for the selected deck and current user from the database using a Promise
+    const row = await new Promise((resolve, reject) => {
+      dbFunc.getUserDeck(selectedDeck, [currentUser.userId, selectedDeck], (err, row) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(row);
+        }
+      });
+    });
 
     if (row) {
       const cards = row.cardIds.split(',').map(Number);
       res.json({ cards });
     } else {
+      // If deck is not found, return a 404 status and end the response
       res.status(404).json({ error: 'Deck not found' });
     }
-  });
+  } catch (error) {
+    console.error(error);
+    // If there is an error, return a 500 status and end the response
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
+
+
 
 
 // TODO: NEEDS WORK and direction

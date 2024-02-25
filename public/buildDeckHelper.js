@@ -272,21 +272,32 @@ function confirmReset() {
     }
 }
 
-function loadDeck() {
-    let selectedDeck = document.getElementById('deckDropdown').value;
+// Assuming you have an event listener for the change event on the dropdown
+document.getElementById('deckDropdown').addEventListener('change', loadDeck);
 
-    // Fetch cards for the selected deck from the server's /deckCards endpoint
-    fetch(`/deckCards?deck=${selectedDeck}`)
+function loadDeck() {
+    const dropdown = document.getElementById('deckDropdown');
+    const selectedDeckId = dropdown.value;  // Get the selected value directly
+
+    console.log("selected deck id:", selectedDeckId);
+
+    fetch('/deckCards', {
+        method: 'POST',
+        body: JSON.stringify({ deckId: selectedDeckId }),
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
         .then(response => response.json())
-        .then(data => {
-            // Update your staging area with the fetched cards
-            updateStagingArea(data.cards);
+        .then(deckDetails => {
+            const stagingArea = document.getElementById('stagingArea');
+            stagingArea.textContent = JSON.stringify(deckDetails, null, 2);
+
+            sessionStorage.setItem('deckId', selectedDeckId);
         })
-        .catch(error => console.error(`Error fetching cards for ${selectedDeck}:`, error));
+        .catch(error => console.error('Error fetching deck details:', error));
 }
 
+
 function updateStagingArea(cards) {
-    // Implement code to update your staging area with the fetched cards
-    // You might want to clear the existing cards and add the new ones
-    // Use your existing logic for staging/unstaging cards
 }

@@ -14,7 +14,7 @@
     <h1>Instructions</h1>
     <div>
         <label for="deckDropdown">Select Deck:</label>
-        <select id="deckDropdown" onchange="loadDeck()">
+        <select id="deckDropdown">
             {{#each decks}}
             <option value="{{deckId}}">{{deckName}}</option>
             {{/each}}
