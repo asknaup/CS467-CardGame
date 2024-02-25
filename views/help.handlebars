@@ -9,32 +9,45 @@
 </head>
 {{!-- #TODO add number of decks --}}
 {{!-- #TODO add option to brows between collections and decks --}}
-<body>
-  <br>
-  <h1 id="usernameH">Welcome to the Help Page</h1>
-  <br>
-  <div class="userContainer">
-    
-  </div>
-  <br>
-  <div class="center">
-     <form action="/gameGenPage" method="get">
-      <button id="gen-game-button-ggp" type="submit">Create a New Trading Card Game</button>
-    </form>
-    <form action="/collect" method="get">
-      <button id="gen-game-button-ggp" type="submit">Browse your collection for {x game}</button>
-    </form>
-    <form action="/buildDeck" method="get">
-      <button id="gen-game-button-ggp" type="submit">Edit your Play Deck from your Collection for {x game}</button>
-    </form>
-    <form action="/gamePlayPage" method="get">
-      <button id="gen-game-button-ggp" type="submit">Play with your created Deck against an opponent</button>
-    </form>
-    <br>
-    <form action="/gamePlayPage" method="get">
-      <button id="gen-game-button-ggp" type="submit">Help! I'm Lost</button>
-    </form>
-  </div>
-</body>
+  <body >
+    <h1 id="helpPageTitle">Welcome to the Help Page</h1>
 
+
+    
+    <div id="helpPage">
+      
+      <div id="leftColumn">
+        <h3 id="FAQTitle">Frequently Asked Questions: </h3>
+        <ul id="FAQ">
+          <li><div class="question"> How do I play this game? How do I start? </div>
+            <p class="answer"> 
+            First you will need to open a pack of cards. You can then also generate your own cards. Then
+            you will need to build your deck of cards. Here are the steps to follow to do that:
+            </p>
+          </li>
+
+          <li> <div class="question"> How much does this game cost? Is it free? </div>
+            <p class="answer">
+            This game is free! It does cost a few cents per image to generate through the ai image generator but 
+            currently we are paying for it! 
+            </p>
+          </li>
+      </ul>
+    </div>
+
+      
+    <div id="rightColumn">
+        <h3 id="helpfulLinksTitle">Helpful Links: </h3>
+        <ul id="ulHelpColumn">
+          <li class="helpLinks"><a href="/gameGenPage">Create a New Trading Card Game</a> </li>
+          <li class="helpLinks"><a href="/collect">Browse your collection for {x game}</a></li>
+          <li class="helpLinks"><a href="/buildDeck">Edit your Play Deck from your Collection for {x game}</a></li>
+          <li class="helpLinks"><a href="/gamePlayPage">Play with your created Deck against an opponent</a></li>
+          <li class="helpLinks"><a href="/gamePlayPage"> Help! I'm Lost</a> </li>
+        </ul>
+      </div>
+    </div> <!-- closing div tag for id="helpPage" -->
+  
+     <script src="helpPage.js"></script>
+  </body>
 </html>

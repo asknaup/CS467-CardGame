@@ -1,5 +1,80 @@
 /* Page-Specific CSS Code */
 
+/* help page css */
+#helpPage {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+}
+
+#helpPageTitle{
+    color: rebeccapurple;
+    margin: 1vw;
+}
+
+#helpfulLinksTitle{
+    color: rebeccapurple;
+    margin: 2vh;
+}
+
+#leftColumn {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+}
+
+#rightColumn {
+    display: flex;
+    flex-direction: column;
+    border-left: 2px solid rgb(173, 124, 173);
+    border-style:ridge;
+    width: 30%;
+}
+
+#FAQ {
+    list-style-type: disc;
+}
+
+#FAQTitle{
+    width: 100%;
+    text-align: left;
+    color: #4caf50;
+    margin: 2vh;
+}
+
+.question{
+    list-style-type: none;
+    text-decoration: underline;
+    color: #4caf50;
+}
+
+.question:hover {
+    cursor: pointer;
+}
+
+.answer {
+    display: none;
+    text-decoration: none;
+}
+
+#ulHelpColumn {
+    display: flex;
+    flex-direction: column;
+}
+
+.helpLinks{
+    width: 90%;
+    list-style: none;
+    margin: 2% 2% 2% 8%;
+}
+
+.helpLinks a{
+    color: rebeccapurple;
+    font-size: 1.3em;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
 /* general card css */
 .cardContainer {
     display: flex;

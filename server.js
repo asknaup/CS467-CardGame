@@ -332,6 +332,16 @@ app.get('/game/', async (req, res) => {
   }
 });
 
+
+app.get('/help', (req, res) => {
+  const user = req.session.user;
+  if (user) {
+    res.render('help')
+  } else {
+    res.redirect('/');
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
 });
