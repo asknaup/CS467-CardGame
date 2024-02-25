@@ -486,7 +486,6 @@ async function updateStagingAreaFromInfo() {
     }
 }
 
-
 async function getCardInfo(cardId, selectedDeck) {
     try {
         const response = await fetch('/getCardInfo', {
@@ -505,87 +504,6 @@ async function getCardInfo(cardId, selectedDeck) {
         return null;
     }
 }
-
-
-// // Your updated getCardData function
-// async function getCardData() {
-//     try {
-//         // Use the initial cardIds when the page is loaded
-//         const cardIds = initialCardIds;
-//         console.log("getCardData card id check", cardIds);
-
-//         // Check if cardIds is defined before proceeding
-//         if (!cardIds || !Array.isArray(cardIds)) {
-//             console.error('CardIds is undefined, null, or not an array.');
-//             return null;  // or return some default value
-//         }
-
-//         // Use Promise.all to wait for all asynchronous calls to complete
-//         const cardPromises = cardIds.map(async (cardId) => {
-//             const cardData = await getCardInfo(cardId);
-//             console.log("carddata obj", cardData);
-//             return cardData; // Assuming you only expect one result per cardId
-//         });
-
-//         // Resolve all promises and get the card data
-//         const cardDataArray = await Promise.all(cardPromises);
-
-//         return cardDataArray;
-//     } catch (error) {
-//         // Handle errors if any of the promises are rejected
-//         console.error("Error fetching card data:", error);
-//         return null; // or return some default value
-//     }
-// }
-
-// // Function to update the staging area based on getCardInfo output
-// async function updateStagingAreaFromInfo(userCards) {
-//     const stagingArea = document.getElementById('stagingArea');
-//     stagingArea.innerHTML = '';
-
-//     const cardIds = Object.keys(userCards);
-
-//     for (const cardId of cardIds) {
-//         // Ensure cardId is defined
-//         if (cardId) {
-//             const cardInfo = await getCardInfo(cardId);
-
-//             // Ensure cardInfo is not null before creating the card element
-//             if (cardInfo) {
-//                 const cardElement = createTradingCardFromInfo(cardInfo);
-//                 cardElement.dataset.cardId = cardId;
-//                 cardElement.draggable = true;
-//                 cardElement.addEventListener('click', () => selectCard(cardId));
-
-//                 stagingArea.appendChild(cardElement);
-//             } else {
-//                 console.error(`Card info not found for card with ID: ${cardId}`);
-//             }
-//         } else {
-//             console.error('Card ID is undefined');
-//         }
-//     }
-// }
-
-
-// // Updated getCardInfo function
-// async function getCardInfo(cardId, selectedDeck) {
-//     try {
-//         const response = await fetch('/getCardInfo', {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//             body: JSON.stringify({ cardId: cardId, selectedDeck: selectedDeck }),
-//         });
-
-//         const data = await response.json();
-//         return data;
-//     } catch (error) {
-//         console.error('Error fetching card info:', error.message);
-//         return null;
-//     }
-// }
 
 let initialCardIds = [];
 
@@ -624,6 +542,5 @@ async function updateStagingArea() {
         console.error('Error updating staging area:', error);
     }
 }
-
 
 updateStagingArea();
