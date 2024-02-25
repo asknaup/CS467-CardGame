@@ -86,7 +86,8 @@ function createExampleCardsForCollection(exampleCards){
             userObj.primaryKeysForCollections[0].push(uniquePrimaryKey);
             userObj.collections[0][uniquePrimaryKey] = new Card(uniquePrimaryKey, cardData.cardName, cardData.imagePath, cardData.cardType, 
             cardData.spellType, cardData.spellAbility, cardData.spellAttack, cardData.spellDefense, 
-            cardData.attack, cardData.defense, cardData.manaCost); 
+            cardData.attack, cardData.defense, cardData.manaCost);
+            console.log(userObj.collections[0][uniquePrimaryKey])
         } else{
             if (index === 50){
                 userObj.collections[1] = {};
@@ -107,6 +108,11 @@ function collectionSelectHandler(collectionSelect){
     collectionSelect.addEventListener("change", () => {
         let collectionKey = parseInt(collectionSelect.value);
         switchToGivenCollection(collectionKey);
+        userObj.startIndex = 0;
+        userObj.endIndex = numCardsInView - 1;
+        if (userObj.endIndex > userObj.primaryKeyArr.length - 1){
+            userObj.endIndex = userObj.primaryKeyArr.length - 1
+        }
         displayCardCollection(userObj);
     })
 }
