@@ -1,116 +1,181 @@
+const cardsPerRow = 6;
+
+function loadDeck() {
+    const dropdown = document.getElementById('deckDropdown');
+    const selectedDeckId = dropdown.value;
+
+    console.log("selected deck id:", selectedDeckId);
+
+    fetch('/deckCards', {
+        method: 'POST',
+        body: JSON.stringify({ deckId: selectedDeckId }),
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+        .then(response => response.json())
+        .then(deckDetails => {
+            console.log("deckDetails loadDeck:", deckDetails);
+
+            // Call the function to update the card display
+            fetch('/cards')
+                .then(response => response.json())
+                .then(userCards => {
+                    updateCardDisplay(userCards);
+
+                    // Call updateStagingArea after fetching new cardIds
+                    updateStagingArea();
+                })
+                .catch(error => console.error('Error fetching user cards:', error));
+        })
+        .catch(error => console.error('Error fetching deck details:', error));
+}
+
+
+function updateCardDisplay(userCards) {
+    // Clear existing cards
+    cardContainer.innerHTML = '';
+
+    // Display all cards in the carousel dynamically with no more than 7 cards per row
+    const cardIds = Object.keys(userCards);
+    const totalCards = cardIds.length;
+
+    let currentRow;
+
+    cardIds.forEach((cardId, index) => {
+        if (index % cardsPerRow === 0) {
+            currentRow = document.createElement('div');
+            currentRow.classList.add('carouselRow');
+            cardContainer.appendChild(currentRow);
+        }
+
+        const card = userCards[cardId];
+        const cardElement = createTradingCard(card);
+        cardElement.dataset.cardId = cardId;
+        cardElement.draggable = true;
+        cardElement.addEventListener('click', () => selectCard(cardId));
+
+        currentRow.appendChild(cardElement);
+    });
+}
+
+// Function to create a trading card
+function createTradingCard(cardData) {
+    // Card container
+    var card = document.createElement('div');
+    card.classList.add('card');
+
+    // cardId
+    var cardId = document.createElement('p');
+    cardId.textContent = cardData.cardId;
+
+    // Tooltip for attributes
+    // var toolTip = document.createElement('div');
+    // toolTip.classList.add('toolTip');
+
+    // var toolTipText = document.createElement('span');
+    // toolTipText.classList.add('toolTipText');
+
+    // Name
+    var cardName = document.createElement('h1');
+    cardName.classList.add('cardName');
+    cardName.textContent = cardData.cardName;
+
+    // Text overlays
+    var textOverlayBottom = document.createElement('div');
+    textOverlayBottom.classList.add('textOverlayBottom');
+
+    var textOverlayTop = document.createElement('div');
+    textOverlayTop.classList.add('textOverlayTop');
+
+    // Card image
+    var cardImage = document.createElement('div');
+    cardImage.classList.add('cardImage');
+
+    var imageElement = document.createElement('img');
+    imageElement.src = cardData.imagePath;
+    imageElement.alt = 'Card Image';
+
+    cardImage.appendChild(imageElement);
+
+    // TODO: Replace with creature
+    var cardType = document.createElement('p');
+    cardType.classList.add('cardType');
+    cardType.textContent = cardData.cardType;
+
+    var rarity = document.createElement('p');
+    rarity.textContent = cardData.rarity;
+
+    var manaCost = document.createElement('p');
+    manaCost.innerHTML = `<strong>Mana Cost:</strong> ${cardData.manaCost}`;
+
+    // toolTipText.appendChild(rarity);
+    // toolTipText.appendChild(manaCost);
+    textOverlayBottom.appendChild(rarity);
+    textOverlayBottom.appendChild(manaCost);
+
+    if (cardData.cardType == "Spell") {
+        var spellType = document.createElement('p');
+        spellType.innerHTML = `<strong>Spell Type:</strong> ${cardData.spellType}`;
+
+        var spellAbility = document.createElement('p');
+        spellAbility.innerHTML = `<strong>Spell Ability:</strong> ${cardData.spellAbility}`;
+
+        var spellAttack = document.createElement('p');
+        spellAttack.innerHTML = `<strong>Spell Attack:</strong> ${cardData.spellAttack}`;
+
+        var spellDefense = document.createElement('p');
+        spellDefense.innerHTML = `<strong>Spell Defense:</strong> ${cardData.spellDefense}`;
+
+        textOverlayBottom.appendChild(spellType);
+        textOverlayBottom.appendChild(spellAbility);
+        textOverlayBottom.appendChild(spellAttack);
+        textOverlayBottom.appendChild(spellDefense);
+        // toolTipText.appendChild(spellType);
+        // toolTipText.appendChild(spellAbility);
+        // toolTipText.appendChild(spellAttack);
+        // toolTipText.appendChild(spellDefense);
+
+    } else {
+        var attack = document.createElement('p');
+        attack.innerHTML = `<strong>Attack:</strong> ${cardData.attack}`;
+
+        var defense = document.createElement('p');
+        defense.innerHTML = `<strong>Defense:</strong> ${cardData.defense}`;
+
+        textOverlayBottom.appendChild(attack);
+        textOverlayBottom.appendChild(defense);
+        // toolTipText.appendChild(attack);
+        // toolTipText.appendChild(defense);
+    }
+
+    // toolTip.appendChild(toolTipText);
+    // textOverlayBottom.appendChild(cardName);
+    // textOverlayBottom.appendChild(cardType);
+    textOverlayTop.appendChild(cardName);
+    textOverlayTop.appendChild(cardType);
+
+    card.appendChild(textOverlayBottom);
+    card.appendChild(cardImage);
+    // card.appendChild(textOverlayBottom);
+    card.appendChild(textOverlayTop);
+
+    // card.appendChild(toolTip);
+
+    return card;
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     const stagingArea = document.getElementById('stagingArea');
     const cardContainer = document.getElementById('cardContainer');
 
-    const cardsPerRow = 6;
+    // Assuming you have an event listener for the change event on the dropdown
+    document.getElementById('deckDropdown').addEventListener('change', loadDeck);
 
     let selectedCards = [];
 
-    // Function to create a trading card
-    function createTradingCard(cardData) {
-        // Card container
-        var card = document.createElement('div');
-        card.classList.add('card');
-
-        // cardId
-        var cardId = document.createElement('p');
-        cardId.textContent = cardData.cardId;
-
-        // Tooltip for attributes
-        // var toolTip = document.createElement('div');
-        // toolTip.classList.add('toolTip');
-
-        // var toolTipText = document.createElement('span');
-        // toolTipText.classList.add('toolTipText');
-
-        // Name
-        var cardName = document.createElement('h1');
-        cardName.classList.add('cardName');
-        cardName.textContent = cardData.cardName;
-
-        // Text overlays
-        var textOverlayBottom = document.createElement('div');
-        textOverlayBottom.classList.add('textOverlayBottom');
-
-        var textOverlayTop = document.createElement('div');
-        textOverlayTop.classList.add('textOverlayTop');
-
-        // Card image
-        var cardImage = document.createElement('div');
-        cardImage.classList.add('cardImage');
-
-        var imageElement = document.createElement('img');
-        imageElement.src = cardData.imagePath;
-        imageElement.alt = 'Card Image';
-
-        cardImage.appendChild(imageElement);
-
-        // TODO: Replace with creature
-        var cardType = document.createElement('p');
-        cardType.classList.add('cardType');
-        cardType.textContent = cardData.cardType;
-
-        var rarity = document.createElement('p');
-        rarity.textContent = cardData.rarity;
-
-        var manaCost = document.createElement('p');
-        manaCost.innerHTML = `<strong>Mana Cost:</strong> ${cardData.manaCost}`;
-
-        // toolTipText.appendChild(rarity);
-        // toolTipText.appendChild(manaCost);
-        textOverlayBottom.appendChild(rarity);
-        textOverlayBottom.appendChild(manaCost);
-
-        if (cardData.cardType == "Spell") {
-            var spellType = document.createElement('p');
-            spellType.innerHTML = `<strong>Spell Type:</strong> ${cardData.spellType}`;
-
-            var spellAbility = document.createElement('p');
-            spellAbility.innerHTML = `<strong>Spell Ability:</strong> ${cardData.spellAbility}`;
-
-            var spellAttack = document.createElement('p');
-            spellAttack.innerHTML = `<strong>Spell Attack:</strong> ${cardData.spellAttack}`;
-
-            var spellDefense = document.createElement('p');
-            spellDefense.innerHTML = `<strong>Spell Defense:</strong> ${cardData.spellDefense}`;
-
-            textOverlayBottom.appendChild(spellType);
-            textOverlayBottom.appendChild(spellAbility);
-            textOverlayBottom.appendChild(spellAttack);
-            textOverlayBottom.appendChild(spellDefense);
-            // toolTipText.appendChild(spellType);
-            // toolTipText.appendChild(spellAbility);
-            // toolTipText.appendChild(spellAttack);
-            // toolTipText.appendChild(spellDefense);
-
-        } else {
-            var attack = document.createElement('p');
-            attack.innerHTML = `<strong>Attack:</strong> ${cardData.attack}`;
-
-            var defense = document.createElement('p');
-            defense.innerHTML = `<strong>Defense:</strong> ${cardData.defense}`;
-
-            textOverlayBottom.appendChild(attack);
-            textOverlayBottom.appendChild(defense);
-            // toolTipText.appendChild(attack);
-            // toolTipText.appendChild(defense);
-        }
-
-        // toolTip.appendChild(toolTipText);
-        // textOverlayBottom.appendChild(cardName);
-        // textOverlayBottom.appendChild(cardType);
-        textOverlayTop.appendChild(cardName);
-        textOverlayTop.appendChild(cardType);
-
-        card.appendChild(textOverlayBottom);
-        card.appendChild(cardImage);
-        // card.appendChild(textOverlayBottom);
-        card.appendChild(textOverlayTop);
-
-        // card.appendChild(toolTip);
-
-        return card;
-    }
+    loadDeck();
+    updateStagingArea();
 
     // Fetch user's cards from the server
     fetch('/cards')
@@ -118,33 +183,6 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(userCards => {
 
             updateCardDisplay(userCards);
-
-            function updateCardDisplay(userCards) {
-                // Clear existing cards
-                cardContainer.innerHTML = '';
-
-                // Display all cards in the carousel dynamically with no more than 7 cards per row
-                const cardIds = Object.keys(userCards);
-                const totalCards = cardIds.length;
-
-                let currentRow;
-
-                cardIds.forEach((cardId, index) => {
-                    if (index % cardsPerRow === 0) {
-                        currentRow = document.createElement('div');
-                        currentRow.classList.add('carouselRow');
-                        cardContainer.appendChild(currentRow);
-                    }
-
-                    const card = userCards[cardId];
-                    const cardElement = createTradingCard(card);
-                    cardElement.dataset.cardId = cardId;
-                    cardElement.draggable = true;
-                    cardElement.addEventListener('click', () => selectCard(cardId));
-
-                    currentRow.appendChild(cardElement);
-                });
-            }
 
             function selectCard(cardId) {
                 const cardElement = document.querySelector(`[data-card-id="${cardId}"]`);
@@ -272,84 +310,126 @@ function confirmReset() {
     }
 }
 
-// Assuming you have an event listener for the change event on the dropdown
-document.getElementById('deckDropdown').addEventListener('change', loadDeck);
-
-function loadDeck() {
-    const dropdown = document.getElementById('deckDropdown');
-    const selectedDeckId = dropdown.value;  // Get the selected value directly
-
-    console.log("selected deck id:", selectedDeckId);
-
-    fetch('/deckCards', {
-        method: 'POST',
-        body: JSON.stringify({ deckId: selectedDeckId }),
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    })
-        .then(response => response.json())
-        .then(deckDetails => {
-            const stagingArea = document.getElementById('stagingArea');
-            stagingArea.textContent = JSON.stringify(deckDetails, null, 2);
-
-            sessionStorage.setItem('deckId', selectedDeckId);
-        })
-        .catch(error => console.error('Error fetching deck details:', error));
-}
 
 
-function updateStagingArea() {
-    // Retrieve the deckId from sessionStorage
-    const deckId = sessionStorage.getItem('deckId');
 
-    // Check if deckId is present in sessionStorage
-    if (!deckId) {
-        console.error('Deck ID not found in sessionStorage');
-        return; // Abort updating staging area if deckId is not found
+
+// async function updateStagingArea() {
+//     // Retrieve the deckId from sessionStorage
+//     // const deckId = sessionStorage.getItem('deckId');
+
+//     console.log("updateStagingArea deckid:", deckId);
+//     // Check if deckId is present in sessionStorage
+//     if (!deckId) {
+//         console.error('Deck ID not found in sessionStorage');
+//         return; // Abort updating staging area if deckId is not found
+//     }
+
+//     // Fetch cardIds associated with the deckId (Replace this with your actual logic)
+//     const cardIds = await fetchCardIdsFromServer(deckId);
+//     console.log('card ids', cardIds);
+
+//     // Assuming you have a staging area container with an id of 'stagingArea'
+//     const stagingArea = document.getElementById('stagingArea');
+
+//     // Clear existing content
+//     stagingArea.innerHTML = '';
+
+//     // Update with new content based on deckId and cardIds
+//     // Add your logic to create and append elements as needed
+//     // For example, you might create divs for each card and append them to the staging area
+//     if (cardIds) {
+//         cardIds.forEach(cardId => {
+//             const cardElement = document.createElement('div');
+//             cardElement.textContent = cardId;
+//             stagingArea.appendChild(cardElement);
+//         });
+//     }
+// }
+
+async function updateStagingArea() {
+    try {
+        // Fetch the deckId from the server (Replace this with your actual logic)
+        const deckId = await fetchDeckIdFromServer();
+        console.log("updateStagingArea deckid:", deckId);
+
+        // Check if deckId is present
+        if (!deckId) {
+            console.error('Deck ID not found');
+            return;
+        }
+
+        // Fetch cardIds associated with the deckId
+        const cardIds = await fetchCardIdsFromServer(deckId);
+        console.log('card ids', cardIds);
+
+        // Assuming you have a staging area container with an id of 'stagingArea'
+        const stagingArea = document.getElementById('stagingArea');
+
+        // Clear existing content
+        stagingArea.innerHTML = '';
+
+        // Update with new content based on deckId and cardIds
+        // Add your logic to create and append elements as needed
+        // For example, you might create divs for each card and append them to the staging area
+        if (cardIds) {
+            cardIds.forEach(cardId => {
+                const cardElement = document.createElement('div');
+                cardElement.textContent = cardId;
+                stagingArea.appendChild(cardElement);
+            });
+        }
+    } catch (error) {
+        console.error('Error updating staging area:', error);
     }
-
-    // Fetch cardIds associated with the deckId (Replace this with your actual logic)
-    const cardIds = fetchCardIdsFromServer(deckId);
-
-    // Assuming you have a staging area container with an id of 'stagingArea'
-    const stagingArea = document.getElementById('stagingArea');
-
-    // Clear existing content
-    stagingArea.innerHTML = '';
-
-    // Update with new content based on deckId and cardIds
-    // Add your logic to create and append elements as needed
-    // For example, you might create divs for each card and append them to the staging area
-    cardIds.forEach(cardId => {
-        const cardElement = document.createElement('div');
-        cardElement.textContent = cardId;
-        stagingArea.appendChild(cardElement);
-    });
 }
+
+// Example function to fetch the deckId from the server
+async function fetchDeckIdFromServer() {
+    try {
+        const response = await fetch('/getDeckId');  // Replace with your actual endpoint
+        const data = await response.json();
+        return data.deckId;  // Adjust based on your server response structure
+    } catch (error) {
+        console.error('Error fetching deckId:', error.message);
+        return null;
+    }
+}
+
 
 // Example function to fetch cardIds from the server
 async function fetchCardIdsFromServer(deckId) {
     try {
-        console.log("TEST TEST TEST")
-        // Make a fetch request to your server endpoint
-        const response = await fetch(`/deckCards`);
-        console.log("TEST TEST TEST")
-        // Check if the response status is OK (status code 200-299)
-        if (!response.ok) {
-            throw new Error(`Failed to fetch cardIds. Status: ${response.status}`);
-        }
-
+        const response = await fetch(`/getCardsForDeck?deckId=${deckId}`);
         const data = await response.json();
-        console.log('Server Response:', data);
-
-        // Return the cardIds from the server response
-        return data.cardIds; // Adjust the property name based on your server response
+        return data;
     } catch (error) {
         console.error('Error fetching cardIds:', error.message);
         return []; // Return an empty array or handle the error as needed
     }
 }
+
+// async function fetchCardIdsFromServer(deckId) {
+//     try {
+//         console.log("fetchCards log", deckId);
+//         console.log(typeof deckId);
+//         fetch(`/getCardsForDeck?deckId=${deckId}`)
+//             .then(response => response.json())
+//             .then(data => {
+//                 // Render the initial hand data on the UI
+//                 console.log("fetchCardsIdsFromServer", data);
+//                 return data;
+
+//             })
+//             .catch(error => {
+//                 console.error('Error fetching initial hand data:', error);
+//             });
+
+//     } catch (error) {
+//         console.error('Error fetching cardIds:', error.message);
+//         return []; // Return an empty array or handle the error as needed
+//     }
+// }
 
 // Call the updateStagingArea function when the page loads or when needed
 updateStagingArea();

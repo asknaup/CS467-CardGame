@@ -232,50 +232,85 @@ app.get('/deckNames', async (req, res) => {
 
 });
 
-
 app.post('/deckCards', async (req, res) => {
   const selectedDeck = req.body.deckId;
-  console.log("/deckcard here:", selectedDeck);
 
+  // Store the selected deckId in the session
+  req.session.deck = { deckId: parseInt(selectedDeck) };
+
+  console.log("selectedDeck post", selectedDeck);
+  console.log("session after post", req.session);
+
+  res.json({ status: 'OK' }); // Send a JSON response
+});
+
+app.get('/getCardsForDeck', async (req, res) => {
   try {
-    console.log("/deckCards here:", selectedDeck);
+    const selectedDeck = req.query.deckId;
 
-    // Fetch cardIds for the selected deck and current user from the database using a Promise
-    const row = await new Promise((resolve, reject) => {
-      dbFunc.getUserDeck(selectedDeck, [selectedDeck], (err, row) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(row);
-        }
-      });
-    });
+    if (selectedDeck) {
 
-    console.log("row", row);
+      // Fetch cardIds for the selected deck and current user from the database using a Promise
+      const row = await dbFunc.getUserDeck(parseInt(selectedDeck));
 
-    if (row) {
-      // Parse the cardList property from the JSON-like structure
-      const cardList = row.cardIds.cardList || [];
-
-      // Check if cardList is an array
-      if (Array.isArray(cardList)) {
-        res.json({ cards: cardList });
+      if (row && row.length > 0) {
+        var deckObject = JSON.parse(row[0].cardId);
+        res.json(deckObject.cardList);
       } else {
-        // If cardList is not found or not an array, return a 404 status
-        res.status(404).json({ error: 'Card list not found or invalid format' });
+        res.status(404).send("Deck not found");
       }
     } else {
-      // If deck is not found, return a 404 status
-      res.status(404).json({ error: 'Deck not found' });
+      console.log("dfjaldfj");
+      res.status(400).send("Missing deckId parameter");
+
     }
   } catch (error) {
-    console.error(error);
-    // If there is an error, return a 500 status
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Error handling getCardsForDeck:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+// Endpoint to get deckId
+app.get('/getDeckId', (req, res) => {
+  // For simplicity, let's just return the first deck's id
+  const deck = req.session.deck;
+
+  if (deck && deck.deckId) {
+    res.json({ deckId: deck.deckId });
+  } else {
+    res.status(404).json({ error: 'No deck found in the session' });
   }
 });
 
 
+// app.post('/deckCards', async (req, res) => {
+//   const selectedDeck = req.body.deckId;
+
+//   req.session.deck = { deckId: selectedDeck };
+//   console.log("selectedDeck post", selectedDeck);
+//   console.log("selectedDeck post req", req.session);
+
+// });
+
+// app.get('/getCardsForDeck', async (req, res) => {
+//   const selectedDeck = req.query.deckId;
+
+//   console.log("selectedDeck get:", selectedDeck);
+
+//   if (selectedDeck) {
+//     console.log("/deckCards here:", selectedDeck);
+
+//     // Fetch cardIds for the selected deck and current user from the database using a Promise
+//     const row = await dbFunc.getUserDeck(selectedDeck);
+
+//     console.log("row", row);
+
+//     var deckObject = JSON.parse(row[0].cardId);
+//     console.log(deckObject);
+//     console.log(deckObject.cardList);
+//     res.json(deckObject.cardList);
+//   }
+// });
 
 
 // TODO: NEEDS WORK and direction
