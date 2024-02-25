@@ -163,7 +163,7 @@ class Game {
                         cardData[0].cardType,   // type
                         cardData[0].creatureType,   // description
                         cardData[0].manaCost,
-                        cardData[0].rarity, 
+                        cardData[0].rarity,
                         cardData[0].imagePath,
                         cardData[0].attack,
                         cardData[0].defense);
@@ -264,8 +264,6 @@ class Game {
         let updatedStage = [...this.playerStage];
 
         if (!card) {
-            // console.log("Error: Card is not in hand.");
-            // return;
             return { error: "Card is not in hand." };
         }
 
@@ -277,26 +275,57 @@ class Game {
         // Check type of card
         if (card instanceof CreatureCard) {
             if (updatedStage.length < 5) {
-                console.log(cardId)
-                updatedStage.push(cardId);
+                updatedStage.push(card);
             } else {
                 // console.log("Error: Maximum limit reached on the board");
                 return { error: "Maximum limit reached on the board" };
             }
         } else if (card instanceof SpellCard) {
-            // Handle playing spell
-            // TODO add logic for card type spell
+            // Check if the spell card targets a creature card
         } else {
             // console.log("Error: unknown card type.");
             return { error: "unknown card type." }
         }
 
         // remove card from hand
-        let updatedHand = this.hand.filter(handCard => handCard.id !== cardId);
+        let updatedHand = this.hand.filter(handCard => handCard.id !== card.id);
 
         this.hand = updatedHand; // Update the hand
         this.playerStage = updatedStage; // Update the player stage
         this.user.mana -= card.mana;
+    }
+
+    // Method to play a spell card
+    playSpellCard(spellCardId, updatedCardData, creatureCardId) {
+        // Find the index of the card in the hand array
+        const spellCardIndexInHand = this.hand.findIndex(card => card.id === spellCardId);
+        const creatureCardIndexInStage = this.playerStage.findIndex(card => card.id === creatureCardId);
+
+        let spellCard = this.hand[spellCardIndexInHand];
+
+        // Check if the card exists in the hand
+        if (spellCardIndexInHand !== -1 && creatureCardIndexInStage !== -1) {
+            // Check if player has sufficient mana to play the spell card
+            if (this.user.mana >= spellCard.mana) {
+                // Remove the spell card from the player's hand
+                this.hand.splice(spellCardIndexInHand, 1);
+
+                // Update the corresponding creature card in the staged cards array
+                this.playerStage[creatureCardIndexInStage] = updatedCardData;
+
+                // Deduct mana cost from player's mana
+                this.user.mana -= spellCard.mana;
+
+                console.log("Spell card removed from hand and creature card updated in the staged cards.");
+                console.log(`Player mana deducted by ${spellCard.mana}. Remaining mana: ${this.user.mana}`);
+            } else {
+                console.log("Insufficient mana to play the spell card.");
+                return { error: "Insufficient mana to play the spell card." }; // Return without playing the card
+            }
+        } else {
+            console.log("Spell card or creature card not found.");
+            return { error: "Spell card or creature card not found."};
+        }
     }
 
     // Method to check if game is over

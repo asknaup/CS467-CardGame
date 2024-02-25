@@ -3,7 +3,7 @@
 // Client Side Javascript
 // Defined globally
 function dragStart(event) {
-    console.log(event.target.id)
+    console.log("dragStart", event.target.id)
     event.dataTransfer.setData('text/plain', event.target.id);
 }
 
@@ -16,17 +16,15 @@ function drop(event) {
     event.preventDefault();
     const cardId = event.dataTransfer.getData('text/plain');
     const dropZone = event.target;
-    
+
     // Check if dropZone already contains a card
     const existingCard = dropZone.querySelector('.card');
-    console.log("existingCard", existingCard)
 
     if (!existingCard) {
         // Fetch card details
         fetch(`/getCardDetails?cardId=${cardId}`)
             .then(response => response.json())
             .then(cardData => {
-                console.log("cardType", cardData)
                 if (cardData.type.toLowerCase() === 'creature') {
                     // Only creature cards can be played in the player drop zone
                     fetch('/playCard', {
@@ -66,18 +64,33 @@ function drop(event) {
                     } else {
                         // Determine the target zone (player or opponent)
                         const targetZone = dropZone.parentElement.classList.contains('player') ? 'player' : 'opponent';
-                        
                         // Apply spell effect based on the target zone
-                        applySpellEffect(cardData, targetZone, dropZone); // Pass dropZone as a parameter
+                        applySpellEffect(cardData, dropZone); // Pass dropZone as a parameter
+                        fetchAndRenderHand();
                     }
                 }
             });
     } else {
-        // If there is already a card in the drop zone, display an error message
+        // If there is already a card in the drop zone
         const dropZoneId = dropZone.id;
-        displayErrorMessage('Error: There is already a card here', dropZoneId);
+        // Fetch card details
+        fetch(`/getCardDetails?cardId=${cardId}`)
+            .then(response => response.json())
+            .then(cardData => {
+                if (cardData.type.toLowerCase() === 'spell') {
+                    // Apply spell effect to the existing creature card
+                    applySpellEffect(cardData, 'player', dropZone);
+                } else {
+                    // Display an error message since only spell cards can be applied to existing creature cards
+                    displayErrorMessage('Error: Only spell cards can be applied to existing creature cards', dropZoneId);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching card details:', error);
+            });
     }
 }
+
 
 // Function to fetch and render the hand
 function fetchAndRenderHand() {
@@ -116,27 +129,24 @@ document.addEventListener('DOMContentLoaded', function () {
             cardElement.id = card.id;
             cardElement.classList.add('card');
 
-            console.log("cardData");
-            console.log(card);
-
             // Set the text content based on the card type
             if (card.type.toLowerCase() === 'creature') {
                 cardElement.textContent = `${card.name}\n${card.type}\nmana: ${card.mana}\nAttack: ${card.attack}\nDefense: ${card.defense}`;
             } else if (card.type.toLowerCase() === 'spell') {
-                cardElement.textContent = `${card.name}\n${card.type}\nmana: ${card.mana}\nSpell Attack: ${card.spellAttack}\nSpell Defense: ${card.spellDefense}`;
+                cardElement.textContent = `${card.name}\n${card.type}\nmana: ${card.mana}\nSpell Attack: ${card.attack}\nSpell Defense: ${card.defense}`;
             }
 
             // Append the card element to the hand container
             handContainer.appendChild(cardElement);
         });
 
-         // Define handList after the hand cards are rendered
-         const handList = handContainer.querySelectorAll('.card');
- 
-         // Add event listeners for the hand cards
-         handList.forEach(card => {
-             card.addEventListener('dragstart', dragStart);
-         });
+        // Define handList after the hand cards are rendered
+        const handList = handContainer.querySelectorAll('.card');
+
+        // Add event listeners for the hand cards
+        handList.forEach(card => {
+            card.addEventListener('dragstart', dragStart);
+        });
     }
 
     // const hand = document.getElementById('hand');
@@ -150,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function dragStart(event) {
         event.dataTransfer.setData('text/plain', event.target.id);
     }
-    
+
     playerDropZones.forEach(zone => {
         zone.addEventListener('dragover', dragOver);
         zone.addEventListener('drop', drop);
@@ -161,12 +171,11 @@ document.addEventListener('DOMContentLoaded', function () {
         event.preventDefault();
     }
 
-    
+
 })
 
 function displayErrorMessage(message, dropZoneId) {
     const errorContainer = document.getElementById(`${dropZoneId}Error`);
-    console.log(errorContainer); // Log the error container for debugging
     if (errorContainer) {
         errorContainer.textContent = message;
         errorContainer.classList.add('show'); // Show the error container
@@ -180,14 +189,6 @@ function displayErrorMessage(message, dropZoneId) {
         }
     }, 5000);
 }
-
-// // Remove the card from the drop zone
-// dropZone.removeChild(newCardElement);
-
-// // Make the <p> element reappear
-// if (pElement) {
-//     pElement.style.display = 'block';
-// }
 
 document.addEventListener('DOMContentLoaded', function () {
     // Add event listener for the end turn button
@@ -262,8 +263,6 @@ function endTurn() {
     })
         .then(response => response.json())
         .then(data => {
-            // console.log(data.message); // Log the message from the server
-            // console.log(data.opponentStage);
 
             // Fetch and render Players hand
             fetchAndRenderHand();
@@ -292,10 +291,12 @@ function endTurn() {
             console.error('Error ending turn:', error);
         });
 
-        attachDragDropListeners();
+    attachDragDropListeners();
 }
 
 function updateOpponentStageUI(opponentStage) {
+    attachStagedCardListeners();
+
     // Assuming opponentStage is an array of card IDs
     const dropZones = document.querySelectorAll('.opponent .drop-zone');
     const emptyDropZones = [];
@@ -312,8 +313,6 @@ function updateOpponentStageUI(opponentStage) {
         }
     });
 
-    console.log(opponentStage)
-
     if (opponentStage.length > 0 && emptyDropZones.length > 0) {
         opponentStage.forEach(card => {
             // Randomly select an empty drop zone
@@ -322,7 +321,6 @@ function updateOpponentStageUI(opponentStage) {
 
             // Select the drop zone container element
             const selectedDropZoneContainer = document.getElementById(selectedDropZone);
-            console.log('Selected drop zone:', selectedDropZone);
 
             // Create a new card element
             const cardElement = document.createElement('div'); cardElement.classList.add('card');
@@ -348,22 +346,116 @@ function updateOpponentStageUI(opponentStage) {
     attachDragDropListeners();
 }
 
-function applySpellEffect(spellCard, targetZone, dropZone) {
-    const targetCreatureId = dropZone.querySelector(".card").id;
-    fetch(`/getCreatureDetails?creatureId=${targetCreatureId}`)
-    .then(response => response.json())
-    .then(creatureData => {
-        if (targetZone === 'player') {
-            creatureData.attack += spellData.spellAttack;
-            creatureData.defense += spellData.spellDefese;
-        } else {
-            creatureData.attack -= spellData.spellDefense;
+function attachStagedCardListeners() {
+    const stagedCards = document.querySelectorAll('.staged-card');
+    const playerDropZones = document.querySelectorAll(".player .drop-zone");
 
-            if (creatureData.defense < 0) {
-                removeCreatureFromBoard(targetCreatureId);
-            }
+    stagedCards.forEach(card => {
+        card.addEventListener('dragstart', dragStart);
+    });
+
+    playerDropZones.forEach(zone => {
+        zone.addEventListener('dragover', dragOver);
+        zone.addEventListener('drop', drop);
+    });
+}
+
+async function applySpellEffect(spellCard, dropZone) {
+    const dropZoneId = dropZone.getAttribute('id');
+
+    if (!dropZoneId) {
+        console.error('Error: No card found in the drop zone');
+        return;
+    }
+
+    try {
+        const creatureCardData = await fetchCreatureCardDetails(dropZoneId);
+
+        if (!creatureCardData) {
+            console.error('Error: Creature card details not found');
+            return;
         }
 
-        updateCreatureDetails(creatureData);
-    })
+        if (creatureCardData.type.toLowerCase() === 'creature') {
+            if (!spellCard.ability) {
+                console.error('Error: Spell effect not defined for the spell card');
+                return;
+            }
+
+            creatureCardData.attack += spellCard.attack;
+            creatureCardData.defense += spellCard.defense;
+
+            // Update the card on the server-side
+            updateCreatureCardOnServer(dropZoneId, creatureCardData, spellCard.id)
+                .then(updatedStagedCards => {
+                    console.log("updatedStagedCards", updatedStagedCards);
+                    // fetch hand after spell has been played
+                    fetchAndRenderHand();
+
+                    // Update the DOM with the updated card details
+                    if (updatedStagedCards) {
+                        const cardElement = document.getElementById(dropZoneId);
+                        const stagedCard = updatedStagedCards.filter(card => card.id === (dropZoneId))[0];
+                        console.log("staged Card", stagedCard)
+                        cardElement.textContent = `${stagedCard.name}\n${stagedCard.type}\nmana: ${stagedCard.mana}\nAttack: ${stagedCard.attack}\nDefense: ${stagedCard.defense}`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error updating creature card on server:', error);
+                });
+        } else {
+            displayErrorMessage('Error: Only creature cards can be affected by spells', dropZone.id);
+        }
+    } catch (error) {
+        console.error('Error applying spell effect:', error);
+    }
+}
+
+async function fetchCreatureCardDetails(cardId) {
+    try {
+        const response = await fetch(`/getCardDetails?cardId=${cardId}`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    } catch (error) {
+        console.error('Error fetching creature card details:', error);
+        return null;
+    }
+}
+
+async function updateCreatureCardOnServer(cardId, updatedCardData, spellCardId) {
+    return new Promise((resolve, reject) => {
+        fetch('/updatePlayerCreatureCard', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ cardId, updatedCardData, spellCardId }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message === 'card played successfully') {
+                console.log("data.cardId", data.cardId);
+                console.log("data.playerMana", data.playerMana);
+                console.log("data.playerStage", data.playerStage);
+                // Update player's mana UI
+                document.getElementById('playerMana').textContent = `Player Mana: ${data.playerMana}`;
+                
+                resolve(data.playerStage); // Resolve the promise with the playerStage data
+            } else if (data.message === 'Insufficient mana to play this card.') {
+                // Display an error message for insufficient mana
+                const dropZoneId = dropZone.id;
+                displayErrorMessage('Error: Insufficient mana to play this card', dropZoneId);
+                reject(data.message); // Reject the promise with the error message
+            } else {
+                console.error('Error:', data.message);
+                reject(data.message); // Reject the promise with the error message
+            }
+        })
+        .catch(error => {
+            console.error('Error playing the card:', error);
+            reject(error); // Reject the promise with the error
+        });
+    });
 }

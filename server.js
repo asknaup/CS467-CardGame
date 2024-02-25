@@ -165,7 +165,7 @@ app.get('/gameGenPage', async (req, res) => {
   try {
     if (user) {
       const userDecks = await dbFunc.gatherUserDecks(user.userId);
-      console.log(userDecks)
+      // console.log(userDecks)
       res.render('gameGenPage', { showLogoutButton: true, decks: userDecks })
     } else {
       res.render('gameGenPage', { showLogoutButton: false })
@@ -196,7 +196,7 @@ app.get('/currentDeck', async (req, res) => {
   // const user = req.session.user;
   if (user) {
     var exampleCards = await dbFunc.getCardIdByUser(1001);
-    console.log(exampleCards);
+    // console.log(exampleCards);
     res.render('currentDeck', { showLogoutButton: true })
   } else {
     res.render('currentDeck', { showLogoutButton: false })
@@ -281,7 +281,7 @@ app.get('/cardViewPage', async (req, res) => {
   // TODO card currently hardcoded
   const user = req.session.user;
 
-  console.log(val[0]);
+  // console.log(val[0]);
   if (user) {
     res.render('cardViewEditPage', { showLogoutButton: true, value: val })
   } else {
@@ -417,7 +417,7 @@ app.post('/cardViewPrintedBulkPage', async (req, res) => {
       newCreature.URL = values
       generatedCards.push(newCreature);
     }
-    console.log(generatedCards);
+    // console.log(generatedCards);
     res.render('cardViewPrintedBulkPage', { cards: generatedCards });
   } catch (err) {
     // Handle errors
@@ -463,8 +463,8 @@ app.post('/gameGenerationPageAction', async (req, res) => {
       req.session.deck = { deckId: userDeckId }
       req.session.game = { ruleSet: ruleSet, gameId: 1001 }  // FIXME once table has been generated and returned gameId
 
-      console.log(ruleSet);
-      console.log(userDeckId);
+      // console.log(ruleSet);
+      // console.log(userDeckId);
 
       // TODO insert into new game to get gameId
 
@@ -556,7 +556,7 @@ app.get('/getHand', async (req, res) => {
 
   if (gameInstance[game.gameId]) {
     const handData = gameInstance[game.gameId].hand.map(card => {
-      console.log(card)
+      // console.log(card)
       return {
         id: card.id,
         name: card.name,
@@ -595,7 +595,7 @@ app.post('/playCard', async (req, res) => {
         const playerMana = gameInstance[game.gameId].user.mana;
         const playerStage = gameInstance[game.gameId].playerStage; // Get the updated playerStage
 
-        console.log(playerStage);
+        // console.log(playerStage);
 
         res.json({ message: 'card played successfully', cardId, playerMana, playerStage });
       }
@@ -643,6 +643,7 @@ app.get('/getCardDetails', async (req, res) => {
         cardData[0].attack,
         cardData[0].defense);
     } else if (cardData[0].cardType.toLowerCase() === 'spell') {
+      // console.log("cardData", cardData[0])
       card = new SpellCard( //id, name, type, description, mana, rarity, imagePath, attack, defense, ability, utility
         cardId,                     // id
         cardData[0].cardName,       // name
@@ -655,6 +656,7 @@ app.get('/getCardDetails', async (req, res) => {
         cardData[0].spellDefense,
         cardData[0].spellAbility,
         cardData[0].utility);
+        // console.log(card)
     } else {
       return res.status(400).json({ error: 'Unknown card type' });
     }
@@ -666,7 +668,6 @@ app.get('/getCardDetails', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
 
 // End turn
 app.post('/endTurn', async (req, res) => {
@@ -680,8 +681,8 @@ app.post('/endTurn', async (req, res) => {
       let updatedHand = gameInstance[game.gameId].hand;
       const playerMana = gameInstance[game.gameId].user.mana;
       const opponentHand = gameInstance[game.gameId].opponentHand;
-      console.log("playerMana", playerMana)
-      console.log("opponentHand", opponentHand.length)
+      // console.log("playerMana", playerMana)
+      // console.log("opponentHand", opponentHand.length)
       res.status(200).json({ message: 'Computer opponent\'s turn completed', opponentStage, updatedHand, playerMana, opponentHand });
 
     } catch (error) {
@@ -692,3 +693,60 @@ app.post('/endTurn', async (req, res) => {
     res.status(404).json({ error: "Game not found." });
   }
 })
+
+// update player creature card by spell
+// app.post('/updatePlayerCreatureCard', (req, res) => {
+//   const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
+//   const { cardId, updatedCardData, spellCardId } = req.body;
+
+//   let stage = gameInstance[game.gameId].playerStage;
+//   console.log("STAGE:", stage)
+//   updatedCardData.id = parseInt(updatedCardData.id);
+
+//   gameInstance[game.gameId].playSpellCard(parseInt(spellCardId), updatedCardData, parseInt(cardId))
+
+//   const playerMana = gameInstance[game.gameId].playerMana;
+//   // Example response
+//   res.json({ message : 'card played successfully', updatedCreatureCardData: updatedCardData, playerMana });
+// });
+
+app.post('/updatePlayerCreatureCard', async (req, res) => {
+  const { cardId, updatedCardData, spellCardId } = req.body;
+  const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
+
+  if (gameInstance[game.gameId]) {
+    try {
+      const result = await gameInstance[game.gameId].playSpellCard(parseInt(spellCardId), updatedCardData, parseInt(cardId));
+
+      if (result && result.error) {
+        if (result.error === 'Insufficient mana to play this card.') {
+          res.json({ message: 'Insufficient mana to play this card.' });
+        } else {
+          res.status(400).json({ error: result.error });
+        }
+      } else {
+
+        // Include playerMana in the response
+        const playerMana = gameInstance[game.gameId].user.mana;
+        const playerStage = gameInstance[game.gameId].playerStage; // Get the updated playerStage
+
+        // console.log(playerStage);
+
+        res.json({ message: 'card played successfully', cardId, playerMana, playerStage });
+      }
+
+    } catch (error) {
+      // Check if the error message is related to insufficient mana
+      if (error.message === "Insufficient mana to play this card.") {
+        // Send a 422 status code for unprocessable entity due to insufficient mana
+        res.status(422).json({ error: error.message });
+      } else {
+        // For other errors, send a 400 status code
+        res.status(400).json({ error: error.message });
+      }
+    }
+  } else {
+    // Send a 404 status code if the game instance is not found
+    res.status(404).json({ error: "Game not found." });
+  }
+});
