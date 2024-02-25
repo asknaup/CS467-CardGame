@@ -15,22 +15,33 @@
     <div>
         <label for="deckDropdown">Select Deck:</label>
         <select id="deckDropdown">
+            <option value="new_deck">Create New Deck</option>
             {{#each decks}}
             <option value="{{deckId}}">{{deckName}}</option>
             {{/each}}
         </select>
     </div>
 
-    <p>Maybe from which game?</p>
+    {{!-- <p>Maybe from which game?</p> --}}
 
     <br>
     <div class="instructions">
-        <p>Here you can build your deck depending on what game you wish to play. First select the game
-            option from the scroll down. Then select an existing deck to edit or create a new deck. Click cards inside
-            the staging area
-            to remove them from your deck and click cards in the card carousel to add them to your deck. Once you're
-            finished, click Done, name your new deck and click Save.</p>
+        <p>Here you can view the cards in your existing decks or build new decks.</p>
+        <br>
+        <p> To view cards in existing decks,
+            simply select the name of the deck who's cards you'd like to view and they will appear in the green staging
+            area.</p><br>
+        <p> To build a new deck, use the dropdown and select "Create New Deck" which will clear out the staging
+            area. This is the default dropdown selection for when the page is loaded so if you didn't view any decks,
+            you can start building without any selections.You can then stage owned cards that are displayed below the
+            staging area to build your new deck. Once
+            you're done, remember to click the Save Deck button so that you can view or play with your new deck later.
+        </p><br>
     </div>
+    <button id="resetButton" onclick="confirmReset()">Reset Staging Area</button>
+
+    <button id="saveDeckButton">Save Deck</button>
+
     <h1>Build Your Deck</h1>
     <div class="stagingArea" id="stagingArea">
     </div>
@@ -40,8 +51,7 @@
     <div class="cardContainer" id="cardContainer">
     </div>
 
-    <button id="resetButton" onclick="confirmReset()">Reset</button>
-    <button id="saveDeckButton">Save Deck</button>
+
 
     <!-- Scripts and styles -->
     <script src="/buildDeckHelper.js"></script>

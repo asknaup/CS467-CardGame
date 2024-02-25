@@ -4,6 +4,13 @@ async function loadDeck() {
     const dropdown = document.getElementById('deckDropdown');
     const selectedDeckId = dropdown.value;
 
+    // Check if the selected option is "new_deck"
+    if (selectedDeckId === 'new_deck') {
+        // Clear the staging area and do any other necessary resets
+        clearStagingArea();
+        return;
+    }
+
     try {
         // Fetch cardIds associated with the selected deckId
         const newCardIds = await fetchCardIdsFromServer(selectedDeckId);
@@ -26,6 +33,14 @@ async function loadDeck() {
     } catch (error) {
         console.error('Error loading deck:', error);
     }
+}
+
+// Function to clear the staging area
+function clearStagingArea() {
+    const stagingArea = document.getElementById('stagingArea');
+    stagingArea.innerHTML = ''; // Clear existing content
+    initialCardIds = []; // Clear the initial card ids
+    // Additional logic to reset any other related variables or states
 }
 
 // Updated function to create a trading card based on getCardInfo output
