@@ -266,7 +266,8 @@ function endTurn() {
 
             // Fetch and render Players hand
             fetchAndRenderHand();
-
+            
+            playOpponentTurn();
             // Update the UI based on the opponent's move
             if (data.opponentStage) {
                 updateOpponentStageUI(data.opponentStage);
@@ -293,6 +294,37 @@ function endTurn() {
 
     attachDragDropListeners();
 }
+
+// Function to play opponent's turn
+async function playOpponentTurn() {
+    try {
+      const response = await fetch('/opponentTurn', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        // Update the game state based on the response
+        updateGameState(data);
+        updateOpponentStageUI(data.opponentStage)
+      } else {
+        console.error('Error playing opponent\'s turn:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error playing opponent\'s turn:', error);
+    }
+  }
+  
+  // Function to update game state based on server response
+  function updateGameState(data) {
+    // Update game state based on the data received from the server
+    console.log('Opponent\'s turn completed:', data);
+    // Example: Update UI with updated game state
+  }
+  
 
 function updateOpponentStageUI(opponentStage) {
     attachStagedCardListeners();
@@ -326,7 +358,8 @@ function updateOpponentStageUI(opponentStage) {
             const cardElement = document.createElement('div'); cardElement.classList.add('card');
             cardElement.draggable = true; // Make the card draggable
             cardElement.id = card.id; // Set the ID of the card element
-            cardElement.textContent = `${card.name} ${card.type} mana: ${card.mana}`;
+            cardElement.textContent = `${card.name}\n${card.type}\nmana: 
+            ${card.mana}\nAttack: ${card.attack}\nDefense: ${card.defense}`;
 
             cardElement.classList.add('card');
             cardElement.id = card; // Set the ID of the card element
@@ -391,13 +424,17 @@ async function applySpellEffect(spellCard, dropZone) {
                     console.log("updatedStagedCards", updatedStagedCards);
                     // fetch hand after spell has been played
                     fetchAndRenderHand();
+                    
+                    let stagedCards = updatedStagedCards['playerStage'];
+                    let cardId = updatedStagedCards['cardId']
 
                     // Update the DOM with the updated card details
-                    if (updatedStagedCards) {
+                    if (stagedCards) {
                         const cardElement = document.getElementById(dropZoneId);
-                        const stagedCard = updatedStagedCards.filter(card => card.id === (dropZoneId))[0];
+                        const stagedCard = stagedCards.filter(card => parseInt(card.id) === parseInt(cardId))[0];
                         console.log("staged Card", stagedCard)
-                        cardElement.textContent = `${stagedCard.name}\n${stagedCard.type}\nmana: ${stagedCard.mana}\nAttack: ${stagedCard.attack}\nDefense: ${stagedCard.defense}`;
+                        cardElement.textContent = `${stagedCard.name}\n${stagedCard.type}\nmana: 
+                            ${stagedCard.mana}\nAttack: ${stagedCard.attack}\nDefense: ${stagedCard.defense}`;
                     }
                 })
                 .catch(error => {
@@ -442,7 +479,10 @@ async function updateCreatureCardOnServer(cardId, updatedCardData, spellCardId) 
                 // Update player's mana UI
                 document.getElementById('playerMana').textContent = `Player Mana: ${data.playerMana}`;
                 
-                resolve(data.playerStage); // Resolve the promise with the playerStage data
+                // Ensure cardId remains integer
+                const updatedCardId = parseInt(data.cardId);
+
+                resolve({ playerStage: data.playerStage, cardId: updatedCardId });
             } else if (data.message === 'Insufficient mana to play this card.') {
                 // Display an error message for insufficient mana
                 const dropZoneId = dropZone.id;

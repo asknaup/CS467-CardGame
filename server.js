@@ -648,13 +648,13 @@ app.get('/getCardDetails', async (req, res) => {
         cardId,                     // id
         cardData[0].cardName,       // name
         cardData[0].cardType,      // type
-        cardData[0].spellType,      // description
+        cardData[0].spellAbility,      // description
         cardData[0].manaCost,
         cardData[0].rarity,
         cardData[0].imagePath,
         cardData[0].spellAttack,
         cardData[0].spellDefense,
-        cardData[0].spellAbility,
+        cardData[0].spellType,
         cardData[0].utility);
         // console.log(card)
     } else {
@@ -694,22 +694,6 @@ app.post('/endTurn', async (req, res) => {
   }
 })
 
-// update player creature card by spell
-// app.post('/updatePlayerCreatureCard', (req, res) => {
-//   const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
-//   const { cardId, updatedCardData, spellCardId } = req.body;
-
-//   let stage = gameInstance[game.gameId].playerStage;
-//   console.log("STAGE:", stage)
-//   updatedCardData.id = parseInt(updatedCardData.id);
-
-//   gameInstance[game.gameId].playSpellCard(parseInt(spellCardId), updatedCardData, parseInt(cardId))
-
-//   const playerMana = gameInstance[game.gameId].playerMana;
-//   // Example response
-//   res.json({ message : 'card played successfully', updatedCreatureCardData: updatedCardData, playerMana });
-// });
-
 app.post('/updatePlayerCreatureCard', async (req, res) => {
   const { cardId, updatedCardData, spellCardId } = req.body;
   const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
@@ -744,6 +728,42 @@ app.post('/updatePlayerCreatureCard', async (req, res) => {
         // For other errors, send a 400 status code
         res.status(400).json({ error: error.message });
       }
+    }
+  } else {
+    // Send a 404 status code if the game instance is not found
+    res.status(404).json({ error: "Game not found." });
+  }
+});
+
+// Opponent's Turn Endpoint
+app.post('/opponentTurn', async (req, res) => {
+  const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
+
+  if (gameInstance[game.gameId]) {
+    try {
+      const opponent = gameInstance[game.gameId].opponent;
+      await opponent.playTurn(gameInstance[game.gameId].opponentHand);
+
+      // Update game state after opponent's turn
+      const playerStage = gameInstance[game.gameId].playerStage;
+      const opponentStage = gameInstance[game.gameId].opponent.playerStage;
+      const playerMana = gameInstance[game.gameId].user.mana;
+      const opponentMana = gameInstance[game.gameId].opponent.mana;
+      const updatedHand = gameInstance[game.gameId].hand;
+      const opponentHand = gameInstance[game.gameId].opponentHand;
+
+      res.status(200).json({
+        message: 'Opponent\'s turn completed',
+        playerStage,
+        opponentStage,
+        playerMana,
+        opponentMana,
+        updatedHand,
+        opponentHand
+      });
+    } catch (error) {
+      console.log("Error in opponent's turn: ", error);
+      res.status(500).json({ error: "Internal server error" });
     }
   } else {
     // Send a 404 status code if the game instance is not found
