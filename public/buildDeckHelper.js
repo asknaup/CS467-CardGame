@@ -1,34 +1,37 @@
 const cardsPerRow = 6;
 
-function loadDeck() {
+async function loadDeck() {
     const dropdown = document.getElementById('deckDropdown');
     const selectedDeckId = dropdown.value;
 
     console.log("selected deck id:", selectedDeckId);
 
-    fetch('/deckCards', {
-        method: 'POST',
-        body: JSON.stringify({ deckId: selectedDeckId }),
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    })
-        .then(response => response.json())
-        .then(deckDetails => {
-            console.log("deckDetails loadDeck:", deckDetails);
+    try {
+        // Fetch cardIds associated with the selected deckId
+        const newCardIds = await fetchCardIdsFromServer(selectedDeckId);
 
-            // Call the function to update the card display
-            fetch('/cards')
-                .then(response => response.json())
-                .then(userCards => {
-                    updateCardDisplay(userCards);
+        // Update the initialCardIds array with the new cardIds
+        initialCardIds = newCardIds;
 
-                    // Call updateStagingArea after fetching new cardIds
-                    updateStagingArea();
-                })
-                .catch(error => console.error('Error fetching user cards:', error));
-        })
-        .catch(error => console.error('Error fetching deck details:', error));
+        console.log("new card ids:", newCardIds);
+
+        // Fetch deck details
+        const deckDetails = await fetch('/deckCards', {
+            method: 'POST',
+            body: JSON.stringify({ deckId: selectedDeckId }),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        console.log("deckDetails loadDeck:", deckDetails);
+
+        // Call the function to update the staging area
+        const cardData = await getCardData();
+        updateStagingArea(cardData);
+    } catch (error) {
+        console.error('Error loading deck:', error);
+    }
 }
 
 
@@ -165,14 +168,71 @@ function createTradingCard(cardData) {
     return card;
 }
 
+let selectedCards = [];
+
+function selectCard(cardId) {
+    const cardElement = document.querySelector(`[data-card-id="${cardId}"]`);
+
+    if (selectedCards.includes(cardId)) {
+        // Card is already selected, remove it from the selected cards array
+        const selectedCardIndex = selectedCards.indexOf(cardId);
+        selectedCards.splice(selectedCardIndex, 1);
+
+        // Check if the card is in the staging area
+        const stagingRows = document.querySelectorAll('.staging-row');
+        stagingRows.forEach(row => {
+            const stagedCardElement = row.querySelector(`[data-card-id="${cardId}"]`);
+            if (stagedCardElement) {
+                row.removeChild(stagedCardElement);
+                // Ensure only 6 cards are displayed in each row in the staging area horizontally
+                const carouselRow = document.querySelectorAll('.carouselRow');
+                let lastRow = carouselRow[carouselRow.length - 1];
+
+                if (!lastRow || lastRow.childElementCount >= cardsPerRow) {
+                    // Create a new row if the last one is full or doesn't exist
+                    lastRow = document.createElement('div');
+                    lastRow.classList.add('carouselRow');
+                    cardContainer.appendChild(lastRow);
+                }
+
+                lastRow.appendChild(cardElement);
+            }
+        });
+    } else {
+        // Card is not selected, add it to the selected cards array
+        selectedCards.push(cardId);
+
+        // Check if the card is in the carousel
+        const carouselRows = document.querySelectorAll('.carouselRow');
+        carouselRows.forEach(row => {
+            const carouselCardElement = row.querySelector(`[data-card-id="${cardId}"]`);
+            if (carouselCardElement) {
+                // Remove the card from the carousel
+                row.removeChild(carouselCardElement);
+
+                // Ensure only 6 cards are displayed in each row in the staging area horizontally
+                const stagingRows = document.querySelectorAll('.staging-row');
+                let lastRow = stagingRows[stagingRows.length - 1];
+
+                if (!lastRow || lastRow.childElementCount >= cardsPerRow) {
+                    // Create a new row if the last one is full or doesn't exist
+                    lastRow = document.createElement('div');
+                    lastRow.classList.add('staging-row');
+                    stagingArea.appendChild(lastRow);
+                }
+
+                lastRow.appendChild(cardElement);
+            }
+        });
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     const stagingArea = document.getElementById('stagingArea');
     const cardContainer = document.getElementById('cardContainer');
 
     // Assuming you have an event listener for the change event on the dropdown
     document.getElementById('deckDropdown').addEventListener('change', loadDeck);
-
-    let selectedCards = [];
 
     loadDeck();
     updateStagingArea();
@@ -183,63 +243,6 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(userCards => {
 
             updateCardDisplay(userCards);
-
-            function selectCard(cardId) {
-                const cardElement = document.querySelector(`[data-card-id="${cardId}"]`);
-
-                if (selectedCards.includes(cardId)) {
-                    // Card is already selected, remove it from the selected cards array
-                    const selectedCardIndex = selectedCards.indexOf(cardId);
-                    selectedCards.splice(selectedCardIndex, 1);
-
-                    // Check if the card is in the staging area
-                    const stagingRows = document.querySelectorAll('.staging-row');
-                    stagingRows.forEach(row => {
-                        const stagedCardElement = row.querySelector(`[data-card-id="${cardId}"]`);
-                        if (stagedCardElement) {
-                            row.removeChild(stagedCardElement);
-                            // Ensure only 6 cards are displayed in each row in the staging area horizontally
-                            const carouselRow = document.querySelectorAll('.carouselRow');
-                            let lastRow = carouselRow[carouselRow.length - 1];
-
-                            if (!lastRow || lastRow.childElementCount >= cardsPerRow) {
-                                // Create a new row if the last one is full or doesn't exist
-                                lastRow = document.createElement('div');
-                                lastRow.classList.add('carouselRow');
-                                cardContainer.appendChild(lastRow);
-                            }
-
-                            lastRow.appendChild(cardElement);
-                        }
-                    });
-                } else {
-                    // Card is not selected, add it to the selected cards array
-                    selectedCards.push(cardId);
-
-                    // Check if the card is in the carousel
-                    const carouselRows = document.querySelectorAll('.carouselRow');
-                    carouselRows.forEach(row => {
-                        const carouselCardElement = row.querySelector(`[data-card-id="${cardId}"]`);
-                        if (carouselCardElement) {
-                            // Remove the card from the carousel
-                            row.removeChild(carouselCardElement);
-
-                            // Ensure only 6 cards are displayed in each row in the staging area horizontally
-                            const stagingRows = document.querySelectorAll('.staging-row');
-                            let lastRow = stagingRows[stagingRows.length - 1];
-
-                            if (!lastRow || lastRow.childElementCount >= cardsPerRow) {
-                                // Create a new row if the last one is full or doesn't exist
-                                lastRow = document.createElement('div');
-                                lastRow.classList.add('staging-row');
-                                stagingArea.appendChild(lastRow);
-                            }
-
-                            lastRow.appendChild(cardElement);
-                        }
-                    });
-                }
-            }
 
         });
 
@@ -310,81 +313,45 @@ function confirmReset() {
     }
 }
 
-
-
-
-
 // async function updateStagingArea() {
-//     // Retrieve the deckId from sessionStorage
-//     // const deckId = sessionStorage.getItem('deckId');
+//     try {
+//         // Fetch the deckId from the server (Replace this with your actual logic)
+//         const deckId = await fetchDeckIdFromServer();
+//         console.log("updateStagingArea deckid:", deckId);
 
-//     console.log("updateStagingArea deckid:", deckId);
-//     // Check if deckId is present in sessionStorage
-//     if (!deckId) {
-//         console.error('Deck ID not found in sessionStorage');
-//         return; // Abort updating staging area if deckId is not found
-//     }
+//         // Check if deckId is present
+//         if (!deckId) {
+//             console.error('Deck ID not found');
+//             return;
+//         }
 
-//     // Fetch cardIds associated with the deckId (Replace this with your actual logic)
-//     const cardIds = await fetchCardIdsFromServer(deckId);
-//     console.log('card ids', cardIds);
+//         // Fetch cardIds associated with the deckId
+//         const cardIds = await fetchCardIdsFromServer(deckId);
+//         console.log('card ids', cardIds);
 
-//     // Assuming you have a staging area container with an id of 'stagingArea'
-//     const stagingArea = document.getElementById('stagingArea');
+//         // Assuming you have a staging area container with an id of 'stagingArea'
+//         const stagingArea = document.getElementById('stagingArea');
 
-//     // Clear existing content
-//     stagingArea.innerHTML = '';
+//         // Clear existing content
+//         stagingArea.innerHTML = '';
 
-//     // Update with new content based on deckId and cardIds
-//     // Add your logic to create and append elements as needed
-//     // For example, you might create divs for each card and append them to the staging area
-//     if (cardIds) {
-//         cardIds.forEach(cardId => {
-//             const cardElement = document.createElement('div');
-//             cardElement.textContent = cardId;
-//             stagingArea.appendChild(cardElement);
-//         });
+//         // Update with new content based on deckId and cardIds
+//         // Add your logic to create and append elements as needed
+//         // For example, you might create divs for each card and append them to the staging area
+//         if (cardIds) {
+//             cardIds.forEach(cardId => {
+//                 const cardElement = document.createElement('div');
+//                 cardElement.textContent = cardId;
+//                 stagingArea.appendChild(cardElement);
+//             });
+//         }
+//     } catch (error) {
+//         console.error('Error updating staging area:', error);
 //     }
 // }
 
-async function updateStagingArea() {
-    try {
-        // Fetch the deckId from the server (Replace this with your actual logic)
-        const deckId = await fetchDeckIdFromServer();
-        console.log("updateStagingArea deckid:", deckId);
-
-        // Check if deckId is present
-        if (!deckId) {
-            console.error('Deck ID not found');
-            return;
-        }
-
-        // Fetch cardIds associated with the deckId
-        const cardIds = await fetchCardIdsFromServer(deckId);
-        console.log('card ids', cardIds);
-
-        // Assuming you have a staging area container with an id of 'stagingArea'
-        const stagingArea = document.getElementById('stagingArea');
-
-        // Clear existing content
-        stagingArea.innerHTML = '';
-
-        // Update with new content based on deckId and cardIds
-        // Add your logic to create and append elements as needed
-        // For example, you might create divs for each card and append them to the staging area
-        if (cardIds) {
-            cardIds.forEach(cardId => {
-                const cardElement = document.createElement('div');
-                cardElement.textContent = cardId;
-                stagingArea.appendChild(cardElement);
-            });
-        }
-    } catch (error) {
-        console.error('Error updating staging area:', error);
-    }
-}
-
 // Example function to fetch the deckId from the server
+
 async function fetchDeckIdFromServer() {
     try {
         const response = await fetch('/getDeckId');  // Replace with your actual endpoint
@@ -396,12 +363,13 @@ async function fetchDeckIdFromServer() {
     }
 }
 
-
-// Example function to fetch cardIds from the server
 async function fetchCardIdsFromServer(deckId) {
     try {
         const response = await fetch(`/getCardsForDeck?deckId=${deckId}`);
-        const data = await response.json();
+        const dataText = await response.text();
+
+        // Try to parse the response as JSON
+        const data = JSON.parse(dataText);
         return data;
     } catch (error) {
         console.error('Error fetching cardIds:', error.message);
@@ -409,27 +377,91 @@ async function fetchCardIdsFromServer(deckId) {
     }
 }
 
-// async function fetchCardIdsFromServer(deckId) {
-//     try {
-//         console.log("fetchCards log", deckId);
-//         console.log(typeof deckId);
-//         fetch(`/getCardsForDeck?deckId=${deckId}`)
-//             .then(response => response.json())
-//             .then(data => {
-//                 // Render the initial hand data on the UI
-//                 console.log("fetchCardsIdsFromServer", data);
-//                 return data;
+// Updated getCardInfo function
+async function getCardInfo(cardId, selectedDeck) {
+    try {
+        const response = await fetch('/getCardInfo', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ cardId: cardId, selectedDeck: selectedDeck }),
+        });
 
-//             })
-//             .catch(error => {
-//                 console.error('Error fetching initial hand data:', error);
-//             });
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching card info:', error.message);
+        return null;
+    }
+}
 
-//     } catch (error) {
-//         console.error('Error fetching cardIds:', error.message);
-//         return []; // Return an empty array or handle the error as needed
-//     }
-// }
+let initialCardIds = [];
 
-// Call the updateStagingArea function when the page loads or when needed
+async function updateStagingArea() {
+    try {
+        // Fetch the deckId from the server (Replace this with your actual logic)
+        const deckId = await fetchDeckIdFromServer();
+
+        // Check if deckId is present
+        if (!deckId) {
+            console.error('Deck ID not found');
+            return;
+        }
+
+        // Fetch cardIds associated with the deckId
+        initialCardIds = await fetchCardIdsFromServer(deckId);
+
+        // Assuming you have a staging area container with an id of 'stagingArea'
+        const stagingArea = document.getElementById('stagingArea');
+
+        // Clear existing content
+        stagingArea.innerHTML = '';
+
+        // Update with new content based on deckId and cardIds
+        // Add your logic to create and append elements as needed
+        // For example, you might create divs for each card and append them to the staging area
+        if (initialCardIds) {
+            initialCardIds.forEach(cardId => {
+                const cardElement = document.createElement('div');
+                cardElement.textContent = cardId;
+                stagingArea.appendChild(cardElement);
+            });
+        }
+    } catch (error) {
+        console.error('Error updating staging area:', error);
+    }
+}
+
+// Your updated getCardData function
+async function getCardData() {
+    try {
+        // Use the initial cardIds when the page is loaded
+        const cardIds = initialCardIds;
+        console.log("getCardData card id check", cardIds);
+
+        // Check if cardIds is defined before proceeding
+        if (!cardIds || !Array.isArray(cardIds)) {
+            console.error('CardIds is undefined, null, or not an array.');
+            return null;  // or return some default value
+        }
+
+        // Use Promise.all to wait for all asynchronous calls to complete
+        const cardPromises = cardIds.map(async (cardId) => {
+            const cardData = await getCardInfo(cardId);
+            console.log("carddata obj", cardData);
+            return cardData; // Assuming you only expect one result per cardId
+        });
+
+        // Resolve all promises and get the card data
+        const cardDataArray = await Promise.all(cardPromises);
+
+        return cardDataArray;
+    } catch (error) {
+        // Handle errors if any of the promises are rejected
+        console.error("Error fetching card data:", error);
+        return null; // or return some default value
+    }
+}
+
 updateStagingArea();

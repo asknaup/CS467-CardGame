@@ -212,6 +212,27 @@ app.get('/cards', async (req, res) => {
   }
 });
 
+app.post('/getCardInfo', async (req, res) => {
+  try {
+    const cardId = req.body.cardId;
+
+    // Use the cardId to fetch card information from the database using getCardByCardId
+    const cardInfo = await dbFunc.getCardByCardId(parseInt(cardId));
+
+    // Check if cardInfo is null or undefined, and handle accordingly
+    if (!cardInfo) {
+      return res.status(404).json({ error: 'Card not found' });
+    }
+
+    res.json(cardInfo);
+  } catch (error) {
+    console.error('Error fetching card info:', error);
+    res.status(500).json({ error: 'Internal server error', details: error.message });
+  }
+});
+
+
+
 app.post('/decksubmitted', async (req, res) => {
   // const user = req.session.user;
   // insertNewDeck(userId, deckName, cardList)
