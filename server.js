@@ -162,14 +162,29 @@ app.get('/generatedGameView', async (req, res) => {
   }
 });
 
-// Needs collection and game info
-app.get('/buildDeck', (req, res) => {
+// Sample user data (replace with your authentication mechanism)
+const currentUser = { userId: 1001, username: 'admin' };
+
+// TODO: One of these to be deleted
+app.get('/buildDeck', async (req, res) => {
   // Needs collection and game info
   // const user = req.session.user;
-  user = { userId: 1001, username: 'admin' };
+
   // FIXME: Switch back to const user = req.session.user; once buildDeck complete
-  if (user) {
-    res.render('buildDeck', { userId: user.userId });
+  try {
+    if (currentUser) {
+      const userDecks = await dbFunc.gatherUserDecks(currentUser.userId);
+      console.log(userDecks)
+      res.render('buildDeck', { showLogoutButton: true, decks: userDecks, userId: currentUser.userId })
+    } else {
+      res.render('builDeck', { showLogoutButton: false })
+    }
+  } catch (err) {
+    console.log(err);
+  }
+
+  if (currentUser) {
+    res.render('buildDeck', { userId: currentUser.userId });
   } else {
     res.redirect('/')
   }
@@ -181,9 +196,9 @@ app.get('/cards', async (req, res) => {
     // const userId = req.query.userId;
     // Needs collection and game info
     // const user = req.session.user;
-    user = { userId: 1007, username: 'admin' }; //FIXME
+
     // Call the database function to get card data based on userId
-    const cardData = await dbFunc.getCardIdByUser(user.userId);
+    const cardData = await dbFunc.getCardIdByUser(currentUser.userId);
     const cardsDict = hf.convertListToDict(cardData);
     // Send card data as reponse
     res.json(cardsDict);
@@ -194,22 +209,129 @@ app.get('/cards', async (req, res) => {
   }
 });
 
-app.post('/decksubmitted', async (req, res) =>{
-  // const user = req.session.user;
+app.post('/getCardInfo', async (req, res) => {
+  try {
+    const cardId = req.body.cardId;
 
-  user = { userId: 1007, username: 'admin' }; //FIXME
+    // Use the cardId to fetch card information from the database using getCardByCardId
+    const cardInfo = await dbFunc.getCardByCardId(parseInt(cardId));
+
+    // Check if cardInfo is null or undefined, and handle accordingly
+    if (!cardInfo) {
+      return res.status(404).json({ error: 'Card not found' });
+    }
+
+    res.json(cardInfo);
+  } catch (error) {
+    console.error('Error fetching card info:', error);
+    res.status(500).json({ error: 'Internal server error', details: error.message });
+  }
+});
+
+
+
+app.post('/decksubmitted', async (req, res) => {
+  // const user = req.session.user;
   // insertNewDeck(userId, deckName, cardList)
 
   try {
     const receivedData = req.body;
     console.log(receivedData);
-    dbFunc.insertNewDeck(user.userId, receivedData.deckName, JSON.stringify({'cardList':receivedData.deckList}));
+    dbFunc.insertNewDeck(currentUser.userId, receivedData.deckName, JSON.stringify({ 'cardList': receivedData.deckList }));
   } catch (error) {
     console.error("Error - Deck Not Saved", error);
   }
 });
 
-// NEEDS WORK and direction
+// Deck pull from db and editing endpoints
+// Endpoint to get deck names for the current user
+// TODO: Why does deleting this break the dropdown? 
+app.get('/deckNames', async (req, res) => {
+
+});
+
+app.post('/deckCards', async (req, res) => {
+  const selectedDeck = req.body.deckId;
+
+  // Store the selected deckId in the session
+  req.session.deck = { deckId: parseInt(selectedDeck) };
+
+  console.log("selectedDeck post", selectedDeck);
+  console.log("session after post", req.session);
+
+  res.json({ status: 'OK' }); // Send a JSON response
+});
+
+app.get('/getCardsForDeck', async (req, res) => {
+  try {
+    const selectedDeck = req.query.deckId;
+
+    if (selectedDeck) {
+
+      // Fetch cardIds for the selected deck and current user from the database using a Promise
+      const row = await dbFunc.getUserDeck(parseInt(selectedDeck));
+
+      if (row && row.length > 0) {
+        var deckObject = JSON.parse(row[0].cardId);
+        res.json(deckObject.cardList);
+      } else {
+        res.status(404).send("Deck not found");
+      }
+    } else {
+      console.log("dfjaldfj");
+      res.status(400).send("Missing deckId parameter");
+
+    }
+  } catch (error) {
+    console.error('Error handling getCardsForDeck:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+// Endpoint to get deckId
+app.get('/getDeckId', (req, res) => {
+  // For simplicity, let's just return the first deck's id
+  const deck = req.session.deck;
+
+  if (deck && deck.deckId) {
+    res.json({ deckId: deck.deckId });
+  } else {
+    res.status(404).json({ error: 'No deck found in the session' });
+  }
+});
+
+
+// app.post('/deckCards', async (req, res) => {
+//   const selectedDeck = req.body.deckId;
+
+//   req.session.deck = { deckId: selectedDeck };
+//   console.log("selectedDeck post", selectedDeck);
+//   console.log("selectedDeck post req", req.session);
+
+// });
+
+// app.get('/getCardsForDeck', async (req, res) => {
+//   const selectedDeck = req.query.deckId;
+
+//   console.log("selectedDeck get:", selectedDeck);
+
+//   if (selectedDeck) {
+//     console.log("/deckCards here:", selectedDeck);
+
+//     // Fetch cardIds for the selected deck and current user from the database using a Promise
+//     const row = await dbFunc.getUserDeck(selectedDeck);
+
+//     console.log("row", row);
+
+//     var deckObject = JSON.parse(row[0].cardId);
+//     console.log(deckObject);
+//     console.log(deckObject.cardList);
+//     res.json(deckObject.cardList);
+//   }
+// });
+
+
+// TODO: NEEDS WORK and direction
 app.get('/browseGames', (req, res) => {
   const user = req.session.user;
   if (user) {
