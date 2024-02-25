@@ -180,8 +180,8 @@ app.get('/cards', async (req, res) => {
     // Retrieve the user ID from the request query parameters
     // const userId = req.query.userId;
     // Needs collection and game info
-    // const user = req.session.user;
-    user = { userId: 1007, username: 'admin' }; //FIXME
+    const user = req.session.user;
+    //user = { userId: 1007, username: 'admin' }; //FIXME
     // Call the database function to get card data based on userId
     const cardData = await dbFunc.getCardIdByUser(user.userId);
     const cardsDict = hf.convertListToDict(cardData);
