@@ -9,6 +9,7 @@
 </head>
 {{!-- #TODO add number of decks --}}
 {{!-- #TODO add option to brows between collections and decks --}}
+
 <body>
   <br>
   <h1 id="usernameH">Welcome to {{ username }}'s Profile</h1>
@@ -24,36 +25,76 @@
       <br>
     </div>
   </div>
+
   <br>
-  <div class="center">
-     <form action="/gameGenPage" method="get">
-      <button id="gen-game-button-ggp" type="submit">Create a New Trading Card Game</button>
+
+  <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+    <form action="/gameGenPage" method="get">
+      <div style="width: 200px; padding: 10px; text-align: center;">
+        <button type="submit"
+          style="width: 100%; cursor: pointer; background-color: #4CAF50; color: white; border: none; border-radius: 5px; font-size: 16px;">Create
+          a New Trading Card Game</button>
+      </div>
     </form>
+
     <form action="/collect" method="POST">
-    <button id="gen-game-button-ggp" type="submit">Create or Browse your collection for </button>
-    <select name="gameId">
-        {{#each vals}}
-        <option value="{{ this.gameId }}">{{ this.imageLocation }}</option>
-        {{/each}}
-    </select>
+      <div style="width: 200px; padding: 10px; text-align: center;">
+        <button type="submit"
+          style="width: 100%; cursor: pointer; background-color: #4CAF50; color: white; border: none; border-radius: 5px; font-size: 16px;">Create
+          or Browse your collection for
+        </button>
+      </div>
+      <div style="width: 200px; padding: 10px; text-align: center;">
+        <select name="gameId" style="width: 100%; border: 1px solid #ccc; border-radius: 5px; padding: 5px;">
+          {{#each vals}}
+          <option value="{{ this.gameId }}">{{ this.imageLocation }}</option>
+          {{/each}}
+        </select>
+      </div>
     </form>
+
     <form action="/buildDeck" method="get">
-      <button id="gen-game-button-ggp" type="submit">Edit your Play Deck from your Collection for</button>
-      <select name="gameId">
-        {{#each vals}}
-        <option value="{{ this.gameId }}">{{ this.imageLocation }}</option>
-        {{/each}}
-    </select>
+      <div style="width: 200px; padding: 10px; text-align: center;">
+        <button type="submit"
+          style="width: 100%; cursor: pointer; background-color: #4CAF50; color: white; border: none; border-radius: 5px; font-size: 16px;">Edit
+          your Play Deck from your Collection for</button>
+      </div>
+      <div style="width: 200px; padding: 10px; text-align: center;">
+        <select name="gameId" style="width: 100%; border: 1px solid #ccc; border-radius: 5px; padding: 5px;">
+          {{#each vals}}
+          <option value="{{ this.gameId }}">{{ this.imageLocation }}</option>
+          {{/each}}
+        </select>
+      </div>
     </form>
+
     <form action="/gamePlayPage" method="get">
-      <button id="gen-game-button-ggp" type="submit">Play with your created Deck against an opponent</button>
+      <div style="width: 200px; padding: 10px; text-align: center;">
+        <button type="submit"
+          style="width: 100%; cursor: pointer; background-color: #4CAF50; color: white; border: none; border-radius: 5px; font-size: 16px;">Play
+          with your created Deck against an opponent</button>
+      </div>
     </form>
-    <br>
+
     <form action="/help" method="get">
-      <button id="gen-game-button-ggp" type="submit">Help! I'm Lost</button>
+      <div style="width: 200px; padding: 10px; text-align: center;">
+        <button type="submit"
+          style="width: 100%; cursor: pointer; background-color: #4CAF50; color: white; border: none; border-radius: 5px; font-size: 16px;">Help!
+          I'm Lost</button>
+      </div>
     </form>
-    <button id="gen-game-button-ggp" type="submit">LOGOUT! NEEDS WORK</button>
+
+    <form action="/logout" method="post">
+      <div style="width: 200px; padding: 10px; text-align: center;">
+        <button type="submit"
+          style="width: 100%; cursor: pointer; background-color: #4CAF50; color: white; border: none; border-radius: 5px; font-size: 16px;">LOGOUT!
+          NEEDS WORK</button>
+      </div>
+    </form>
   </div>
+
+
+
 </body>
 
 </html>
