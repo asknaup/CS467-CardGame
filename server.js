@@ -124,16 +124,19 @@ app.get('/gamePlayPage', (req, res) => {
 });
 
 
-app.get('/cardGenBulkPage', async (req, res) => {
+app.get('/cardGenBulkPage', (req, res) => {
   const user = req.session.user;
   if (user) {
-    const val_list = await dbFunc.getAllGeneratedGames();
-    res.render('cardGenBulkPage', { vals: val_list })
+    res.render('cardGenBulkPage');
   } else {
     res.redirect('/');
   }
 });
 
+// TODO routing between gameGeneration, card Generation
+// TODO Work on corresponding edit pages, corresponding bulk pages
+// TODO Work on generating inputs
+// TODO html formatting
 app.get('/gameGenPage', async (req, res) => {
   const user = req.session.user;
   try {
@@ -181,59 +184,27 @@ app.get('/buildDeck', async (req, res) => {
   } catch (err) {
     console.log(err);
   }
+});
 
+// TODO Deck generation page
+app.get('/buildDeck', (req, res) => {
+  // Show user logged in user profile
+  // FIXME
+  const user = req.session.user;
+  // const user = { userId: 1001, username: 'admin' }
   if (user) {
-    res.render('buildDeck', { userId: user.userId });
+    res.render('buildDeck', { showLogoutButton: true, userId: 1001 })
   } else {
-    res.redirect('/')
+    res.render('buildDeck', { showLogoutButton: false })
   }
 });
 
-app.get('/cards', async (req, res) => {
-  // Needs collection and game info
-  // const user = req.session.user;
-  const user = {userId: 1001, username: 'admin'};
-
-  try {
-    // Call the database function to get card data based on userId
-    const cardData = await dbFunc.getCardIdByUser(user.userId);
-    const cardsDict = hf.convertListToDict(cardData);
-    // Send card data as reponse
-    res.json(cardsDict);
-  } catch (error) {
-    // Handle errors that occur during data retrival
-    console.error('Error fetching card data:', error);
-    res.status(500).json({ error: 'Internal server error' })
-    return;
-  }
-});
-
-app.post('/getCardInfo', async (req, res) => {
-  try {
-
-    const cardId = req.body.cardId;
-
-    // Use the cardId to fetch card information from the database using getCardByCardId
-    const cardInfo = await dbFunc.getCardByCardId(parseInt(cardId));
-
-    // Check if cardInfo is null or undefined, and handle accordingly
-    if (!cardInfo) {
-      return res.status(404).json({ error: 'Card not found' });
-    }
-
-    res.json(cardInfo);
-  } catch (error) {
-    console.error('Error fetching card info:', error);
-    res.status(500).json({ error: 'Internal server error', details: error.message });
-    return;
-  }
-});
-
-
-
-app.post('/decksubmitted', async (req, res) => {
-  // const user = req.session.user;
-  const user = {userId: 1001, username: 'admin'};
+// Add to deck, delete, deck stats
+app.get('/currentDeck', async (req, res) => {
+  // Show user logged in user profile
+  // FIXME
+  // const user = { userId: 1001, username: 'admin' };
+  const user = req.session.user;
 
   try {
     const receivedData = req.body;
@@ -402,35 +373,6 @@ app.get('/logout', (req, res) => {
     }
   })
 })
-
-// FIXME change to '/game/:gameId'
-app.get('/game/', async (req, res) => {
-  // FIXME replace
-  // const user = req.session.user;
-  // const deck = req.session.deck;
-  // const game = req.session.game;
-  const user = { userId: 1001, username: 'admin' }
-  const deck = { deckId: 7001 }
-  const game = { ruleSet: 'ruleSet1', gameId: 1001 }
-  // TODO game handlebars file
-  // TODO game logic
-  if (user) {
-    // const deckList = await game1.getDeck(user.userId, deck.deckId);
-    // console.log(deckList);
-    const userInstance = new User(user.userId, user.username);
-    const gameInstance = new Game(userInstance, deck.deckId, game.ruleSet, game.gameId);
-
-    await gameInstance.initialize();
-
-    res.render('gamePlay1', {
-      gameId: game.gameId,
-      ruleSet: game.ruleSet,
-      hand: game.hand,
-      remainingDeckCards: gameInstance.deck.length
-    });
-  }
-});
-
 
 app.get('/help', (req, res) => {
   const user = req.session.user;
@@ -613,35 +555,20 @@ app.post('/cardViewPrintedPage', async (req, res) => {
 
 app.post('/cardViewPrintedBulkPage', async (req, res) => {
   const user = req.session.user;
-  // Need Collection ID
-
   async function delay(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+
   try {
     const num = parseInt(req.body.number); // Assuming req.body.number contains the number of cards to generate
     const generatedCards = [];
 
     for (let i = 0; i < num; i++) {
-      if (req.body.cardType == "Creature") {
-        let newCreature = await card.createDataStructCreature(req.body.colors, req.body.creatures, req.body.places, req.body.cardType);
-        const aiCard = await card.createAICard(newCreature.creature, newCreature.place, newCreature.color, newCreature.rarity, 1);
-        let values = [];
-        while (!values || values.length === 0) {
-          values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId);
-          await delay(700); // Add a delay to avoid excessive requests 
-        }
-        newCreature.URL = values[0].url;
-        generatedCards.push(newCreature);
+      newCreature = card.createDataStructCreature(req.body.colors, req.body.creatures, req.body.places);
+      const aiCard = await card.createAICard(newCreature.creature, newCreature.place, newCreature.color, newCreature.rarity, 1);
 
-      } else if (req.body.cardType == "Spell") {
-        let newSpell = await card.createDataStructSpell(req.body.color, req.body.theme, req.body.cardType, "Offensive"); // Hard coded
-        const aiCard = await card.createAICard("abstract spell", newSpell.place, newSpell.color, newSpell.rarity, 1);
-        let values = [];
-        while (!values || values.length === 0) {
-          values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId);
-          await delay(700); // Add a delay to avoid excessive requests
-        }
-        newSpell.URL = values[0].url;
-        generatedCards.push(newSpell);
+      let values = [];
+      while (values.length === 0) {
+        values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId);
+        await delay(500); // Add a delay to avoid excessive requests
       }
     }
     console.log(generatedCards);
@@ -717,6 +644,7 @@ app.post('/collect', async (req, res) => {
 });
 
 
+
 ///////////////////////////////////////////////
 // GAME PLAY
 ///////////////////////////////////////////////
@@ -730,27 +658,77 @@ app.get('/game/', async (req, res) => {
   // const user = req.session.user;
   // const deck = req.session.deck;
   // const game = req.session.game;
-  const user = { userId: 1001, username: 'admin' }
-  const deck = { deckId: 7001 }
+  const user = { userId: 1005, username: 'admin' }
+  const deck = { deckId: 7004 }
   const game = { ruleSet: 'ruleSet1', gameId: 1001 }
 
+  console.log("gameInstance", gameInstance);
+  console.log("GAME", game)
   // If user we can intialize a game
   if (user) {
     const userInstance = new User(user.userId, user.username);
     gameInstance[game.gameId] = new Game(userInstance, deck.deckId, game.ruleSet, game.gameId);
 
     await gameInstance[game.gameId].initialize();
-    // console.log(gameInstance[game.gameId].hand)
+
     res.render('gamePlay1', {
       gameId: game.gameId,
       ruleSet: game.ruleSet,
-      hand: gameInstance[game.gameId].hand,
+      // hand: handData,
       remainingDeckCards: gameInstance[game.gameId].deck.length,
       playerMana: gameInstance[game.gameId].user.mana,
       opponentMana: gameInstance[game.gameId].opponent.mana
     });
   }
 });
+
+// Get Hand
+app.get('/getHand', async (req, res) => {
+  const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
+  gameInst = gameInstance[game.gameId];
+
+  if (gameInstance[game.gameId]) {
+    const handData = gameInstance[game.gameId].hand.map(card => {
+      return {
+        id: parseInt(card.id),
+        name: card.name,
+        type: card.type,
+        mana: parseInt(card.mana),
+        attack: parseInt(card.attack),
+        defense: parseInt(card.defense),
+        ability: card.ability,
+        spellAttack: parseInt(card.spellAttack),
+        spellDefense: parseInt(card.spellDefense)
+      };
+    });
+
+    res.status(200).json({ hand: handData });
+
+  }
+})
+
+// Get Player Stage
+app.get('/getPlayerStage', async (req, res) => {
+  const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
+  let gameInst = gameInstance[game.gameId];
+
+  if (gameInst) {
+    const playerStage = gameInst.playerStage;
+    res.status(200).json({ playerStage: playerStage });
+  }
+})
+
+// Get Opponent Stage
+app.get('/getOpponentStage', async (req, res) => {
+  const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
+  gameInst = gameInstance[game.gameId];
+
+  if (gameInst) {
+    const opponentStage = gameInst.opponentStage;
+
+    res.status(200).json({ opponentStage: opponentStage });
+  }
+})
 
 // Play Card
 app.post('/playCard', async (req, res) => {
@@ -759,39 +737,38 @@ app.post('/playCard', async (req, res) => {
 
   if (gameInstance[game.gameId]) {
     try {
+      // console.log("PLAYERSTAGE", gameInstance[game.gameId].playerStage)
       const result = await gameInstance[game.gameId].playCard(parseInt(cardId));
 
       if (result && result.error) {
         if (result.error === 'Insufficient mana to play this card.') {
-          return res.json({ message: 'Insufficient mana to play this card.' });
+          res.json({ message: 'Insufficient mana to play this card.' });
         } else {
-          return res.status(400).json({ error: result.error });
+          res.status(400).json({ error: result.error });
         }
       } else {
 
         // Include playerMana in the response
         const playerMana = gameInstance[game.gameId].user.mana;
         const playerStage = gameInstance[game.gameId].playerStage; // Get the updated playerStage
-
-        console.log(playerStage);
-
-        return res.json({ message: 'card played successfully', cardId, playerMana, playerStage });
+        // console.log("UPDATED PLAYERSTAGE", gameInstance[game.gameId].playerStage)
+        console.log("playerMana", playerMana)
+        res.json({ message: 'card played successfully', cardId, playerMana, playerStage });
       }
 
     } catch (error) {
       // Check if the error message is related to insufficient mana
       if (error.message === "Insufficient mana to play this card.") {
         // Send a 422 status code for unprocessable entity due to insufficient mana
-        return res.status(422).json({ error: error.message });
+        res.status(422).json({ error: error.message });
       } else {
         // For other errors, send a 400 status code
-        return res.status(400).json({ error: error.message });
+        res.status(400).json({ error: error.message });
       }
     }
   } else {
     // Send a 404 status code if the game instance is not found
-    return res.status(404).json({ error: "Game not found." });
-
+    res.status(404).json({ error: "Game not found." });
   }
 });
 
@@ -812,41 +789,41 @@ app.get('/getCardDetails', async (req, res) => {
     let card;
     if (cardData[0].cardType.toLowerCase() === 'creature') {
       card = new CreatureCard( //id, name, type, description, mana, rarity, imagePath, attack, defense
-        cardId,                 // id
+        parseInt(cardId),                 // id
         cardData[0].cardName,   // name
         cardData[0].cardType,   // type
         cardData[0].creatureType,   // description
-        cardData[0].manaCost,
+        parseInt(cardData[0].manaCost),
         cardData[0].rarity,
         cardData[0].imagePath,
-        cardData[0].attack,
-        cardData[0].defense);
+        parseInt(cardData[0].attack),
+        parseInt(cardData[0].defense));
     } else if (cardData[0].cardType.toLowerCase() === 'spell') {
+      // console.log("cardData", cardData[0])
       card = new SpellCard( //id, name, type, description, mana, rarity, imagePath, attack, defense, ability, utility
-        cardId,                     // id
+        parseInt(cardId),                     // id
         cardData[0].cardName,       // name
         cardData[0].cardType,      // type
-        cardData[0].spellType,      // description
-        cardData[0].manaCost,
+        cardData[0].spellAbility,      // description
+        parseInt(cardData[0].manaCost),
         cardData[0].rarity,
         cardData[0].imagePath,
-        cardData[0].spellAttack,
-        cardData[0].spellDefense,
-        cardData[0].spellAbility,
+        parseInt(cardData[0].spellAttack),
+        parseInt(cardData[0].spellDefense),
+        cardData[0].spellType,
         cardData[0].utility);
+      // console.log(card)
     } else {
       return res.status(400).json({ error: 'Unknown card type' });
     }
 
     // Send the card details as JSON response
-    return res.json(card);
+    res.json(card);
   } catch (error) {
     console.error('Error fetching card details:', error);
-    return res.status(500).json({ error: 'Internal server error' });
-
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
-
 
 // End turn
 app.post('/endTurn', async (req, res) => {
@@ -854,18 +831,189 @@ app.post('/endTurn', async (req, res) => {
 
   if (gameInstance[game.gameId]) {
     try {
-      // let game = gameInstance[game.gameId];
+      // Get the updated playerStage after ending the turn
       await gameInstance[game.gameId].playNextTurn();
-      // console.log(gameInstance[game.gameId].opponent.playerStage)
-      let opponentStage = gameInstance[game.gameId].opponent.playerStage;
 
-      return res.status(200).json({ message: 'Computer opponent\'s turn completed', opponentStage });
+      let opponentStage = gameInstance[game.gameId].opponentStage; // Computers
+      let updatedStage = gameInstance[game.gameId].playerStage;
+      let updatedHand = gameInstance[game.gameId].hand;
+      const playerMana = gameInstance[game.gameId].user.mana;
+      const opponentHand = gameInstance[game.gameId].opponentHand;
+      
+      res.status(200).json({ message: 'Computer opponent\'s turn completed', 
+      opponentStage, 
+      updatedStage,
+      updatedHand, 
+      opponentDeckCount: gameInstance[game.gameId].opponentDeck.length,
+      playerDeckCount: gameInstance[game.gameId].deck.length,
+      playerMana, 
+      opponentHand, 
+      playerHealth: gameInstance[game.gameId].user.health });
 
     } catch (error) {
       console.log("error: ", error)
     }
   } else {
     // Send a 404 status code if the game instance is not found
-    return res.status(404).json({ error: "Game not found." });
+    res.status(404).json({ error: "Game not found." });
   }
 })
+
+app.post('/damageOpponent', (req, res) => {
+  const game = { ruleSet: 'ruleSet1', gameId: 1001 }; //FIXME
+  const { id } = req.body;
+
+  // Get the game instance
+  const games = gameInstance[game.gameId];
+
+  // Check if the game instance exists
+  if (!games) {
+    return res.status(404).json({ error: 'Game not found.' });
+  }
+
+  // Perform the attack operation
+  const attackResult = games.attackOpponentHealth(parseInt(id));
+
+  // Check if the attack was successful
+  if (attackResult.success) {
+    // Optionally, you can send back updated opponent health or other relevant data
+    res.status(200).json({ message: attackResult.message, opponentHealth: games.opponent.health, playerMana: games.user.mana });
+  } else {
+    // If there was an error during the attack operation, send an error response
+    res.status(400).json({ error: attackResult.error });
+  }
+});
+app.post('/updatePlayerCreatureCard', async (req, res) => {
+  const { cardId, updatedCardData, spellCardId } = req.body;
+  const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
+
+  if (gameInstance[game.gameId]) {
+    try {
+      const result = await gameInstance[game.gameId].playSpellCard(parseInt(spellCardId), updatedCardData, parseInt(cardId));
+
+      if (result && result.error) {
+        if (result.error === 'Insufficient mana to play this card.') {
+          res.json({ message: 'Insufficient mana to play this card.' });
+        } else {
+          res.status(400).json({ error: result.error });
+        }
+      } else {
+
+        // Include playerMana in the response
+        const playerMana = gameInstance[game.gameId].user.mana;
+        const playerStage = gameInstance[game.gameId].playerStage; // Get the updated playerStage
+
+        // console.log(playerStage);
+
+        res.json({ message: 'card played successfully', cardId, playerMana, playerStage });
+      }
+
+    } catch (error) {
+      // Check if the error message is related to insufficient mana
+      if (error.message === "Insufficient mana to play this card.") {
+        // Send a 422 status code for unprocessable entity due to insufficient mana
+        res.status(422).json({ error: error.message });
+      } else {
+        // For other errors, send a 400 status code
+        res.status(400).json({ error: error.message });
+      }
+    }
+  } else {
+    // Send a 404 status code if the game instance is not found
+    res.status(404).json({ error: "Game not found." });
+  }
+});
+
+// // Opponent's Turn Endpoint
+// app.post('/opponentTurn', async (req, res) => {
+//   const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
+
+//   if (gameInstance[game.gameId]) {
+//     try {
+//       const opponent = gameInstance[game.gameId].opponent;
+//       await opponent.playTurn(gameInstance[game.gameId].opponentHand);
+
+//       // Update game state after opponent's turn
+//       const playerStage = gameInstance[game.gameId].playerStage;
+//       const opponentStage = gameInstance[game.gameId].opponent.playerStage;
+//       const playerMana = gameInstance[game.gameId].user.mana;
+//       const opponentMana = gameInstance[game.gameId].opponent.mana;
+//       const updatedHand = gameInstance[game.gameId].hand;
+//       const opponentHand = gameInstance[game.gameId].opponentHand;
+
+//       res.status(200).json({
+//         message: 'Opponent\'s turn completed',
+//         playerStage,
+//         opponentStage,
+//         playerMana,
+//         opponentMana,
+//         updatedHand,
+//         opponentHand
+//       });
+//     } catch (error) {
+//       console.log("Error in opponent's turn: ", error);
+//       res.status(500).json({ error: "Internal server error" });
+//     }
+//   } else {
+//     // Send a 404 status code if the game instance is not found
+//     res.status(404).json({ error: "Game not found." });
+//   }
+// });
+
+app.post('/attackCardToOpponent', async (req, res) => {
+  const { cardId, opponentCardId } = req.body;
+  const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
+
+  if (gameInstance[game.gameId]) {
+    try {
+      const attackResult = await gameInstance[game.gameId].attackCardToOpponent(parseInt(cardId), parseInt(opponentCardId));
+
+      if (attackResult.success) {
+        // Optionally, you can send back updated opponent health or other relevant data
+        res.status(200).json({ message: attackResult.message, opponentHealth: gameInstance[game.gameId].opponent.health, playerMana: gameInstance[game.gameId].user.mana });
+      } else {
+        // If there was an error during the attack operation, send an error response
+        res.status(400).json({ error: attackResult.error });
+      }
+    } catch (error) {
+      console.log("Error in attacking card to opponent: ", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  } else {
+    // Send a 404 status code if the game instance is not found
+    res.status(404).json({ error: "Game not found." });
+  }
+});
+
+app.post('/attackCardToHealth', async (req, res) => {
+  const { id } = req.body;
+  const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
+  console.log("ATTACK CARD TO HEALTH", id)
+  if (gameInstance[game.gameId]) {
+    try {
+      const attackResult = await gameInstance[game.gameId].attackOpponentHealth(parseInt(id));
+      console.log("ATTACK RESULT", attackResult)
+      const opponentHealth = gameInstance[game.gameId].opponent.health;
+      const playerMana = gameInstance[game.gameId].user.mana;
+      const playerStage = gameInstance[game.gameId].playerStage;
+
+      if (attackResult.success) {
+        // Optionally, you can send back updated opponent health or other relevant data
+        res.status(200).json({ message: attackResult.message, 
+          opponentHealth: opponentHealth, 
+          playerMana: playerMana,
+          playerStage: playerStage,
+          playerDeckCount: gameInstance[game.gameId].deck.length,});
+      } else {
+        // If there was an error during the attack operation, send an error response
+        res.status(400).json({ error: attackResult.error });
+      }
+    } catch (error) {
+      console.log("Error in attacking card to health: ", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  } else {
+    // Send a 404 status code if the game instance is not found
+    res.status(404).json({ error: "Game not found." });
+  }
+});
