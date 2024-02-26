@@ -81,6 +81,25 @@ app.get('/', (req, res) => {
   }
 });
 
+app.get('/cards', async (req, res) => {
+  try {
+    // Retrieve the user ID from the request query parameters
+    // const userId = req.query.userId;
+    // Needs collection and game info
+    const user = req.session.user;
+    //user = { userId: 1007, username: 'admin' }; //FIXME
+    // Call the database function to get card data based on userId
+    const cardData = await dbFunc.getCardIdByUser(user.userId);
+    const cardsDict = hf.convertListToDict(cardData);
+    // Send card data as reponse
+    res.json(cardsDict);
+  } catch (error) {
+    // Handle errors that occur during data retrival
+    console.error('Error fetching card data:', error);
+    res.status(500).json({ error: 'Internal server error' })
+  }
+});
+
 app.get('/userProfile', async (req, res) => {
   const user = req.session.user;
   if (user) {
