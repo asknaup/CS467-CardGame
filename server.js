@@ -662,8 +662,6 @@ app.get('/game/', async (req, res) => {
   const deck = { deckId: 7004 }
   const game = { ruleSet: 'ruleSet1', gameId: 1001 }
 
-  console.log("gameInstance", gameInstance);
-  console.log("GAME", game)
   // If user we can intialize a game
   if (user) {
     const userInstance = new User(user.userId, user.username);
