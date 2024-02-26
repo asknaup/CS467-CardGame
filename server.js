@@ -162,20 +162,19 @@ app.get('/generatedGameView', async (req, res) => {
   }
 });
 
-// Sample user data (replace with your authentication mechanism)
-const currentUser = { userId: 1001, username: 'admin' };
 
 // TODO: One of these to be deleted
 app.get('/buildDeck', async (req, res) => {
   // Needs collection and game info
   // const user = req.session.user;
+  const user = {userId: 1001, username: 'admin'};
 
   // FIXME: Switch back to const user = req.session.user; once buildDeck complete
   try {
-    if (currentUser) {
-      const userDecks = await dbFunc.gatherUserDecks(currentUser.userId);
+    if (user) {
+      const userDecks = await dbFunc.gatherUserDecks(user.userId);
       console.log(userDecks)
-      res.render('buildDeck', { showLogoutButton: true, decks: userDecks, userId: currentUser.userId })
+      res.render('buildDeck', { showLogoutButton: true, decks: userDecks, userId: user.userId })
     } else {
       res.render('builDeck', { showLogoutButton: false })
     }
@@ -183,22 +182,21 @@ app.get('/buildDeck', async (req, res) => {
     console.log(err);
   }
 
-  if (currentUser) {
-    res.render('buildDeck', { userId: currentUser.userId });
+  if (user) {
+    res.render('buildDeck', { userId: user.userId });
   } else {
     res.redirect('/')
   }
 });
 
 app.get('/cards', async (req, res) => {
-  try {
-    // Retrieve the user ID from the request query parameters
-    // const userId = req.query.userId;
-    // Needs collection and game info
-    // const user = req.session.user;
+  // Needs collection and game info
+  // const user = req.session.user;
+  const user = {userId: 1001, username: 'admin'};
 
+  try {
     // Call the database function to get card data based on userId
-    const cardData = await dbFunc.getCardIdByUser(currentUser.userId);
+    const cardData = await dbFunc.getCardIdByUser(user.userId);
     const cardsDict = hf.convertListToDict(cardData);
     // Send card data as reponse
     res.json(cardsDict);
@@ -206,11 +204,13 @@ app.get('/cards', async (req, res) => {
     // Handle errors that occur during data retrival
     console.error('Error fetching card data:', error);
     res.status(500).json({ error: 'Internal server error' })
+    return;
   }
 });
 
 app.post('/getCardInfo', async (req, res) => {
   try {
+
     const cardId = req.body.cardId;
 
     // Use the cardId to fetch card information from the database using getCardByCardId
@@ -225,6 +225,7 @@ app.post('/getCardInfo', async (req, res) => {
   } catch (error) {
     console.error('Error fetching card info:', error);
     res.status(500).json({ error: 'Internal server error', details: error.message });
+    return;
   }
 });
 
@@ -232,12 +233,12 @@ app.post('/getCardInfo', async (req, res) => {
 
 app.post('/decksubmitted', async (req, res) => {
   // const user = req.session.user;
-  // insertNewDeck(userId, deckName, cardList)
+  const user = {userId: 1001, username: 'admin'};
 
   try {
     const receivedData = req.body;
     console.log(receivedData);
-    dbFunc.insertNewDeck(currentUser.userId, receivedData.deckName, JSON.stringify({ 'cardList': receivedData.deckList }));
+    dbFunc.insertNewDeck(user.userId, receivedData.deckName, JSON.stringify({ 'cardList': receivedData.deckList }));
   } catch (error) {
     console.error("Error - Deck Not Saved", error);
   }
@@ -251,6 +252,7 @@ app.get('/deckNames', async (req, res) => {
 });
 
 app.post('/deckCards', async (req, res) => {
+
   const selectedDeck = req.body.deckId;
 
   // Store the selected deckId in the session
@@ -264,6 +266,7 @@ app.post('/deckCards', async (req, res) => {
 
 app.get('/getCardsForDeck', async (req, res) => {
   try {
+
     const selectedDeck = req.query.deckId;
 
     if (selectedDeck) {
@@ -276,15 +279,18 @@ app.get('/getCardsForDeck', async (req, res) => {
         res.json(deckObject.cardList);
       } else {
         res.status(404).send("Deck not found");
+        return;
       }
     } else {
       console.log("dfjaldfj");
       res.status(400).send("Missing deckId parameter");
+      return;
 
     }
   } catch (error) {
     console.error('Error handling getCardsForDeck:', error);
     res.status(500).send('Internal Server Error');
+    return;
   }
 });
 
@@ -297,43 +303,14 @@ app.get('/getDeckId', (req, res) => {
     res.json({ deckId: deck.deckId });
   } else {
     res.status(404).json({ error: 'No deck found in the session' });
+    return;
   }
 });
 
-
-// app.post('/deckCards', async (req, res) => {
-//   const selectedDeck = req.body.deckId;
-
-//   req.session.deck = { deckId: selectedDeck };
-//   console.log("selectedDeck post", selectedDeck);
-//   console.log("selectedDeck post req", req.session);
-
-// });
-
-// app.get('/getCardsForDeck', async (req, res) => {
-//   const selectedDeck = req.query.deckId;
-
-//   console.log("selectedDeck get:", selectedDeck);
-
-//   if (selectedDeck) {
-//     console.log("/deckCards here:", selectedDeck);
-
-//     // Fetch cardIds for the selected deck and current user from the database using a Promise
-//     const row = await dbFunc.getUserDeck(selectedDeck);
-
-//     console.log("row", row);
-
-//     var deckObject = JSON.parse(row[0].cardId);
-//     console.log(deckObject);
-//     console.log(deckObject.cardList);
-//     res.json(deckObject.cardList);
-//   }
-// });
-
-
 // TODO: NEEDS WORK and direction
 app.get('/browseGames', (req, res) => {
-  const user = req.session.user;
+  // const user = req.session.user;
+  const user = {userId: 1001, username: 'admin'};
   if (user) {
     res.render('browseGames')
   } else {
@@ -343,7 +320,7 @@ app.get('/browseGames', (req, res) => {
 
 app.get('/newUser', (req, res) => {
   // Show user logged in user profile
-    res.render('newUser', { showLogoutButton: true })
+  res.render('newUser', { showLogoutButton: true })
 });
 
 app.get('/resetPW', (req, res) => {
@@ -498,7 +475,7 @@ app.post('/newUserPost', async (req, res) => {
       }
     } else {
       // Handle other errors if needed
-      res.send(`Something went wrong : (${err})`);
+      return res.send(`Something went wrong : (${err})`);
     }
   }
 });
@@ -519,7 +496,7 @@ app.post('/login', async (req, res) => {
       });
     }
   } catch (err) {
-    res.send(`Something went wrong: ${err}`);
+    return res.send(`Something went wrong: ${err}`);
   }
 });
 
@@ -527,7 +504,7 @@ app.post('/cardViewEditPage', async (req, res) => {
   const user = req.session.user;
   try {
     if (user) {
-      async function delay(ms) { return new Promise(resolve => setTimeout(resolve, ms));}
+      async function delay(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
       const generatedCards = [];
       const collectionId = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, req.body.whichgame)
       req.session.collectionId = collectionId;
@@ -535,7 +512,7 @@ app.post('/cardViewEditPage', async (req, res) => {
       req.session.gameId = req.body.whichgame;
 
       if (req.body.cardType == "Creature") {
-          // Generate for Creature
+        // Generate for Creature
 
         for (let i = 0; i < 1; i++) {
           let values = [];
@@ -545,7 +522,7 @@ app.post('/cardViewEditPage', async (req, res) => {
           newCreature.defense = req.body.creatureDefense
           newCreature.rarity = req.body.rarity
           newCreature.name = req.body.cardName
-          
+
           const aiCard = await card.createAICard(newCreature.creature, newCreature.place, newCreature.color, newCreature.rarity, 1);
           while (!values || values.length === 0) {
             values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId);
@@ -556,32 +533,31 @@ app.post('/cardViewEditPage', async (req, res) => {
           let stringed = JSON.stringify(newCreature);
           newCreature.stringed = stringed;
           generatedCards.push(newCreature);
-        }   
-
-      } else if (req.body.cardType == "Spell")
-        {
-          for (let i = 0; i < 3; i++) {
-            let values = [];
-            let newSpell = await card.createDataStructSpell(req.body.color, req.body.theme, req.body.cardType, req.body.spellType);
-            newSpell.manaCost = req.body.manaCost;
-            newSpell.attack = req.body.spellAttack;
-            newSpell.defense = req.body.spellDefense
-            newSpell.rarity = req.body.rarity
-            newSpell.name = req.body.cardName
-            
-            const aiCard = await card.createAICard("abstract spell", newSpell.place, newSpell.color, newSpell.rarity, 1);            
-
-            while (!values || values.length === 0 ) {
-              values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId);
-              await delay(700); // Add a delay to avoid excessive requests
-            }
-      
-            newSpell.URL = values[0].url;
-            let stringed = JSON.stringify(newSpell);
-            newSpell.stringed = stringed;
-            generatedCards.push(newSpell);
-          }
         }
+
+      } else if (req.body.cardType == "Spell") {
+        for (let i = 0; i < 3; i++) {
+          let values = [];
+          let newSpell = await card.createDataStructSpell(req.body.color, req.body.theme, req.body.cardType, req.body.spellType);
+          newSpell.manaCost = req.body.manaCost;
+          newSpell.attack = req.body.spellAttack;
+          newSpell.defense = req.body.spellDefense
+          newSpell.rarity = req.body.rarity
+          newSpell.name = req.body.cardName
+
+          const aiCard = await card.createAICard("abstract spell", newSpell.place, newSpell.color, newSpell.rarity, 1);
+
+          while (!values || values.length === 0) {
+            values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId);
+            await delay(700); // Add a delay to avoid excessive requests
+          }
+
+          newSpell.URL = values[0].url;
+          let stringed = JSON.stringify(newSpell);
+          newSpell.stringed = stringed;
+          generatedCards.push(newSpell);
+        }
+      }
       res.render('cardViewEditPage', {
         card: generatedCards
       });
@@ -589,7 +565,7 @@ app.post('/cardViewEditPage', async (req, res) => {
       res.render('cardGenPage', { error: "Sorry! You cannot create a card without having an account" })
     }
   } catch (err) {
-    res.send(`Something went wrong: ${err}`);
+    return res.send(`Something went wrong: ${err}`);
   }
 });
 
@@ -597,14 +573,14 @@ app.post('/cardViewPrintedPage', async (req, res) => {
   const user = req.session.user;
   try {
     const stringCard = JSON.parse(req.body.cardstring);
-    const cardId = await dbFunc.insertCard(stringCard.name, stringCard.cardType, user.userId, stringCard.rarity, stringCard.manaCost); 
+    const cardId = await dbFunc.insertCard(stringCard.name, stringCard.cardType, user.userId, stringCard.rarity, stringCard.manaCost);
     await dbFunc.insertCardUrl(cardId, stringCard.URL);
 
     if (req.body.cardType == "Creature") {
-      await dbFunc.insertCreatureCard(cardId, stringCard.creatureAttack, stringCard.creatureDefense, stringCard.creatureType );     // Hard coded
-    } else { 
+      await dbFunc.insertCreatureCard(cardId, stringCard.creatureAttack, stringCard.creatureDefense, stringCard.creatureType);     // Hard coded
+    } else {
       await dbFunc.insertSpellCard(cardId, stringCard.spellType, stringCard.ability, stringCard.attack, stringCard.defense, stringCard.utility); // Needs work
-    } 
+    }
 
     // Needs Work
     /*
@@ -622,7 +598,7 @@ app.post('/cardViewPrintedPage', async (req, res) => {
       console.error("Error updating collection:", error);
     }
     */
-    
+
     const data = await dbFunc.getCardInfo(cardId);
     res.render('cardViewPrintedPage', {
       card: stringCard,
@@ -630,7 +606,7 @@ app.post('/cardViewPrintedPage', async (req, res) => {
     });
   } catch (err) {
     // Handle errors that may occur during card generation, database interaction, or rendering
-    res.send(`Something went wrong: ${err}`);
+    return res.send(`Something went wrong: ${err}`);
   }
 });
 
@@ -649,10 +625,10 @@ app.post('/cardViewPrintedBulkPage', async (req, res) => {
         let newCreature = await card.createDataStructCreature(req.body.colors, req.body.creatures, req.body.places, req.body.cardType);
         const aiCard = await card.createAICard(newCreature.creature, newCreature.place, newCreature.color, newCreature.rarity, 1);
         let values = [];
-          while ( !values || values.length === 0 ) {
-            values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId);
-            await delay(700); // Add a delay to avoid excessive requests 
-          }
+        while (!values || values.length === 0) {
+          values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId);
+          await delay(700); // Add a delay to avoid excessive requests 
+        }
         newCreature.URL = values[0].url;
         generatedCards.push(newCreature);
 
@@ -660,23 +636,23 @@ app.post('/cardViewPrintedBulkPage', async (req, res) => {
         let newSpell = await card.createDataStructSpell(req.body.color, req.body.theme, req.body.cardType, "Offensive"); // Hard coded
         const aiCard = await card.createAICard("abstract spell", newSpell.place, newSpell.color, newSpell.rarity, 1);
         let values = [];
-          while (!values || values.length === 0 ) {
-            values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId);
-            await delay(700); // Add a delay to avoid excessive requests
-          }
+        while (!values || values.length === 0) {
+          values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId);
+          await delay(700); // Add a delay to avoid excessive requests
+        }
         newSpell.URL = values[0].url;
         generatedCards.push(newSpell);
-    }   
-  }
+      }
+    }
     console.log(generatedCards);
-    generatedCards.forEach( async (card) => {
+    generatedCards.forEach(async (card) => {
       try {
         const cardId = await dbFunc.insertCard(card.name, card.cardType, user.userId, card.rarity, card.manaCost);
         await dbFunc.insertCardUrl(cardId, card.URL);
         if (card.cardType == "Spell") {
           await dbFunc.insertSpellCard(cardId, card.spellType, card.ability, card.attack, card.defense, card.utility);
         } else if (card.cardType == "Creature") {
-          await dbFunc.insertCreatureCard(cardId, card.attack, card.defense, card.creature); 
+          await dbFunc.insertCreatureCard(cardId, card.attack, card.defense, card.creature);
         }
 
         /* NEEDS WORK
@@ -690,11 +666,11 @@ app.post('/cardViewPrintedBulkPage', async (req, res) => {
       }
     })
     res.render('cardViewPrintedBulkPage', { cards: generatedCards });
-  
+
   } catch (err) {
     // Handle errors
     console.error(err);
-    res.status(500).send({ success: false, error: err.message });
+    return res.status(500).send({ success: false, error: err.message });
   }
 });
 
@@ -713,7 +689,7 @@ app.post('/generatedGameView', async (req, res) => {
       });
     } catch (err) {
       console.error(err);
-      res.send(`Something went wrong: ${err}`);
+      return res.send(`Something went wrong: ${err}`);
     }
   } else {
     res.redirect('/');
@@ -723,13 +699,13 @@ app.post('/generatedGameView', async (req, res) => {
 // Current Work
 app.post('/collect', async (req, res) => {
   const user = req.session.user;
-  if (user) { 
+  if (user) {
     const thisCollectId = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, req.body.gameId);
     const collect = await dbFunc.getAllCollectionsByUser(user.userId);
     const listCards = await dbFunc.grabListOfCardsFromCollection(thisCollectId);
     console.log(thisCollectId, collect, listCards);
 
-    res.render('collect', { 
+    res.render('collect', {
       thisCollectId: collect,
       collect: collect,
       listCards: listCards
@@ -787,9 +763,9 @@ app.post('/playCard', async (req, res) => {
 
       if (result && result.error) {
         if (result.error === 'Insufficient mana to play this card.') {
-          res.json({ message: 'Insufficient mana to play this card.' });
+          return res.json({ message: 'Insufficient mana to play this card.' });
         } else {
-          res.status(400).json({ error: result.error });
+          return res.status(400).json({ error: result.error });
         }
       } else {
 
@@ -799,22 +775,23 @@ app.post('/playCard', async (req, res) => {
 
         console.log(playerStage);
 
-        res.json({ message: 'card played successfully', cardId, playerMana, playerStage });
+        return res.json({ message: 'card played successfully', cardId, playerMana, playerStage });
       }
 
     } catch (error) {
       // Check if the error message is related to insufficient mana
       if (error.message === "Insufficient mana to play this card.") {
         // Send a 422 status code for unprocessable entity due to insufficient mana
-        res.status(422).json({ error: error.message });
+        return res.status(422).json({ error: error.message });
       } else {
         // For other errors, send a 400 status code
-        res.status(400).json({ error: error.message });
+        return res.status(400).json({ error: error.message });
       }
     }
   } else {
     // Send a 404 status code if the game instance is not found
-    res.status(404).json({ error: "Game not found." });
+    return res.status(404).json({ error: "Game not found." });
+
   }
 });
 
@@ -840,7 +817,7 @@ app.get('/getCardDetails', async (req, res) => {
         cardData[0].cardType,   // type
         cardData[0].creatureType,   // description
         cardData[0].manaCost,
-        cardData[0].rarity, 
+        cardData[0].rarity,
         cardData[0].imagePath,
         cardData[0].attack,
         cardData[0].defense);
@@ -862,10 +839,11 @@ app.get('/getCardDetails', async (req, res) => {
     }
 
     // Send the card details as JSON response
-    res.json(card);
+    return res.json(card);
   } catch (error) {
     console.error('Error fetching card details:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: 'Internal server error' });
+
   }
 });
 
@@ -880,13 +858,14 @@ app.post('/endTurn', async (req, res) => {
       await gameInstance[game.gameId].playNextTurn();
       // console.log(gameInstance[game.gameId].opponent.playerStage)
       let opponentStage = gameInstance[game.gameId].opponent.playerStage;
-      
-      res.status(200).json({ message: 'Computer opponent\'s turn completed', opponentStage});
+
+      return res.status(200).json({ message: 'Computer opponent\'s turn completed', opponentStage });
+
     } catch (error) {
       console.log("error: ", error)
     }
   } else {
     // Send a 404 status code if the game instance is not found
-    res.status(404).json({ error: "Game not found." });
+    return res.status(404).json({ error: "Game not found." });
   }
 })

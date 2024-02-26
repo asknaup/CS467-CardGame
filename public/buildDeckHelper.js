@@ -50,6 +50,11 @@ function createTradingCardFromInfo(cardInfo) {
 
     var card = document.createElement('div');
     card.classList.add('card');
+    card.draggable = true;
+
+    // const cardElement = row.querySelector(`[data-card-id="${cardId}"]`);
+
+    // card.innerHTML = cardElement.outerHTML;
 
     var cardId = document.createElement('p');
     cardId.textContent = cardInfo[0].cardId;
@@ -383,6 +388,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     console.error('Error:', error);
                 });
         }
+        alert('Your deck has been saved!');
     }
 
     // Attach the saveDeck function to the button click event
@@ -461,6 +467,46 @@ async function getCardData(selectedDeck) {
     }
 }
 
+// async function updateStagingAreaFromInfo() {
+//     try {
+//         // Fetch the deckId from the server (Replace this with your actual logic)
+//         const deckId = await fetchDeckIdFromServer();
+
+//         // Check if deckId is present
+//         if (!deckId) {
+//             console.error('Deck ID not found');
+//             return;
+//         }
+
+//         // Fetch cardIds associated with the deckId
+//         const cardIds = await fetchCardIdsFromServer(deckId);
+
+//         // Assuming you have a staging area container with an id of 'stagingArea'
+//         const stagingArea = document.getElementById('stagingArea');
+
+//         // Clear existing content
+//         stagingArea.innerHTML = '';
+
+//         // Update with new content based on deckId and cardIds
+//         // Add your logic to create and append elements as needed
+//         // For example, you might create divs for each card and append them to the staging area
+//         if (cardIds) {
+//             cardIds.forEach(async (cardId) => {
+//                 // Fetch card info for each cardId
+//                 const cardInfo = await getCardInfo(cardId);
+
+//                 // Create trading card element from cardInfo
+//                 const cardElement = createTradingCardFromInfo(cardInfo);
+
+//                 // Append cardElement to the staging area
+//                 stagingArea.appendChild(cardElement);
+//             });
+//         }
+//     } catch (error) {
+//         console.error('Error updating staging area:', error);
+//     }
+// }
+
 async function updateStagingAreaFromInfo() {
     try {
         // Fetch the deckId from the server (Replace this with your actual logic)
@@ -492,6 +538,9 @@ async function updateStagingAreaFromInfo() {
                 // Create trading card element from cardInfo
                 const cardElement = createTradingCardFromInfo(cardInfo);
 
+                // Set data-card-id attribute
+                cardElement.setAttribute('data-card-id', cardId);
+
                 // Append cardElement to the staging area
                 stagingArea.appendChild(cardElement);
             });
@@ -500,6 +549,7 @@ async function updateStagingAreaFromInfo() {
         console.error('Error updating staging area:', error);
     }
 }
+
 
 async function getCardInfo(cardId, selectedDeck) {
     try {
