@@ -194,6 +194,18 @@ function createTradingCardWithId(id, cardData){
     return cardContainer;
 }
 
+function createBackOfCard() {
+    // Card container
+    var cardContainer = document.createElement('div');
+    cardContainer.classList.add('card');
+    return cardContainer;
+}
+
+function createBackOfCardWithId(id){
+    let cardContainer = createBackOfCard();
+    cardContainer.setAttribute('id', id);
+    return cardContainer;
+}
 
 function addStagedCardFunctionality(playerObj, primaryIndex){
     playerObj.startIndex = Math.floor(primaryIndex / numScrollCards) * numScrollCards;
