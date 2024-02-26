@@ -1,6 +1,6 @@
 .drop-zone {
-    width: 150px; 
-    height: 210px; 
+    width: 150px;
+    height: 210px;
     border: 2px dashed #000;
     margin: 10px;
     display: inline-block;
@@ -12,7 +12,7 @@
     width: 100px;
     height: 140px;
     margin: 5px;
-    border: 1px solid black; 
+    border: 1px solid black;
     cursor: pointer;
     background-color: lightseagreen;
 }
@@ -25,9 +25,10 @@
     justify-content: space-evenly;
 }
 
-.opponent, .player {
-    display: flex; 
-    flex-wrap: wrap; 
+.opponent,
+.player {
+    display: flex;
+    flex-wrap: wrap;
     justify-content: space-evenly;
     position: relative;
 }
@@ -38,22 +39,73 @@
 }
 
 .playerError {
-    display: none; 
+    display: none;
     position: absolute;
-    top: -20px; 
-    background-color: red; 
-    color: white; 
-    padding: 5px; 
+    top: -20px;
+    background-color: red;
+    color: white;
+    padding: 5px;
     height: 20px;
 }
 
 .playerError.show {
-    display: block; /* Show the error message */
+    display: block;
+    /* Show the error message */
     height: 20px;
 }
 
 .greyed-out {
-    opacity: 0.6; /* Reduce opacity to make the card appear faded */
-    pointer-events: none; /* Disable pointer events so the card cannot be interacted with */
-    filter: grayscale(100%); /* Apply grayscale filter to make the card appear greyed out */
+    opacity: 0.6;
+    /* Reduce opacity to make the card appear faded */
+    pointer-events: none;
+    /* Disable pointer events so the card cannot be interacted with */
+    filter: grayscale(100%);
+    /* Apply grayscale filter to make the card appear greyed out */
+}
+
+.health-orb {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #ff6347;
+    /* Red color for health orb */
+    position: absolute;
+    text-align: center;
+    line-height: 50px;
+    font-weight: bold;
+}
+
+#board-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+#board {
+    border: 2px solid green;
+    width: auto;
+    height: auto;
+    margin: 20px;
+    justify-content: space-evenly;
+}
+
+#discard-pile {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center horizontally */
+}
+
+.opponent-discards,
+.player-discards {
+    width: 150px;
+    margin: 10px;
+}
+
+.discard-area {
+    width: 150px;
+    height: 210px;
+    border: 2px dashed #000;
+    margin: 10px;
+    display: inline-block;
+    flex-wrap: wrap;
+    position: relative;
 }

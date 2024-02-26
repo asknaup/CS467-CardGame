@@ -19,6 +19,7 @@ class CreatureCard extends Card {
         super(id, name, type, description, mana, rarity, imagePath);
         this.attack = attack;
         this.defense = defense;
+        this.hasBeenOnStage = false;
     }
 }
 
@@ -78,28 +79,47 @@ class ComputerOpponent extends Opponent {
     constructor(health = 100, mana = 10, player) {
         super(health, mana, player);
         this.playerStage = []; // Initialize playerStage for staging creature cards
+        this.opponentStage = []; // Initialize opponentStage for staging computers's creature cards
+    }
+
+    selectRandomCard(cards) {
+        return cards[Math.floor(Math.random() * cards.length)];
     }
 
     async playTurn(hand, isFirstTurn) {
         // Check if it's the first turn
         if (isFirstTurn) {
+            console.log("FIRST TURN")
             // If it's the first turn, play creature cards only
             for (let i = 0; i < hand.length; i++) {
                 const card = hand[i];
-                if (card instanceof CreatureCard && card.mana <= this.mana) {
-                    this.playerStage.push(card);
+                if (card instanceof CreatureCard && card.mana <= this.mana && this.opponentStage.length < 5) {
+                    this.opponentStage.push(card);
                     this.mana -= card.mana;
                     hand.splice(i, 1);
                     i--;
                 }
             }
         } else {
+            console.log("NOT FIRST TURN")
             // If it's not the first turn, play either creature or spell cards
             for (let i = 0; i < hand.length; i++) {
                 const card = hand[i];
                 if ((card instanceof CreatureCard || card instanceof SpellCard) && card.mana <= this.mana) {
-                    if (card instanceof CreatureCard) {
-                        this.playerStage.push(card);
+                    if (card instanceof CreatureCard && this.opponentStage.length < 5) {
+                        this.opponentStage.push(card);
+
+                        const cardToAttackIndex = Math.floor(Math.random() * this.playerStage.length);
+                        const cardToAttack = this.playerStage[cardToAttackIndex];
+                        
+                        // Attack the player's creature card
+                        const damage = card.attack;
+                        cardToAttack.defense -= damage;
+                        // Remove the card from the player's stage if its defense is 0 or less
+                        if (cardToAttack.defense <= 0) {
+                            this.playerStage.splice(cardToAttackIndex, 1);
+                        }
+
                     } else if (card instanceof SpellCard) {
                         this.applySpellCardEffects(card);
                     }
@@ -111,12 +131,12 @@ class ComputerOpponent extends Opponent {
         }
     }
 
-    evaluateBoardState(playerStage) {
+    evaluateBoardState(opponentStage) {
         const boardState = {
             playerHealth: this.user.health,
             opponentHealth: this.health,
-            playerCreatureStats: this.calculateCreatureStats(playerStage),
-            opponentCreatureStats: this.calculatedCreatureStats(this.playerStage),
+            playerCreatureStats: this.calculateCreatureStats(opponentStage),
+            opponentCreatureStats: this.calculatedCreatureStats(this.opponentStage),
             playerMana: this.user.mana
         };
 
@@ -228,15 +248,13 @@ class ComputerOpponent extends Opponent {
 
     // Example method to apply effects of a spell card
     applySpellCardEffects(spellCard) {
-        console.log(spellCard);
         // Apply effects based on the type of spell card
         switch (spellCard.ability) {
             case "Damage":
-                console.log("THIS.OPPONENT", this.player)
+                console.log("DAMAGE")
                 // Example: Deal damage to opponent's creatures or player
                 this.player.decreaseHealth(spellCard.attack); // Adjust based on your game mechanics
                 
-                console.log("THIS.OPPONENT", this.player)
                 break;
             case "Buff":
                 console.log("BUFF")
@@ -246,7 +264,7 @@ class ComputerOpponent extends Opponent {
             case "Debuff":
                 console.log("DEBUFF")
                 // Example: Decrease attack or defense of opponent's creatures
-                this.debuffOpponentCreatures(spellCard.debuffAmount); // Implement this method
+                this.debuffOpponentCreatures(spellCard); // Implement this method
                 break;
             // Add more cases for different types of spell cards...
             default:
@@ -256,21 +274,47 @@ class ComputerOpponent extends Opponent {
     }
 
     buffCreatures(spellCard) {
-        // Apply the buff to the player's creatures
-        for (const creature of this.playerStage) {
+        console.log("Buffing creature on opponent's stage");
+        // Apply the buff to a random creature on the opponent's stage
+        if (this.opponentStage.length > 0) {
+            const randomIndex = Math.floor(Math.random() * this.opponentStage.length);
+            const creature = this.opponentStage[randomIndex];
             creature.attack += spellCard.attack; // Adjust based on your game mechanics
             creature.defense += spellCard.defense; // Adjust based on your game mechanics
         }
     }
-
+    
     debuffOpponentCreatures(spellCard) {
-        // Apply the debuff to the opponent's creatures
-        for (const creature of this.opponent.playerStage) {
-            creature.attack -= spellCard.attack; // Adjust based on your game mechanics
-            creature.defense -= spellCard.defense; // Adjust based on your game mechanics
+        console.log("Debuffing creature on player's stage");
+        // Apply the debuff to the creature with the highest attack/defense combo on the player's stage
+        if (this.playerStage.length > 0) {
+            let highestCombo = -Infinity;
+            let targetCreature = null;
+    
+            for (const creature of this.playerStage) {
+                const combo = creature.attack + creature.defense;
+                if (combo > highestCombo) {
+                    highestCombo = combo;
+                    targetCreature = creature;
+                }
+            }
+
+            // Get index of creature in this.playerStage
+            const index = this.playerStage.findIndex(creature => creature.id === targetCreature.id);
+            // Apply debuff to the players creature
+            this.playerStage[index].attack -= spellCard.attack; // Adjust based on your game mechanics
+            this.playerStage[index].defense -= spellCard.defense; // Adjust based on your game mechanics
+       
+
+            if (this.playerStage[index].defense <= 0 ) {
+                this.playerStage.splice(index, 1);
+            }
+
+            if (this.playerStage[index].attack <= 0) {
+                this.playerStage[index].attack = 0;
+            }
         }
     }
-
 
     updateGameStateAfterCreatureCardPlayed(creatureCard) {
         // Add the creature to the player's stage
@@ -409,19 +453,23 @@ class Game {
     async playNextTurn() {
         // Draw cards for the next turn for user
         this.drawCardsPerTurn();
-        console.log(this.hand.length)
-
+    
         // Execute the computer opponent's turn
         if (this.opponent instanceof ComputerOpponent) {
             this.drawOpponentsCardsPerTurn();
+            console.log("ROUND", this.round)
             if (this.round === 0) {
+                this.opponent.playerStage = this.playerStage;
                 await this.opponent.playTurn(this.opponentHand, true);
             } else {
+                this.opponent.playerStage = this.playerStage;
                 await this.opponent.playTurn(this.opponentHand, false);
             }
-            this.opponentStage = this.opponent.playerStage;
-        }
 
+            this.playerStage = this.opponent.playerStage;
+            this.opponentStage = this.opponent.opponentStage;
+        }
+    
         // Reset players mana to 10
         this.user.mana = 10;
         this.opponent.mana = 10;
@@ -485,7 +533,12 @@ class Game {
                     this.hand = this.hand.filter(handCard => handCard.id !== cardId);
                     // Deduct mana cost from player's mana
                     this.user.mana -= card.mana;
-                    return { success: true, message: `Spell card ${card.name} played successfully on ${updatedStage[targetCreatureIndex].name}` };
+
+                    return { success: true, 
+                        message: `Spell card ${card.name} played successfully on ${updatedStage[targetCreatureIndex].name}`,
+                        updatedStage: updatedStage,
+                        updatedHand: this.hand,
+                    };
                 } else {
                     return { error: "Target creature card not found." };
                 }
@@ -536,6 +589,56 @@ class Game {
         } else {
             console.log("Spell card or creature card not found.");
             return { error: "Spell card or creature card not found." };
+        }
+    }
+
+    // Method to attack opponent's health with a card from the user's hand
+    attackOpponentHealth(cardId) {
+        // Find the card instance in hand based on cardId
+        const card = this.hand.find(card => card.id === cardId);
+        // display all card ids in playerStage
+        const cardStage = this.playerStage.find(card => card.id === cardId);
+
+        if (card) {
+            // card is in hand
+            // Check if the card is a spell card with damage type
+            if (card instanceof SpellCard && card.ability.toLowerCase() === 'damage') {
+                const damage = card.attack; // Assuming spellAttack contains the damage value
+                const manaCost = card.mana;
+                // Deduct damage from opponent's health
+                this.opponent.health -= damage;
+
+                // Remove the card from the user's hand
+                this.hand = this.hand.filter(handCard => handCard.id !== cardId);
+                this.user.mana -= manaCost;
+                // console.log(`Opponent's health reduced by ${damage}. Remaining health: ${this.opponent.health}`);
+
+                return { success: true, message: `Opponent's health reduced by ${damage}` };
+            } else if (card instanceof CreatureCard && card.hasBeenOnStage) {
+                const damage = card.attack; // Assuming spellAttack contains the damage value
+                // Deduct damage from opponent's health
+                this.opponent.health -= damage;
+
+                // Remove card from stage
+                this.playerStage = this.playerStage.filter(stageCard => stageCard.id !== cardId);
+
+                return { success: true, message: `Opponent's health reduced by ${damage}`};
+            
+            } else {
+                return { error: "Invalid card type or card does not have a damage spell." };
+            }
+        } else if (cardStage) {
+            // card is on stage
+            const damage = cardStage.attack; // Assuming spellAttack contains the damage value
+            // Deduct damage from opponent's health
+            this.opponent.health -= damage;
+
+            // Remove card from stage
+            this.playerStage = this.playerStage.filter(stageCard => stageCard.id !== cardId);
+
+            return { success: true, message: `Opponent's health reduced by ${damage}`};
+        } else {
+            return { error: "Card not found in hand or staging." };
         }
     }
 

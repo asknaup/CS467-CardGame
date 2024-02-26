@@ -26,14 +26,20 @@ function drop(event) {
             .then(response => response.json())
             .then(cardData => {
                 if (cardData.type.toLowerCase() === 'creature') {
-                    // Only creature cards can be played in the player drop zone
-                    fetch('/playCard', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ cardId: cardId }),
-                    })
+                    // Check if the drop zone is the opponent's drop zone
+                    if (dropZone.parentElement.classList.contains('opponent')) {
+
+                        // Get id of card in dropzone
+                        let cardInDropZone = dropZone.querySelector('.card');
+                        let cardId = cardInDropZone.id;
+
+                        fetch('/attackCardToOpponent', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ cardId: cardId, dropZoneId: dropZone.id}),
+                        })
                         .then(response => response.json())
                         .then(data => {
                             if (data.message === 'card played successfully') {
@@ -52,22 +58,63 @@ function drop(event) {
                                 console.error('Error:', data.message);
                             }
                         })
-                        .catch(error => {
-                            console.error('Error playing the card:', error);
-                        });
-                } else if (cardData.type.toLowerCase() === 'spell') {
-                    // Check if the drop zone is the staging area
-                    if (dropZone.parentElement.classList.contains('staging')) {
-                        // Display an error message for spell cards being played in the staging area
-                        const dropZoneId = dropZone.id;
-                        displayErrorMessage('Error: Cannot play Spell card in staging area. Must be applied to player or Creature card', dropZoneId);
-                    } else {
-                        // Determine the target zone (player or opponent)
-                        const targetZone = dropZone.parentElement.classList.contains('player') ? 'player' : 'opponent';
-                        // Apply spell effect based on the target zone
-                        applySpellEffect(cardData, dropZone); // Pass dropZone as a parameter
-                        fetchAndRenderHand();
+                    } else if (dropZone.parentElement.classList.contains('player')) {
+                        // Only creature cards can be played in the player drop zone
+                        fetch('/playCard', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ cardId: cardId }),
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.message === 'card played successfully') {
+                                    // Move the card from hand to the drop zone
+                                    const cardElement = document.getElementById(cardId);
+                                    cardElement.classList.add('greyed-out');
+                                    dropZone.appendChild(cardElement);
+
+                                    // Update player's mana UI
+                                    document.getElementById('playerMana').textContent = `Player Mana: ${data.playerMana}`;
+                                } else if (data.message === 'Insufficient mana to play this card.') {
+                                    // Display an error message for insufficient mana
+                                    const dropZoneId = dropZone.id;
+                                    displayErrorMessage('Error: Insufficient mana to play this card', dropZoneId);
+                                } else {
+                                    console.error('Error:', data.message);
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error playing the card:', error);
+                            });
                     }
+                } else if (cardData.type.toLowerCase() === 'spell') {
+                    // Check if card is a buff spell
+                    if (cardData.ability.toLowerCase() === 'buff') {
+                        // Check if the drop zone is the staging area
+                        if (dropZone.parentElement.classList.contains('staging')) {
+                            // Display an error message for spell cards being played in the staging area
+                            const dropZoneId = dropZone.id;
+                            displayErrorMessage('Error: Cannot play Spell card in staging area. Must be applied to player or Creature card', dropZoneId);
+                        } else {
+                            // Determine the target zone (player or opponent)
+                            const targetZone = dropZone.parentElement.classList.contains('player') ? 'player' : 'opponent';
+                            // Apply spell effect based on the target zone
+                            applySpellEffect(cardData, dropZone); // Pass dropZone as a parameter
+                            fetchAndRenderHand();
+                        }
+                    } else {
+                        // Display error message for non-buff spell cards
+                        const dropZoneId = dropZone.id;
+                        displayErrorMessage('Error: Only buff spells can be played on your creature cards', dropZoneId);
+                    }
+
+
+                } else {
+                    // Display an error message for invalid card types
+                    const dropZoneId = dropZone.id;
+                    displayErrorMessage('Error: Only creature cards and buff spells can be played in this zone', dropZoneId);
                 }
             });
     } else {
@@ -79,7 +126,7 @@ function drop(event) {
             .then(cardData => {
                 if (cardData.type.toLowerCase() === 'spell') {
                     // Apply spell effect to the existing creature card
-                    applySpellEffect(cardData, 'player', dropZone);
+                    applySpellEffect(cardData, dropZone);
                 } else {
                     // Display an error message since only spell cards can be applied to existing creature cards
                     displayErrorMessage('Error: Only spell cards can be applied to existing creature cards', dropZoneId);
@@ -105,8 +152,171 @@ function fetchAndRenderHand() {
         });
 }
 
+function fetchAndRenderStagingArea() {
+    fetch('/getPlayerStage')
+        .then(response => response.json())
+        .then(data => {
+            // Render the staging area data on the UI
+            renderStagingArea(data.playerStage);
+        })
+        .catch(error => {
+            console.error('Error fetching staging area data:', error);
+        });
+}
+
+function fetchAndRenderOpponentStage() {
+    fetch('/getOpponentStage')
+        .then(response => response.json())
+        .then(data => {
+            // Render the opponent's staging area data on the UI
+            renderOpponentStage(data.opponentStage);
+        })
+        .catch(error => {
+            console.error('Error fetching opponent\'s staging area data:', error);
+        });
+}
+
+function renderStagingArea(stagingAreaData) {
+    const stagingAreaContainer = document.getElementById('stagingArea');
+    
+    // Replace cards with new data, if card is already in staging area else remove
+    stagingAreaData.forEach(card => {
+        const cardElement = document.getElementById(card.id);
+        if (cardElement) {
+            cardElement.textContent = `${card.name}\n${card.type}\nmana: ${card.mana}\nAttack: ${card.attack}\nDefense: ${card.defense}`;
+        } else {
+            const newCardElement = document.createElement('div');
+            newCardElement.draggable = true;
+            newCardElement.id = card.id;
+            newCardElement.classList.add('card');
+            newCardElement.textContent = `${card.name}\n${card.type}\nmana: ${card.mana}\nAttack: ${card.attack}\nDefense: ${card.defense}`;
+            stagingAreaContainer.appendChild(newCardElement);
+        }
+    }
+    )
+}
+
+function renderOpponentStage(opponentStageData) {
+    const opponentStagingAreaContainer = document.getElementById('opponentStagingArea');
+
+    // Replace cards with new data, if card is already in staging area else remove
+    opponentStageData.forEach(card => {
+        const cardElement = document.getElementById(card.id);
+        if (cardElement) {
+            cardElement.textContent = `${card.name}\n${card.type}\nmana: ${card.mana}\nAttack: ${card.attack}\nDefense: ${card.defense}`;
+        } else {
+            const newCardElement = document.createElement('div');
+            newCardElement.draggable = true;
+            newCardElement.id = card.id;
+            newCardElement.classList.add('card');
+            newCardElement.textContent = `${card.name}\n${card.type}\nmana: ${card.mana}\nAttack: ${card.attack}\nDefense: ${card.defense}`;
+            opponentStagingAreaContainer.appendChild(newCardElement);
+        }
+    }
+    )
+}
+
+
+
+// Function to handle dropping on the opponent's health orb
+function dropOnOpponentHealthOrb(event) {
+    event.preventDefault();
+    const cardId = event.dataTransfer.getData('text/plain');
+
+    // Fetch card details
+    fetch(`/getCardDetails?cardId=${cardId}`)
+        .then(response => response.json())
+        .then(cardData => {
+            // Check if the card type is "damage" spell
+            if (cardData.type.toLowerCase() === 'spell' && cardData.ability.toLowerCase() === 'damage') {
+                // Apply the spell effect to damage the opponent's health
+                applyDamageToOpponentHealth(cardData.id);
+                fetchAndRenderHand(); // Fetch and render the hand after the spell is played
+            } else if (cardData.type.toLowerCase() === "creature") {
+                // If cardData is in staging area, play card and remove from staging area
+                attackCardToHealth(cardData.id);
+                
+            } else {
+                // Display an error message since only "damage" spells can be applied to opponent's health
+                displayErrorMessage('Error: Only "damage" spells can be applied to opponent\'s health', 'opponentHealthOrb');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching card details:', error);
+        });
+}
+
+function attackCardToHealth(id) {
+    fetch('/attackCardToHealth', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id }),
+    })
+        .then(response => response.json())
+        .then(data => {
+            // Handle response from the server, if needed
+            if (data.message) {
+                const opponentHealthSpan = document.getElementById('opponentHealth');
+                const opponentHealth = opponentHealthSpan.textContent;
+                opponentHealthSpan.textContent = data.opponentHealth.toString()
+
+                document.getElementById('playerMana').textContent = `Player Mana: ${data.playerMana}`;
+
+                // Remove card from staging area
+                const cardElement = document.getElementById(id);
+                cardElement.remove();
+
+                // Update player's deck card count
+                document.getElementById('deck-count').textContent = `Remaining Deck Cards: ${data.playerDeckCount}`;
+            }
+
+
+        })
+        .catch(error => {
+            console.error('Error applying damage to opponent health:', error);
+        });
+}
+
+// Function to apply damage to opponent's health
+function applyDamageToOpponentHealth(id) {
+    // Send a request to the server to deduct 'damage' from the opponent's health
+    fetch('/damageOpponent', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id }),
+    })
+        .then(response => response.json())
+        .then(data => {
+            // Handle response from the server, if needed
+
+            if (data.message) {
+                const opponentHealthSpan = document.getElementById('opponentHealth');
+                const opponentHealth = opponentHealthSpan.textContent;
+                opponentHealthSpan.textContent = data.opponentHealth.toString()
+
+                document.getElementById('playerMana').textContent = `Player Mana: ${data.playerMana}`;
+
+            }
+        })
+        .catch(error => {
+            console.error('Error applying damage to opponent health:', error);
+        });
+}
 
 document.addEventListener('DOMContentLoaded', function () {
+    // Add event listener for the end turn button
+    const endTurnButton = document.getElementById('endTurnButton');
+    endTurnButton.addEventListener('click', endTurn);
+
+
+    const opponentHealthOrb = document.getElementById('opponentHealth');
+    opponentHealthOrb.addEventListener('drop', dropOnOpponentHealthOrb);
+    opponentHealthOrb.addEventListener('dragover', dragOver);
+
     // Fetch initial hand data from the server
     fetch('/getHand')
         .then(response => response.json())
@@ -117,6 +327,9 @@ document.addEventListener('DOMContentLoaded', function () {
         .catch(error => {
             console.error('Error fetching initial hand data:', error);
         });
+
+
+
     // Function to render the hand on the UI
     function renderHand(handData) {
         const handContainer = document.getElementById('hand');
@@ -133,7 +346,8 @@ document.addEventListener('DOMContentLoaded', function () {
             if (card.type.toLowerCase() === 'creature') {
                 cardElement.textContent = `${card.name}\n${card.type}\nmana: ${card.mana}\nAttack: ${card.attack}\nDefense: ${card.defense}`;
             } else if (card.type.toLowerCase() === 'spell') {
-                cardElement.textContent = `${card.name}\n${card.type}\nmana: ${card.mana}\nSpell Attack: ${card.attack}\nSpell Defense: ${card.defense}`;
+                cardElement.textContent = `${card.name}\n${card.type}\nmana: ${card.mana}
+                \nSpell Attack: ${card.attack}\nSpell Defense: ${card.defense}\nSpell Type: ${card.ability}`;
             }
 
             // Append the card element to the hand container
@@ -190,12 +404,6 @@ function displayErrorMessage(message, dropZoneId) {
     }, 5000);
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-    // Add event listener for the end turn button
-    const endTurnButton = document.getElementById('endTurnButton');
-    endTurnButton.addEventListener('click', endTurn);
-});
-
 function attachDragDropListeners() {
     const handList = document.getElementById('hand').querySelectorAll('.card');
     const playerDropZones = document.querySelectorAll(".player .drop-zone");
@@ -226,7 +434,8 @@ function renderHand(handData) {
         if (card.type.toLowerCase() === 'creature') {
             cardElement.textContent = `${card.name}\n${card.type}\nmana: ${card.mana}\nAttack: ${card.attack}\nDefense: ${card.defense}`;
         } else if (card.type.toLowerCase() === 'spell') {
-            cardElement.textContent = `${card.name}\n${card.type}\nmana: ${card.mana}\nSpell Attack: ${card.attack}\nSpell Defense: ${card.defense}`;
+            cardElement.textContent = `${card.name}\n${card.type}\nmana: ${card.mana}
+            \nSpell Attack: ${card.attack}\nSpell Defense: ${card.defense}\nSpell Type: ${card.ability}`;
         }
 
         // Append the card element to the hand container
@@ -254,6 +463,7 @@ function fetchAndRenderHand() {
 }
 
 function endTurn() {
+    console.log("END TURN")
     fetch('/endTurn', {
         method: 'POST',
         headers: {
@@ -263,11 +473,21 @@ function endTurn() {
     })
         .then(response => response.json())
         .then(data => {
-
             // Fetch and render Players hand
             fetchAndRenderHand();
+            fetchAndRenderStagingArea();
+            fetchAndRenderOpponentStage();
             
-            playOpponentTurn();
+            // Convert grayed-out cards back to their original state
+            const grayedOutCards = document.querySelectorAll('.greyed-out');
+            grayedOutCards.forEach(card => {
+                card.classList.remove('greyed-out');
+                const pElement = card.parentNode.querySelector('p');
+                if (pElement) {
+                    pElement.style.display = 'block';
+                }
+            });
+
             // Update the UI based on the opponent's move
             if (data.opponentStage) {
                 updateOpponentStageUI(data.opponentStage);
@@ -278,15 +498,31 @@ function endTurn() {
                 document.getElementById('playerMana').textContent = `Player Mana: ${data.playerMana}`;
             }
 
-            // Convert grayed-out cards back to their original state
-            const grayedOutCards = document.querySelectorAll('.greyed-out');
-            grayedOutCards.forEach(card => {
-                card.classList.remove('greyed-out');
-                const pElement = card.parentNode.querySelector('p');
-                if (pElement) {
-                    pElement.style.display = 'block';
-                }
-            });
+            if (data.opponentMana) {
+                // Update opponent's mana UI
+                document.getElementById('opponentMana').textContent = `Opponent Mana: ${data.opponentMana}`;
+            }
+
+            if (data.opponentHealth) {
+                // Update opponent's health UI
+                document.getElementById('opponentHealth').textContent = data.opponentHealth;
+            }
+
+            if (data.playerHealth) {
+                // Update player's health UI
+                document.getElementById('playerHealth').textContent = data.playerHealth;
+            }
+
+            if (data.opponentDeckCount) {
+                // Update opponent's deck card count
+                document.getElementById('opponentDeckCount').textContent = `Remaining Deck Cards: ${data.opponentDeckCount}`;
+            }
+
+            if (data.playerDeckCount) {
+                // Update player's deck card count
+                document.getElementById('deck-count').textContent = `Remaining Deck Cards: ${data.playerDeckCount}`;
+            }
+
         })
         .catch(error => {
             console.error('Error ending turn:', error);
@@ -295,43 +531,18 @@ function endTurn() {
     attachDragDropListeners();
 }
 
-// Function to play opponent's turn
-async function playOpponentTurn() {
-    try {
-      const response = await fetch('/opponentTurn', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-  
-      if (response.ok) {
-        const data = await response.json();
-        // Update the game state based on the response
-        updateGameState(data);
-        updateOpponentStageUI(data.opponentStage)
-      } else {
-        console.error('Error playing opponent\'s turn:', response.statusText);
-      }
-    } catch (error) {
-      console.error('Error playing opponent\'s turn:', error);
-    }
-  }
-  
-  // Function to update game state based on server response
-  function updateGameState(data) {
-    // Update game state based on the data received from the server
-    console.log('Opponent\'s turn completed:', data);
-    // Example: Update UI with updated game state
-  }
-  
-
 function updateOpponentStageUI(opponentStage) {
     attachStagedCardListeners();
 
     // Assuming opponentStage is an array of card IDs
     const dropZones = document.querySelectorAll('.opponent .drop-zone');
     const emptyDropZones = [];
+
+    // Attach drop event listeners to opponent drop zones
+    dropZones.forEach(dropZone => {
+        dropZone.addEventListener('dragover', dragOver);
+        dropZone.addEventListener('drop', drop);
+    });
 
     // Check each drop zone for a card
     dropZones.forEach(dropZone => {
@@ -357,17 +568,18 @@ function updateOpponentStageUI(opponentStage) {
             // Create a new card element
             const cardElement = document.createElement('div'); cardElement.classList.add('card');
             cardElement.draggable = true; // Make the card draggable
-            cardElement.id = card.id; // Set the ID of the card element
+            cardElement.id = parseInt(card.id); // Set the ID of the card element
             cardElement.textContent = `${card.name}\n${card.type}\nmana: 
             ${card.mana}\nAttack: ${card.attack}\nDefense: ${card.defense}`;
 
             cardElement.classList.add('card');
             cardElement.id = card; // Set the ID of the card element
 
+            if (card) {
             // Append the card element to the selected drop zone
             selectedDropZoneContainer.appendChild(cardElement);
-
-            console.log(`Placed card ${card} in drop zone ${selectedDropZoneContainer.id}`);
+            }
+            console.log(`Placed card ${card.id} in drop zone ${selectedDropZoneContainer.id}`);
 
             // Remove the selected drop zone from the emptyDropZones array
             emptyDropZones.splice(randomIndex, 1);
@@ -421,10 +633,9 @@ async function applySpellEffect(spellCard, dropZone) {
             // Update the card on the server-side
             updateCreatureCardOnServer(dropZoneId, creatureCardData, spellCard.id)
                 .then(updatedStagedCards => {
-                    console.log("updatedStagedCards", updatedStagedCards);
                     // fetch hand after spell has been played
                     fetchAndRenderHand();
-                    
+
                     let stagedCards = updatedStagedCards['playerStage'];
                     let cardId = updatedStagedCards['cardId']
 
@@ -432,7 +643,7 @@ async function applySpellEffect(spellCard, dropZone) {
                     if (stagedCards) {
                         const cardElement = document.getElementById(dropZoneId);
                         const stagedCard = stagedCards.filter(card => parseInt(card.id) === parseInt(cardId))[0];
-                        console.log("staged Card", stagedCard)
+
                         cardElement.textContent = `${stagedCard.name}\n${stagedCard.type}\nmana: 
                             ${stagedCard.mana}\nAttack: ${stagedCard.attack}\nDefense: ${stagedCard.defense}`;
                     }
@@ -470,32 +681,29 @@ async function updateCreatureCardOnServer(cardId, updatedCardData, spellCardId) 
             },
             body: JSON.stringify({ cardId, updatedCardData, spellCardId }),
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.message === 'card played successfully') {
-                console.log("data.cardId", data.cardId);
-                console.log("data.playerMana", data.playerMana);
-                console.log("data.playerStage", data.playerStage);
-                // Update player's mana UI
-                document.getElementById('playerMana').textContent = `Player Mana: ${data.playerMana}`;
-                
-                // Ensure cardId remains integer
-                const updatedCardId = parseInt(data.cardId);
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === 'card played successfully') {
+                    // Update player's mana UI
+                    document.getElementById('playerMana').textContent = `Player Mana: ${data.playerMana}`;
 
-                resolve({ playerStage: data.playerStage, cardId: updatedCardId });
-            } else if (data.message === 'Insufficient mana to play this card.') {
-                // Display an error message for insufficient mana
-                const dropZoneId = dropZone.id;
-                displayErrorMessage('Error: Insufficient mana to play this card', dropZoneId);
-                reject(data.message); // Reject the promise with the error message
-            } else {
-                console.error('Error:', data.message);
-                reject(data.message); // Reject the promise with the error message
-            }
-        })
-        .catch(error => {
-            console.error('Error playing the card:', error);
-            reject(error); // Reject the promise with the error
-        });
+                    // Ensure cardId remains integer
+                    const updatedCardId = parseInt(data.cardId);
+
+                    resolve({ playerStage: data.playerStage, cardId: updatedCardId });
+                } else if (data.message === 'Insufficient mana to play this card.') {
+                    // Display an error message for insufficient mana
+                    const dropZoneId = dropZone.id;
+                    displayErrorMessage('Error: Insufficient mana to play this card', dropZoneId);
+                    reject(data.message); // Reject the promise with the error message
+                } else {
+                    console.error('Error:', data.message);
+                    reject(data.message); // Reject the promise with the error message
+                }
+            })
+            .catch(error => {
+                console.error('Error playing the card:', error);
+                reject(error); // Reject the promise with the error
+            });
     });
 }
