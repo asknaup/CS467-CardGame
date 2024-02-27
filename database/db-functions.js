@@ -582,6 +582,7 @@ async function getAllDecksByUser(userId) {
     });
 }
 
+
 //   '{"cardList": []}' MAYBE
 //   console.log(collectionDataObject); 
 async function insertOrSelectCollectionByUserIdandGameId(userId, gameId) {
@@ -605,7 +606,6 @@ async function insertOrSelectCollectionByUserIdandGameId(userId, gameId) {
                     });
                     return;
                 }
-
                 if (checkCollectionResult.length > 0) {
                     // Collection exists, return collectionId
                     const collectionId = checkCollectionResult[0].collectionId;
@@ -627,7 +627,6 @@ async function insertOrSelectCollectionByUserIdandGameId(userId, gameId) {
                             });
                             return;
                         }
-
                         db.pool.query(selectLastInsertIdQuery, (selectErr, selectResult) => {
                             if (selectErr) {
                                 db.pool.query('ROLLBACK', () => {
@@ -635,7 +634,6 @@ async function insertOrSelectCollectionByUserIdandGameId(userId, gameId) {
                                 });
                                 return;
                             }
-
                             db.pool.query('COMMIT', (commitErr) => {
                                 if (commitErr) {
                                     db.pool.query('ROLLBACK', () => {

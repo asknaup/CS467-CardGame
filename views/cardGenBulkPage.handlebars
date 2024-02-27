@@ -18,7 +18,7 @@
         <h3>Generate for which game?</h3><br>
         <select id="whichgame" name="whichgame">
           {{#each vals}}
-            <option value="{{this.imageLocation}}">{{this.imageLocation}}</option>
+            <option value="{{this.gameId}}">{{this.imageLocation}}</option>
           {{/each}}
         </select>
         <br><br><p>---------------------------------</p><br>
@@ -96,7 +96,7 @@
         ];
 
     const colors = [
-        "No Significant Color", "Random", "Blue", "Brown", "Gold",
+        "None", "Random", "Blue", "Brown", "Gold",
         "Green", "Magenta", "Maroon",
         "Navy", "Orange", "Pink", "Purple", "Red",
         "Silver", "Turquoise", "Violet", "Yellow"

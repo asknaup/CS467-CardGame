@@ -135,7 +135,7 @@ async function createDataStructSpell(colors, place, cardType, spellType) {
     } else { newStruct.color = colors;}
 
     if (spellType == "Random") {
-        newStruct.spellType = getRandomElement(["Damage", "Buff", "De-Buff"]);
+        newStruct.spellType = getRandomElement(["Damage", "Buff", "Debuff"]);
     } else { newStruct.spellType = spellType; } 
     
     if (newStruct.rarity == "Common") {
