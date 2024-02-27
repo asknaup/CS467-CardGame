@@ -347,13 +347,84 @@ document.addEventListener('DOMContentLoaded', function () {
             cardElement.id = card.id;
             cardElement.classList.add('card');
 
-            // Set the text content based on the card type
-            if (card.type.toLowerCase() === 'creature') {
-                cardElement.textContent = `${card.name}\n${card.type}\nmana: ${card.mana}\nAttack: ${card.attack}\nDefense: ${card.defense}`;
-            } else if (card.type.toLowerCase() === 'spell') {
-                cardElement.textContent = `${card.name}\n${card.type}\nmana: ${card.mana}
-                \nSpell Attack: ${card.attack}\nSpell Defense: ${card.defense}\nSpell Type: ${card.ability}`;
+            console.log(card);
+            // // Set the text content based on the card type
+            // if (card.type.toLowerCase() === 'creature') {
+            //     cardElement.textContent = `${card.name}\n${card.type}\nmana: ${card.mana}\nAttack: ${card.attack}\nDefense: ${card.defense}`;
+            // } else if (card.type.toLowerCase() === 'spell') {
+            //     cardElement.textContent = `${card.name}\n${card.type}\nmana: ${card.mana}
+            //     \nSpell Attack: ${card.attack}\nSpell Defense: ${card.defense}\nSpell Type: ${card.ability}`;
+            // }
+
+            var cardId = document.createElement('p');
+            cardId.textContent = card.cardId;
+
+            var cardName = document.createElement('h1');
+            cardName.classList.add('cardName');
+            cardName.textContent = card.cardName;
+
+            var textOverlayBottom = document.createElement('div');
+            textOverlayBottom.classList.add('textOverlayBottom');
+
+            var textOverlayTop = document.createElement('div');
+            textOverlayTop.classList.add('textOverlayTop');
+
+            var cardImage = document.createElement('div');
+            cardImage.classList.add('cardImage');
+
+            var imageElement = document.createElement('img');
+            imageElement.src = card.imagePath;
+            imageElement.alt = 'Card Image';
+
+            cardImage.appendChild(imageElement);
+
+            var cardType = document.createElement('p');
+            cardType.classList.add('cardType');
+            cardType.textContent = card.cardType;
+
+            var rarity = document.createElement('p');
+            rarity.textContent = card.rarity;
+
+            var manaCost = document.createElement('p');
+            manaCost.innerHTML = `<strong>Mana Cost:</strong> ${card.manaCost}`;
+
+            textOverlayBottom.appendChild(rarity);
+            textOverlayBottom.appendChild(manaCost);
+
+            if (card.cardType == "Spell") {
+                var spellType = document.createElement('p');
+                spellType.innerHTML = `<strong>Spell Type:</strong> ${card.spellType}`;
+
+                var spellAbility = document.createElement('p');
+                spellAbility.innerHTML = `<strong>Spell Ability:</strong> ${card.spellAbility}`;
+
+                var spellAttack = document.createElement('p');
+                spellAttack.innerHTML = `<strong>Spell Attack:</strong> ${card.spellAttack}`;
+
+                var spellDefense = document.createElement('p');
+                spellDefense.innerHTML = `<strong>Spell Defense:</strong> ${card.spellDefense}`;
+
+                textOverlayBottom.appendChild(spellType);
+                textOverlayBottom.appendChild(spellAbility);
+                textOverlayBottom.appendChild(spellAttack);
+                textOverlayBottom.appendChild(spellDefense);
+            } else {
+                var attack = document.createElement('p');
+                attack.innerHTML = `<strong>Attack:</strong> ${card.attack}`;
+
+                var defense = document.createElement('p');
+                defense.innerHTML = `<strong>Defense:</strong> ${card.defense}`;
+
+                textOverlayBottom.appendChild(attack);
+                textOverlayBottom.appendChild(defense);
             }
+
+            textOverlayTop.appendChild(cardName);
+            textOverlayTop.appendChild(cardType);
+
+            cardElement.appendChild(textOverlayBottom);
+            cardElement.appendChild(cardImage);
+            cardElement.appendChild(textOverlayTop);
 
             // Append the card element to the hand container
             handContainer.appendChild(cardElement);

@@ -687,9 +687,11 @@ app.get('/getHand', async (req, res) => {
 
   if (gameInstance[game.gameId]) {
     const handData = gameInstance[game.gameId].hand.map(card => {
+      console.log(card);
       return {
         id: parseInt(card.id),
         name: card.name,
+        imagePath: card.imagePath,
         type: card.type,
         mana: parseInt(card.mana),
         attack: parseInt(card.attack),
