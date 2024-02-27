@@ -678,7 +678,7 @@ app.get('/game/', async (req, res) => {
   // const deck = req.session.deck;
   // const game = req.session.game;
   const user = { userId: 1005, username: 'admin' }
-  const deck = { deckId: 7004 }
+  const deck = { deckId: 7000 }
   const game = { ruleSet: 'ruleSet1', gameId: 1001 }
 
   // If user we can intialize a game
@@ -691,7 +691,6 @@ app.get('/game/', async (req, res) => {
     res.render('gamePlay1', {
       gameId: game.gameId,
       ruleSet: game.ruleSet,
-      // hand: handData,
       remainingDeckCards: gameInstance[game.gameId].deck.length,
       playerMana: gameInstance[game.gameId].user.mana,
       opponentMana: gameInstance[game.gameId].opponent.mana
@@ -706,9 +705,11 @@ app.get('/getHand', async (req, res) => {
 
   if (gameInstance[game.gameId]) {
     const handData = gameInstance[game.gameId].hand.map(card => {
+      console.log(card);
       return {
         id: parseInt(card.id),
         name: card.name,
+        imagePath: card.imagePath,
         type: card.type,
         mana: parseInt(card.mana),
         attack: parseInt(card.attack),
