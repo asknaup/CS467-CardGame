@@ -889,3 +889,23 @@
 .miniGameCardBack {
     background-color: rgb(231, 227, 227);
 }
+
+#wonTitlePart1 {
+    display: none;
+    position: absolute;
+    color: #4caf50;
+    font-size: 4em;
+    top: 45%;
+    left: 20%;
+    z-index: 999;
+}
+
+#wonTitlePart2 {
+    display: none;
+    position: absolute;
+    color: rgb(154, 87, 154);
+    font-size: 4em;
+    top: 55%;
+    right: 20%;
+    z-index: 999;
+}

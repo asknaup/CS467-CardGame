@@ -88,6 +88,12 @@ function gameLogic(cardObj, cardSlot){
         }
     }
     userObj.numTurnsTaken += 1;
+    if(userObj.numOfMatchesLeft === 0){
+        let wonTitlePart1 = document.getElementById("wonTitlePart1");
+        wonTitlePart1.style.display = "block";
+        let wonTitlePart2 = document.getElementById("wonTitlePart2");
+        wonTitlePart2.style.display = "block";
+    }
 }
 
 
@@ -149,7 +155,7 @@ let cardTemplates = [{cardId: "10", cardName: "Joe", imagePath: "/images/goblinG
 
 // create cardObs for miniGame from cardTemplates array
 userObj = {firstCard: null, firstCardSlot: null, secondCard: null, secondCardSlot: null, numTurnsTaken: 0, numCardSlots: 18, 
-            cardObjs: [], cardSlotsArr: [], slotToCardDict: {}, cardsDict: {}, oldFaceUpCards: []};
+            cardObjs: [], cardSlotsArr: [], slotToCardDict: {}, cardsDict: {}, oldFaceUpCards: [], numOfMatchesLeft: 9};
 for(let index = 0; index < (userObj.numCardSlots / 2); index++){
     let cardObj = cardTemplates[index];
     let cardA = new Card (cardObj.cardId + "A", cardObj.cardName, cardObj.imagePath, cardObj.cardType, cardObj.rarity, cardObj.spellType, 
@@ -162,6 +168,14 @@ for(let index = 0; index < (userObj.numCardSlots / 2); index++){
     userObj.cardObjs.push(cardB);
     userObj.cardsDict[cardB.cardId] = cardB; 
 }
+
+
+// Fischer-Yates Shuffle
+for (let i = userObj.cardObjs.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [userObj.cardObjs[i], userObj.cardObjs[j]] = [userObj.cardObjs[j], userObj.cardObjs[i]]
+}
+
 
 // fill cardSlots with card elements
 for(let index = 0; index < userObj.cardObjs.length; index++){
