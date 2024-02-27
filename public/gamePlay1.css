@@ -1,3 +1,274 @@
+#cardList {
+    border: 1px solid #ccc;
+    min-height: 200px;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    /* Adjust to a vertical layout */
+    align-items: center;
+    /* Center items horizontally */
+    height: 100vh;
+}
+
+/* Add some basic styling for the tooltip */
+.toolTip {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.toolTipText {
+    display: none;
+    position: absolute;
+    background-color: #333;
+    color: #fff;
+    top: -100%;
+    left: 0;
+    padding: 5px;
+    border-radius: 5px;
+    z-index: 1;
+}
+
+/* Show tooltip text when hovering over the .card element */
+.card:hover .toolTipText {
+    display: block;
+}
+
+.stagingArea {
+    border: 1px solid #ccc;
+    background-color: #d8eece;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    /* Adjust gap as needed for spacing between cards */
+    justify-content: flex-start;
+    align-items: flex-start;
+    height: 350px;
+    /* Fixed height */
+    min-height: 400px;
+    width: 100%;
+    /* Fixed width */
+    overflow-y: auto;
+    /* Add this if you want a vertical scrollbar if the content overflows */
+}
+
+.stagingArea .cardContainer {
+    flex: 0 0 calc(16.666% - 10px);
+    /* Set to approximately 100% / 6 with gap in mind */
+    box-sizing: border-box;
+    /* Include padding and border in the width calculation */
+}
+
+.cardContainer {
+    max-width: 100%;
+    margin: 0 auto;
+    /* Center the container */
+}
+
+#cardContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.card {
+    /* width: 250px;
+    height: 350px; */
+    width: 180px;
+    height: 270px;
+    /* Card container height */
+    border: 2px solid #000;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+    margin-right: 10px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    /* background-color: #bbb; */
+    /* z-index: 0; */
+    /* Add margin between cards */
+}
+
+.textOverlayBottom {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgb(226, 180, 180, 0.7);
+    /* Add a semi-transparent background */
+    padding: 5px;
+    text-align: center;
+    width: 100%;
+}
+
+.textOverlayTop {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgb(226, 180, 180, 0.7);
+    /* Add a semi-transparent background */
+    padding: 0px;
+    text-align: center;
+    width: 100%;
+}
+
+.cardBackground {
+    height: 100%;
+    margin: 10px 10px 10px 10px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    border-bottom-left-radius: 8%;
+    border-bottom-right-radius: 8%;
+    background-image: url(https://image.ibb.co/e1XKAS/green_background.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+}
+
+p,
+label,
+.instructions {
+    text-align: center;
+}
+
+.cardFrame {
+    z-index: 1;
+    position: relative;
+    height: 350px;
+    max-width: 97%;
+    left: 1%;
+    top: 0.5%;
+    left: 1.2%;
+    display: flex;
+    flex-direction: column;
+}
+
+.card:last-child {
+    margin-right: 0;
+    /* Remove margin from the last card */
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.cardName {
+    font-size: 1.2em;
+    font-family: fancy;
+    font-weight: 600;
+    margin: 0;
+    color: #000;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+/* .cardImage img {
+    width: 100%;
+    height: 100%;
+} */
+
+.cardImage {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    /* height: 50%;
+    width: 50%;
+    overflow: hidden;
+    margin: 0 10px; */
+    /* justify-content: center;
+    display: flex;
+    align-items: center; */
+}
+
+/* .frameHeader,
+.cardImage {
+    background:
+        linear-gradient(0deg, rgba(201, 216, 201, .3), rgba(201, 216, 209, .3)),
+        url(https://image.ibb.co/jKByZn/tile_bg_1.jpg);
+    display: flex;
+    margin-top: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    padding: 8px 0;
+    justify-content: space-between;
+    border-radius: 18px/40px;
+} */
+
+.frame-header,
+.frame-art,
+.frame-type-line {
+    box-shadow:
+        0 0 0 2px #171314,
+        0 0 0 5px #26714A,
+        -3px 3px 2px 5px #171314;
+
+    margin-bottom: 7px;
+}
+
+.attributes {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 14px;
+}
+
+.navigation {
+    display: flex;
+}
+
+button {
+    padding: 10px;
+    margin: 40px 5px;
+    /* Margin between buttons */
+}
+
+.cardContent {
+    overflow: hidden;
+}
+
+/* h1,
+header {
+    font-size: xx-large;
+    font-weight: bold;
+    background-image: linear-gradient(to left, #449a3c, #a7d393);
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+} */
+
+#carouselCounter {
+    margin: 15px 10px;
+    /* Margin to the carousel counter */
+}
+
+.stagedCard {
+    margin-right: 10px;
+}
+
+#resetBtn {
+    margin: 15px;
+    align-items: center;
+}
+
+#prevBtn {
+    align-items: center;
+}
+
+.cardType {
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
 .drop-zone {
     width: 150px;
     height: 210px;
@@ -8,14 +279,14 @@
     position: relative;
 }
 
-.card {
+/* .card {
     width: 100px;
     height: 140px;
     margin: 5px;
     border: 1px solid black;
     cursor: pointer;
     background-color: lightseagreen;
-}
+} */
 
 .board {
     border: 2px solid green;
@@ -84,7 +355,7 @@
     border: 2px solid green;
     width: auto;
     height: auto;
-    margin: 20px;
+    margin: 100px;
     justify-content: space-evenly;
 }
 
