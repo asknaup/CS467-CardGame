@@ -38,26 +38,26 @@ function drop(event) {
                             headers: {
                                 'Content-Type': 'application/json',
                             },
-                            body: JSON.stringify({ cardId: cardId, dropZoneId: dropZone.id}),
+                            body: JSON.stringify({ cardId: cardId, dropZoneId: dropZone.id }),
                         })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.message === 'card played successfully') {
-                                // Move the card from hand to the drop zone
-                                const cardElement = document.getElementById(cardId);
-                                cardElement.classList.add('greyed-out');
-                                dropZone.appendChild(cardElement);
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.message === 'card played successfully') {
+                                    // Move the card from hand to the drop zone
+                                    const cardElement = document.getElementById(cardId);
+                                    cardElement.classList.add('greyed-out');
+                                    dropZone.appendChild(cardElement);
 
-                                // Update player's mana UI
-                                document.getElementById('playerMana').textContent = `Player Mana: ${data.playerMana}`;
-                            } else if (data.message === 'Insufficient mana to play this card.') {
-                                // Display an error message for insufficient mana
-                                const dropZoneId = dropZone.id;
-                                displayErrorMessage('Error: Insufficient mana to play this card', dropZoneId);
-                            } else {
-                                console.error('Error:', data.message);
-                            }
-                        })
+                                    // Update player's mana UI
+                                    document.getElementById('playerMana').textContent = `Player Mana: ${data.playerMana}`;
+                                } else if (data.message === 'Insufficient mana to play this card.') {
+                                    // Display an error message for insufficient mana
+                                    const dropZoneId = dropZone.id;
+                                    displayErrorMessage('Error: Insufficient mana to play this card', dropZoneId);
+                                } else {
+                                    console.error('Error:', data.message);
+                                }
+                            })
                     } else if (dropZone.parentElement.classList.contains('player')) {
                         // Only creature cards can be played in the player drop zone
                         fetch('/playCard', {
@@ -178,7 +178,7 @@ function fetchAndRenderOpponentStage() {
 
 function renderStagingArea(stagingAreaData) {
     const stagingAreaContainer = document.getElementById('stagingArea');
-    
+
     // Replace cards with new data, if card is already in staging area else remove
     stagingAreaData.forEach(card => {
         const cardElement = document.getElementById(card.id);
@@ -235,7 +235,7 @@ function dropOnOpponentHealthOrb(event) {
             } else if (cardData.type.toLowerCase() === "creature") {
                 // If cardData is in staging area, play card and remove from staging area
                 attackCardToHealth(cardData.id);
-                
+
             } else {
                 // Display an error message since only "damage" spells can be applied to opponent's health
                 displayErrorMessage('Error: Only "damage" spells can be applied to opponent\'s health', 'opponentHealthOrb');
@@ -342,13 +342,84 @@ document.addEventListener('DOMContentLoaded', function () {
             cardElement.id = card.id;
             cardElement.classList.add('card');
 
-            // Set the text content based on the card type
-            if (card.type.toLowerCase() === 'creature') {
-                cardElement.textContent = `${card.name}\n${card.type}\nmana: ${card.mana}\nAttack: ${card.attack}\nDefense: ${card.defense}`;
-            } else if (card.type.toLowerCase() === 'spell') {
-                cardElement.textContent = `${card.name}\n${card.type}\nmana: ${card.mana}
-                \nSpell Attack: ${card.attack}\nSpell Defense: ${card.defense}\nSpell Type: ${card.ability}`;
+            console.log(card);
+            // // Set the text content based on the card type
+            // if (card.type.toLowerCase() === 'creature') {
+            //     cardElement.textContent = `${card.name}\n${card.type}\nmana: ${card.mana}\nAttack: ${card.attack}\nDefense: ${card.defense}`;
+            // } else if (card.type.toLowerCase() === 'spell') {
+            //     cardElement.textContent = `${card.name}\n${card.type}\nmana: ${card.mana}
+            //     \nSpell Attack: ${card.attack}\nSpell Defense: ${card.defense}\nSpell Type: ${card.ability}`;
+            // }
+
+            var cardId = document.createElement('p');
+            cardId.textContent = card.cardId;
+
+            var cardName = document.createElement('h1');
+            cardName.classList.add('cardName');
+            cardName.textContent = card.cardName;
+
+            var textOverlayBottom = document.createElement('div');
+            textOverlayBottom.classList.add('textOverlayBottom');
+
+            var textOverlayTop = document.createElement('div');
+            textOverlayTop.classList.add('textOverlayTop');
+
+            var cardImage = document.createElement('div');
+            cardImage.classList.add('cardImage');
+
+            var imageElement = document.createElement('img');
+            imageElement.src = card.imagePath;
+            imageElement.alt = 'Card Image';
+
+            cardImage.appendChild(imageElement);
+
+            var cardType = document.createElement('p');
+            cardType.classList.add('cardType');
+            cardType.textContent = card.cardType;
+
+            var rarity = document.createElement('p');
+            rarity.textContent = card.rarity;
+
+            var manaCost = document.createElement('p');
+            manaCost.innerHTML = `<strong>Mana Cost:</strong> ${card.manaCost}`;
+
+            textOverlayBottom.appendChild(rarity);
+            textOverlayBottom.appendChild(manaCost);
+
+            if (card.cardType == "Spell") {
+                var spellType = document.createElement('p');
+                spellType.innerHTML = `<strong>Spell Type:</strong> ${card.spellType}`;
+
+                var spellAbility = document.createElement('p');
+                spellAbility.innerHTML = `<strong>Spell Ability:</strong> ${card.spellAbility}`;
+
+                var spellAttack = document.createElement('p');
+                spellAttack.innerHTML = `<strong>Spell Attack:</strong> ${card.spellAttack}`;
+
+                var spellDefense = document.createElement('p');
+                spellDefense.innerHTML = `<strong>Spell Defense:</strong> ${card.spellDefense}`;
+
+                textOverlayBottom.appendChild(spellType);
+                textOverlayBottom.appendChild(spellAbility);
+                textOverlayBottom.appendChild(spellAttack);
+                textOverlayBottom.appendChild(spellDefense);
+            } else {
+                var attack = document.createElement('p');
+                attack.innerHTML = `<strong>Attack:</strong> ${card.attack}`;
+
+                var defense = document.createElement('p');
+                defense.innerHTML = `<strong>Defense:</strong> ${card.defense}`;
+
+                textOverlayBottom.appendChild(attack);
+                textOverlayBottom.appendChild(defense);
             }
+
+            textOverlayTop.appendChild(cardName);
+            textOverlayTop.appendChild(cardType);
+
+            cardElement.appendChild(textOverlayBottom);
+            cardElement.appendChild(cardImage);
+            cardElement.appendChild(textOverlayTop);
 
             // Append the card element to the hand container
             handContainer.appendChild(cardElement);
@@ -477,7 +548,7 @@ function endTurn() {
             fetchAndRenderHand();
             fetchAndRenderStagingArea();
             fetchAndRenderOpponentStage();
-            
+
             // Convert grayed-out cards back to their original state
             const grayedOutCards = document.querySelectorAll('.greyed-out');
             grayedOutCards.forEach(card => {
@@ -576,8 +647,8 @@ function updateOpponentStageUI(opponentStage) {
             cardElement.id = card; // Set the ID of the card element
 
             if (card) {
-            // Append the card element to the selected drop zone
-            selectedDropZoneContainer.appendChild(cardElement);
+                // Append the card element to the selected drop zone
+                selectedDropZoneContainer.appendChild(cardElement);
             }
             console.log(`Placed card ${card.id} in drop zone ${selectedDropZoneContainer.id}`);
 
