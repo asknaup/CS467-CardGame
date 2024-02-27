@@ -11,15 +11,54 @@ function dragOver(event) {
     event.preventDefault();
 }
 
+// function drop(event) {
+//     event.preventDefault();
+//     const cardId = event.dataTransfer.getData('text/plain');
+//     const dropZone = event.target;
+//     const existingCard = dropZone.querySelector('.card');
+
+//     if (!existingCard) {
+//         handleEmptyDropZone(cardId, dropZone);
+//     } else {
+//         handleExistingCardDrop(cardId, dropZone);
+//     }
+// }
+
+function handleEmptyDropZone(cardId, dropZone) {
+    fetch(`/getCardDetails?cardId=${cardId}`)
+        .then(response => response.json())
+        .then(cardData => {
+            if (cardData.type.toLowerCase() === 'creature') {
+                if (dropZone.parentElement.classList.contains('opponent')) {
+                    // Attack the opponent
+                    attackCardToOpponent(cardId, dropZone);  // TODO: Implement this function
+                } else if (dropZone.parentElement.classList.contains('player')) {
+                    // Play the card in the player's drop zone
+                    playCard(cardId, dropZone);
+                }
+            } else if (cardData.type.toLowerCase() === 'spell') {
+                handleSpellCardDrop(cardData, dropZone);
+            } else {
+                displayErrorMessage('Error: Only creature cards and spell cards can be played in this zone', dropZone.id);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching card details:', error);
+        });
+}
+
+
 function drop(event) {
     attachDragDropListeners();
     event.preventDefault();
+    console.log("DROP", event.dataTransfer)
+
     const cardId = event.dataTransfer.getData('text/plain');
     const dropZone = event.target;
 
     // Check if dropZone already contains a card
     const existingCard = dropZone.querySelector('.card');
-    console.log(cardId);
+    console.log("CARDID", cardId);
 
     if (!existingCard) {
         // Fetch card details
@@ -137,20 +176,6 @@ function drop(event) {
                 console.error('Error fetching card details:', error);
             });
     }
-}
-
-
-// Function to fetch and render the hand
-function fetchAndRenderHand() {
-    fetch('/getHand')
-        .then(response => response.json())
-        .then(data => {
-            // Render the hand data on the UI
-            renderHand(data.hand);
-        })
-        .catch(error => {
-            console.error('Error fetching hand data:', error);
-        });
 }
 
 function fetchAndRenderStagingArea() {
@@ -323,120 +348,18 @@ document.addEventListener('DOMContentLoaded', function () {
     opponentHealthOrb.addEventListener('drop', dropOnOpponentHealthOrb);
     opponentHealthOrb.addEventListener('dragover', dragOver);
 
-    // Fetch initial hand data from the server
-    fetch('/getHand')
-        .then(response => response.json())
-        .then(data => {
-            // Render the initial hand data on the UI
-            renderHand(data.hand);
-        })
-        .catch(error => {
-            console.error('Error fetching initial hand data:', error);
-        });
+    // // Fetch initial hand data from the server
+    // fetch('/getHand')
+    //     .then(response => response.json())
+    //     .then(data => {
+    //         // Render the initial hand data on the UI
+    //         renderHand(data.hand);
+    //     })
+    //     .catch(error => {
+    //         console.error('Error fetching initial hand data:', error);
+    //     });
 
-
-
-    // Function to render the hand on the UI
-    function renderHand(handData) {
-        const handContainer = document.getElementById('hand');
-        handContainer.innerHTML = ''; // Clear existing hand content
-
-        // Iterate over the hand data and create card elements
-        handData.forEach(card => {
-            const cardElement = document.createElement('div');
-            cardElement.draggable = true;
-            cardElement.id = card.id;
-            cardElement.classList.add('card');
-            // // Set the text content based on the card type
-            // if (card.type.toLowerCase() === 'creature') {
-            //     cardElement.textContent = `${card.name}\n${card.type}\nmana: ${card.mana}\nAttack: ${card.attack}\nDefense: ${card.defense}`;
-            // } else if (card.type.toLowerCase() === 'spell') {
-            //     cardElement.textContent = `${card.name}\n${card.type}\nmana: ${card.mana}
-            //     \nSpell Attack: ${card.attack}\nSpell Defense: ${card.defense}\nSpell Type: ${card.ability}`;
-            // }
-
-            var cardId = document.createElement('p');
-            cardId.textContent = card.cardId;
-
-            var name = document.createElement('h1');
-            name.classList.add('name');
-            name.textContent = card.name;
-
-            var textOverlayBottom = document.createElement('div');
-            textOverlayBottom.classList.add('textOverlayBottom');
-
-            var textOverlayTop = document.createElement('div');
-            textOverlayTop.classList.add('textOverlayTop');
-
-            var cardImage = document.createElement('div');
-            cardImage.classList.add('cardImage');
-
-            var imageElement = document.createElement('img');
-            imageElement.src = card.imagePath;
-            imageElement.alt = 'Card Image';
-
-            cardImage.appendChild(imageElement);
-
-            var type = document.createElement('p');
-            type.classList.add('cardType');
-            type.textContent = card.type;
-
-            var rarity = document.createElement('p');
-            rarity.textContent = card.rarity;
-
-            var mana = document.createElement('p');
-            mana.innerHTML = `<strong>Mana Cost:</strong> ${card.mana}`;
-
-            textOverlayBottom.appendChild(rarity);
-            textOverlayBottom.appendChild(mana);
-
-            if (card.type == "Spell") {
-                var spellType = document.createElement('p');
-                spellType.innerHTML = `<strong>Spell Type:</strong> ${card.spellType}`;
-
-                var spellAbility = document.createElement('p');
-                spellAbility.innerHTML = `<strong>Spell Ability:</strong> ${card.spellAbility}`;
-
-                var spellAttack = document.createElement('p');
-                spellAttack.innerHTML = `<strong>Spell Attack:</strong> ${card.spellAttack}`;
-
-                var spellDefense = document.createElement('p');
-                spellDefense.innerHTML = `<strong>Spell Defense:</strong> ${card.spellDefense}`;
-
-                textOverlayBottom.appendChild(spellType);
-                textOverlayBottom.appendChild(spellAbility);
-                textOverlayBottom.appendChild(spellAttack);
-                textOverlayBottom.appendChild(spellDefense);
-            } else {
-                var attack = document.createElement('p');
-                attack.innerHTML = `<strong>Attack:</strong> ${card.attack}`;
-
-                var defense = document.createElement('p');
-                defense.innerHTML = `<strong>Defense:</strong> ${card.defense}`;
-
-                textOverlayBottom.appendChild(attack);
-                textOverlayBottom.appendChild(defense);
-            }
-
-            textOverlayTop.appendChild(name);
-            textOverlayTop.appendChild(type);
-
-            cardElement.appendChild(textOverlayBottom);
-            cardElement.appendChild(cardImage);
-            cardElement.appendChild(textOverlayTop);
-
-            // Append the card element to the hand container
-            handContainer.appendChild(cardElement);
-        });
-
-        // Define handList after the hand cards are rendered
-        const handList = handContainer.querySelectorAll('.card');
-
-        // Add event listeners for the hand cards
-        handList.forEach(card => {
-            card.addEventListener('dragstart', dragStart);
-        });
-    }
+    fetchAndRenderHand()
 
     // const hand = document.getElementById('hand');
     const handList = hand.querySelectorAll('.card');
@@ -493,35 +416,108 @@ function attachDragDropListeners() {
     });
 }
 
+
+
 // Function to render the hand on the UI
 function renderHand(handData) {
     const handContainer = document.getElementById('hand');
     handContainer.innerHTML = ''; // Clear existing hand content
 
     // Iterate over the hand data and create card elements
-    handData.forEach(card => {
+    handData.forEach(cardData => {
         const cardElement = document.createElement('div');
         cardElement.draggable = true;
-        cardElement.id = card.id;
+        cardElement.id = cardData.id;
         cardElement.classList.add('card');
 
-        // Set the text content based on the card type
-        if (card.type.toLowerCase() === 'creature') {
-            cardElement.textContent = `${card.name}\n${card.type}\nmana: ${card.mana}\nAttack: ${card.attack}\nDefense: ${card.defense}`;
-        } else if (card.type.toLowerCase() === 'spell') {
-            cardElement.textContent = `${card.name}\n${card.type}\nmana: ${card.mana}
-            \nSpell Attack: ${card.attack}\nSpell Defense: ${card.defense}\nSpell Type: ${card.ability}`;
+        // Create a container for the entire card
+        const cardContainer = document.createElement('div');
+        cardContainer.classList.add('card-container');
+
+        // Create elements for card content
+        const cardId = document.createElement('p');
+        cardId.textContent = cardData.cardId;
+
+        const name = document.createElement('h1');
+        name.classList.add('name');
+        name.textContent = cardData.name;
+
+        const textOverlayBottom = document.createElement('div');
+        textOverlayBottom.classList.add('textOverlayBottom');
+
+        const textOverlayTop = document.createElement('div');
+        textOverlayTop.classList.add('textOverlayTop');
+
+        const cardImage = document.createElement('div');
+        cardImage.classList.add('cardImage');
+        cardImage.draggable = false;
+
+        const imageElement = document.createElement('img');
+        imageElement.src = cardData.imagePath;
+        imageElement.alt = 'Card Image';
+
+        cardImage.appendChild(imageElement);
+
+        const rarity = document.createElement('p');
+        rarity.textContent = cardData.rarity;
+
+        const mana = document.createElement('p');
+        mana.innerHTML = `<strong>Mana Cost:</strong> ${cardData.mana}`;
+
+        textOverlayBottom.appendChild(rarity);
+        textOverlayBottom.appendChild(mana);
+
+        let typeText = '';
+        if (cardData.type.toLowerCase() === "spell") {
+            typeText = `${cardData.type} - ${cardData.ability}`;
+
+            const spellType = document.createElement('p');
+            spellType.innerHTML = `<strong>Spell Type:</strong> ${cardData.spellType}`;
+
+            const spellAttack = document.createElement('p');
+            spellAttack.innerHTML = `<strong>Spell Attack:</strong> ${cardData.attack}`;
+
+            const spellDefense = document.createElement('p');
+            spellDefense.innerHTML = `<strong>Spell Defense:</strong> ${cardData.spellDefense}`;
+
+            textOverlayBottom.appendChild(spellType);
+            textOverlayBottom.appendChild(spellAttack);
+            textOverlayBottom.appendChild(spellDefense);
+        } else {
+            typeText = cardData.type;
+
+            const attack = document.createElement('p');
+            attack.innerHTML = `<strong>Attack:</strong> ${cardData.attack}`;
+
+            const defense = document.createElement('p');
+            defense.innerHTML = `<strong>Defense:</strong> ${cardData.defense}`;
+
+            textOverlayBottom.appendChild(attack);
+            textOverlayBottom.appendChild(defense);
         }
+
+        const type = document.createElement('p');
+        type.classList.add('cardType');
+        type.textContent = typeText;
+
+        textOverlayTop.appendChild(name);
+        textOverlayTop.appendChild(type);
+
+        cardContainer.appendChild(textOverlayBottom);
+        cardContainer.appendChild(cardImage);
+        cardContainer.appendChild(textOverlayTop);
+
+        // Append the card container to the card element
+        cardElement.appendChild(cardContainer);
 
         // Append the card element to the hand container
         handContainer.appendChild(cardElement);
     });
 
-    // Add event listeners for the hand cards
+    // Define handList after the hand cards are rendered
     const handList = handContainer.querySelectorAll('.card');
-    handList.forEach(card => {
-        card.addEventListener('dragstart', dragStart);
-    });
+    console.log("HANDLIST", handList);
+    return handList;
 }
 
 // Function to fetch and render the hand
@@ -530,7 +526,8 @@ function fetchAndRenderHand() {
         .then(response => response.json())
         .then(data => {
             // Render the hand data on the UI
-            renderHand(data.hand);
+            let handList = renderHand(data.hand);
+            console.log(handList);
         })
         .catch(error => {
             console.error('Error fetching hand data:', error);
