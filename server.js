@@ -100,7 +100,7 @@ app.get('/userProfile', async (req, res) => {
   const user = req.session.user;
   if (user) {
     const userProf = await dbFunc.getUserProfile(user.userId);
-    const valList = await dbFunc.getAllGeneratedGamesByUser(user.userId);
+    const valList = await dbFunc.getAllGeneratedGames();
     const genLen = valList ? valList.length : 0;
 
     const collect = await dbFunc.getAllCollectionsByUser(user.userId);
@@ -310,10 +310,41 @@ app.get('/help', async (req, res) => {
 });
 
 // Add database logic
-app.get('/trading', (req, res) => {
+app.get('/trading', async (req, res) => {
   const user = req.session.user;
+  const c = req.query.collectId;
+  let listCards;
   if (user) {
-    res.render('trading', { showLogoutButton: true })
+    const collect = await dbFunc.getAllCollectionsByUser(user.userId);
+      if (c) {
+      listCards = await dbFunc.grabListOfCardsFromCollection(req.query.collectId); 
+      } else {
+      listCards = await dbFunc.grabListOfCardsFromCollection(collect[0].collectionId);
+      }
+    res.render('trading', {
+      collect: collect
+     })
+  } else {
+    res.redirect('/');
+  }
+});
+
+// Add database logic
+app.post('/trading', async (req, res) => {
+  const user = req.session.user;
+  const c = req.query.collectId;
+  let listCards;
+  if (user) {
+    const collect = await dbFunc.getAllCollectionsByUser(user.userId);
+    if (c) {
+    listCards = await dbFunc.grabListOfCardsFromCollection(req.query.collectId); 
+    } else {
+    listCards = await dbFunc.grabListOfCardsFromCollection(collect[0].collectionId);
+    }
+
+    res.render('trading', {
+      collect: collect
+     })
   } else {
     res.redirect('/');
   }
@@ -322,11 +353,20 @@ app.get('/trading', (req, res) => {
 // Needs Work, collection db issue
 app.get('/collect', async (req, res) => {
   const user = req.session.user;
+  const c = req.query.collectId;
+  let listCards;
+
   if (user) {
     const collect = await dbFunc.getAllCollectionsByUser(user.userId);
-    //const something = await dbFunc.getOneGeneratedGame(collect.gameId)   // Need to build collections
+    if (c) {
+    listCards = await dbFunc.grabListOfCardsFromCollection(req.query.collectId); 
+    } else {
+    listCards = await dbFunc.grabListOfCardsFromCollection(collect[0].collectionId);
+    }
+  
     res.render('collect', {
-      collect: collect
+      collect: collect,
+      listCards: listCards,
     })
   } else {
     res.redirect('/');
@@ -339,6 +379,7 @@ app.get('/collectAdmin', async (req, res) => {
   if (user) {
     const collect = await dbFunc.getAllCollectionsByUser(user.userId);
     //const something = await dbFunc.getOneGeneratedGame(collect.gameId)   // Need to build collections
+    console.log(collect);
     res.render('collect', {
       collect: collect
     })
@@ -391,12 +432,19 @@ app.post('/newUserPost', async (req, res) => {
   try {
     const user_id = await dbFunc.insertNewUser(req.body.inputUserName, req.body.inputNewPassword, req.body.inputEmail);
     const userProfile = await dbFunc.getUserProfile(user_id);
+    
     if (user_id) {          // save relevant user information in the session
       req.session.user = {
         userId: user_id,
         username: req.body.inputUserName
       };
     }
+    const oneVar = await dbFunc.getAllGeneratedGames()
+    const gameName = await dbFunc.grabGameName(oneVar[0].gameId);
+    const userName = await dbFunc.grabUsername(user_id);
+    const nameTime = `${userName[0].username}'s collection for ${gameName[0].imageLocation}`;
+    const collect = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user_id, oneVar[0].gameId, nameTime);
+
     res.redirect('/userProfile');
   } catch (err) {
     console.log(err);
@@ -445,7 +493,11 @@ app.post('/cardViewEditPage', async (req, res) => {
     if (user) {
       async function delay(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
       const generatedCards = [];
-      const collectionId = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, req.body.whichgame)
+      const gameName = await dbFunc.grabGameName(req.body.whichgame);
+      const userName = await dbFunc.grabUsername(user.userId);
+      const nameTime = `${userName[0].username}'s collection for ${gameName[0].imageLocation}`;
+
+      const collectionId = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, req.body.whichgame, nameTime)
       req.session.collectionId = collectionId;
       req.session.gameId = req.body.whichgame;
 
@@ -523,8 +575,12 @@ app.post('/cardViewPrintedPage', async (req, res) => {
     }
 
     // Update User Collection
+    const gameName = await dbFunc.grabGameName(req.body.whichgame);
+    const userName = await dbFunc.grabUsername(user.userId);
+    const nameTime = `${userName[0].username}'s collection for ${gameName[0].imageLocation}`;
+
     try {
-      const collId = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, req.body.whichgame);
+      const collId = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, req.body.whichgame, nameTime);
       let returnList = await dbFunc.grabListOfCardsFromCollection(collId);
       x = JSON.parse(returnList[0].cardId);
       y = x.cardList.concat(cardIdList);
@@ -587,9 +643,13 @@ app.post('/cardViewPrintedBulkPage', async (req, res) => {
         await dbFunc.insertCreatureCard(cardId, card.attack, card.defense, card.creature); 
       }
     });
-      // Update User Collection
+      
+    const gameName = await dbFunc.grabGameName(req.body.whichgame);
+    const userName = await dbFunc.grabUsername(user.userId);
+    const nameTime = `${userName[0].username}'s collection for ${gameName[0].imageLocation}`;
+
     try {
-      const collId = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, req.body.whichgame);
+      const collId = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, req.body.whichgame, nameTime);
       let returnList = await dbFunc.grabListOfCardsFromCollection(collId);
       x = JSON.parse(returnList[0].cardId);
       y = x.cardList.concat(cardIdList);
@@ -629,16 +689,21 @@ app.post('/generatedGameView', async (req, res) => {
 // Current Work
 app.post('/collect', async (req, res) => {
   const user = req.session.user;
+
   if (user) {
-    const thisCollectId = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, req.body.gameId);
+    const gameName = await dbFunc.grabGameName(req.body.gameId);
+    const userName = await dbFunc.grabUsername(user.userId);
+    const nameTime = `${userName[0].username}'s collection for ${gameName[0].imageLocation}`;
+
+    const thisCollectId = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, req.body.gameId, nameTime);
     const collect = await dbFunc.getAllCollectionsByUser(user.userId);
     const listCards = await dbFunc.grabListOfCardsFromCollection(thisCollectId);
     console.log(thisCollectId, collect, listCards);
 
     res.render('collect', {
-      thisCollectId: collect,
       collect: collect,
-      listCards: listCards
+      listCards: listCards,
+      name: nameTime
     })
   } else {
     // Authentication failed, render 'welcomePagePortal' with an error message

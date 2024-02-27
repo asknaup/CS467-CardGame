@@ -585,7 +585,7 @@ async function getAllDecksByUser(userId) {
 
 //   '{"cardList": []}' MAYBE
 //   console.log(collectionDataObject); 
-async function insertOrSelectCollectionByUserIdandGameId(userId, gameId) {
+async function insertOrSelectCollectionByUserIdandGameId(userId, gameId, collectName) {
     return new Promise((resolve, reject) => {
         db.pool.query('START TRANSACTION', (startTransactionErr) => {
             if (startTransactionErr) {
@@ -595,9 +595,9 @@ async function insertOrSelectCollectionByUserIdandGameId(userId, gameId) {
             }
 
             const checkCollectionQuery = 'SELECT collectionId FROM collections WHERE playerId = ? AND gameId = ?';
-            const insertQuery = 'INSERT INTO collections (playerId, gameId, cardId) VALUES (?, ?, ?)';
+            const insertQuery = 'INSERT INTO collections (playerId, gameId, cardId, collectionName) VALUES (?, ?, ?, ?)';
             const selectLastInsertIdQuery = 'SELECT LAST_INSERT_ID() as newCollectId';
-            const vals = [userId, gameId, '{"cardList": []}'];
+            const vals = [userId, gameId, '{"cardList": []}', collectName];
 
             db.pool.query(checkCollectionQuery, [userId, gameId], (checkCollectionErr, checkCollectionResult) => {
                 if (checkCollectionErr) {
@@ -679,6 +679,45 @@ async function updateListOfCollection(collectId, cardIds) {
     });
 }
 
+async function grabUsername(userId) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT username FROM userProfile where userId = ?';
+        db.pool.query(query, userId, (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+}
+
+async function grabGameName(gameId) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT imageLocation FROM generatedGame where gameId = ?';
+        db.pool.query(query, gameId, (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+}
+
+async function grabListOfCardsFromCollection(collectId) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT cardId FROM collections where collectionId = ?';
+        db.pool.query(query, collectId, (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+}
+
 
 // function updateGameWinner({ params }) {
 //     // Initialize a new game -> winner has not been decided
@@ -725,3 +764,5 @@ module.exports.insertOrSelectCollectionByUserIdandGameId = insertOrSelectCollect
 module.exports.grabListOfCardsFromCollection = grabListOfCardsFromCollection;
 module.exports.updateListOfCollection = updateListOfCollection;
 module.exports.insertNewDeck = insertNewDeck;
+module.exports.grabUsername = grabUsername;
+module.exports.grabGameName = grabGameName;
