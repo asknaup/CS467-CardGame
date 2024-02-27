@@ -19,6 +19,7 @@ function drop(event) {
 
     // Check if dropZone already contains a card
     const existingCard = dropZone.querySelector('.card');
+    console.log(cardId);
 
     if (!existingCard) {
         // Fetch card details
@@ -357,9 +358,9 @@ document.addEventListener('DOMContentLoaded', function () {
             var cardId = document.createElement('p');
             cardId.textContent = card.cardId;
 
-            var cardName = document.createElement('h1');
-            cardName.classList.add('cardName');
-            cardName.textContent = card.cardName;
+            var name = document.createElement('h1');
+            name.classList.add('name');
+            name.textContent = card.name;
 
             var textOverlayBottom = document.createElement('div');
             textOverlayBottom.classList.add('textOverlayBottom');
@@ -376,9 +377,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             cardImage.appendChild(imageElement);
 
-            var cardType = document.createElement('p');
-            cardType.classList.add('cardType');
-            cardType.textContent = card.cardType;
+            var type = document.createElement('p');
+            type.classList.add('cardType');
+            type.textContent = card.type;
 
             var rarity = document.createElement('p');
             rarity.textContent = card.rarity;
@@ -389,7 +390,7 @@ document.addEventListener('DOMContentLoaded', function () {
             textOverlayBottom.appendChild(rarity);
             textOverlayBottom.appendChild(mana);
 
-            if (card.cardType == "Spell") {
+            if (card.type == "Spell") {
                 var spellType = document.createElement('p');
                 spellType.innerHTML = `<strong>Spell Type:</strong> ${card.spellType}`;
 
@@ -417,8 +418,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 textOverlayBottom.appendChild(defense);
             }
 
-            textOverlayTop.appendChild(cardName);
-            textOverlayTop.appendChild(cardType);
+            textOverlayTop.appendChild(name);
+            textOverlayTop.appendChild(type);
 
             cardElement.appendChild(textOverlayBottom);
             cardElement.appendChild(cardImage);
