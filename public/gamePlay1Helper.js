@@ -38,26 +38,26 @@ function drop(event) {
                             headers: {
                                 'Content-Type': 'application/json',
                             },
-                            body: JSON.stringify({ cardId: cardId, dropZoneId: dropZone.id}),
+                            body: JSON.stringify({ cardId: cardId, dropZoneId: dropZone.id }),
                         })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.message === 'card played successfully') {
-                                // Move the card from hand to the drop zone
-                                const cardElement = document.getElementById(cardId);
-                                cardElement.classList.add('greyed-out');
-                                dropZone.appendChild(cardElement);
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.message === 'card played successfully') {
+                                    // Move the card from hand to the drop zone
+                                    const cardElement = document.getElementById(cardId);
+                                    cardElement.classList.add('greyed-out');
+                                    dropZone.appendChild(cardElement);
 
-                                // Update player's mana UI
-                                document.getElementById('playerMana').textContent = `Player Mana: ${data.playerMana}`;
-                            } else if (data.message === 'Insufficient mana to play this card.') {
-                                // Display an error message for insufficient mana
-                                const dropZoneId = dropZone.id;
-                                displayErrorMessage('Error: Insufficient mana to play this card', dropZoneId);
-                            } else {
-                                console.error('Error:', data.message);
-                            }
-                        })
+                                    // Update player's mana UI
+                                    document.getElementById('playerMana').textContent = `Player Mana: ${data.playerMana}`;
+                                } else if (data.message === 'Insufficient mana to play this card.') {
+                                    // Display an error message for insufficient mana
+                                    const dropZoneId = dropZone.id;
+                                    displayErrorMessage('Error: Insufficient mana to play this card', dropZoneId);
+                                } else {
+                                    console.error('Error:', data.message);
+                                }
+                            })
                     } else if (dropZone.parentElement.classList.contains('player')) {
                         // Only creature cards can be played in the player drop zone
                         fetch('/playCard', {
@@ -178,7 +178,7 @@ function fetchAndRenderOpponentStage() {
 
 function renderStagingArea(stagingAreaData) {
     const stagingAreaContainer = document.getElementById('stagingArea');
-    
+
     // Replace cards with new data, if card is already in staging area else remove
     stagingAreaData.forEach(card => {
         const cardElement = document.getElementById(card.id);
@@ -197,21 +197,26 @@ function renderStagingArea(stagingAreaData) {
 }
 
 function renderOpponentStage(opponentStageData) {
+    console.log("opponentStageData", opponentStageData);
     const opponentStagingAreaContainer = document.getElementById('opponentStagingArea');
-
+    console.log("opponentStagingAreaContainer", opponentStagingAreaContainer);
     // Replace cards with new data, if card is already in staging area else remove
     opponentStageData.forEach(card => {
-        const cardElement = document.getElementById(card.id);
-        if (cardElement) {
-            cardElement.textContent = `${card.name}\n${card.type}\nmana: ${card.mana}\nAttack: ${card.attack}\nDefense: ${card.defense}`;
-        } else {
-            const newCardElement = document.createElement('div');
-            newCardElement.draggable = true;
-            newCardElement.id = card.id;
-            newCardElement.classList.add('card');
-            newCardElement.textContent = `${card.name}\n${card.type}\nmana: ${card.mana}\nAttack: ${card.attack}\nDefense: ${card.defense}`;
-            opponentStagingAreaContainer.appendChild(newCardElement);
-        }
+        const existingCardElement = document.getElementById(card.id.toString());
+        console.log("existingCardElement", existingCardElement);
+        // if (existingCardElement) {
+            existingCardElement.textContent = `${card.name}\n${card.type}\nmana: ${card.mana}\nAttack: ${card.attack}\nDefense: ${card.defense}`;
+        // } else {
+        //     // Create a new card element with updated data
+        //     const newCardElement = document.createElement('div');
+        //     newCardElement.draggable = true;
+        //     newCardElement.id = card.id;
+        //     newCardElement.classList.add('card');
+        //     newCardElement.textContent = `${card.name}\n${card.type}\nmana: ${card.mana}\nAttack: ${card.attack}\nDefense: ${card.defense}`;
+            
+        //     // Append the new card element to the opponent staging area
+        //     opponentStagingAreaContainer.appendChild(newCardElement);
+        // }
     }
     )
 }
@@ -235,7 +240,7 @@ function dropOnOpponentHealthOrb(event) {
             } else if (cardData.type.toLowerCase() === "creature") {
                 // If cardData is in staging area, play card and remove from staging area
                 attackCardToHealth(cardData.id);
-                
+
             } else {
                 // Display an error message since only "damage" spells can be applied to opponent's health
                 displayErrorMessage('Error: Only "damage" spells can be applied to opponent\'s health', 'opponentHealthOrb');
@@ -477,7 +482,7 @@ function endTurn() {
             fetchAndRenderHand();
             fetchAndRenderStagingArea();
             fetchAndRenderOpponentStage();
-            
+
             // Convert grayed-out cards back to their original state
             const grayedOutCards = document.querySelectorAll('.greyed-out');
             grayedOutCards.forEach(card => {
@@ -515,7 +520,7 @@ function endTurn() {
 
             if (data.opponentDeckCount) {
                 // Update opponent's deck card count
-                document.getElementById('opponentDeckCount').textContent = `Remaining Deck Cards: ${data.opponentDeckCount}`;
+                document.getElementById('opponentDeckCount').textContent = `Remaining Opponent Deck Cards: ${data.opponentDeckCount}`;
             }
 
             if (data.playerDeckCount) {
@@ -564,7 +569,7 @@ function updateOpponentStageUI(opponentStage) {
 
             // Select the drop zone container element
             const selectedDropZoneContainer = document.getElementById(selectedDropZone);
-
+            console.log(`CARD: ${card.id}`);
             // Create a new card element
             const cardElement = document.createElement('div'); cardElement.classList.add('card');
             cardElement.draggable = true; // Make the card draggable
@@ -573,11 +578,10 @@ function updateOpponentStageUI(opponentStage) {
             ${card.mana}\nAttack: ${card.attack}\nDefense: ${card.defense}`;
 
             cardElement.classList.add('card');
-            cardElement.id = card; // Set the ID of the card element
 
             if (card) {
-            // Append the card element to the selected drop zone
-            selectedDropZoneContainer.appendChild(cardElement);
+                // Append the card element to the selected drop zone
+                selectedDropZoneContainer.appendChild(cardElement);
             }
             console.log(`Placed card ${card.id} in drop zone ${selectedDropZoneContainer.id}`);
 
