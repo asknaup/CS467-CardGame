@@ -322,7 +322,8 @@ app.get('/trading', async (req, res) => {
       listCards = await dbFunc.grabListOfCardsFromCollection(collect[0].collectionId);
       }
     res.render('trading', {
-      collect: collect
+      collect: collect,
+      listCards: listCards
      })
   } else {
     res.redirect('/');
