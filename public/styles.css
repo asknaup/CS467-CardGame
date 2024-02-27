@@ -577,6 +577,7 @@
     padding: 1vh;
     margin: 0vh;
     background-color: rgb(177, 200, 204);
+    border: 2px solid black;
     border-radius: 10px;
     z-index: 100;
 }
@@ -841,6 +842,7 @@
     bottom: 45vw;
     right: 5vw;
     background-color: rgb(177, 200, 204); 
+    border: 2px solid black;
     border-radius: 15px;
     z-index: 100;
     padding: 1vw;
@@ -865,7 +867,7 @@
     right: 1vh;
     font-size: 4em;
     background-color: transparent;
-    color: rgb(154, 87, 154);
+    color: black;
 }
 
 .miniGameRow {
@@ -882,4 +884,8 @@
 
 .miniGameCard:hover {
     transform: scale(1.00);
+}
+
+.miniGameCardBack {
+    background-color: rgb(231, 227, 227);
 }

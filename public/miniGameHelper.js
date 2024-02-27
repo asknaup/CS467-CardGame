@@ -169,7 +169,7 @@ for(let index = 0; index < userObj.cardObjs.length; index++){
     // create back of trading car
     var backMiniGameCard = createBackOfCardWithId(cardObj.cardId + "Back");
     backMiniGameCard.classList.add("miniGameCard")
-    backMiniGameCard.style.backgroundColor = "rgb(131, 104, 207)";
+    backMiniGameCard.classList.add("miniGameCardBack")
     backMiniGameCard.style.position = "absolute";
     backMiniGameCard.style.zIndex = 10;
     // create trading card
