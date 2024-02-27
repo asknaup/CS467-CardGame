@@ -346,8 +346,6 @@ document.addEventListener('DOMContentLoaded', function () {
             cardElement.draggable = true;
             cardElement.id = card.id;
             cardElement.classList.add('card');
-
-            console.log(card);
             // // Set the text content based on the card type
             // if (card.type.toLowerCase() === 'creature') {
             //     cardElement.textContent = `${card.name}\n${card.type}\nmana: ${card.mana}\nAttack: ${card.attack}\nDefense: ${card.defense}`;
@@ -385,11 +383,11 @@ document.addEventListener('DOMContentLoaded', function () {
             var rarity = document.createElement('p');
             rarity.textContent = card.rarity;
 
-            var manaCost = document.createElement('p');
-            manaCost.innerHTML = `<strong>Mana Cost:</strong> ${card.manaCost}`;
+            var mana = document.createElement('p');
+            mana.innerHTML = `<strong>Mana Cost:</strong> ${card.mana}`;
 
             textOverlayBottom.appendChild(rarity);
-            textOverlayBottom.appendChild(manaCost);
+            textOverlayBottom.appendChild(mana);
 
             if (card.cardType == "Spell") {
                 var spellType = document.createElement('p');
