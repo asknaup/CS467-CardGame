@@ -14,17 +14,17 @@
     Inspect the Game
   </h1>
   <div>
-    <p> {{ game.[0].gameName }} </p>
-    <p>Game Owner{{ game.[0].ownerId }}</p>
-    <p>RuleSet {{ game.[0].ruleSet }} </p>
+    <p> Game name: {{ game.[0].gameName }} </p>
+    <p> Game Owner{{ game.[0].ownerId }}</p>
     <p> List of Cards: {{ game.[0].cardList }} </p>
     <p>{{ game.gameId }}</p>
-    
   </div>
+ <!-- 
   <form action="/collect" method="POST">
     <button>View the Collection for this Game</button>
     <input type="hidden" name="gameId" value="{{ genGameId }}">
   </form>
+  -->
   <form action="/cardGenPage" method="get">
     <button>Build Cards for this Game</button>
     <input type="hidden" name="gameId" value="{{ gameId }}">

@@ -18,7 +18,7 @@
         <h3>Generate for which game?</h3><br>
         <select id="whichgame" name="whichgame">
           {{#each vals}}
-            <option value="{{this.imageLocation}}">{{this.imageLocation}}</option>
+            <option value="{{this.gameId}}">{{this.imageLocation}}</option>
           {{/each}}
         </select>
         <br><br><p>---------------------------------</p><br>
@@ -29,9 +29,14 @@
           <option value="Creature">Creature</option>
           <option value="Spell">Spell</option>
         </select><br><br>
-        <label for="places">Select Setting or Theme:</label>
-        <select id="places" name="places">
+        <label for="theme">Select Setting or Theme:</label>
+        <select id="theme" name="theme">
             <!-- Populated with places -->
+        </select>
+        <br><br>
+        <label for="colors">Select Color:</label>
+        <select id="colors" name="colors">
+            <!-- Populated -->
         </select>
         <br><br>
         <div id="creatureFields">
@@ -40,12 +45,10 @@
             <!-- Populated -->
         </select>
         </div>
-        <br>        
-        <label for="colors">Select Color:</label>
-        <select id="colors" name="colors">
-            <!-- Populated -->
-        </select>
-        <br><br>
+        <div id="spellFields" style="display: none;">
+          <br>
+        </div>
+        <br><br>        
         <button id="gen-game-button-ggp" type="submit">Generate Bulk</button>
         {{#if error}}
         <p id="error">{{error}}</p>
@@ -66,7 +69,7 @@
         }
       });
 
-    const places = [
+    const theme = [
         "Random", "African", "Ancient Babylon", "Ancient Ruins", "Ancient Egypt", "Antarctica", "Arabian", "Arctic Tundra", 
         "Amazon Rainforest", "American", "Aztec", "Chinese Dynasty", "Corrupt", "Cyberpunk Dystopia", 
         "Deep Sea Abyss", "Deep Space Outpost", "Desert Oasis", "Enchanted Castle", "Evil", "Fairy Kingdom", 
@@ -93,14 +96,14 @@
         ];
 
     const colors = [
-        "No Significant Color", "Random", "Blue", "Brown", "Gold",
+        "None", "Random", "Blue", "Brown", "Gold",
         "Green", "Magenta", "Maroon",
         "Navy", "Orange", "Pink", "Purple", "Red",
         "Silver", "Turquoise", "Violet", "Yellow"
     ];
 
     const creaturesDropdown = document.getElementById("creatures");
-    const placesDropdown = document.getElementById("places");
+    const placesDropdown = document.getElementById("theme");
     const colorsDropdown = document.getElementById('colors');
 
     colors.forEach(color => {
@@ -116,7 +119,7 @@
     });
 
     // Populate the dropdown menu with options
-    places.forEach(place => {
+    theme.forEach(place => {
         const option2 = document.createElement("option");
         option2.text = place;
         placesDropdown.add(option2);

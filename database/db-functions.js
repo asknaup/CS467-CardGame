@@ -582,6 +582,7 @@ async function getAllDecksByUser(userId) {
     });
 }
 
+
 //   '{"cardList": []}' MAYBE
 //   console.log(collectionDataObject); 
 async function insertOrSelectCollectionByUserIdandGameId(userId, gameId) {
@@ -596,7 +597,7 @@ async function insertOrSelectCollectionByUserIdandGameId(userId, gameId) {
             const checkCollectionQuery = 'SELECT collectionId FROM collections WHERE playerId = ? AND gameId = ?';
             const insertQuery = 'INSERT INTO collections (playerId, gameId, cardId) VALUES (?, ?, ?)';
             const selectLastInsertIdQuery = 'SELECT LAST_INSERT_ID() as newCollectId';
-            const vals = [userId, gameId, '[]'];
+            const vals = [userId, gameId, '{"cardList": []}'];
 
             db.pool.query(checkCollectionQuery, [userId, gameId], (checkCollectionErr, checkCollectionResult) => {
                 if (checkCollectionErr) {
@@ -605,7 +606,6 @@ async function insertOrSelectCollectionByUserIdandGameId(userId, gameId) {
                     });
                     return;
                 }
-
                 if (checkCollectionResult.length > 0) {
                     // Collection exists, return collectionId
                     const collectionId = checkCollectionResult[0].collectionId;
@@ -627,7 +627,6 @@ async function insertOrSelectCollectionByUserIdandGameId(userId, gameId) {
                             });
                             return;
                         }
-
                         db.pool.query(selectLastInsertIdQuery, (selectErr, selectResult) => {
                             if (selectErr) {
                                 db.pool.query('ROLLBACK', () => {
@@ -635,7 +634,6 @@ async function insertOrSelectCollectionByUserIdandGameId(userId, gameId) {
                                 });
                                 return;
                             }
-
                             db.pool.query('COMMIT', (commitErr) => {
                                 if (commitErr) {
                                     db.pool.query('ROLLBACK', () => {
@@ -652,64 +650,6 @@ async function insertOrSelectCollectionByUserIdandGameId(userId, gameId) {
         });
     });
 }
-
-
-async function sometrhing2(userId, gameId) {
-    try {
-        // Start Transaction
-        await new Promise((resolve, reject) => {
-            db.pool.query('START TRANSACTION', (beginTransactionErr) => {
-                if (beginTransactionErr) {
-                    reject(beginTransactionErr);
-                } else {
-                    resolve();
-                }
-            });
-        });
-
-        // Check if collection already exists for the user and game
-        const selectQuery = 'SELECT collectionId FROM collections WHERE playerId = ? AND gameId = ?';
-        const selectResult = await db.pool.query(selectQuery, [userId, gameId]);
-
-        // If collection doesn't exist, insert a new one
-        if (selectResult.length === 0) {
-            const insertQuery = 'INSERT INTO collections (playerId, gameId, cardId) VALUES (?, ?, ?)';
-            const insertResult = await db.pool.query(insertQuery, [userId, gameId, '[]']);
-
-            // Get the ID of the newly inserted collection
-            const newCollectionId = insertResult.insertId;
-            return newCollectionId;
-        } else {
-            // Collection already exists, return its ID
-            return selectResult[0].collectionId;
-        }
-        
-        // Commit Transaction
-        await new Promise((resolve, reject) => {
-            db.pool.query('COMMIT', (commitErr) => {
-                if (commitErr) {
-                    reject(commitErr);
-                } else {
-                    resolve();
-                }
-            });
-        });
-    } catch (error) {
-        // Rollback Transaction if an error occurs
-        await new Promise((resolve, reject) => {
-            db.pool.query('ROLLBACK', (rollbackErr) => {
-                if (rollbackErr) {
-                    reject(rollbackErr);
-                } else {
-                    resolve();
-                }
-            });
-        });
-        throw error;
-    }
-}
-
-
 
 // CardId is json list of cards
 async function grabListOfCardsFromCollection(collectId) {
@@ -738,7 +678,6 @@ async function updateListOfCollection(collectId, cardIds) {
         });
     });
 }
-
 
 
 // function updateGameWinner({ params }) {

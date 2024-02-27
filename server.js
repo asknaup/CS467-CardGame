@@ -21,6 +21,7 @@ const configFile = require('./database/config');
 
 // Import Game Classes
 const { Game, User, Card, CreatureCard, SpellCard } = require('./game/game-play1'); // Import the User class if not already imported
+const { consoleLog } = require('@ngrok/ngrok');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -143,10 +144,11 @@ app.get('/gamePlayPage', (req, res) => {
 });
 
 
-app.get('/cardGenBulkPage', (req, res) => {
+app.get('/cardGenBulkPage', async (req, res) => {
   const user = req.session.user;
   if (user) {
-    res.render('cardGenBulkPage');
+    const val_list = await dbFunc.getAllGeneratedGames();
+    res.render('cardGenBulkPage', { vals: val_list });
   } else {
     res.redirect('/');
   }
@@ -368,6 +370,20 @@ app.get('/collect', async (req, res) => {
   }
 });
 
+// Get all Admin Collections
+app.get('/collectAdmin', async (req, res) => {
+  const user = req.session.user;
+  if (user) {
+    const collect = await dbFunc.getAllCollectionsByUser(user.userId);
+    //const something = await dbFunc.getOneGeneratedGame(collect.gameId)   // Need to build collections
+    res.render('collect', {
+      collect: collect
+    })
+  } else {
+    res.redirect('/');
+  }
+});
+
 // Needs Work!
 app.get('/openPack', async (req, res) => {
   const user = req.session.user;
@@ -419,7 +435,6 @@ app.post('/newUserPost', async (req, res) => {
       };
     }
     res.redirect('/userProfile');
-
   } catch (err) {
     console.log(err);
     if (err.code === 'ER_DUP_ENTRY') {
@@ -467,6 +482,7 @@ app.post('/cardViewEditPage', async (req, res) => {
     if (user) {
       async function delay(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
       const generatedCards = [];
+      console.log(req.body.whichgame);
       const collectionId = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, req.body.whichgame)
       req.session.collectionId = collectionId;
       console.log(collectionId, user.userId, req.body.whichgame);
@@ -544,15 +560,20 @@ app.post('/cardViewPrintedPage', async (req, res) => {
     }
 
     // Needs Work
+    '{"cardList": []}'
+
+    /// cardId: '{"cardList": []}'
     /*
     try {
       // Fetch the list of card IDs from the collection
       let returnList = await dbFunc.grabListOfCardsFromCollection(req.session.collectionId);
+      x = JSON.parse(returnList.cardIds);
       console.log(returnList);
-      returnList.push(cardId);
+      x.push(cardId);
       console.log(returnList);
-      //const updatedListString = JSON.stringify(cardIds);
-      await dbFunc.updateListOfCollection(req.session.collectionId, returnList);
+      
+      // const updatedListString = JSON.stringify(cardIds);
+      await dbFunc.updateListOfCollection(req.session.collectionId, JSON.stringify({"cardList": x}));
       console.log("Updated collection with new card ID:", cardId);
      } catch (error) {
       // Error occurred while updating the collection
@@ -571,61 +592,80 @@ app.post('/cardViewPrintedPage', async (req, res) => {
   }
 });
 
-
 app.post('/cardViewPrintedBulkPage', async (req, res) => {
   const user = req.session.user;
   async function delay(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
-
+  
   try {
-    const num = parseInt(req.body.number); // Assuming req.body.number contains the number of cards to generate
-    const generatedCards = [];
+    let num = parseInt(req.body.number); // Assuming req.body.number contains the number of cards to generate
+    if (num > 20) { num = 20 };
+    let generatedCards = [];
+    let cardIdList = [];
 
     for (let i = 0; i < num; i++) {
-      newCreature = card.createDataStructCreature(req.body.colors, req.body.creatures, req.body.places);
-      const aiCard = await card.createAICard(newCreature.creature, newCreature.place, newCreature.color, newCreature.rarity, 1);
+      if (req.body.cardType == "Creature") {
+        let newCreature = await card.createDataStructCreature(req.body.colors, req.body.creatures, req.body.theme, req.body.cardType);
+        const aiCard = await card.createAICard(newCreature.creature, newCreature.place, newCreature.color, newCreature.rarity, 1);
+        let values = [];
+          while ( !values || values.length === 0 ) {
+            values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId);
+            await delay(500); // Add a delay to avoid excessive requests 
+          }
+        newCreature.URL = values[0].url
+        generatedCards.push(newCreature);
 
-      let values = [];
-      while (values.length === 0) {
-        values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId);
-        await delay(500); // Add a delay to avoid excessive requests
+      } else if (req.body.cardType == "Spell") {
+        let newSpell = await card.createDataStructSpell(req.body.colors, req.body.theme, req.body.cardType, "Random"); // Hard coded
+        const aiCard = await card.createAICard("abstract spell", newSpell.places, newSpell.color, newSpell.name, 1);
+        let values = [];
+          while (!values || values.length === 0 ) {
+            values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId);
+            await delay(500); // Add a delay to avoid excessive requests
+          }
+        newSpell.URL = values[0].url
+        generatedCards.push(newSpell);
+    }   
+  };
+    // console.log(generatedCards);
+    generatedCards.forEach( async (card) => {
+      const cardId = await dbFunc.insertCard(card.name, card.cardType, user.userId, card.rarity, card.manaCost);
+      cardIdList.push(cardId);
+      await dbFunc.insertCardUrl(cardId, card.URL);
+      if (card.cardType == "Spell") {
+        await dbFunc.insertSpellCard(cardId, card.spellType, card.ability, card.attack, card.defense, card.utility);
+      } else if (card.cardType == "Creature") {
+        await dbFunc.insertCreatureCard(cardId, card.attack, card.defense, card.creature); 
       }
+    });
+      
+    try {
+      const collId = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, req.body.whichgame);
+      console.log(collId);
+      let returnList = await dbFunc.grabListOfCardsFromCollection(collId);
+      console.log(returnList);
+      x = JSON.parse(returnList[0].cardId);
+      console.log(cardIdList);
+      y = x.cardList.concat(cardIdList);
+      console.log(y);
+      await dbFunc.updateListOfCollection(collId, JSON.stringify({"cardList": y}));
+     } catch (error) {
+      console.error("Error updating collection:", error); 
     }
-    console.log(generatedCards);
-    generatedCards.forEach(async (card) => {
-      try {
-        const cardId = await dbFunc.insertCard(card.name, card.cardType, user.userId, card.rarity, card.manaCost);
-        await dbFunc.insertCardUrl(cardId, card.URL);
-        if (card.cardType == "Spell") {
-          await dbFunc.insertSpellCard(cardId, card.spellType, card.ability, card.attack, card.defense, card.utility);
-        } else if (card.cardType == "Creature") {
-          await dbFunc.insertCreatureCard(cardId, card.attack, card.defense, card.creature);
-        }
-
-        /* NEEDS WORK
-
-        // await dbFunc.updateListOfCollection(req.session.collectionId, cardId); 
-
-        */
-
-      } catch (err) {
-        console.error(err);
-      }
-    })
     res.render('cardViewPrintedBulkPage', { cards: generatedCards });
 
   } catch (err) {
     // Handle errors
     console.error(err);
-    return res.status(500).send({ success: false, error: err.message });
+    res.status(500).send({ success: false, error: err.message });
   }
 });
 
-// ??
+
 app.post('/generatedGameView', async (req, res) => {
   if (req.session.user) {
     try {
       const user = req.session.user;
-      const genGameId = await dbFunc.insertNewGeneratedGame(user.userId, req.body.ruleSet, '[]', req.body.name);
+      const genGameId = await dbFunc.insertNewGeneratedGame(user.userId, req.body.ruleSet, '{"cardList": []}', req.body.name);
       req.session.gameId = genGameId;
       const gameStats = await dbFunc.getGeneratedGameStats(genGameId);
       console.log(genGameId, gameStats);
@@ -661,7 +701,6 @@ app.post('/collect', async (req, res) => {
     res.redirect('/');
   }
 });
-
 
 
 ///////////////////////////////////////////////
