@@ -39,17 +39,6 @@ main {
     display: block;
 }
 
-.carouselRow {
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-}
-
-.staging-row {
-    flex-wrap: wrap;
-    display: flex;
-}
-
 .stagingArea {
     border: 1px solid #ccc;
     background-color: #d8eece;
@@ -90,8 +79,8 @@ main {
 .card {
     /* width: 250px;
     height: 350px; */
-    width: 200px;
-    height: 300px;
+    width: 180px;
+    height: 270px;
     /* Card container height */
     border: 2px solid #000;
     border-radius: 24px;
@@ -366,7 +355,7 @@ header {
     border: 2px solid green;
     width: auto;
     height: auto;
-    margin: 20px;
+    margin: 100px;
     justify-content: space-evenly;
 }
 
