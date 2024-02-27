@@ -183,7 +183,7 @@ CREATE TABLE IF NOT EXISTS cardSpell (
 DROP TABLE IF EXISTS collections;
 
 CREATE TABLE IF NOT EXISTS collections (
-    collectionId INT,
+    collectionId INT AUTO_INCREMENT,
     playerId INT,
     gameId INT,
     cardId VARCHAR(5000), 
