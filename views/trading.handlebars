@@ -37,6 +37,18 @@
             <div id="userCardSlots"></div>
         </div>
         <h1 id="userDeck">User's Collection</h1>
+        <form action="/trading" method="get" id="cardForm">
+        <select name="collectId" id="collectId">
+            {{#each collect}}
+                <option value="{{this.collectionId}}">{{this.collectionName}}</option>
+            {{/each}}
+        </select>
+        <button type="submit">Go to this Collection</button>
+    </form>
+    <form action="/collect" method="get" id="new">
+        <p>No collections appear? Go to the collect page to create collections</p>
+        <button type="submit">Collect</button>
+    </form>
     </div>
 
     <div id="tradePopUpForm">

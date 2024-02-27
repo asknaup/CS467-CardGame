@@ -61,11 +61,6 @@ app.use('/game', express.static(path.join(__dirname, 'game')));
 /*
 ROUTES
 */
-// To DO
-// Generate Game Instances with Name
-// Generate Collection Instances of Games per User
-// Generate Decks of collection 
-
 
 app.get('/', (req, res) => {
   const user = req.session.user
@@ -105,7 +100,7 @@ app.get('/userProfile', async (req, res) => {
   const user = req.session.user;
   if (user) {
     const userProf = await dbFunc.getUserProfile(user.userId);
-    const valList = await dbFunc.getAllGeneratedGamesByUser(user.userId);
+    const valList = await dbFunc.getAllGeneratedGames();
     const genLen = valList ? valList.length : 0;
 
     const collect = await dbFunc.getAllCollectionsByUser(user.userId);
@@ -143,7 +138,6 @@ app.get('/gamePlayPage', (req, res) => {
   }
 });
 
-
 app.get('/cardGenBulkPage', async (req, res) => {
   const user = req.session.user;
   if (user) {
@@ -154,10 +148,6 @@ app.get('/cardGenBulkPage', async (req, res) => {
   }
 });
 
-// TODO routing between gameGeneration, card Generation
-// TODO Work on corresponding edit pages, corresponding bulk pages
-// TODO Work on generating inputs
-// TODO html formatting
 app.get('/gameGenPage', async (req, res) => {
   const user = req.session.user;
   try {
@@ -187,12 +177,10 @@ app.get('/generatedGameView', async (req, res) => {
 });
 
 
-// TODO: One of these to be deleted
 app.get('/buildDeck', async (req, res) => {
   // Needs collection and game info
   // const user = req.session.user;
   const user = {userId: 1001, username: 'admin'};
-
   // FIXME: Switch back to const user = req.session.user; once buildDeck complete
   try {
     if (user) {
@@ -207,26 +195,12 @@ app.get('/buildDeck', async (req, res) => {
   }
 });
 
-// TODO Deck generation page
-app.get('/buildDeck', (req, res) => {
-  // Show user logged in user profile
-  // FIXME
-  const user = req.session.user;
-  // const user = { userId: 1001, username: 'admin' }
-  if (user) {
-    res.render('buildDeck', { showLogoutButton: true, userId: 1001 })
-  } else {
-    res.render('buildDeck', { showLogoutButton: false })
-  }
-});
-
 // Add to deck, delete, deck stats
 app.get('/currentDeck', async (req, res) => {
   // Show user logged in user profile
   // FIXME
   // const user = { userId: 1001, username: 'admin' };
   const user = req.session.user;
-
   try {
     const receivedData = req.body;
     console.log(receivedData);
@@ -244,28 +218,20 @@ app.get('/deckNames', async (req, res) => {
 });
 
 app.post('/deckCards', async (req, res) => {
-
   const selectedDeck = req.body.deckId;
-
   // Store the selected deckId in the session
   req.session.deck = { deckId: parseInt(selectedDeck) };
-
   console.log("selectedDeck post", selectedDeck);
   console.log("session after post", req.session);
-
   res.json({ status: 'OK' }); // Send a JSON response
 });
 
 app.get('/getCardsForDeck', async (req, res) => {
   try {
-
     const selectedDeck = req.query.deckId;
-
     if (selectedDeck) {
-
       // Fetch cardIds for the selected deck and current user from the database using a Promise
       const row = await dbFunc.getUserDeck(parseInt(selectedDeck));
-
       if (row && row.length > 0) {
         var deckObject = JSON.parse(row[0].cardId);
         res.json(deckObject.cardList);
@@ -274,10 +240,8 @@ app.get('/getCardsForDeck', async (req, res) => {
         return;
       }
     } else {
-      console.log("dfjaldfj");
       res.status(400).send("Missing deckId parameter");
       return;
-
     }
   } catch (error) {
     console.error('Error handling getCardsForDeck:', error);
@@ -325,7 +289,6 @@ app.get('/resetPW', (req, res) => {
   }
 });
 
-// Will need minor work
 app.get('/cardGenPage', async (req, res) => {
   const user = req.session.user;
   if (user) {
@@ -347,10 +310,41 @@ app.get('/help', async (req, res) => {
 });
 
 // Add database logic
-app.get('/trading', (req, res) => {
+app.get('/trading', async (req, res) => {
   const user = req.session.user;
+  const c = req.query.collectId;
+  let listCards;
   if (user) {
-    res.render('trading', { showLogoutButton: true })
+    const collect = await dbFunc.getAllCollectionsByUser(user.userId);
+      if (c) {
+      listCards = await dbFunc.grabListOfCardsFromCollection(req.query.collectId); 
+      } else {
+      listCards = await dbFunc.grabListOfCardsFromCollection(collect[0].collectionId);
+      }
+    res.render('trading', {
+      collect: collect
+     })
+  } else {
+    res.redirect('/');
+  }
+});
+
+// Add database logic
+app.post('/trading', async (req, res) => {
+  const user = req.session.user;
+  const c = req.query.collectId;
+  let listCards;
+  if (user) {
+    const collect = await dbFunc.getAllCollectionsByUser(user.userId);
+    if (c) {
+    listCards = await dbFunc.grabListOfCardsFromCollection(req.query.collectId); 
+    } else {
+    listCards = await dbFunc.grabListOfCardsFromCollection(collect[0].collectionId);
+    }
+
+    res.render('trading', {
+      collect: collect
+     })
   } else {
     res.redirect('/');
   }
@@ -359,11 +353,20 @@ app.get('/trading', (req, res) => {
 // Needs Work, collection db issue
 app.get('/collect', async (req, res) => {
   const user = req.session.user;
+  const c = req.query.collectId;
+  let listCards;
+
   if (user) {
     const collect = await dbFunc.getAllCollectionsByUser(user.userId);
-    //const something = await dbFunc.getOneGeneratedGame(collect.gameId)   // Need to build collections
+    if (c) {
+    listCards = await dbFunc.grabListOfCardsFromCollection(req.query.collectId); 
+    } else {
+    listCards = await dbFunc.grabListOfCardsFromCollection(collect[0].collectionId);
+    }
+  
     res.render('collect', {
-      collect: collect
+      collect: collect,
+      listCards: listCards,
     })
   } else {
     res.redirect('/');
@@ -376,6 +379,7 @@ app.get('/collectAdmin', async (req, res) => {
   if (user) {
     const collect = await dbFunc.getAllCollectionsByUser(user.userId);
     //const something = await dbFunc.getOneGeneratedGame(collect.gameId)   // Need to build collections
+    console.log(collect);
     res.render('collect', {
       collect: collect
     })
@@ -428,12 +432,19 @@ app.post('/newUserPost', async (req, res) => {
   try {
     const user_id = await dbFunc.insertNewUser(req.body.inputUserName, req.body.inputNewPassword, req.body.inputEmail);
     const userProfile = await dbFunc.getUserProfile(user_id);
+    
     if (user_id) {          // save relevant user information in the session
       req.session.user = {
         userId: user_id,
         username: req.body.inputUserName
       };
     }
+    const oneVar = await dbFunc.getAllGeneratedGames()
+    const gameName = await dbFunc.grabGameName(oneVar[0].gameId);
+    const userName = await dbFunc.grabUsername(user_id);
+    const nameTime = `${userName[0].username}'s collection for ${gameName[0].imageLocation}`;
+    const collect = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user_id, oneVar[0].gameId, nameTime);
+
     res.redirect('/userProfile');
   } catch (err) {
     console.log(err);
@@ -482,10 +493,12 @@ app.post('/cardViewEditPage', async (req, res) => {
     if (user) {
       async function delay(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
       const generatedCards = [];
-      console.log(req.body.whichgame);
-      const collectionId = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, req.body.whichgame)
+      const gameName = await dbFunc.grabGameName(req.body.whichgame);
+      const userName = await dbFunc.grabUsername(user.userId);
+      const nameTime = `${userName[0].username}'s collection for ${gameName[0].imageLocation}`;
+
+      const collectionId = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, req.body.whichgame, nameTime)
       req.session.collectionId = collectionId;
-      console.log(collectionId, user.userId, req.body.whichgame);
       req.session.gameId = req.body.whichgame;
 
       if (req.body.cardType == "Creature") {
@@ -548,9 +561,11 @@ app.post('/cardViewEditPage', async (req, res) => {
 
 app.post('/cardViewPrintedPage', async (req, res) => {
   const user = req.session.user;
+  let cardIdList = [];
   try {
     const stringCard = JSON.parse(req.body.cardstring);
     const cardId = await dbFunc.insertCard(stringCard.name, stringCard.cardType, user.userId, stringCard.rarity, stringCard.manaCost);
+    cardIdList.push(cardId);
     await dbFunc.insertCardUrl(cardId, stringCard.URL);
 
     if (req.body.cardType == "Creature") {
@@ -559,28 +574,20 @@ app.post('/cardViewPrintedPage', async (req, res) => {
       await dbFunc.insertSpellCard(cardId, stringCard.spellType, stringCard.ability, stringCard.attack, stringCard.defense, stringCard.utility); // Needs work
     }
 
-    // Needs Work
-    '{"cardList": []}'
+    // Update User Collection
+    const gameName = await dbFunc.grabGameName(req.body.whichgame);
+    const userName = await dbFunc.grabUsername(user.userId);
+    const nameTime = `${userName[0].username}'s collection for ${gameName[0].imageLocation}`;
 
-    /// cardId: '{"cardList": []}'
-    /*
     try {
-      // Fetch the list of card IDs from the collection
-      let returnList = await dbFunc.grabListOfCardsFromCollection(req.session.collectionId);
-      x = JSON.parse(returnList.cardIds);
-      console.log(returnList);
-      x.push(cardId);
-      console.log(returnList);
-      
-      // const updatedListString = JSON.stringify(cardIds);
-      await dbFunc.updateListOfCollection(req.session.collectionId, JSON.stringify({"cardList": x}));
-      console.log("Updated collection with new card ID:", cardId);
+      const collId = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, req.body.whichgame, nameTime);
+      let returnList = await dbFunc.grabListOfCardsFromCollection(collId);
+      x = JSON.parse(returnList[0].cardId);
+      y = x.cardList.concat(cardIdList);
+      await dbFunc.updateListOfCollection(collId, JSON.stringify({"cardList": y}));
      } catch (error) {
-      // Error occurred while updating the collection
-      console.error("Error updating collection:", error);
+      console.error("Error updating collection:", error); 
     }
-    */
-
     const data = await dbFunc.getCardInfo(cardId);
     res.render('cardViewPrintedPage', {
       card: stringCard,
@@ -626,7 +633,6 @@ app.post('/cardViewPrintedBulkPage', async (req, res) => {
         generatedCards.push(newSpell);
     }   
   };
-    // console.log(generatedCards);
     generatedCards.forEach( async (card) => {
       const cardId = await dbFunc.insertCard(card.name, card.cardType, user.userId, card.rarity, card.manaCost);
       cardIdList.push(cardId);
@@ -638,28 +644,26 @@ app.post('/cardViewPrintedBulkPage', async (req, res) => {
       }
     });
       
+    const gameName = await dbFunc.grabGameName(req.body.whichgame);
+    const userName = await dbFunc.grabUsername(user.userId);
+    const nameTime = `${userName[0].username}'s collection for ${gameName[0].imageLocation}`;
+
     try {
-      const collId = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, req.body.whichgame);
-      console.log(collId);
+      const collId = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, req.body.whichgame, nameTime);
       let returnList = await dbFunc.grabListOfCardsFromCollection(collId);
-      console.log(returnList);
       x = JSON.parse(returnList[0].cardId);
-      console.log(cardIdList);
       y = x.cardList.concat(cardIdList);
-      console.log(y);
       await dbFunc.updateListOfCollection(collId, JSON.stringify({"cardList": y}));
      } catch (error) {
       console.error("Error updating collection:", error); 
     }
     res.render('cardViewPrintedBulkPage', { cards: generatedCards });
-
   } catch (err) {
     // Handle errors
     console.error(err);
     res.status(500).send({ success: false, error: err.message });
   }
 });
-
 
 app.post('/generatedGameView', async (req, res) => {
   if (req.session.user) {
@@ -685,16 +689,21 @@ app.post('/generatedGameView', async (req, res) => {
 // Current Work
 app.post('/collect', async (req, res) => {
   const user = req.session.user;
+
   if (user) {
-    const thisCollectId = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, req.body.gameId);
+    const gameName = await dbFunc.grabGameName(req.body.gameId);
+    const userName = await dbFunc.grabUsername(user.userId);
+    const nameTime = `${userName[0].username}'s collection for ${gameName[0].imageLocation}`;
+
+    const thisCollectId = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, req.body.gameId, nameTime);
     const collect = await dbFunc.getAllCollectionsByUser(user.userId);
     const listCards = await dbFunc.grabListOfCardsFromCollection(thisCollectId);
     console.log(thisCollectId, collect, listCards);
 
     res.render('collect', {
-      thisCollectId: collect,
       collect: collect,
-      listCards: listCards
+      listCards: listCards,
+      name: nameTime
     })
   } else {
     // Authentication failed, render 'welcomePagePortal' with an error message

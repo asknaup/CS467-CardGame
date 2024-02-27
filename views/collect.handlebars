@@ -14,21 +14,30 @@
     <p>big old pack picture</p>
     <br><br>
     <form action="/openPack" method="'get">
-    
     <button id="gen-game-button-ggp" class="openPackButton" type="submit">Open a Pack of 5 New Cards</button>
 
     </form>
     <!--div class="instructions">
         <p>Collection_Id: </p>
         <p>List of Cards: </p>
-        <p> ---- Will need to grab userName and gameName to create CollectionId Name --- </p>
+        <p> Will need to grab userName and gameName to create CollectionId Name </p>
     </div -->
-    <h2 id="collectionTitle">Collection</h2>
-    
-    <select id="collectionSelect">
-        <option id="collection1" class="collectionOptions" value="0">Collection 1</option>
-        <option id="collection2" class="collectionOptions" value="1">Collection 2</option>
-    </select>
+    <h2 id="collectionTitle">Collections</h2>
+    <form action="/collect" method="get" id="cardForm">
+        <select name="collectId" id="collectId">
+            {{#each collect}}
+                <option value="{{this.collectionId}}">{{this.collectionName}}</option>
+            {{/each}}
+        </select>
+        <button type="submit">Go to this Collection</button>
+    </form>
+    <form action="/userProfile" method="get" id="new">
+        <p>No collections appear?</p>
+        <p>Go to your User Profile</p>
+        <p>to create a collection</p>
+        <button type="submit">User Profile</button>
+    </form>
+    <a href></a>
     <div id="collection">
         <button type="button" id="collectionScrollLeft"> &lt; </button>
         <button type="button" id="collectionScrollRight"> &gt; </button>
