@@ -838,9 +838,9 @@
 
 #miniGame {
     display: none;
-    position: relative;
-    bottom: 45vw;
-    right: 5vw;
+    position: absolute;
+    top: 0%;
+    left: -10%;
     background-color: rgb(177, 200, 204); 
     border: 2px solid black;
     border-radius: 15px;
@@ -867,6 +867,18 @@
     background-color: rgb(154, 87, 154);
     margin: 0% 0% 0% 15%;
     margin-top: 1vh;
+}
+
+#refreshGameButton {
+    position: absolute;
+    bottom: -4.5vh;
+    right: 1vh;
+    font-weight: bolder;
+    color: white;
+    background-color: rgb(154, 87, 154);
+    border: 2px solid black;
+    border-radius: 5px;
+    padding: .5vh;
 }
 
 #minimizeButton {
