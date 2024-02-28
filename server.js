@@ -617,7 +617,7 @@ app.post('/cardViewPrintedPage', async (req, res) => {
       let adminList = await dbFunc.grabAdminListCards(req.session.gameId);
       let admin = JSON.parse(adminList[0].listCards);
       let newAdminList = admin.cardList.concat(cardIdList);
-      await dbFunc.updateAdminListCards(newAdminList, req.session.gameId);
+      await dbFunc.updateAdminListCards(JSON.stringify({"cardList": newAdminList}), req.session.gameId);
 
      } catch (error) {
       console.error("Error updating collection:", error); 
@@ -692,7 +692,7 @@ app.post('/cardViewPrintedBulkPage', async (req, res) => {
       let adminList = await dbFunc.grabAdminListCards(req.body.whichgame);
       let admin = JSON.parse(adminList[0].listCards);
       let newAdminList = admin.cardList.concat(cardIdList);
-      await dbFunc.updateAdminListCards(newAdminList, req.body.whichgame);
+      await dbFunc.updateAdminListCards(JSON.stringify({"cardList": newAdminList}), req.body.whichgame);
 
      } catch (error) {
       console.error("Error updating collection:", error); 
