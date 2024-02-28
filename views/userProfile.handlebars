@@ -57,7 +57,7 @@
       <div style="width: 200px; padding: 10px; text-align: center;">
         <button type="submit"
           style="width: 100%; cursor: pointer; background-color: #4CAF50; color: white; border: none; border-radius: 5px; font-size: 16px;">Edit
-          your Play Deck from your Collection for</button>
+          your Deck from this Collection</button>
       </div>
       <div style="width: 200px; padding: 10px; text-align: center;">
         <select name="gameId" style="width: 100%; border: 1px solid #ccc; border-radius: 5px; padding: 5px;">
@@ -65,14 +65,6 @@
           <option value="{{ this.gameId }}">{{ this.imageLocation }}</option>
           {{/each}}
         </select>
-      </div>
-    </form>
-
-    <form action="/gamePlayPage" method="get">
-      <div style="width: 200px; padding: 10px; text-align: center;">
-        <button type="submit"
-          style="width: 100%; cursor: pointer; background-color: #4CAF50; color: white; border: none; border-radius: 5px; font-size: 16px;">Play
-          with your created Deck against an opponent</button>
       </div>
     </form>
 
