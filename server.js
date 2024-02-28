@@ -82,8 +82,8 @@ app.get('/cards', async (req, res) => {
     // Retrieve the user ID from the request query parameters
     // const userId = req.query.userId;
     // Needs collection and game info
-    const user = req.session.user;
-    //user = { userId: 1007, username: 'admin' }; //FIXME
+    // const user = req.session.user;
+    const user = { userId: 1001, username: 'admin' }; //FIXME
     // Call the database function to get card data based on userId
     const cardData = await dbFunc.getCardIdByUser(user.userId);
     const cardsDict = hf.convertListToDict(cardData);
@@ -364,7 +364,8 @@ app.get('/collect', async (req, res) => {
     } else {
     listCards = await dbFunc.grabListOfCardsFromCollection(collect[0].collectionId);
     }
-  
+    console.log(collect);
+    console.log(listCards);
     res.render('collect', {
       collect: collect,
       listCards: listCards,
@@ -494,12 +495,6 @@ app.post('/cardViewEditPage', async (req, res) => {
     if (user) {
       async function delay(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
       const generatedCards = [];
-      const gameName = await dbFunc.grabGameName(req.body.whichgame);
-      const userName = await dbFunc.grabUsername(user.userId);
-      const nameTime = `${userName[0].username}'s collection for ${gameName[0].imageLocation}`;
-
-      const collectionId = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, req.body.whichgame, nameTime)
-      req.session.collectionId = collectionId;
       req.session.gameId = req.body.whichgame;
 
       if (req.body.cardType == "Creature") {
@@ -576,12 +571,13 @@ app.post('/cardViewPrintedPage', async (req, res) => {
     }
 
     // Update User Collection
-    const gameName = await dbFunc.grabGameName(req.body.whichgame);
+    const gameName = await dbFunc.grabGameName(req.session.gameId);
     const userName = await dbFunc.grabUsername(user.userId);
     const nameTime = `${userName[0].username}'s collection for ${gameName[0].imageLocation}`;
-
+    console.log(nameTime);
+    
     try {
-      const collId = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, req.body.whichgame, nameTime);
+      const collId = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, req.session.gameId, nameTime);
       let returnList = await dbFunc.grabListOfCardsFromCollection(collId);
       x = JSON.parse(returnList[0].cardId);
       y = x.cardList.concat(cardIdList);
@@ -646,8 +642,10 @@ app.post('/cardViewPrintedBulkPage', async (req, res) => {
     });
       
     const gameName = await dbFunc.grabGameName(req.body.whichgame);
+    console.log(gameName);
     const userName = await dbFunc.grabUsername(user.userId);
     const nameTime = `${userName[0].username}'s collection for ${gameName[0].imageLocation}`;
+    console.log(nameTime);
 
     try {
       const collId = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, req.body.whichgame, nameTime);
