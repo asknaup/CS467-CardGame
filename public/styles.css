@@ -855,20 +855,23 @@
 
 #playGameButtonDiv{
     position: absolute;
+    color: rgb(173, 124, 173);
     border-left: 2px solid black;
     padding-left: 2vh;
     width: 15%;
-    bottom: 0%;
+    bottom: 5%;
     right: 0%;
 }
 
 #playGameButton {
     background-color: rgb(154, 87, 154);
+    margin: 0% 0% 0% 15%;
+    margin-top: 1vh;
 }
 
 #minimizeButton {
     position: absolute;
-    top: -5vh;
+    top: -10vh;
     right: 1vh;
     font-size: 4em;
     background-color: transparent;
@@ -885,6 +888,7 @@
 
 .miniGameCard {
     margin: 0px;
+    position: relative;
 }
 
 .miniGameCard:hover {
@@ -898,6 +902,7 @@
 #wonTitlePart1 {
     display: none;
     position: absolute;
+    padding: 0px;
     color: #4caf50;
     font-size: 4em;
     top: 45%;
@@ -908,6 +913,7 @@
 #wonTitlePart2 {
     display: none;
     position: absolute;
+    padding: 0px;
     color: rgb(154, 87, 154);
     font-size: 4em;
     top: 55%;

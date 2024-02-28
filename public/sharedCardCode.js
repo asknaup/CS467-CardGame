@@ -118,25 +118,35 @@ function createTradingCard(cardData) {
 }
 */
 
-// OLD!!!! createTradingCard() func for prototype/testing purposes
+// Function to create a trading card
 function createTradingCard(cardData) {
     // Card container
-    var cardContainer = document.createElement('div');
-    cardContainer.classList.add('card');
+    var card = document.createElement('div');
+    card.classList.add('card');
 
-    // Card content
-    var cardContent = document.createElement('div');
-    cardContent.classList.add('cardContent');
+    // cardId
+    var cardId = document.createElement('p');
+    cardId.textContent = cardData.cardId;
 
-    // Card header
-    var cardHeader = document.createElement('div');
+    // Tooltip for attributes
+    // var toolTip = document.createElement('div');
+    // toolTip.classList.add('toolTip');
 
-    var cardName = document.createElement('h2');
+    // var toolTipText = document.createElement('span');
+    // toolTipText.classList.add('toolTipText');
+
+    // Name
+    var cardName = document.createElement('h1');
     cardName.classList.add('cardName');
     cardName.textContent = cardData.cardName;
 
-    cardHeader.appendChild(cardName);
-  
+    // Text overlays
+    var textOverlayBottom = document.createElement('div');
+    textOverlayBottom.classList.add('textOverlayBottom');
+
+    var textOverlayTop = document.createElement('div');
+    textOverlayTop.classList.add('textOverlayTop');
+
     // Card image
     var cardImage = document.createElement('div');
     cardImage.classList.add('cardImage');
@@ -147,48 +157,76 @@ function createTradingCard(cardData) {
 
     cardImage.appendChild(imageElement);
 
-    
-    // Card details
-    var cardDetails = document.createElement('div');
-    cardDetails.classList.add('cardDetails');
+    // TODO: Replace with creature
+    var cardType = document.createElement('p');
+    cardType.classList.add('cardType');
+    cardType.textContent = cardData.cardType;
 
-    var cardDescription = document.createElement('p');
-    cardDescription.classList.add('cardDescription');
-    cardDescription.textContent = cardData.description;
+    var rarity = document.createElement('p');
+    rarity.textContent = cardData.rarity;
 
-    var additionalText = document.createElement('p');
-    additionalText.textContent = cardData.cardType; // Set additional text content
+    var manaCost = document.createElement('p');
+    manaCost.innerHTML = `<strong>Mana Cost:</strong> ${cardData.manaCost}`;
 
-    var attributesList = document.createElement('ul');
-    attributesList.classList.add('attributes');
+    // toolTipText.appendChild(rarity);
+    // toolTipText.appendChild(manaCost);
+    textOverlayBottom.appendChild(rarity);
+    textOverlayBottom.appendChild(manaCost);
 
-    
-    // Iterate through card attributes to create list items
-    cardData.attributes = {attack: cardData.attack, defense: cardData.defense, manaCost: cardData.manaCost};
-    Object.keys(cardData.attributes).forEach(function (attribute) {
-        var listItem = document.createElement('li');
-        listItem.innerHTML = `<strong>${attribute}:</strong> ${cardData.attributes[attribute]}`;
-        attributesList.appendChild(listItem);
-    });
+    if (cardData.cardType == "Spell") {
+        var spellType = document.createElement('p');
+        spellType.innerHTML = `<strong>Spell Type:</strong> ${cardData.spellType}`;
 
-    // Build card body
-    cardDetails.appendChild(cardDescription);
-    cardDetails.appendChild(additionalText);
-    cardDetails.appendChild(attributesList);
+        var spellAbility = document.createElement('p');
+        spellAbility.innerHTML = `<strong>Spell Ability:</strong> ${cardData.spellAbility}`;
 
-    // Append elements to card content
-    cardContent.appendChild(cardHeader);
-    cardContent.appendChild(cardImage);
-    cardContent.appendChild(cardDetails);
+        var spellAttack = document.createElement('p');
+        spellAttack.innerHTML = `<strong>Spell Attack:</strong> ${cardData.spellAttack}`;
 
-    // Append card content to card container
-    cardContainer.appendChild(cardContent);
+        var spellDefense = document.createElement('p');
+        spellDefense.innerHTML = `<strong>Spell Defense:</strong> ${cardData.spellDefense}`;
 
-    return cardContainer;
+        textOverlayBottom.appendChild(spellType);
+        textOverlayBottom.appendChild(spellAbility);
+        textOverlayBottom.appendChild(spellAttack);
+        textOverlayBottom.appendChild(spellDefense);
+        // toolTipText.appendChild(spellType);
+        // toolTipText.appendChild(spellAbility);
+        // toolTipText.appendChild(spellAttack);
+        // toolTipText.appendChild(spellDefense);
+
+    } else {
+        var attack = document.createElement('p');
+        attack.innerHTML = `<strong>Attack:</strong> ${cardData.attack}`;
+
+        var defense = document.createElement('p');
+        defense.innerHTML = `<strong>Defense:</strong> ${cardData.defense}`;
+
+        textOverlayBottom.appendChild(attack);
+        textOverlayBottom.appendChild(defense);
+        // toolTipText.appendChild(attack);
+        // toolTipText.appendChild(defense);
+    }
+
+    // toolTip.appendChild(toolTipText);
+    // textOverlayBottom.appendChild(cardName);
+    // textOverlayBottom.appendChild(cardType);
+    textOverlayTop.appendChild(cardName);
+    textOverlayTop.appendChild(cardType);
+
+    card.appendChild(textOverlayBottom);
+    card.appendChild(cardImage);
+    // card.appendChild(textOverlayBottom);
+    card.appendChild(textOverlayTop);
+
+    // card.appendChild(toolTip);
+
+    return card;
 }
 
 
-function createTradingCardWithId(id, cardData){
+
+function createTradingCardWithId(id, cardData) {
     let cardContainer = createTradingCard(cardData);
     cardContainer.setAttribute('id', id);
     return cardContainer;
@@ -201,62 +239,62 @@ function createBackOfCard() {
     return cardContainer;
 }
 
-function createBackOfCardWithId(id){
+function createBackOfCardWithId(id) {
     let cardContainer = createBackOfCard();
     cardContainer.setAttribute('id', id);
     return cardContainer;
 }
 
-function addStagedCardFunctionality(playerObj, primaryIndex){
+function addStagedCardFunctionality(playerObj, primaryIndex) {
     playerObj.startIndex = Math.floor(primaryIndex / numScrollCards) * numScrollCards;
     playerObj.endIndex = playerObj.startIndex + (numScrollCards - 1);
-    if (playerObj.endIndex > playerObj.primaryKeyArr.length - 1){
+    if (playerObj.endIndex > playerObj.primaryKeyArr.length - 1) {
         playerObj.endIndex = playerObj.primaryKeyArr.length - 1
     }
     displayScrollCards(playerObj);
 }
 
 
-function createAndAppendStagedCard(playerObj, primaryIndex, cardData){
+function createAndAppendStagedCard(playerObj, primaryIndex, cardData) {
     var stageArea = document.getElementById(playerObj.stageAreaId);
     let stagedCard = createTradingCardWithId(cardData.cardId + playerObj.stagedCardName, cardData);
-    stagedCard.onclick = function(){addStagedCardFunctionality(playerObj, primaryIndex)};
+    stagedCard.onclick = function () { addStagedCardFunctionality(playerObj, primaryIndex) };
     stageArea.appendChild(stagedCard);
 }
 
 
-function addScrollCardFunctionality(playerObj, primaryIndex, cardData, scrollCard){
-        if (cardData.isStaged == false){
-            if(playerObj.stagedCardCount < 4){
-                highlightCard(true, playerObj.isUser, scrollCard);
-                createAndAppendStagedCard(playerObj, primaryIndex, cardData);
-                cardData.isStaged = true;
-                playerObj.stagedCardCount += 1;
-            }
-        } else {
-            highlightCard(false, playerObj.isUser, scrollCard);
-            var stagedCard = document.getElementById(cardData.cardId + playerObj.stagedCardName);
-            stagedCard.remove();
-            cardData.isStaged = false;
-            playerObj.stagedCardCount -= 1;
+function addScrollCardFunctionality(playerObj, primaryIndex, cardData, scrollCard) {
+    if (cardData.isStaged == false) {
+        if (playerObj.stagedCardCount < 4) {
+            highlightCard(true, playerObj.isUser, scrollCard);
+            createAndAppendStagedCard(playerObj, primaryIndex, cardData);
+            cardData.isStaged = true;
+            playerObj.stagedCardCount += 1;
         }
-    };
+    } else {
+        highlightCard(false, playerObj.isUser, scrollCard);
+        var stagedCard = document.getElementById(cardData.cardId + playerObj.stagedCardName);
+        stagedCard.remove();
+        cardData.isStaged = false;
+        playerObj.stagedCardCount -= 1;
+    }
+};
 
 
-function displayScrollCards(playerObj){
+function displayScrollCards(playerObj) {
     // Clear out old card elements
     var cardSlots = document.getElementById(playerObj.cardSlots);
-    while(cardSlots.firstChild){
+    while (cardSlots.firstChild) {
         cardSlots.removeChild(cardSlots.firstChild);
     }
-    for (let index = playerObj.startIndex; index <= playerObj.endIndex; index++){
+    for (let index = playerObj.startIndex; index <= playerObj.endIndex; index++) {
         let primaryKey = playerObj.primaryKeyArr[index];
         let cardData = playerObj.cardDict[primaryKey];
         let scrollCard = createTradingCardWithId(primaryKey, cardData);
-        scrollCard.onclick = function () {addScrollCardFunctionality(playerObj, index, cardData, scrollCard)};
-        if (cardData.isStaged == true){
+        scrollCard.onclick = function () { addScrollCardFunctionality(playerObj, index, cardData, scrollCard) };
+        if (cardData.isStaged == true) {
             highlightCard(true, playerObj.isUser, scrollCard);
-        }else{
+        } else {
             highlightCard(false, playerObj.isUser, scrollCard);
         }
         cardSlots.appendChild(scrollCard);
@@ -265,14 +303,14 @@ function displayScrollCards(playerObj){
 
 
 // add green or purple border to card when selected
-function highlightCard(isHighlighted, isUser, scrollCard){
-    if (isHighlighted){
-        if(isUser){
+function highlightCard(isHighlighted, isUser, scrollCard) {
+    if (isHighlighted) {
+        if (isUser) {
             scrollCard.style.border = "6px solid #65f76b";
-        }else{
+        } else {
             scrollCard.style.border = "6px solid #f06cf0";
         }
-    }else{
+    } else {
         scrollCard.style.border = "3px solid black";
     }
 }
