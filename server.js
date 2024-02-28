@@ -499,7 +499,7 @@ app.post('/cardViewEditPage', async (req, res) => {
       if (req.body.cardType == "Creature") {
         // Generate for Creature
 
-        for (let i = 0; i < 1; i++) {
+        for (let i = 0; i < 3; i++) {
           let values = [];
           let newCreature = await card.createDataStructCreature(req.body.color, req.body.creatureType, req.body.theme, req.body.cardType);
           newCreature.manaCost = req.body.manaCost;
@@ -641,6 +641,7 @@ app.post('/cardViewPrintedBulkPage', async (req, res) => {
     });
       
     const gameName = await dbFunc.grabGameName(req.body.whichgame);
+    console.log(gameName);
     const userName = await dbFunc.grabUsername(user.userId);
     const nameTime = `${userName[0].username}'s collection for ${gameName[0].imageLocation}`;
 
