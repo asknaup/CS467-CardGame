@@ -3,142 +3,179 @@
 
 <head>
   <meta charset="utf-8" />
-  <link rel="stylesheet" href="global.css">
+  <link rel="stylesheet" type = "text/css" href="/global.css">
+  <link rel="stylesheet" type = "text/css" href="/styles.css">
 </head>
 
 <body>
-  <div class="container1">
-    <br><br> 
-    <h1> Welcome to the Bulk Card Generation Page </h1>
-    <br><br>
-    <h1> Card Names, Rarity, Attack and Defense, and Mana Cost will be randomized </h1>
-    <div id="input-form">
-      {{!-- Links to generateCard post --}}
-      <form action="/cardViewPrintedBulkPage" method="post" id="cardForm">
-        <h3>Generate for which game?</h3><br>
-        <select id="whichgame" name="whichgame">
-          {{#each vals}}
-            <option value="{{this.gameId}}">{{this.imageLocation}}</option>
-          {{/each}}
-        </select>
-        <br><br><p>---------------------------------</p><br>
-        <label for="number">Select Number of Cards to be Generated:</label>
-        <input name="number" type="number" placeholder="Number of Cards (< 20)">
-        <label for="cardType">Select Type of Card:</label>
-        <select id="cardType" name="cardType">
-          <option value="Creature">Creature</option>
-          <option value="Spell">Spell</option>
-        </select><br><br>
-        <label for="theme">Select Setting or Theme:</label>
-        <select id="theme" name="theme">
-            <!-- Populated with places -->
-        </select>
-        <br><br>
-        <label for="colors">Select Color:</label>
-        <select id="colors" name="colors">
-            <!-- Populated -->
-        </select>
-        <br><br>
-        <div id="creatureFields">
-        <label for="creatures">Select Creature Type:</label>
-        <select id="creatures" name="creatures">
-            <!-- Populated -->
-        </select>
-        </div>
-        <div id="spellFields" style="display: none;">
-          <br>
-        </div>
-        <br><br>        
-        <button id="gen-game-button-ggp" type="submit">Generate Bulk</button>
-        {{#if error}}
-        <p id="error">{{error}}</p>
-        {{/if}}
-      </form>
-    </div>
-    </div>
-    <script>
+  <div id="cardBulkDiv">
+    <div class="container1">
+      <br><br> 
+      <h1> Welcome to the Bulk Card Generation Page </h1>
+      <br><br>
+      <h1> Card Names, Rarity, Attack and Defense, and Mana Cost will be randomized </h1>
+      <div id="input-form">
+        {{!-- Links to generateCard post --}}
+        <form action="/cardViewPrintedBulkPage" method="post" id="cardForm">
+          <h3>Generate for which game?</h3><br>
+          <select id="whichgame" name="whichgame">
+            {{#each vals}}
+              <option value="{{this.imageLocation}}">{{this.imageLocation}}</option>
+            {{/each}}
+          </select>
+          <br><br><p>---------------------------------</p><br>
+          <label for="number">Select Number of Cards to be Generated:</label>
+          <input name="number" type="number" placeholder="Number of Cards (< 20)">
+          <label for="cardType">Select Type of Card:</label>
+          <select id="cardType" name="cardType">
+            <option value="Creature">Creature</option>
+            <option value="Spell">Spell</option>
+          </select><br><br>
+          <label for="places">Select Setting or Theme:</label>
+          <select id="places" name="places">
+              <!-- Populated with places -->
+          </select>
+          <br><br>
+          <div id="creatureFields">
+          <label for="creatures">Select Creature Type:</label>
+          <select id="creatures" name="creatures">
+              <!-- Populated -->
+          </select>
+          </div>
+          <br>        
+          <label for="colors">Select Color:</label>
+          <select id="colors" name="colors">
+              <!-- Populated -->
+          </select>
+          <br><br>
+          <button id="gen-game-button-ggp" type="submit">Generate Bulk</button>
+          {{#if error}}
+          <p id="error">{{error}}</p>
+          {{/if}}
+        </form>
+      </div>
+      </div>
+      <script>
+        document.getElementById('cardType').addEventListener('change', function () {
+          var cardType = this.value;
+          var creatureFields = document.getElementById('creatureFields');
+
+
+          if (cardType === 'Creature') {
+            creatureFields.style.display = 'block';
+          } else if (cardType === 'Spell') {
+            creatureFields.style.display = 'none';
+          }
+        });
+
+      const places = [
+          "Random", "African", "Ancient Babylon", "Ancient Ruins", "Ancient Egypt", "Antarctica", "Arabian", "Arctic Tundra", 
+          "Amazon Rainforest", "American", "Aztec", "Chinese Dynasty", "Corrupt", "Cyberpunk Dystopia", 
+          "Deep Sea Abyss", "Deep Space Outpost", "Desert Oasis", "Enchanted Castle", "Evil", "Fairy Kingdom", 
+          "Fairy Ring", "Fairy Tale Forest", "Futuristic", "Futuristic Megacity", "Galactic Arena", "Galactic", 
+          "Good", "Greek Mythology", "Haunted", "Himalayan", "Himalayan Mountains", "Industrial Revolution", 
+          "Lost City of Atlantis", "Lost Temple", "Lunar Colony", "Mars Colony", "Mayan", "Medieval Castle", 
+          "Medieval Europe", "Medieval Tournament", "Medieval Village", "Native American", "Ninjas", "Parallel Earth", 
+          "Planet", "Pirate", "Polynesian Island", "Post-Apocalyptic", "Roman Colosseum", "Roman Empire", 
+          "Renaissance Italy", "Robot Factory", "Samurai Dojo", "Samurai", "Space Colony Ship", "Space Exploration", 
+          "Space Opera", "Space Pirate", "Space Station", "Steampunk", "Submarine", "Subterranean City", 
+          "Time Travel", "Tropical Island", "Underwater", "Underworld Realm", "Viking", "Victorian London", 
+          "Western Saloon"
+          ];
+
+      const creatures = [
+          "Random", "Angel", "Banshee", "Basilisk", "Bigfoot", "Centaur", "Cerberus", "Chimera", "Chupacabra", "Cthulhu", "Cyclops",
+          "Demon", "Doppelganger", "Dragon", "Dwarf", "Elf", "Fairy", "Frost Giant", "Genie", "Ghost", "Gnome",
+          "Goblin", "Gremlin", "Griffin", "Harpie", "Hippogriff", "Hydra", "Imp", "Jinn", "Kelpie", "Kraken",
+          "Leprechaun", "Lich", "Manticore", "Mermaid", "Minotaur", "Mothman", "Naga", "Nymph", "Ogre", "Oni",
+          "Pegasus", "Peryton", "Phoenix", "Roc", "Sasquatch", "Satyr", "Sea Serpent", "Selkie", "Siren", "Skeleton",
+          "Specter", "Sphinx", "Sprite", "Tanuki", "Thunderbird", "Titan", "Troll", "Unicorn", "Valkyrie", "Vampire",
+          "Vampire Bat", "Vodyanoy", "Wendigo", "Werewolf", "Wight", "Will-o'-the-Wisp", "Witch", "Wizard", "Wraith",
+          "Wyrm", "Wyvern", "Xorn", "Yuki-onna", "Yeti", "Zaratan", "Ziz", "Zombie"
+          ];
+
+      const colors = [
+          "No Significant Color", "Random", "Blue", "Brown", "Gold",
+          "Green", "Magenta", "Maroon",
+          "Navy", "Orange", "Pink", "Purple", "Red",
+          "Silver", "Turquoise", "Violet", "Yellow"
+      ];
+
+      const creaturesDropdown = document.getElementById("creatures");
+      const placesDropdown = document.getElementById("places");
+      const colorsDropdown = document.getElementById('colors');
+
+      colors.forEach(color => {
+          const option = document.createElement("option");
+          option.text = color;
+          colorsDropdown.add(option)
+      })
+
+      creatures.forEach(creature => {
+          const option1 = document.createElement("option");
+          option1.text = creature;
+          creaturesDropdown.add(option1);
+      });
+
+      // Populate the dropdown menu with options
+      places.forEach(place => {
+          const option2 = document.createElement("option");
+          option2.text = place;
+          placesDropdown.add(option2);
+      });
+
       document.getElementById('cardType').addEventListener('change', function () {
-        var cardType = this.value;
-        var creatureFields = document.getElementById('creatureFields');
+          var cardType = this.value;
+          var creatureFields = document.getElementById('creatureFields');
+          var spellFields = document.getElementById('spellFields');
 
+          if (cardType === 'Creature') {
+            creatureFields.style.display = 'block';
+            spellFields.style.display = 'none';
+          } else if (cardType === 'Spell') {
+            creatureFields.style.display = 'none';
+            spellFields.style.display = 'block';
+          }
+        });
 
-        if (cardType === 'Creature') {
-          creatureFields.style.display = 'block';
-        } else if (cardType === 'Spell') {
-          creatureFields.style.display = 'none';
-        }
-      });
+  </script>
 
-    const theme = [
-        "Random", "African", "Ancient Babylon", "Ancient Ruins", "Ancient Egypt", "Antarctica", "Arabian", "Arctic Tundra", 
-        "Amazon Rainforest", "American", "Aztec", "Chinese Dynasty", "Corrupt", "Cyberpunk Dystopia", 
-        "Deep Sea Abyss", "Deep Space Outpost", "Desert Oasis", "Enchanted Castle", "Evil", "Fairy Kingdom", 
-        "Fairy Ring", "Fairy Tale Forest", "Futuristic", "Futuristic Megacity", "Galactic Arena", "Galactic", 
-        "Good", "Greek Mythology", "Haunted", "Himalayan", "Himalayan Mountains", "Industrial Revolution", 
-        "Lost City of Atlantis", "Lost Temple", "Lunar Colony", "Mars Colony", "Mayan", "Medieval Castle", 
-        "Medieval Europe", "Medieval Tournament", "Medieval Village", "Native American", "Ninjas", "Parallel Earth", 
-        "Planet", "Pirate", "Polynesian Island", "Post-Apocalyptic", "Roman Colosseum", "Roman Empire", 
-        "Renaissance Italy", "Robot Factory", "Samurai Dojo", "Samurai", "Space Colony Ship", "Space Exploration", 
-        "Space Opera", "Space Pirate", "Space Station", "Steampunk", "Submarine", "Subterranean City", 
-        "Time Travel", "Tropical Island", "Underwater", "Underworld Realm", "Viking", "Victorian London", 
-        "Western Saloon"
-        ];
-
-    const creatures = [
-        "Random", "Angel", "Banshee", "Basilisk", "Bigfoot", "Centaur", "Cerberus", "Chimera", "Chupacabra", "Cthulhu", "Cyclops",
-        "Demon", "Doppelganger", "Dragon", "Dwarf", "Elf", "Fairy", "Frost Giant", "Genie", "Ghost", "Gnome",
-        "Goblin", "Gremlin", "Griffin", "Harpie", "Hippogriff", "Hydra", "Imp", "Jinn", "Kelpie", "Kraken",
-        "Leprechaun", "Lich", "Manticore", "Mermaid", "Minotaur", "Mothman", "Naga", "Nymph", "Ogre", "Oni",
-        "Pegasus", "Peryton", "Phoenix", "Roc", "Sasquatch", "Satyr", "Sea Serpent", "Selkie", "Siren", "Skeleton",
-        "Specter", "Sphinx", "Sprite", "Tanuki", "Thunderbird", "Titan", "Troll", "Unicorn", "Valkyrie", "Vampire",
-        "Vampire Bat", "Vodyanoy", "Wendigo", "Werewolf", "Wight", "Will-o'-the-Wisp", "Witch", "Wizard", "Wraith",
-        "Wyrm", "Wyvern", "Xorn", "Yuki-onna", "Yeti", "Zaratan", "Ziz", "Zombie"
-        ];
-
-    const colors = [
-        "None", "Random", "Blue", "Brown", "Gold",
-        "Green", "Magenta", "Maroon",
-        "Navy", "Orange", "Pink", "Purple", "Red",
-        "Silver", "Turquoise", "Violet", "Yellow"
-    ];
-
-    const creaturesDropdown = document.getElementById("creatures");
-    const placesDropdown = document.getElementById("theme");
-    const colorsDropdown = document.getElementById('colors');
-
-    colors.forEach(color => {
-        const option = document.createElement("option");
-        option.text = color;
-        colorsDropdown.add(option)
-    })
-
-    creatures.forEach(creature => {
-        const option1 = document.createElement("option");
-        option1.text = creature;
-        creaturesDropdown.add(option1);
-    });
-
-    // Populate the dropdown menu with options
-    theme.forEach(place => {
-        const option2 = document.createElement("option");
-        option2.text = place;
-        placesDropdown.add(option2);
-    });
-
-    document.getElementById('cardType').addEventListener('change', function () {
-        var cardType = this.value;
-        var creatureFields = document.getElementById('creatureFields');
-        var spellFields = document.getElementById('spellFields');
-
-        if (cardType === 'Creature') {
-          creatureFields.style.display = 'block';
-          spellFields.style.display = 'none';
-        } else if (cardType === 'Spell') {
-          creatureFields.style.display = 'none';
-          spellFields.style.display = 'block';
-        }
-      });
-
-</script>
+      <div id="playGameButtonDiv">
+        <p>Play a game while <br> you wait for cards <br> to be generated</p>
+        <button type="button" id="playGameButton">Play Game</button>
+      </div>
+      <div id="miniGame">
+        <button type="button" id="minimizeButton"> - </button>
+          <div id="miniGameRow0" class="miniGameRow">
+              <div id="cardSlot0" class="cardSlots"> </div>
+              <div id="cardSlot1" class="cardSlots"> </div>
+              <div id="cardSlot2" class="cardSlots"> </div>
+              <div id="cardSlot3" class="cardSlots"> </div>
+              <div id="cardSlot4" class="cardSlots"> </div>
+              <div id="cardSlot5" class="cardSlots"> </div>
+          </div>
+          <div id="miniGameRow1" class="miniGameRow">
+              <div id="cardSlot6" class="cardSlots"> </div>
+              <div id="cardSlot7" class="cardSlots"> </div>
+              <div id="cardSlot8" class="cardSlots"> </div>
+              <div id="cardSlot9" class="cardSlots"> </div>
+              <div id="cardSlot10" class="cardSlots"> </div>
+              <div id="cardSlot11" class="cardSlots"> </div>
+          </div>
+          <div id="miniGameRow2" class="miniGameRow">
+              <div id="cardSlot12" class="cardSlots"> </div>
+              <div id="cardSlot13" class="cardSlots"> </div>
+              <div id="cardSlot14" class="cardSlots"> </div>
+              <div id="cardSlot15" class="cardSlots"> </div>
+              <div id="cardSlot16" class="cardSlots"> </div>
+              <div id="cardSlot17" class="cardSlots"> </div>
+          </div>
+          <h2 id="wonTitlePart1">You did it!</h2>
+          <h2 id="wonTitlePart2">You Won!</h2>
+      </div>
+      
+      <script src="/sharedCardCode.js"></script>
+      <script src="/miniGameHelper.js"></script>
+    </div>
 </body>
 </html>
