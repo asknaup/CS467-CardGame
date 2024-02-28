@@ -4,8 +4,8 @@
 <head>
   <meta charset="utf-8" />
   <link rel="stylesheet" type = "text/css" href="/global.css">
-  <link rel="stylesheet" type = "text/css" href="/styles.css">
   <link rel="stylesheet" type="text/css" href="/tradingAndCollect.css">
+  <link rel="stylesheet" type = "text/css" href="/styles.css">
 </head>
 
 <body>
@@ -55,94 +55,95 @@
           {{/if}}
         </form>
       </div>
-      </div>
-      <script>
-        document.getElementById('cardType').addEventListener('change', function () {
-          var cardType = this.value;
-          var creatureFields = document.getElementById('creatureFields');
-
-
-          if (cardType === 'Creature') {
-            creatureFields.style.display = 'block';
-          } else if (cardType === 'Spell') {
-            creatureFields.style.display = 'none';
-          }
-        });
-
-      const places = [
-          "Random", "African", "Ancient Babylon", "Ancient Ruins", "Ancient Egypt", "Antarctica", "Arabian", "Arctic Tundra", 
-          "Amazon Rainforest", "American", "Aztec", "Chinese Dynasty", "Corrupt", "Cyberpunk Dystopia", 
-          "Deep Sea Abyss", "Deep Space Outpost", "Desert Oasis", "Enchanted Castle", "Evil", "Fairy Kingdom", 
-          "Fairy Ring", "Fairy Tale Forest", "Futuristic", "Futuristic Megacity", "Galactic Arena", "Galactic", 
-          "Good", "Greek Mythology", "Haunted", "Himalayan", "Himalayan Mountains", "Industrial Revolution", 
-          "Lost City of Atlantis", "Lost Temple", "Lunar Colony", "Mars Colony", "Mayan", "Medieval Castle", 
-          "Medieval Europe", "Medieval Tournament", "Medieval Village", "Native American", "Ninjas", "Parallel Earth", 
-          "Planet", "Pirate", "Polynesian Island", "Post-Apocalyptic", "Roman Colosseum", "Roman Empire", 
-          "Renaissance Italy", "Robot Factory", "Samurai Dojo", "Samurai", "Space Colony Ship", "Space Exploration", 
-          "Space Opera", "Space Pirate", "Space Station", "Steampunk", "Submarine", "Subterranean City", 
-          "Time Travel", "Tropical Island", "Underwater", "Underworld Realm", "Viking", "Victorian London", 
-          "Western Saloon"
-          ];
-
-      const creatures = [
-          "Random", "Angel", "Banshee", "Basilisk", "Bigfoot", "Centaur", "Cerberus", "Chimera", "Chupacabra", "Cthulhu", "Cyclops",
-          "Demon", "Doppelganger", "Dragon", "Dwarf", "Elf", "Fairy", "Frost Giant", "Genie", "Ghost", "Gnome",
-          "Goblin", "Gremlin", "Griffin", "Harpie", "Hippogriff", "Hydra", "Imp", "Jinn", "Kelpie", "Kraken",
-          "Leprechaun", "Lich", "Manticore", "Mermaid", "Minotaur", "Mothman", "Naga", "Nymph", "Ogre", "Oni",
-          "Pegasus", "Peryton", "Phoenix", "Roc", "Sasquatch", "Satyr", "Sea Serpent", "Selkie", "Siren", "Skeleton",
-          "Specter", "Sphinx", "Sprite", "Tanuki", "Thunderbird", "Titan", "Troll", "Unicorn", "Valkyrie", "Vampire",
-          "Vampire Bat", "Vodyanoy", "Wendigo", "Werewolf", "Wight", "Will-o'-the-Wisp", "Witch", "Wizard", "Wraith",
-          "Wyrm", "Wyvern", "Xorn", "Yuki-onna", "Yeti", "Zaratan", "Ziz", "Zombie"
-          ];
-
-      const colors = [
-          "No Significant Color", "Random", "Blue", "Brown", "Gold",
-          "Green", "Magenta", "Maroon",
-          "Navy", "Orange", "Pink", "Purple", "Red",
-          "Silver", "Turquoise", "Violet", "Yellow"
-      ];
-
-      const creaturesDropdown = document.getElementById("creatures");
-      const placesDropdown = document.getElementById("places");
-      const colorsDropdown = document.getElementById('colors');
-
-      colors.forEach(color => {
-          const option = document.createElement("option");
-          option.text = color;
-          colorsDropdown.add(option)
-      })
-
-      creatures.forEach(creature => {
-          const option1 = document.createElement("option");
-          option1.text = creature;
-          creaturesDropdown.add(option1);
-      });
-
-      // Populate the dropdown menu with options
-      places.forEach(place => {
-          const option2 = document.createElement("option");
-          option2.text = place;
-          placesDropdown.add(option2);
-      });
-
+    </div>
+    <script>
       document.getElementById('cardType').addEventListener('change', function () {
-          var cardType = this.value;
-          var creatureFields = document.getElementById('creatureFields');
-          var spellFields = document.getElementById('spellFields');
+        var cardType = this.value;
+        var creatureFields = document.getElementById('creatureFields');
 
-          if (cardType === 'Creature') {
-            creatureFields.style.display = 'block';
-            spellFields.style.display = 'none';
-          } else if (cardType === 'Spell') {
-            creatureFields.style.display = 'none';
-            spellFields.style.display = 'block';
-          }
-        });
 
-  </script>
+        if (cardType === 'Creature') {
+          creatureFields.style.display = 'block';
+        } else if (cardType === 'Spell') {
+          creatureFields.style.display = 'none';
+        }
+      });
 
+    const places = [
+        "Random", "African", "Ancient Babylon", "Ancient Ruins", "Ancient Egypt", "Antarctica", "Arabian", "Arctic Tundra", 
+        "Amazon Rainforest", "American", "Aztec", "Chinese Dynasty", "Corrupt", "Cyberpunk Dystopia", 
+        "Deep Sea Abyss", "Deep Space Outpost", "Desert Oasis", "Enchanted Castle", "Evil", "Fairy Kingdom", 
+        "Fairy Ring", "Fairy Tale Forest", "Futuristic", "Futuristic Megacity", "Galactic Arena", "Galactic", 
+        "Good", "Greek Mythology", "Haunted", "Himalayan", "Himalayan Mountains", "Industrial Revolution", 
+        "Lost City of Atlantis", "Lost Temple", "Lunar Colony", "Mars Colony", "Mayan", "Medieval Castle", 
+        "Medieval Europe", "Medieval Tournament", "Medieval Village", "Native American", "Ninjas", "Parallel Earth", 
+        "Planet", "Pirate", "Polynesian Island", "Post-Apocalyptic", "Roman Colosseum", "Roman Empire", 
+        "Renaissance Italy", "Robot Factory", "Samurai Dojo", "Samurai", "Space Colony Ship", "Space Exploration", 
+        "Space Opera", "Space Pirate", "Space Station", "Steampunk", "Submarine", "Subterranean City", 
+        "Time Travel", "Tropical Island", "Underwater", "Underworld Realm", "Viking", "Victorian London", 
+        "Western Saloon"
+        ];
+
+    const creatures = [
+        "Random", "Angel", "Banshee", "Basilisk", "Bigfoot", "Centaur", "Cerberus", "Chimera", "Chupacabra", "Cthulhu", "Cyclops",
+        "Demon", "Doppelganger", "Dragon", "Dwarf", "Elf", "Fairy", "Frost Giant", "Genie", "Ghost", "Gnome",
+        "Goblin", "Gremlin", "Griffin", "Harpie", "Hippogriff", "Hydra", "Imp", "Jinn", "Kelpie", "Kraken",
+        "Leprechaun", "Lich", "Manticore", "Mermaid", "Minotaur", "Mothman", "Naga", "Nymph", "Ogre", "Oni",
+        "Pegasus", "Peryton", "Phoenix", "Roc", "Sasquatch", "Satyr", "Sea Serpent", "Selkie", "Siren", "Skeleton",
+        "Specter", "Sphinx", "Sprite", "Tanuki", "Thunderbird", "Titan", "Troll", "Unicorn", "Valkyrie", "Vampire",
+        "Vampire Bat", "Vodyanoy", "Wendigo", "Werewolf", "Wight", "Will-o'-the-Wisp", "Witch", "Wizard", "Wraith",
+        "Wyrm", "Wyvern", "Xorn", "Yuki-onna", "Yeti", "Zaratan", "Ziz", "Zombie"
+        ];
+
+    const colors = [
+        "No Significant Color", "Random", "Blue", "Brown", "Gold",
+        "Green", "Magenta", "Maroon",
+        "Navy", "Orange", "Pink", "Purple", "Red",
+        "Silver", "Turquoise", "Violet", "Yellow"
+    ];
+
+    const creaturesDropdown = document.getElementById("creatures");
+    const placesDropdown = document.getElementById("places");
+    const colorsDropdown = document.getElementById('colors');
+
+    colors.forEach(color => {
+        const option = document.createElement("option");
+        option.text = color;
+        colorsDropdown.add(option)
+    })
+
+    creatures.forEach(creature => {
+        const option1 = document.createElement("option");
+        option1.text = creature;
+        creaturesDropdown.add(option1);
+    });
+
+    // Populate the dropdown menu with options
+    places.forEach(place => {
+        const option2 = document.createElement("option");
+        option2.text = place;
+        placesDropdown.add(option2);
+    });
+
+    document.getElementById('cardType').addEventListener('change', function () {
+        var cardType = this.value;
+        var creatureFields = document.getElementById('creatureFields');
+        var spellFields = document.getElementById('spellFields');
+
+        if (cardType === 'Creature') {
+          creatureFields.style.display = 'block';
+          spellFields.style.display = 'none';
+        } else if (cardType === 'Spell') {
+          creatureFields.style.display = 'none';
+          spellFields.style.display = 'block';
+        }
+      });
+
+    </script>
+
+    <!--
       <div id="playGameButtonDiv">
-        <p>Play a game while <br> you wait for cards <br> to be generated</p>
+        <p>Play a game while you wait for cards to be generated</p>
         <button type="button" id="playGameButton">Play Game</button>
       </div>
       <div id="miniGame">
@@ -177,6 +178,8 @@
       
       <script src="/sharedCardCode.js"></script>
       <script src="/miniGameHelper.js"></script>
-    </div>
+    -->
+  </div> <!-- id="cardBulkDiv" -->
+    
 </body>
 </html>
