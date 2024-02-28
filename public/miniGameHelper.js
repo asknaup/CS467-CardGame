@@ -160,6 +160,10 @@ function removeOldCardsFromBoard(){
 }
 
 function setUpMiniGame(){
+    let wonTitlePart1 = document.getElementById("wonTitlePart1");
+    wonTitlePart1.style.display = "none";
+    let wonTitlePart2 = document.getElementById("wonTitlePart2");
+    wonTitlePart2.style.display = "none";
     removeOldCardsFromBoard();
     setupCardObjs();
     shuffleCards();

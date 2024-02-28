@@ -995,7 +995,6 @@ header {
     display: none;
     position: absolute;
     top: 0%;
-    left: -10%;
     background-color: rgb(177, 200, 204); 
     border: 2px solid black;
     border-radius: 15px;
@@ -1026,7 +1025,7 @@ header {
 
 #refreshGameButton {
     position: absolute;
-    bottom: -4.5vh;
+    bottom: 0vh;
     right: 1vh;
     font-weight: bolder;
     color: white;
@@ -1038,7 +1037,7 @@ header {
 
 #minimizeButton {
     position: absolute;
-    top: -10vh;
+    top: -5vh;
     right: 1vh;
     font-size: 4em;
     background-color: transparent;
