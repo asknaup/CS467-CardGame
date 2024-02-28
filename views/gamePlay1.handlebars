@@ -86,17 +86,20 @@
 
     </div>
     {{!-- TODO : reformat game location variables below --}}
-    <div id="deck-count">
-        Remaining Deck Cards: {{remainingDeckCards}}
+    <div class="game-stats">
+        <div id="deck-count">
+            Remaining Deck Cards: {{remainingDeckCards}}
+        </div>
+        <div id="opponentDeckCount">
+            Remaining Opponent Deck Cards: {{remainingDeckCards}}
+        </div>
+        <div id="playerMana">Player Mana: {{playerMana}} </div>
+        <div>Opponent Mana: {{opponentMana}} </div>
     </div>
-    <div id="opponentDeckCount">
-        Remaining Opponent Deck Cards: {{remainingDeckCards}}
-    </div>
-    <div id="playerMana">Player Mana: {{playerMana}} </div>
-    <div>Opponent Mana: {{opponentMana}} </div>
     <button id="endTurnButton">End Turn</button>
     <!-- Add other controls as needed -->
     <script src="/public/gamePlay1Helper.js"></script>
+
 </body>
 
 </html>
