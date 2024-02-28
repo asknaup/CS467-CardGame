@@ -679,6 +679,33 @@ async function updateListOfCollection(collectId, cardIds) {
     });
 }
 
+// Json list of cards
+async function grabAdminListCards(gameId) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT listCards FROM generatedGame where gameId = ?';
+        db.pool.query(query, gameId, (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+}
+
+async function updateAdminListCards(listCards, gameId) {
+    return new Promise((resolve, reject) => {
+        const updateQuery = 'UPDATE generatedGame SET listCards = ? WHERE gameId = ?';
+        db.pool.query(updateQuery, [listCards, gameId], (err, updateResult) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(updateResult);
+            }
+        });
+    });
+}
+
 async function grabUsername(userId) {
     return new Promise((resolve, reject) => {
         const query = 'SELECT username FROM userProfile where userId = ?';
@@ -718,6 +745,18 @@ async function grabListOfCardsFromCollection(collectId) {
     });
 }
 
+async function grabGameIdFromCollection(collectId) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT gameId FROM collections where collectionId = ?';
+        db.pool.query(query, collectId, (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+}
 
 // function updateGameWinner({ params }) {
 //     // Initialize a new game -> winner has not been decided
@@ -766,3 +805,6 @@ module.exports.updateListOfCollection = updateListOfCollection;
 module.exports.insertNewDeck = insertNewDeck;
 module.exports.grabUsername = grabUsername;
 module.exports.grabGameName = grabGameName;
+module.exports.grabAdminListCards = grabAdminListCards;
+module.exports.updateAdminListCards = updateAdminListCards;
+module.exports.grabGameIdFromCollection = grabGameIdFromCollection;
