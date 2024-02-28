@@ -76,12 +76,26 @@ main {
     justify-content: center;
 }
 
+@keyframes pulse {
+    0% {
+        border-color: #000;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    50% {
+        border-color: #34db58;
+        box-shadow: 0 0 15px rgba(52, 219, 108, 0.4);
+    }
+
+    100% {
+        border-color: #000;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+}
+
 .card {
-    /* width: 250px;
-    height: 350px; */
     width: 180px;
     height: 270px;
-    /* Card container height */
     border: 2px solid #000;
     border-radius: 24px;
     overflow: hidden;
@@ -91,10 +105,10 @@ main {
     margin-bottom: 20px;
     position: relative;
     overflow: hidden;
-    /* background-color: #bbb; */
-    /* z-index: 0; */
-    /* Add margin between cards */
+    animation: pulse 2s infinite;
+    /* Adjust duration as needed */
 }
+
 
 .textOverlayBottom {
     position: absolute;
@@ -224,6 +238,16 @@ label,
     display: flex;
 }
 
+.name {
+    font-size: 1.2em;
+    font-family: fancy;
+    font-weight: 600;
+    margin: 0;
+    color: #000;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
 button {
     padding: 10px;
     margin: 40px 5px;
@@ -262,6 +286,18 @@ header {
     align-items: center;
 }
 
+/* Stylish card type */
+/* .cardType {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: #3498db;
+    color: #fff;
+    border-radius: 5px;
+    padding: 10px;
+} */
+
 .cardType {
     justify-content: center;
     display: flex;
@@ -269,114 +305,238 @@ header {
     text-align: center;
 }
 
+/* Enhanced drop-zone */
 .drop-zone {
     width: 150px;
     height: 210px;
-    border: 2px dashed #000;
+    border: 2px dashed #3498db;
     margin: 10px;
     display: inline-block;
     flex-wrap: wrap;
     position: relative;
+    transition: border-color 0.3s ease-in-out;
 }
 
-/* .card {
-    width: 100px;
-    height: 140px;
-    margin: 5px;
-    border: 1px solid black;
-    cursor: pointer;
-    background-color: lightseagreen;
-} */
+.drop-zone:hover {
+    border-color: #2980b9;
+}
 
+/* Stylish board */
 .board {
-    border: 2px solid green;
+    border: 2px solid #27ae60;
     width: auto;
     height: auto;
     margin: 20px;
     justify-content: space-evenly;
+    background-color: #ecf0f1;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(39, 174, 96, 0.3);
 }
 
+/* Improved player and opponent areas */
 .opponent,
 .player {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
     position: relative;
+    margin: 10px;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Centered card container */
 .card-container {
     display: flex;
     justify-content: center;
 }
 
+/* Stylish player error message */
 .playerError {
     display: none;
     position: absolute;
-    top: -20px;
-    background-color: red;
-    color: white;
-    padding: 5px;
-    height: 20px;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #e74c3c;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(231, 76, 60, 0.3);
 }
 
 .playerError.show {
     display: block;
-    /* Show the error message */
-    height: 20px;
+    animation: fadeInOut 2s ease-in-out;
 }
 
+/* Greyed-out effect */
 .greyed-out {
     opacity: 0.6;
-    /* Reduce opacity to make the card appear faded */
-    pointer-events: none;
-    /* Disable pointer events so the card cannot be interacted with */
     filter: grayscale(100%);
-    /* Apply grayscale filter to make the card appear greyed out */
+    transition: opacity 0.3s ease-in-out;
 }
 
+.greyed-out:hover {
+    opacity: 1;
+}
+
+/* Stylish health orb */
 .health-orb {
     width: 50px;
     height: 50px;
     border-radius: 50%;
     background-color: #ff6347;
-    /* Red color for health orb */
+    color: #fff;
     position: absolute;
     text-align: center;
     line-height: 50px;
     font-weight: bold;
+    box-shadow: 0 0 10px rgba(255, 99, 71, 0.3);
 }
 
+/* Enhanced board container */
 #board-container {
     display: flex;
     justify-content: space-between;
+    padding: 20px;
 }
 
-#board {
-    border: 2px solid green;
-    width: auto;
-    height: auto;
-    margin: 100px;
-    justify-content: space-evenly;
-}
-
+/* Styled discard pile */
 #discard-pile {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center horizontally */
+    align-items: center;
+    margin: 20px;
 }
 
 .opponent-discards,
 .player-discards {
     width: 150px;
     margin: 10px;
+    background-color: #ecf0f1;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Styled discard area */
 .discard-area {
     width: 150px;
     height: 210px;
-    border: 2px dashed #000;
-    margin: 10px;
+    border: 2px dashed #e74c3c;
+    margin: 0px;
+    margin-left: -10px;
     display: inline-block;
     flex-wrap: wrap;
     position: relative;
+    transition: border-color 0.3s ease-in-out;
+}
+
+.discard-area:hover {
+    border-color: #c0392b;
+}
+
+/* Fade-in and fade-out animation */
+@keyframes fadeInOut {
+
+    0%,
+    100% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+.game-stats {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.game-stats:hover {
+    background-color: #34495e;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+}
+
+.game-stats div {
+    text-align: center;
+    margin: 10px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.game-stats:hover div {
+    transform: scale(1.05);
+}
+
+.remaining-deck,
+.remaining-opponent-deck,
+.player-mana,
+.opponent-mana {
+    flex: 1;
+}
+
+.remaining-deck::before,
+.remaining-opponent-deck::before,
+.player-mana::before,
+.opponent-mana::before {
+    content: '';
+    display: block;
+    width: 30px;
+    height: 30px;
+    margin: 0 auto 5px;
+    background-size: cover;
+    transition: transform 0.3s ease-in-out;
+}
+
+.game-stats:hover .remaining-deck::before,
+.game-stats:hover .remaining-opponent-deck::before,
+.game-stats:hover .player-mana::before,
+.game-stats:hover .opponent-mana::before {
+    transform: scale(1.2);
+}
+
+h1,
+header {
+    font-size: xx-large;
+    font-weight: bold;
+    background-image: linear-gradient(to left, #449a3c, #a7d393);
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+}
+
+
+.player-mana,
+.opponent-mana {
+    margin: 0 10px;
+}
+
+/* Example styling for icons */
+.remaining-deck::before {
+    background-image: url('path/to/deck-icon.png');
+}
+
+.remaining-opponent-deck::before {
+    background-image: url('path/to/opponent-deck-icon.png');
+}
+
+.player-mana::before {
+    background-image: url('path/to/player-mana-icon.png');
+}
+
+.opponent-mana::before {
+    background-image: url('path/to/opponent-mana-icon.png');
 }

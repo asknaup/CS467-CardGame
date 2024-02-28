@@ -95,16 +95,16 @@ function createTradingCardFromInfo(cardInfo) {
 
     if (cardInfo[0].cardType == "Spell") {
         var spellType = document.createElement('p');
-        spellType.innerHTML = `<strong>Spell Type:</strong> ${cardInfo[0].spellType}`;
+        spellType.innerHTML = `<strong>Type:</strong> ${cardInfo[0].spellType}`;
 
         var spellAbility = document.createElement('p');
-        spellAbility.innerHTML = `<strong>Spell Ability:</strong> ${cardInfo[0].spellAbility}`;
+        spellAbility.innerHTML = `<strong>Ability:</strong> ${cardInfo[0].spellAbility}`;
 
         var spellAttack = document.createElement('p');
-        spellAttack.innerHTML = `<strong>Spell Attack:</strong> ${cardInfo[0].spellAttack}`;
+        spellAttack.innerHTML = `<strong>Attack:</strong> ${cardInfo[0].spellAttack}`;
 
         var spellDefense = document.createElement('p');
-        spellDefense.innerHTML = `<strong>Spell Defense:</strong> ${cardInfo[0].spellDefense}`;
+        spellDefense.innerHTML = `<strong>Defense:</strong> ${cardInfo[0].spellDefense}`;
 
         textOverlayBottom.appendChild(spellType);
         textOverlayBottom.appendChild(spellAbility);

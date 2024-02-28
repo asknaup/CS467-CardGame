@@ -340,7 +340,7 @@
 }
 
 #otherPlayerTitle h2{
-    color: rgb(173, 124, 173);
+    color:rgb(173, 124, 173);
 }
 
 #userTitle h2{
@@ -577,6 +577,7 @@
     padding: 1vh;
     margin: 0vh;
     background-color: rgb(177, 200, 204);
+    border: 2px solid black;
     border-radius: 10px;
     z-index: 100;
 }
@@ -828,4 +829,94 @@
     transform: translateY(-50%);
     color: #757575;
     /* Adjust the color as needed */
+}
+
+/* miniGame page css */
+#cardBulkDiv{
+    position: relative;
+}
+
+#miniGame {
+    display: none;
+    position: relative;
+    bottom: 45vw;
+    right: 5vw;
+    background-color: rgb(177, 200, 204); 
+    border: 2px solid black;
+    border-radius: 15px;
+    z-index: 100;
+    padding: 1vw;
+}
+
+.cardSlots{
+    width: 10.5vw;
+    height: 18.5vw;
+}
+
+#playGameButtonDiv{
+    position: absolute;
+    color: rgb(173, 124, 173);
+    border-left: 2px solid black;
+    padding-left: 2vh;
+    width: 15%;
+    bottom: 5%;
+    right: 0%;
+}
+
+#playGameButton {
+    background-color: rgb(154, 87, 154);
+    margin: 0% 0% 0% 15%;
+    margin-top: 1vh;
+}
+
+#minimizeButton {
+    position: absolute;
+    top: -10vh;
+    right: 1vh;
+    font-size: 4em;
+    background-color: transparent;
+    color: black;
+}
+
+.miniGameRow {
+    display: flex;
+    flex-direction: row;
+    height: 24vw;
+    justify-content: space-between;
+    padding: 2vw 2vw 0vw 2vw;
+}
+
+.miniGameCard {
+    margin: 0px;
+    position: relative;
+}
+
+.miniGameCard:hover {
+    transform: scale(1.00);
+}
+
+.miniGameCardBack {
+    background-color: rgb(231, 227, 227);
+}
+
+#wonTitlePart1 {
+    display: none;
+    position: absolute;
+    padding: 0px;
+    color: #4caf50;
+    font-size: 4em;
+    top: 45%;
+    left: 20%;
+    z-index: 999;
+}
+
+#wonTitlePart2 {
+    display: none;
+    position: absolute;
+    padding: 0px;
+    color: rgb(154, 87, 154);
+    font-size: 4em;
+    top: 55%;
+    right: 20%;
+    z-index: 999;
 }
