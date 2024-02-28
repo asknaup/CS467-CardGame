@@ -1,5 +1,213 @@
 /* Page-Specific CSS Code */
 
+/* general card css */
+
+/* old css for card
+.card {
+    width: 10.5vw;
+    height: 100%;
+    // Card container height
+    background-color: beige;
+    border: 3px solid #000;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+    margin: 5px;
+    // Add margin between cards
+    z-index: 2;
+} */
+
+#cardList {
+    border: 1px solid #ccc;
+    min-height: 200px;
+}
+
+/* Add some basic styling for the tooltip */
+.toolTip {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.toolTipText {
+    display: none;
+    position: absolute;
+    background-color: #333;
+    color: #fff;
+    top: -100%;
+    left: 0;
+    padding: 5px;
+    border-radius: 5px;
+    z-index: 1;
+}
+
+/* Show tooltip text when hovering over the .card element */
+.card:hover .toolTipText {
+    display: block;
+}
+
+.stagingArea .cardContainer {
+    flex: 0 0 calc(16.666% - 10px);
+    /* Set to approximately 100% / 6 with gap in mind */
+    box-sizing: border-box;
+    /* Include padding and border in the width calculation */
+}
+
+.cardContainer {
+    max-width: 100%;
+    margin: 0 auto;
+    /* Center the container */
+}
+
+#cardContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.card {
+    width: 250px;
+    height: 350px;
+    /* Card container height */
+    border: 2px solid #000;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+    margin-right: 10px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    /* background-color: #bbb; */
+    /* z-index: 0; */
+    /* Add margin between cards */
+}
+
+.textOverlayBottom {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgb(226, 180, 180, 0.7);
+    /* Add a semi-transparent background */
+    padding: 5px;
+    text-align: center;
+    width: 100%;
+}
+
+.textOverlayTop {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgb(226, 180, 180, 0.7);
+    /* Add a semi-transparent background */
+    padding: 0px;
+    text-align: center;
+    width: 100%;
+}
+
+.cardBackground {
+    height: 100%;
+    margin: 10px 10px 10px 10px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    border-bottom-left-radius: 8%;
+    border-bottom-right-radius: 8%;
+    background-image: url(https://image.ibb.co/e1XKAS/green_background.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+}
+
+
+.cardFrame {
+    z-index: 1;
+    position: relative;
+    height: 350px;
+    max-width: 97%;
+    left: 1%;
+    top: 0.5%;
+    left: 1.2%;
+    display: flex;
+    flex-direction: column;
+}
+
+.card:last-child {
+    margin-right: 0;
+    /* Remove margin from the last card */
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.cardName {
+    font-size: 1.2em;
+    font-family: fancy;
+    font-weight: 600;
+    margin: 0;
+    color: #000;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.cardImage {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    /* height: 50%;
+    width: 50%;
+    overflow: hidden;
+    margin: 0 10px; */
+    /* justify-content: center;
+    display: flex;
+    align-items: center; */
+}
+
+.frame-header,
+.frame-art,
+.frame-type-line {
+    box-shadow:
+        0 0 0 2px #171314,
+        0 0 0 5px #26714A,
+        -3px 3px 2px 5px #171314;
+
+    margin-bottom: 7px;
+}
+
+.attributes {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 14px;
+}
+
+.cardContent {
+    overflow: hidden;
+}
+
+h1,
+header {
+    font-size: xx-large;
+    font-weight: bold;
+    background-image: linear-gradient(to left, #449a3c, #a7d393);
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+}
+
+.cardType {
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
 /* help page css */
 #helpPage {
     position: relative;
@@ -73,59 +281,6 @@
     font-size: 1.3em;
     font-weight: bold;
     text-decoration: underline;
-}
-
-/* general card css */
-.cardContainer {
-    display: flex;
-    justify-content: space-between;
-}
-
-.card {
-    width: 10.5vw;
-    height: 100%;
-    /* Card container height */
-    background-color: beige;
-    border: 3px solid #000;
-    border-radius: 5px;
-    overflow: hidden;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease-in-out;
-    margin: 5px;
-    /* Add margin between cards */
-    z-index: 2;
-}
-
-.card:last-child {
-    margin-right: 0;
-    /* Remove margin from the last card */
-}
-
-.card:hover {
-    transform: scale(1.05);
-}
-
-.cardContent {
-    padding: 10px;
-}
-
-.cardName {
-    margin: 0;
-    color: #000;
-    font-size: 16px;
-    font-weight: bold;
-}
-
-.cardImage img {
-    width: 100%;
-    height: auto;
-}
-
-.attributes {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    font-size: 14px;
 }
 
 /* main.handlebars */
@@ -838,9 +993,8 @@
 
 #miniGame {
     display: none;
-    position: relative;
-    bottom: 45vw;
-    right: 5vw;
+    position: absolute;
+    top: 0%;
     background-color: rgb(177, 200, 204); 
     border: 2px solid black;
     border-radius: 15px;
@@ -869,9 +1023,21 @@
     margin-top: 1vh;
 }
 
+#refreshGameButton {
+    position: absolute;
+    bottom: 0vh;
+    right: 1vh;
+    font-weight: bolder;
+    color: white;
+    background-color: rgb(154, 87, 154);
+    border: 2px solid black;
+    border-radius: 5px;
+    padding: .5vh;
+}
+
 #minimizeButton {
     position: absolute;
-    top: -10vh;
+    top: -5vh;
     right: 1vh;
     font-size: 4em;
     background-color: transparent;

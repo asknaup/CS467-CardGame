@@ -397,6 +397,7 @@ app.get('/collect', async (req, res) => {
     } else {
     listCards = await dbFunc.grabListOfCardsFromCollection(collect[0].collectionId);
     }
+
     console.log(listCards);
     res.render('collect', {
       collect: collect,
@@ -679,8 +680,10 @@ app.post('/cardViewPrintedBulkPage', async (req, res) => {
     });
       
     const gameName = await dbFunc.grabGameName(req.body.whichgame);
+    console.log(gameName);
     const userName = await dbFunc.grabUsername(user.userId);
     const nameTime = `${userName[0].username}'s collection for ${gameName[0].imageLocation}`;
+    console.log(nameTime);
 
     try {
       const collId = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, req.body.whichgame, nameTime);
