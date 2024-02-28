@@ -856,7 +856,7 @@
 #playGameButtonDiv{
     position: absolute;
     border-left: 2px solid black;
-    padding: 1vh;
+    padding-left: 2vh;
     width: 15%;
     bottom: 0%;
     right: 0%;
