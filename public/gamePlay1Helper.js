@@ -535,7 +535,6 @@ function renderHand(handData) {
         const mana = document.createElement('p');
         mana.innerHTML = `<strong>Mana:</strong> ${cardData.mana}`;
 
-        textOverlayBottom.appendChild(rarity);
         textOverlayBottom.appendChild(mana);
 
         let typeText = '';
@@ -573,6 +572,7 @@ function renderHand(handData) {
 
         textOverlayTop.appendChild(name);
         textOverlayTop.appendChild(type);
+        textOverlayTop.appendChild(rarity);
 
         cardContainer.appendChild(textOverlayBottom);
         cardContainer.appendChild(cardImage);

@@ -2,12 +2,14 @@
 <html lang="en">
 
 <head>
-  {{!-- <meta charset="utf-8" /> --}}
-  {{!-- <meta name="viewport" content="width=device-width, intial-scale=1.0"> --}}
+    {{!--
+    <meta charset="utf-8" /> --}}
+    {{!--
+    <meta name="viewport" content="width=device-width, intial-scale=1.0"> --}}
     <title>Create New Game</title>
-    <link rel="stylesheet" type = "text/css" href="/global.css">
+    <link rel="stylesheet" type="text/css" href="/global.css">
+    <link rel="stylesheet" type="text/css" href="/styles.css">
     <link rel="stylesheet" type="text/css" href="/tradingAndCollect.css">
-    <link rel="stylesheet" type = "text/css" href="/styles.css">
 </head>
 
 <body>
@@ -20,12 +22,16 @@
         </div>
 
         <div id="stageArea">
-            <div id="otherPlayerTitle"><h2>Market's Stage Area</h2></div>
+            <div id="otherPlayerTitle">
+                <h2>Market's Stage Area</h2>
+            </div>
             <div class="otherTopStageText">Click Card To Stage It Here</div>
             <div class="otherBottomStageText">Click Card To Stage It Here</div>
             <div id="otherStageAreaId" class="otherStageAreaClass"></div>
 
-            <div id="userTitle"><h2>User's Stage Area</h2></div>
+            <div id="userTitle">
+                <h2>User's Stage Area</h2>
+            </div>
             <div class="userTopStageText">Click Card To Stage It Here</div>
             <div class="userBottomStageText">Click Card To Stage It Here</div>
             <div id="userStageAreaId" class="userStageAreaClass"></div>
@@ -39,42 +45,42 @@
         </div>
         <h1 id="userDeck">User's Collection</h1>
         <form action="/trading" method="get" id="cardForm">
-        <select name="collectId" id="collectId">
-            {{#each collect}}
+            <select name="collectId" id="collectId">
+                {{#each collect}}
                 <option value="{{this.collectionId}}">{{this.collectionName}}</option>
-            {{/each}}
-        </select>
-        <button type="submit">Go to this Collection</button>
-    </form>
-    <form action="/collect" method="get" id="new">
-        <p>No collections appear? Go to the collect page to create collections</p>
-        <button type="submit">Collect</button>
-    </form>
+                {{/each}}
+            </select>
+            <button type="submit">Go to this Collection</button>
+        </form>
+        <form action="/collect" method="get" id="new">
+            <p>No collections appear? Go to the collect page to create collections</p>
+            <button type="submit">Collect</button>
+        </form>
     </div>
 
     <div id="tradePopUpForm">
         <form class="tradeForm">
             <h1 id="tradeRequest">Trade Request </h1>
             <h3 id="noteToProgrammers">
-                NOTE: The start-trade button would be clicked by the user. 
+                NOTE: The start-trade button would be clicked by the user.
                 But this pop up would appear on the other player's screen. And
                 NOT on the screen of the player who clicked the start-trade button
             </h3>
-                <div id="tradeSection">
-                    <div id="otherPlayerTradeSection">
-                        <h2 id="otherTradedCardsTitle">Other Player's Cards:</h2>
-                        <div id="otherPlayerTradeSlots"></div>
-                    </div>
-                    <div id="userTradeSection">
-                        <h2 id="userTradedCardsTitle">User's Cards:</h2>
-                        <div id="userTradeSlots"></div>
-                    </div>
+            <div id="tradeSection">
+                <div id="otherPlayerTradeSection">
+                    <h2 id="otherTradedCardsTitle">Other Player's Cards:</h2>
+                    <div id="otherPlayerTradeSlots"></div>
                 </div>
-                <div id="tradeButtonSection">
-                    <button type="button" class="tradeButtons" id="acceptTradeButton">Accept</button>
-                    <button type ="button" class="tradeButtons" id="declineTradeButton">Decline</button>
-                    <button type="button" class="tradeButtons" id="counterOfferTradeButton">Counter Offer</button>
+                <div id="userTradeSection">
+                    <h2 id="userTradedCardsTitle">User's Cards:</h2>
+                    <div id="userTradeSlots"></div>
                 </div>
+            </div>
+            <div id="tradeButtonSection">
+                <button type="button" class="tradeButtons" id="acceptTradeButton">Accept</button>
+                <button type="button" class="tradeButtons" id="declineTradeButton">Decline</button>
+                <button type="button" class="tradeButtons" id="counterOfferTradeButton">Counter Offer</button>
+            </div>
         </form>
     </div>
 

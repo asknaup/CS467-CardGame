@@ -166,28 +166,27 @@ function createTradingCard(cardData) {
     rarity.textContent = cardData.rarity;
 
     var manaCost = document.createElement('p');
-    manaCost.innerHTML = `<strong>Mana Cost:</strong> ${cardData.manaCost}`;
+    manaCost.innerHTML = `<strong>Mana:</strong> ${cardData.manaCost}`;
 
     // toolTipText.appendChild(rarity);
     // toolTipText.appendChild(manaCost);
-    textOverlayBottom.appendChild(rarity);
     textOverlayBottom.appendChild(manaCost);
 
     if (cardData.cardType == "Spell") {
         var spellType = document.createElement('p');
-        spellType.innerHTML = `<strong>Spell Type:</strong> ${cardData.spellType}`;
+        spellType.innerHTML = `<strong>Type:</strong> ${cardData.spellType}`;
 
-        var spellAbility = document.createElement('p');
-        spellAbility.innerHTML = `<strong>Spell Ability:</strong> ${cardData.spellAbility}`;
+        // var spellAbility = document.createElement('p');
+        // spellAbility.innerHTML = `<strong>Spell Ability:</strong> ${cardData.spellAbility}`;
 
         var spellAttack = document.createElement('p');
-        spellAttack.innerHTML = `<strong>Spell Attack:</strong> ${cardData.spellAttack}`;
+        spellAttack.innerHTML = `<strong>ATK:</strong> ${cardData.spellAttack}`;
 
         var spellDefense = document.createElement('p');
-        spellDefense.innerHTML = `<strong>Spell Defense:</strong> ${cardData.spellDefense}`;
+        spellDefense.innerHTML = `<strong>DEF:</strong> ${cardData.spellDefense}`;
 
         textOverlayBottom.appendChild(spellType);
-        textOverlayBottom.appendChild(spellAbility);
+        // textOverlayBottom.appendChild(spellAbility);
         textOverlayBottom.appendChild(spellAttack);
         textOverlayBottom.appendChild(spellDefense);
         // toolTipText.appendChild(spellType);
@@ -197,10 +196,10 @@ function createTradingCard(cardData) {
 
     } else {
         var attack = document.createElement('p');
-        attack.innerHTML = `<strong>Attack:</strong> ${cardData.attack}`;
+        attack.innerHTML = `<strong>ATK:</strong> ${cardData.attack}`;
 
         var defense = document.createElement('p');
-        defense.innerHTML = `<strong>Defense:</strong> ${cardData.defense}`;
+        defense.innerHTML = `<strong>DEF:</strong> ${cardData.defense}`;
 
         textOverlayBottom.appendChild(attack);
         textOverlayBottom.appendChild(defense);
@@ -213,6 +212,7 @@ function createTradingCard(cardData) {
     // textOverlayBottom.appendChild(cardType);
     textOverlayTop.appendChild(cardName);
     textOverlayTop.appendChild(cardType);
+    textOverlayTop.appendChild(rarity);
 
     card.appendChild(textOverlayBottom);
     card.appendChild(cardImage);
