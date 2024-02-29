@@ -46,6 +46,7 @@ function clearStagingArea() {
 // Updated function to create a trading card based on getCardInfo output
 function createTradingCardFromInfo(cardInfo) {
 
+    console.log(cardInfo);
     console.log('Creating Card Element (cardInfo[0]):', cardInfo[0]);
 
     var card = document.createElement('div');
