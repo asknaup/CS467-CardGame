@@ -189,7 +189,7 @@ app.get('/generatedGameView', async (req, res) => {
 app.get('/buildDeck', async (req, res) => {
   // Needs collection and game info
   // const user = req.session.user;
-  const user = {userId: 1001, username: 'admin'};
+  const user = { userId: 1001, username: 'admin' };
 
   // FIXME: Switch back to const user = req.session.user; once buildDeck complete
   try {
@@ -300,7 +300,7 @@ app.get('/getDeckId', (req, res) => {
 // TODO: NEEDS WORK and direction
 app.get('/browseGames', (req, res) => {
   // const user = req.session.user;
-  const user = {userId: 1001, username: 'admin'};
+  const user = { userId: 1001, username: 'admin' };
   if (user) {
     res.render('browseGames')
   } else {
@@ -705,7 +705,7 @@ app.get('/getHand', async (req, res) => {
 
   if (gameInstance[game.gameId]) {
     const handData = gameInstance[game.gameId].hand.map(card => {
-      console.log(card);
+      // console.log(card);
       return {
         id: parseInt(card.id),
         name: card.name,
@@ -857,16 +857,18 @@ app.post('/endTurn', async (req, res) => {
       let updatedHand = gameInstance[game.gameId].hand;
       const playerMana = gameInstance[game.gameId].user.mana;
       const opponentHand = gameInstance[game.gameId].opponentHand;
-      
-      res.status(200).json({ message: 'Computer opponent\'s turn completed', 
-      opponentStage, 
-      updatedStage,
-      updatedHand, 
-      opponentDeckCount: gameInstance[game.gameId].opponentDeck.length,
-      playerDeckCount: gameInstance[game.gameId].deck.length,
-      playerMana, 
-      opponentHand, 
-      playerHealth: gameInstance[game.gameId].user.health });
+
+      res.status(200).json({
+        message: 'Computer opponent\'s turn completed',
+        opponentStage,
+        updatedStage,
+        updatedHand,
+        opponentDeckCount: gameInstance[game.gameId].opponentDeck.length,
+        playerDeckCount: gameInstance[game.gameId].deck.length,
+        playerMana,
+        opponentHand,
+        playerHealth: gameInstance[game.gameId].user.health
+      });
 
     } catch (error) {
       console.log("error: ", error)
@@ -901,6 +903,7 @@ app.post('/damageOpponent', (req, res) => {
     res.status(400).json({ error: attackResult.error });
   }
 });
+
 app.post('/updatePlayerCreatureCard', async (req, res) => {
   const { cardId, updatedCardData, spellCardId } = req.body;
   const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
@@ -916,12 +919,9 @@ app.post('/updatePlayerCreatureCard', async (req, res) => {
           res.status(400).json({ error: result.error });
         }
       } else {
-
         // Include playerMana in the response
         const playerMana = gameInstance[game.gameId].user.mana;
         const playerStage = gameInstance[game.gameId].playerStage; // Get the updated playerStage
-
-        // console.log(playerStage);
 
         res.json({ message: 'card played successfully', cardId, playerMana, playerStage });
       }
@@ -1017,17 +1017,52 @@ app.post('/attackCardToHealth', async (req, res) => {
 
       if (attackResult.success) {
         // Optionally, you can send back updated opponent health or other relevant data
-        res.status(200).json({ message: attackResult.message, 
-          opponentHealth: opponentHealth, 
+        res.status(200).json({
+          message: attackResult.message,
+          opponentHealth: opponentHealth,
           playerMana: playerMana,
           playerStage: playerStage,
-          playerDeckCount: gameInstance[game.gameId].deck.length,});
+          playerDeckCount: gameInstance[game.gameId].deck.length,
+        });
       } else {
         // If there was an error during the attack operation, send an error response
         res.status(400).json({ error: attackResult.error });
       }
     } catch (error) {
       console.log("Error in attacking card to health: ", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  } else {
+    // Send a 404 status code if the game instance is not found
+    res.status(404).json({ error: "Game not found." });
+  }
+});
+
+app.post('/debuffOpponent', async (req, res) => {
+  // Update the attacked Card with the debuff
+  const { id, targetId } = req.body;
+  const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
+
+  console.log("DEBUFF OPPONENT", id, targetId)
+
+  if (gameInstance[game.gameId]) {
+    try {
+      const debuffResult = await gameInstance[game.gameId].playCard(id, targetId);
+      console.log(gameInstance[game.gameId].opponentStage)
+      // console.log("DEBUFF RESULT", debuffResult)
+      if (debuffResult.success) {
+        // Optionally, you can send back updated opponent health or other relevant data
+        res.status(200).json({
+          message: debuffResult.message,
+          opponentStage: gameInstance[game.gameId].opponentStage,
+          hand: gameInstance[game.gameId].hand,
+        });
+      } else {
+        // If there was an error during the attack operation, send an error response
+        res.status(400).json({ error: debuffResult.error });
+      }
+    } catch (error) {
+      console.log("Error in debuffing opponent: ", error);
       res.status(500).json({ error: "Internal server error" });
     }
   } else {
