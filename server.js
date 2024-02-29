@@ -184,9 +184,24 @@ app.get('/buildDeck', async (req, res) => {
   // FIXME: Switch back to const user = req.session.user; once buildDeck complete
   try {
     if (user) {
+      const c = req.query.collectId;
+      let listCards;
+      const collect = await dbFunc.getAllCollectionsByUser(user.userId);
+      
+      if (c) {
+      listCards = await dbFunc.grabListOfCardsFromCollection(req.query.collectId); 
+      } else {
+      listCards = await dbFunc.grabListOfCardsFromCollection(collect[0].collectionId);
+      }
+
       const userDecks = await dbFunc.gatherUserDecks(user.userId);
       console.log(userDecks)
-      res.render('buildDeck', { showLogoutButton: true, decks: userDecks, userId: user.userId })
+      res.render('buildDeck', { showLogoutButton: true, 
+        decks: userDecks, 
+        userId: user.userId,
+        listCards: listCards,
+        collect: collect
+      })
     } else {
       res.render('builDeck', { showLogoutButton: false })
     }
@@ -314,16 +329,25 @@ app.get('/trading', async (req, res) => {
   const user = req.session.user;
   const c = req.query.collectId;
   let listCards;
+  let gameId;
+  let adminList; 
+
   if (user) {
     const collect = await dbFunc.getAllCollectionsByUser(user.userId);
       if (c) {
-      listCards = await dbFunc.grabListOfCardsFromCollection(req.query.collectId); 
+      listCards = await dbFunc.grabListOfCardsFromCollection(req.query.collectId);
+      gameId = await dbFunc.grabGameIdFromCollection(req.query.collectId)
+      adminList = await dbFunc.grabAdminListCards(gameId); 
       } else {
       listCards = await dbFunc.grabListOfCardsFromCollection(collect[0].collectionId);
+      gameId = await dbFunc.grabGameIdFromCollection(req.query.collectId)
+      adminList = await dbFunc.grabAdminListCards(gameId); 
       }
+  
     res.render('trading', {
       collect: collect,
-      listCards: listCards
+      listCards: listCards,
+      adminList: adminList
      })
   } else {
     res.redirect('/');
@@ -335,16 +359,25 @@ app.post('/trading', async (req, res) => {
   const user = req.session.user;
   const c = req.query.collectId;
   let listCards;
+  let gameId;
+  let adminList; 
+
   if (user) {
     const collect = await dbFunc.getAllCollectionsByUser(user.userId);
-    if (c) {
-    listCards = await dbFunc.grabListOfCardsFromCollection(req.query.collectId); 
-    } else {
-    listCards = await dbFunc.grabListOfCardsFromCollection(collect[0].collectionId);
-    }
-
+      if (c) {
+      listCards = await dbFunc.grabListOfCardsFromCollection(req.query.collectId);
+      gameId = await dbFunc.grabGameIdFromCollection(req.query.collectId)
+      adminList = await dbFunc.grabAdminListCards(gameId); 
+      } else {
+      listCards = await dbFunc.grabListOfCardsFromCollection(collect[0].collectionId);
+      gameId = await dbFunc.grabGameIdFromCollection(req.query.collectId)
+      adminList = await dbFunc.grabAdminListCards(gameId); 
+      }
+  
     res.render('trading', {
-      collect: collect
+      collect: collect,
+      listCards: listCards,
+      adminList: adminList
      })
   } else {
     res.redirect('/');
@@ -364,7 +397,7 @@ app.get('/collect', async (req, res) => {
     } else {
     listCards = await dbFunc.grabListOfCardsFromCollection(collect[0].collectionId);
     }
-    console.log(collect);
+
     console.log(listCards);
     res.render('collect', {
       collect: collect,
@@ -379,9 +412,8 @@ app.get('/collect', async (req, res) => {
 app.get('/collectAdmin', async (req, res) => {
   const user = req.session.user;
   if (user) {
-    const collect = await dbFunc.getAllCollectionsByUser(user.userId);
-    //const something = await dbFunc.getOneGeneratedGame(collect.gameId)   // Need to build collections
-    console.log(collect);
+    let genGames = await dbFunc.getAllGeneratedGames()
+
     res.render('collect', {
       collect: collect
     })
@@ -500,7 +532,7 @@ app.post('/cardViewEditPage', async (req, res) => {
       if (req.body.cardType == "Creature") {
         // Generate for Creature
 
-        for (let i = 0; i < 1; i++) {
+        for (let i = 0; i < 3; i++) {
           let values = [];
           let newCreature = await card.createDataStructCreature(req.body.color, req.body.creatureType, req.body.theme, req.body.cardType);
           newCreature.manaCost = req.body.manaCost;
@@ -579,9 +611,15 @@ app.post('/cardViewPrintedPage', async (req, res) => {
     try {
       const collId = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, req.session.gameId, nameTime);
       let returnList = await dbFunc.grabListOfCardsFromCollection(collId);
-      x = JSON.parse(returnList[0].cardId);
-      y = x.cardList.concat(cardIdList);
+      let x = JSON.parse(returnList[0].cardId);
+      let y = x.cardList.concat(cardIdList);
       await dbFunc.updateListOfCollection(collId, JSON.stringify({"cardList": y}));
+
+      let adminList = await dbFunc.grabAdminListCards(req.session.gameId);
+      let admin = JSON.parse(adminList[0].listCards);
+      let newAdminList = admin.cardList.concat(cardIdList);
+      await dbFunc.updateAdminListCards(JSON.stringify({"cardList": newAdminList}), req.session.gameId);
+
      } catch (error) {
       console.error("Error updating collection:", error); 
     }
@@ -650,9 +688,15 @@ app.post('/cardViewPrintedBulkPage', async (req, res) => {
     try {
       const collId = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, req.body.whichgame, nameTime);
       let returnList = await dbFunc.grabListOfCardsFromCollection(collId);
-      x = JSON.parse(returnList[0].cardId);
-      y = x.cardList.concat(cardIdList);
+      let x = JSON.parse(returnList[0].cardId);
+      let y = x.cardList.concat(cardIdList);
       await dbFunc.updateListOfCollection(collId, JSON.stringify({"cardList": y}));
+
+      let adminList = await dbFunc.grabAdminListCards(req.body.whichgame);
+      let admin = JSON.parse(adminList[0].listCards);
+      let newAdminList = admin.cardList.concat(cardIdList);
+      await dbFunc.updateAdminListCards(JSON.stringify({"cardList": newAdminList}), req.body.whichgame);
+
      } catch (error) {
       console.error("Error updating collection:", error); 
     }

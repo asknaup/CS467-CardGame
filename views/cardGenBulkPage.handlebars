@@ -56,11 +56,11 @@
         </form>
       </div>
     </div>
+  </div>
     <script>
       document.getElementById('cardType').addEventListener('change', function () {
         var cardType = this.value;
         var creatureFields = document.getElementById('creatureFields');
-
 
         if (cardType === 'Creature') {
           creatureFields.style.display = 'block';
@@ -140,8 +140,6 @@
       });
 
     </script>
-
-    
       <div id="playGameButtonDiv">
         <p>Play a game while you wait for cards to be generated</p>
         <button type="button" id="playGameButton">Play Game</button>
@@ -181,6 +179,5 @@
       <script src="/miniGameHelper.js"></script>
     
   </div> <!-- id="cardBulkDiv" -->
-    
 </body>
 </html>
