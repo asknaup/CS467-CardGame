@@ -3,7 +3,7 @@
 // Client Side Javascript
 // Defined globally
 function dragStart(event) {
-    // console.log("dragStart", event.target.id)
+    
     event.dataTransfer.setData('text/plain', event.target.id);
 }
 
@@ -51,9 +51,7 @@ function handleEmptyDropZone(cardId, dropZone) {
 function handleExistingCardDrop(cardId, dropZone) {
     const dropZoneId = dropZone.id;
     const cardElement = dropZone.querySelector('.card');
-
-    // console.log("DROPZONEID", dropZoneId);
-    // console.log("CARDID drop", cardElement.id, cardId)
+    
 
     fetch(`/getCardDetails?cardId=${cardId}`)
         .then(response => response.json())
@@ -102,7 +100,7 @@ function attackCardToOpponent(cardId, dropZone) {
 }
 
 function handleSpellCardDrop(spellCard, dropZone) {
-    console.log("SPELL CARD DROP", spellCard, dropZone)
+    
     if (spellCard.ability.toLowerCase() === 'buff') {
         if (dropZone.parentElement.classList.contains('staging')) {
             displayErrorMessage('Error: Cannot play Spell card in staging area. Must be applied to player or Creature card', dropZone.id);
@@ -164,7 +162,7 @@ function fetchAndRenderOpponentStage() {
     fetch('/getOpponentStage')
         .then(response => response.json())
         .then(data => {
-            console.log("OPPONENT STAGE", data.opponentStage);
+            
             // Render the opponent's staging area data on the UI
             renderOpponentStage(data.opponentStage);
         })
@@ -217,8 +215,7 @@ function renderOpponentStage(opponentStageData) {
         if (cardData) {
             const parentNode = childElement.parentNode;
             parentNode.removeChild(childElement);
-
-            console.log("CARD DATA FROM STAGE", cardData, parentNode, childElement)
+            
             
             // Update the card element with the new card data
             const cardContainer = document.createElement('div');
@@ -725,7 +722,7 @@ function updateOpponentStageUI(opponentStage) {
 
             // Select the drop zone container element
             const selectedDropZoneContainer = document.getElementById(selectedDropZone);
-            console.log(`CARD: ${card.id}`);
+            
             // Create a new card element
             const cardElement = document.createElement('div');
             cardElement.classList.add('card');
@@ -843,9 +840,6 @@ function attachStagedCardListeners() {
 
 async function applySpellEffect(spellCard, dropZone) {
     try {
-        console.log("APPLY SPELL EFFECT");
-        console.log(spellCard);
-        console.log(dropZone);
         // const dropZoneId = dropZone.getAttribute('id');
         const cardId = dropZone.querySelector('.card').id;
 
@@ -855,12 +849,12 @@ async function applySpellEffect(spellCard, dropZone) {
         }
 
         const creatureCardData = await fetchCreatureCardDetails(cardId);
-        console.log("CREATURE CARD DATA", creatureCardData);
+        
         if (!creatureCardData) {
             console.error('Error: Creature card details not found');
             return;
         }
-        console.log("SPELL ABILITY", spellCard.ability.toLowerCase());
+        
         if (creatureCardData.type.toLowerCase() === 'creature') {
             if (spellCard.ability.toLowerCase() === 'debuff') {
                 applyDebuffToOpponentCard(spellCard.id, cardId);
@@ -885,8 +879,7 @@ function handleNoCardFoundError(dropZone) {
 }
 
 async function applySpellToCreature(spellCard, dropZoneId, creatureCardData) {
-    console.log("APPLY SPELL TO CREATURE")
-    console.log(spellCard);
+    
 
     if (!spellCard.ability) {
         console.error('Error: Spell effect not defined for the spell card');
