@@ -59,69 +59,91 @@ function displayCardCollection(userObj){
     }
 }
 
-function collectionSelectHandler(collectionSelect){
-    collectionSelect.addEventListener("change", () => {
+async function collectionSelectHandler(collectionSelect){
         let collectionKey = parseInt(collectionSelect.value);
-        switchToGivenCollection(collectionKey);
-        userObj.startIndex = 0;
-        userObj.endIndex = numCardsInView - 1;
-        if (userObj.endIndex > userObj.primaryKeyArr.length - 1){
-            userObj.endIndex = userObj.primaryKeyArr.length - 1
-        }
+        console.log(collectionKey);
+        await switchToGivenCollection(collectionKey, userObj);
         displayCardCollection(userObj);
-    })
-}
-
-function switchToGivenCollection(collectionKey){
-    userObj.primaryKeyArr = userObj.primaryKeysForCollections[collectionKey];
-    userObj.cardDict = userObj.collections[collectionKey];
 }
 
 
-async function getCollection(){
-    const response= await fetch('/getCollection');
-    let collection = await response.json();
-    for(let index = 0; index < collection.length; index++){
-        let cardList = JSON.parse(collection[index].cardId);
+async function switchToGivenCollection(collectionKey, userObj){
+    if(!(collectionKey in userObj.collections)){
+        let cardList = userObj.cardListsFromDb[collectionKey];
         let listOfCardObjs = cardList.cardList;
-        //console.log(listOfCardObjs);
-        userObj.primaryKeysForCollections[index] = [];
-        userObj.collections[index] = {};
+        userObj.primaryKeysForCollections[collectionKey] = [];
+        userObj.collections[collectionKey] = {};
         for(const cardId of  listOfCardObjs){
             const cardDetailsResponse = await fetch('/getCardDetails?cardId=' + cardId);
             await cardDetailsResponse.json()
                 .then((cardData) => {
-                        userObj.primaryKeysForCollections[index].push(cardData.id);
+                        userObj.primaryKeysForCollections[collectionKey].push(cardData.id);
                         //(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana)
                         let cardObj = new Card(cardData.id, cardData.cardName, cardData.imagePath, 
                             cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
-                        userObj.collections[index][cardData.id] = cardObj;
+                        userObj.collections[collectionKey][cardData.id] = cardObj;
                 })
-                .catch((error) => {console.log(error)});
-                
+                .catch((error) => {console.log(error)});  
         }
+    }
+    userObj.primaryKeyArr = userObj.primaryKeysForCollections[collectionKey];
+    userObj.cardDict = userObj.collections[collectionKey];
+    userObj.startIndex = 0;
+    userObj.endIndex = numCardsInView - 1;
+    if (userObj.endIndex > userObj.primaryKeyArr.length - 1){
+        userObj.endIndex = userObj.primaryKeyArr.length - 1
     }
 }
 
+
+async function getCollection(userObj){
+    const response= await fetch('/getCollection');
+    let collection = await response.json();
+    console.log(collection)
+    for(let index = 0; index < collection.length; index++){
+        let currCollectId = collection[index].collectionId
+        userObj.cardListsFromDb[currCollectId] = JSON.parse(collection[index].cardId);
+    }
+    let collectionId = null;
+    if(collection.length > 0){
+        collectionId = collection[0].collectionId
+        userObj.primaryKeysForCollections[collectionId] = [];
+        userObj.collections[collectionId] = {};
+        let cardList = userObj.cardListsFromDb[collectionId];
+        let listOfCardObjs = cardList.cardList;
+        for(const cardId of  listOfCardObjs){
+            const cardDetailsResponse = await fetch('/getCardDetails?cardId=' + cardId);
+            await cardDetailsResponse.json()
+                .then((cardData) => {
+                        userObj.primaryKeysForCollections[collectionId].push(cardData.id);
+                        //(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana)
+                        let cardObj = new Card(cardData.id, cardData.cardName, cardData.imagePath, 
+                            cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
+                        userObj.collections[collectionId][cardData.id] = cardObj;
+                })
+                .catch((error) => {console.log(error)});  
+        }
+    }
+    userObj.primaryKeyArr = userObj.primaryKeysForCollections[collectionId];
+    userObj.cardDict = userObj.collections[collectionId];
+}
+
 async function setupCollectionPage(){
-    await getCollection();
-    userObj.primaryKeyArr = userObj.primaryKeysForCollections[0];
-    //console.log(userObj.primaryKeyArr)
-    userObj.cardDict = userObj.collections[0];
-    if(userObj.primaryKeyArr.length < userObj.endIndex){
-        userObj.endIndex = userObj.primaryKeyArr.length - 1;
+    await getCollection(userObj);
+    if (userObj.endIndex > userObj.primaryKeyArr.length - 1){
+        userObj.endIndex = userObj.primaryKeyArr.length - 1
     }
     displayCardCollection(userObj);
     addRightScroll(userObj, collectionScrollRightButton)
     addLeftScroll(userObj, collectionScrollLeftButton)
-
+    
 }
 
 
 /*main code for collection */
 var numCardsInView = 21;
-let userObj = {isUser: true, primaryKeyArr: [], cardDict: {}, primaryKeysForCollections: {}, collections: {}, 
-             startIndex: 0, endIndex: 20, cardSlots: "userCardSlots", collectionContainer: "collectionContainer"};
+let userObj = {isUser: true, primaryKeyArr: [], cardDict: {}, primaryKeysForCollections: {}, collections: {}, cardListsFromDb: {},
+                startIndex: 0, endIndex: 20, cardSlots: "userCardSlots", collectionContainer: "collectionContainer"};
 
 var collectionScrollLeftButton = document.getElementById("collectionScrollLeft");
 var collectionScrollRightButton = document.getElementById("collectionScrollRight");
@@ -129,4 +151,4 @@ setupCollectionPage();
 
 
 var collectionSelect = document.getElementById("collectId");
-collectionSelectHandler(collectionSelect)
+collectionSelect.addEventListener("change", () => { collectionSelectHandler(collectionSelect) });
