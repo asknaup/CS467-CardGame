@@ -111,7 +111,7 @@ class ComputerOpponent extends Opponent {
 
                         const cardToAttackIndex = Math.floor(Math.random() * this.playerStage.length);
                         const cardToAttack = this.playerStage[cardToAttackIndex];
-                        
+
                         // Attack the player's creature card
                         const damage = card.attack;
                         cardToAttack.defense -= damage;
@@ -247,24 +247,24 @@ class ComputerOpponent extends Opponent {
     }
 
     // Example method to apply effects of a spell card
-    applySpellCardEffects(spellCard) {
+    applySpellCardEffects(spellCard, targetCreatureCard = null) {
         // Apply effects based on the type of spell card
-        switch (spellCard.ability) {
-            case "Damage":
+        switch (spellCard.ability.toLowerCase()) {
+            case "damage":
                 console.log("DAMAGE")
                 // Example: Deal damage to opponent's creatures or player
                 this.player.decreaseHealth(spellCard.attack); // Adjust based on your game mechanics
-                
+
                 break;
-            case "Buff":
+            case "buff":
                 console.log("BUFF")
                 // Example: Increase attack or defense of creatures
                 this.buffCreatures(spellCard); // Implement this method
                 break;
-            case "Debuff":
+            case "debuff":
                 console.log("DEBUFF")
                 // Example: Decrease attack or defense of opponent's creatures
-                this.debuffOpponentCreatures(spellCard); // Implement this method
+                this.debuffOpponentCreatures(spellCard, targetCreatureCard); // Implement this method
                 break;
             // Add more cases for different types of spell cards...
             default:
@@ -283,36 +283,13 @@ class ComputerOpponent extends Opponent {
             creature.defense += spellCard.defense; // Adjust based on your game mechanics
         }
     }
-    
-    debuffOpponentCreatures(spellCard) {
+
+    debuffOpponentCreatures(spellCard, targetCreatureCard) {
         console.log("Debuffing creature on player's stage");
-        // Apply the debuff to the creature with the highest attack/defense combo on the player's stage
-        if (this.playerStage.length > 0) {
-            let highestCombo = -Infinity;
-            let targetCreature = null;
-    
-            for (const creature of this.playerStage) {
-                const combo = creature.attack + creature.defense;
-                if (combo > highestCombo) {
-                    highestCombo = combo;
-                    targetCreature = creature;
-                }
-            }
-
-            // Get index of creature in this.playerStage
-            const index = this.playerStage.findIndex(creature => creature.id === targetCreature.id);
-            // Apply debuff to the players creature
-            this.playerStage[index].attack -= spellCard.attack; // Adjust based on your game mechanics
-            this.playerStage[index].defense -= spellCard.defense; // Adjust based on your game mechanics
-       
-
-            if (this.playerStage[index].defense <= 0 ) {
-                this.playerStage.splice(index, 1);
-            }
-
-            if (this.playerStage[index].attack <= 0) {
-                this.playerStage[index].attack = 0;
-            }
+        // Apply the debuff to the target creature card
+        if (targetCreatureCard) {
+            targetCreatureCard.attack -= spellCard.attack; // Adjust based on your game mechanics
+            targetCreatureCard.defense -= spellCard.defense; // Adjust based on your game mechanics
         }
     }
 
@@ -453,7 +430,7 @@ class Game {
     async playNextTurn() {
         // Draw cards for the next turn for user
         this.drawCardsPerTurn();
-    
+
         // Execute the computer opponent's turn
         if (this.opponent instanceof ComputerOpponent) {
             this.drawOpponentsCardsPerTurn();
@@ -469,7 +446,7 @@ class Game {
             this.playerStage = this.opponent.playerStage;
             this.opponentStage = this.opponent.opponentStage;
         }
-    
+
         // Reset players mana to 10
         this.user.mana = 10;
         this.opponent.mana = 10;
@@ -506,7 +483,8 @@ class Game {
         // Find the card instance in hand based on cardId
         const card = this.hand.find(card => card.id === cardId);
         let updatedStage = [...this.playerStage];
-
+        let updatedOpponentStage = [...this.opponentStage];
+        console.log("CARD:", card)
         if (!card) {
             return { error: "Card is not in hand." };
         }
@@ -515,40 +493,77 @@ class Game {
             return { error: "Insufficient mana to play this card." }; // Return without playing the card
         }
 
-        if (card instanceof CreatureCard) {
-            if (updatedStage.length < 5) {
-                updatedStage.push(card);
-            } else {
-                return { error: "Maximum limit reached on the board" };
-            }
-        } else if (card instanceof SpellCard) {
-            // Check if the spell card targets a creature card
-            if (targetCardId) {
-                // Find the target creature card in the player's stage
-                const targetCreatureIndex = updatedStage.findIndex(card => card.id === targetCardId);
-                if (targetCreatureIndex !== -1) {
-                    // Apply the spell card effects to the target creature
-                    this.applySpellCardEffects(card, updatedStage[targetCreatureIndex]);
-                    // Remove the spell card from the player's hand
-                    this.hand = this.hand.filter(handCard => handCard.id !== cardId);
-                    // Deduct mana cost from player's mana
-                    this.user.mana -= card.mana;
+        if (targetCardId) {
+            // Find the target creature card in the player's stage
+            const targetCreatureIndex = updatedOpponentStage.findIndex(card => card.id === parseInt(targetCardId));
+            if (targetCreatureIndex !== -1) {
+                // Apply the spell card effects to the target creature
+                this.applySpellCardEffects(card, updatedOpponentStage[targetCreatureIndex]);
+                // If creature's attack if below 0, update to 0
+                if (updatedOpponentStage[targetCreatureIndex].attack <= 0) {
+                    updatedOpponentStage[targetCreatureIndex].attack = 0;
+                }
+                // Check if the target creature's defense is below 0 and remove it if necessary
+                if (updatedOpponentStage[targetCreatureIndex].defense <= 0) {
+                    let tempStage = updatedOpponentStage.filter(card => card.defense > 0);
+                    
+                    updatedOpponentStage = tempStage;
+                    this.opponentStage = updatedOpponentStage;
+                    this.opponent.opponentStage = updatedOpponentStage;
+                }
+                this.opponentStage = updatedOpponentStage;
+                this.opponent.opponentStage = updatedOpponentStage;
 
-                    return { success: true, 
-                        message: `Spell card ${card.name} played successfully on ${updatedStage[targetCreatureIndex].name}`,
-                        updatedStage: updatedStage,
-                        updatedHand: this.hand,
-                    };
+                // Remove the spell card from the player's hand
+                this.hand = this.hand.filter(handCard => handCard.id !== cardId);
+                // Deduct mana cost from player's mana
+                this.user.mana -= card.mana;
+                return {
+                    success: true,
+                    message: `Spell card played successfully`,
+                    opponentStage: this.opponent.opponentStage,
+                    hand: this.hand,
+                };
+            } else {
+                return { error: "Target creature card not found." };
+            }
+        
+        } else {
+            if (card instanceof CreatureCard) {
+                if (updatedStage.length < 5) {
+                    updatedStage.push(card);
                 } else {
-                    return { error: "Target creature card not found." };
+                    return { error: "Maximum limit reached on the board" };
+                }
+            } else if (card instanceof SpellCard) {
+                // Check if the spell card targets a creature card
+                if (targetCardId) {
+                    // Find the target creature card in the player's stage
+                    const targetCreatureIndex = updatedStage.findIndex(card => card.id === targetCardId);
+                    if (targetCreatureIndex !== -1) {
+                        // Apply the spell card effects to the target creature
+                        this.applySpellCardEffects(card, updatedStage[targetCreatureIndex]);
+                        // Remove the spell card from the player's hand
+                        this.hand = this.hand.filter(handCard => handCard.id !== cardId);
+                        // Deduct mana cost from player's mana
+                        this.user.mana -= card.mana;
+
+                        return {
+                            success: true,
+                            message: `Spell card ${card.name} played successfully on ${updatedStage[targetCreatureIndex].name}`,
+                            updatedStage: updatedStage,
+                            updatedHand: this.hand,
+                        };
+                    } else {
+                        return { error: "Target creature card not found." };
+                    }
+                } else {
+                    return { error: "Target creature card not specified." };
                 }
             } else {
-                return { error: "Target creature card not specified." };
+                return { error: "Unknown card type." };
             }
-        } else {
-            return { error: "Unknown card type." };
         }
-
         // Remove card from hand
         let updatedHand = this.hand.filter(handCard => handCard.id !== card.id);
 
@@ -622,8 +637,8 @@ class Game {
                 // Remove card from stage
                 this.playerStage = this.playerStage.filter(stageCard => stageCard.id !== cardId);
 
-                return { success: true, message: `Opponent's health reduced by ${damage}`};
-            
+                return { success: true, message: `Opponent's health reduced by ${damage}` };
+
             } else {
                 return { error: "Invalid card type or card does not have a damage spell." };
             }
@@ -636,9 +651,57 @@ class Game {
             // Remove card from stage
             this.playerStage = this.playerStage.filter(stageCard => stageCard.id !== cardId);
 
-            return { success: true, message: `Opponent's health reduced by ${damage}`};
+            return { success: true, message: `Opponent's health reduced by ${damage}` };
         } else {
             return { error: "Card not found in hand or staging." };
+        }
+    }
+
+    
+    // Example method to apply effects of a spell card
+    applySpellCardEffects(spellCard, targetCreatureCard = null) {
+        // Apply effects based on the type of spell card
+        switch (spellCard.ability.toLowerCase()) {
+            case "damage":
+                console.log("DAMAGE")
+                // Example: Deal damage to opponent's creatures or player
+                this.player.decreaseHealth(spellCard.attack); // Adjust based on your game mechanics
+
+                break;
+            case "buff":
+                console.log("BUFF")
+                // Example: Increase attack or defense of creatures
+                this.buffCreatures(spellCard); // Implement this method
+                break;
+            case "debuff":
+                console.log("DEBUFF")
+                // Example: Decrease attack or defense of opponent's creatures
+                this.debuffOpponentCreatures(spellCard, targetCreatureCard); // Implement this method
+                break;
+            // Add more cases for different types of spell cards...
+            default:
+                // Handle unknown spell card types
+                console.error("Unknown spell card type:", spellCard.type);
+        }
+    }
+
+    buffCreatures(spellCard) {
+        console.log("Buffing creature on opponent's stage");
+        // Apply the buff to a random creature on the opponent's stage
+        if (this.opponentStage.length > 0) {
+            const randomIndex = Math.floor(Math.random() * this.opponentStage.length);
+            const creature = this.opponentStage[randomIndex];
+            creature.attack += spellCard.attack; // Adjust based on your game mechanics
+            creature.defense += spellCard.defense; // Adjust based on your game mechanics
+        }
+    }
+
+    debuffOpponentCreatures(spellCard, targetCreatureCard) {
+        console.log("Debuffing creature on player's stage");
+        // Apply the debuff to the target creature card
+        if (targetCreatureCard) {
+            targetCreatureCard.attack -= spellCard.attack; // Adjust based on your game mechanics
+            targetCreatureCard.defense -= spellCard.defense; // Adjust based on your game mechanics
         }
     }
 
