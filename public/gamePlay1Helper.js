@@ -546,8 +546,9 @@ function renderHand(handData) {
         rarity.textContent = cardData.rarity;
 
         const mana = document.createElement('p');
-        mana.innerHTML = `<strong>Mana:</strong> ${cardData.mana}`;
+        mana.innerHTML = `<strong>Mana Cost:</strong> ${cardData.mana}`;
 
+        textOverlayBottom.appendChild(rarity);
         textOverlayBottom.appendChild(mana);
 
         let typeText = '';
@@ -558,10 +559,10 @@ function renderHand(handData) {
             // spellType.innerHTML = `<strong>Spell Type:</strong> ${cardData.spellType}`;
 
             const spellAttack = document.createElement('p');
-            spellAttack.innerHTML = `<strong>ATK:</strong> ${cardData.attack}`;
+            spellAttack.innerHTML = `<strong>Spell Attack:</strong> ${cardData.attack}`;
 
             const spellDefense = document.createElement('p');
-            spellDefense.innerHTML = `<strong>Spell Defense:</strong> ${cardData.spellDefense}`;
+            spellDefense.innerHTML = `<strong>Spell Defense:</strong> ${cardData.defense}`;
 
             // textOverlayBottom.appendChild(spellType);
             textOverlayBottom.appendChild(spellAttack);
@@ -570,10 +571,10 @@ function renderHand(handData) {
             typeText = cardData.type;
 
             const attack = document.createElement('p');
-            attack.innerHTML = `<strong>ATK:</strong> ${cardData.attack}`;
+            attack.innerHTML = `<strong>Attack:</strong> ${cardData.attack}`;
 
             const defense = document.createElement('p');
-            defense.innerHTML = `<strong>DEF:</strong> ${cardData.defense}`;
+            defense.innerHTML = `<strong>Defense:</strong> ${cardData.defense}`;
 
             textOverlayBottom.appendChild(attack);
             textOverlayBottom.appendChild(defense);
@@ -585,7 +586,6 @@ function renderHand(handData) {
 
         textOverlayTop.appendChild(name);
         textOverlayTop.appendChild(type);
-        textOverlayTop.appendChild(rarity);
 
         cardContainer.appendChild(textOverlayBottom);
         cardContainer.appendChild(cardImage);
@@ -759,7 +759,7 @@ function updateOpponentStageUI(opponentStage) {
             rarity.textContent = card.rarity;
 
             const mana = document.createElement('p');
-            mana.innerHTML = `<strong>Mana:</strong> ${card.mana}`;
+            mana.innerHTML = `<strong>Mana Cost:</strong> ${card.mana}`;
 
             textOverlayBottom.appendChild(rarity);
             textOverlayBottom.appendChild(mana);
@@ -772,7 +772,7 @@ function updateOpponentStageUI(opponentStage) {
                 // spellType.innerHTML = `<strong>Spell Type:</strong> ${card.spellType}`;
 
                 const spellAttack = document.createElement('p');
-                spellAttack.innerHTML = `<strong>ATK:</strong> ${card.attack}`;
+                spellAttack.innerHTML = `<strong>Spell Attack:</strong> ${card.attack}`;
 
                 const spellDefense = document.createElement('p');
                 spellDefense.innerHTML = `<strong>Spell Defense:</strong> ${card.defense}`;
@@ -784,10 +784,10 @@ function updateOpponentStageUI(opponentStage) {
                 typeText = card.type;
 
                 const attack = document.createElement('p');
-                attack.innerHTML = `<strong>ATK:</strong> ${card.attack}`;
+                attack.innerHTML = `<strong>Attack:</strong> ${card.attack}`;
 
                 const defense = document.createElement('p');
-                defense.innerHTML = `<strong>DEF:</strong> ${card.defense}`;
+                defense.innerHTML = `<strong>Defense:</strong> ${card.defense}`;
 
                 textOverlayBottom.appendChild(attack);
                 textOverlayBottom.appendChild(defense);
@@ -906,7 +906,7 @@ function updateDOMWithUpdatedCardDetails(updatedStagedCards, dropZoneId) {
         if (cardElement && stagedCard) {
             const textOverlayBottom = cardElement.querySelector('.textOverlayBottom');
             if (textOverlayBottom) {
-                textOverlayBottom.innerHTML = `<p><strong>Mana:</strong> ${stagedCard.mana}</p><p><strong>ATK:</strong> ${stagedCard.attack}</p><p><strong>DEF:</strong> ${stagedCard.defense}</p>`;
+                textOverlayBottom.innerHTML = `<p><strong>Mana Cost:</strong> ${stagedCard.mana}</p><p><strong>Attack:</strong> ${stagedCard.attack}</p><p><strong>Defense:</strong> ${stagedCard.defense}</p>`;
             } else {
                 console.error('Text overlay bottom element not found:', textOverlayBottom);
             }
