@@ -1,25 +1,75 @@
 class Card{
-    constructor(primaryKey, cardName, imagePath, cardType, rarity, spellType, 
-        spellAbility, spellAttack, spellDefense, attack, defense, manaCost, matchIdentifier){
-        this.cardId = primaryKey;
+    constructor(cardId, cardName, imagePath, description, type, rarity,
+         attack, defense, mana, matchIdentifier){
+        this.cardId = cardId;
         this.cardName = cardName;
         this.imagePath = imagePath;
-        this.cardType = cardType;
-        this.description = "";
+        this.type = type;
+        this.description = description;
         this.rarity = rarity;
-        this.spellType = spellType;
-        this.specialAbility = spellAbility;
-        this.spellAttack = spellAttack;
-        this.spellDefense = spellDefense;
         this.attack = attack;
         this.defense = defense;
-        this.manaCost = manaCost;
+        this.mana = mana;
         this.matchIdentifier = matchIdentifier;
         this.isFaceUp = false;
         this.hasBeenMatched = false;
-        
     }
 }
+
+/*      cardId, cardName, imagePath, cardType, rarity, spellType, spAbility, spAtk, spDef, atk, def, manaCost) */
+let cardTemplates = [{cardId: "10", cardName: "Joe", imagePath: "/images/goblinGuy.jpg", description: "", type: "Creature", 
+    rarity: "Common", attack: null, defnese: null, mana: "2"},
+
+    {cardId:"47", cardName: "Chain Lightning", imagePath: "/images/chainLightening.jpg", description: "", type: "Spell", 
+    rarity: "Common", attack: null, defense: null, mana: "1"},
+
+    {cardId:"49", cardName: "Ronan", imagePath: "/images/building.jpg", description: "", type: "Creature", 
+    rarity: "Common", attack: "3", defense: "1", mana: "2"},
+
+    {cardId:"48", cardName:"lotus", imagePath: "/images/bear.jpg", description: "", type: "Creature", 
+    rarity: "Common", attack: null, defense: null, mana: "2"},
+
+    {cardId:"50", cardName: "Uilliam", imagePath: "/images/madMaxLookingGuy.jpg", description: "", type: "Creature", 
+    rarity: "Common", attack: "0", defense: "1", mana: "3"},
+
+    {cardId:"5115", cardName: "Ivaylo", imagePath: "/images/pirate.jpg", description: "", type: "Creature", 
+    rarity: "common", attack: "9", defense: "7", mana: "8"},
+
+    {cardId:"312", cardName:"_", imagePath: "/images/hoodedGuy.jpg", description: "", type: "Spell", 
+    rarity: "common", attack: null, defense: null, mana: "0"},
+
+    {cardId:"1510",cardName: "joe", imagePath: "/images/boxer.jpg", description: "", type: "Creature", 
+    rarity: "common", attack: "4", defense:"8", mana: "2"},
+
+    {cardId:"154", cardName:"joe", imagePath: "/images/aragornIsThatYou.jpg", description: "", type: "Creature", 
+    rarity: "common", attack: "4", defense: "8", mana: "2"},
+
+    {cardId:"207", cardName:"joe", imagePath: "/images/werewolf.jpg", description: "", type: "Creature", 
+    rarity: "common", attack: null, defense: null, mana: "2"},
+
+    {cardId:"332", cardName:"_", imagePath: "/images/orbThing.jpg", description: "", type: "Spell",
+     rarity: "common", attack: null, defense: null, mana: "0"},
+
+    {cardId:"4632", cardName: "Invisibility", imagePath: "/images/noIdeaWhatThisIs.jpg", description: "", type:"Spell", 
+    rarity: "common" , attack: null, defense: null, mana: "2"},
+
+    {cardId: "172", cardName: "jay", imagePath: "devilGuy", description: "", type: "Creature", 
+    rarity: "common",  attack: 4, defense: 3, mana: 2},
+
+    {cardId: "1062", cardName: "Ronan", imagePath: "scaryArmoredGuy", description: "", type: "Creature", 
+    rarity: "common", attack: 4, defense: 3, mana: 3},
+
+    {cardId: "1014", cardName: "Lirael", imagePath: "desert", description: "", type: "Creature", 
+    rarity: "common", attack: 4, defense: 5, mana: 4},
+
+    {cardId: "10923", cardName: "Gareth", imagePath: "space", description: "", type: "Creature", 
+    rarity: "common", attack: 5, defense: 4, mana: 4},
+
+    {cardId: "10335", cardName: "Brigid", imagePath: "pinkGuy", description: "", type: "Creature", 
+    rarity: "common", attack: 2, defense: 2, mana: 3},
+
+    {cardId: "10739", cardName: "Séimíne", imagePath: "paradise", description: "", type: "Creature", 
+    rarity: "common", attack: 1, defense: 1, mana: 2}];
 
 
 function flipCardFaceUp(cardSlot){
@@ -96,6 +146,7 @@ function gameLogic(cardObj, cardSlot){
     }
 }
 
+
 function setupCardObjs(){
     userObj.cardObjs = [];
     userObj.cardSlotsArr = [];
@@ -104,13 +155,14 @@ function setupCardObjs(){
     userObj.numOfMatchesLeft = 9;
     for(let index = 0; index < (userObj.numCardSlots / 2); index++){
         let cardObj = cardTemplates[index];
-        let cardA = new Card (cardObj.cardId + "A", cardObj.cardName, cardObj.imagePath, cardObj.cardType, cardObj.rarity, cardObj.spellType, 
-        cardObj.spellAbility, cardObj.spellAttack, cardObj.spellDefense, cardObj.attack, cardObj.defense, cardObj.manaCost, cardObj.cardId);
+
+        let cardA = new Card (cardObj.cardId + "A", cardObj.cardName, cardObj.imagePath, cardObj.description, cardObj.type, 
+                    cardObj.rarity, cardObj.attack, cardObj.defense, cardObj.mana, cardObj.cardId);
         userObj.cardObjs.push(cardA);
         userObj.cardsDict[cardA.cardId] = cardA;
     
-        let cardB = new Card (cardObj.cardId + "B", cardObj.cardName, cardObj.imagePath, cardObj.cardType, cardObj.rarity, cardObj.spellType, 
-        cardObj.spellAbility, cardObj.spellAttack, cardObj.spellDefense, cardObj.attack, cardObj.defense, cardObj.manaCost, cardObj.cardId);
+        let cardB = new Card (cardObj.cardId + "B", cardObj.cardName, cardObj.imagePath, cardObj.description, cardObj.type, 
+                    cardObj.rarity, cardObj.attack, cardObj.defense, cardObj.mana, cardObj.cardId);
         userObj.cardObjs.push(cardB);
         userObj.cardsDict[cardB.cardId] = cardB; 
     }
@@ -124,6 +176,7 @@ function shuffleCards(){
         [userObj.cardObjs[i], userObj.cardObjs[j]] = [userObj.cardObjs[j], userObj.cardObjs[i]]
     }
 }
+
 
 function populateCardSlots(){
     // fill cardSlots with card elements
@@ -169,62 +222,6 @@ function setUpMiniGame(){
     shuffleCards();
     populateCardSlots();
 }
-
-
-/*      cardId, cardName, imagePath, cardType, rarity, spellType, spAbility, spAtk, spDef, atk, def, manaCost) */
-let cardTemplates = [{cardId: "10", cardName: "Joe", imagePath: "/images/goblinGuy.jpg",  cardType: "Creature", rarity: "Common", spellType: null, 
-    spellAbility: "Enhance", spellAttack: "12", spellDefense: "1", attack: null, defnese: null, manaCost: "2"},
-
-    {cardId:"47", cardName: "Chain Lightning", imagePath: "/images/chainLightening.jpg", cardType: "Spell", rarity: "Common", spellType: "Offensive", 
-    spellAbility:"_", spellAttack: "0", spellDefense: "1", attack: null, defense: null, manaCost: "1"},
-
-    {cardId:"49", cardName: "Ronan", imagePath: "/images/building.jpg", cardType: "Creature", rarity: "Common", spellType: null, 
-    spellAbility: null, spellAttack: null, spellDefense: null, attack: "3", defense: "1", manaCost: "2"},
-
-    {cardId:"48", cardName:"lotus", imagePath: "/images/bear.jpg", cardType: "Creature", rarity: "Common", spellType: null, 
-    spellAbility: null, spellAttack: "2", spellDefense: "2", attack: null, defense: null, manaCost: "2"},
-
-    {cardId:"50", cardName: "Uilliam", imagePath: "/images/madMaxLookingGuy.jpg", cardType: "Creature", rarity: "Common", spellType: null,
-     spellAbility: null, spellAttack: null, spellDefense: null, attack: "0", defense: "1", manaCost: "3"},
-
-    {cardId:"5115", cardName: "Ivaylo", imagePath: "/images/pirate.jpg", cardType: "Creature", rarity: "common", spellType: null, 
-    spellAbility: null,spellAttack:  null, spellDefense: null, attack: "9", defense: "7", manaCost: "8"},
-
-    {cardId:"312", cardName:"_", imagePath: "/images/hoodedGuy.jpg", cardType: "Spell", rarity: "common", spellType: "Offensive", 
-    spellAbility: "_", spellAttack:"0", spellDefense: "0", attack: null, defense: null, manaCost: "0"},
-
-    {cardId:"1510",cardName: "joe", imagePath: "/images/boxer.jpg", cardType: "Creature", rarity: "common", spellType: null, 
-    spellAbility: null, spellAttack: null, spellDefense: null, attack: "4", defense:"8", manaCost: "2"},
-
-    {cardId:"154", cardName:"joe", imagePath: "/images/aragornIsThatYou.jpg", cardType: "Creature", rarity: "common", spellType: null, 
-    spellAbility: null, spellAttack: null, spellDefense: null, attack: "4", defense: "8", manaCost:"2"},
-
-    {cardId:"207", cardName:"joe", imagePath: "/images/werewolf.jpg", cardType: "Creature", rarity: "common", spellType: null, 
-    spellAbility: "Enhance", spellAttack: "3",spellDefense: "3", attack: null, defense: null, manaCost: "2"},
-
-    {cardId:"332", cardName:"_", imagePath: "/images/orbThing.jpg", cardType: "Spell", rarity: "common", spellType: "Offensive", 
-    spellAbility: "_", spellAttack:"0", spellDefense: "0", attack: null, defense: null, manaCost: "0"},
-
-    {cardId:"4632", cardName: "Invisibility", imagePath: "/images/noIdeaWhatThisIs.jpg", cardType:"Spell", rarity: "common" , spellType: "Offensive", 
-    spellAbility: "_", spellAttack: "0", spellDefense: "2", attack: null, defense: null, manaCost: "2"},
-
-    {cardId: "172", cardName: "jay", imagePath: "devilGuy", cardType: "Creature", rarity: "common", spellType: null,
-    specialAbility: null, spellAttack: null, spellDefense: null, attack: 4, defense: 3, manaCost: 2},
-
-    {cardId: "1062", cardName: "Ronan", imagePath: "scaryArmoredGuy", cardType: "Creature", rarity: "common", spellType: null,
-    specialAbility: null, spellAttack: null, spellDefense: null, attack: 4, defense: 3, manaCost: 3},
-
-    {cardId: "1014", cardName: "Lirael", imagePath: "desert", cardType: "Creature", rarity: "common", spellType: null,
-    specialAbility: null, spellAttack: null, spellDefense: null, attack: 4, defense: 5, manaCost: 4},
-
-    {cardId: "10923", cardName: "Gareth", imagePath: "space", cardType: "Creature", rarity: "common", spellType: null,
-    specialAbility: null, spellAttack: null, spellDefense: null, attack: 5, defense: 4, manaCost: 4},
-
-    {cardId: "10335", cardName: "Brigid", imagePath: "pinkGuy", cardType: "Creature", rarity: "common", spellType: null,
-    specialAbility: null, spellAttack: null, spellDefense: null, attack: 2, defense: 2, manaCost: 3},
-
-    {cardId: "10739", cardName: "Séimíne", imagePath: "paradise", cardType: "Creature", rarity: "common", spellType: null,
-    specialAbility: null, spellAttack: null, spellDefense: null, attack: 1, defense: 1, manaCost: 2}];
 
 
 // create cardObs for miniGame from cardTemplates array
