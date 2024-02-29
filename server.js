@@ -384,24 +384,36 @@ app.post('/trading', async (req, res) => {
   }
 });
 
+app.get('/getCollection', async(req, res) => {
+  const user = req.session.user;
+  if(user){
+    let collection = await dbFunc.getAllCollectionsByUser(user.userId);
+    res.json(collection);
+  }else{
+    res.redirect('/');
+  }
+});
+
+
 // Needs Work, collection db issue
 app.get('/collect', async (req, res) => {
   const user = req.session.user;
   const c = req.query.collectId;
-  let listCards;
+  //let listCards;
 
   if (user) {
     const collect = await dbFunc.getAllCollectionsByUser(user.userId);
+    /*
     if (c) {
     listCards = await dbFunc.grabListOfCardsFromCollection(req.query.collectId); 
     } else {
     listCards = await dbFunc.grabListOfCardsFromCollection(collect[0].collectionId);
     }
-
+    
     console.log(listCards);
+    */
     res.render('collect', {
-      collect: collect,
-      listCards: listCards,
+      collect: collect
     })
   } else {
     res.redirect('/');
