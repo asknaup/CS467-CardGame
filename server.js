@@ -334,6 +334,7 @@ app.get('/trading', async (req, res) => {
 
   if (user) {
     const collect = await dbFunc.getAllCollectionsByUser(user.userId);
+    /*
       if (c) {
       listCards = await dbFunc.grabListOfCardsFromCollection(req.query.collectId);
       gameId = await dbFunc.grabGameIdFromCollection(req.query.collectId)
@@ -343,11 +344,11 @@ app.get('/trading', async (req, res) => {
       gameId = await dbFunc.grabGameIdFromCollection(req.query.collectId)
       adminList = await dbFunc.grabAdminListCards(gameId); 
       }
-  
+    */
     res.render('trading', {
-      collect: collect,
-      listCards: listCards,
-      adminList: adminList
+      collect: collect //,
+      //listCards: listCards,
+      //adminList: adminList
      })
   } else {
     res.redirect('/');
@@ -413,7 +414,8 @@ app.get('/collect', async (req, res) => {
     console.log(listCards);
     */
     res.render('collect', {
-      collect: collect
+      collect: collect //,
+      //listCards: listCards,
     })
   } else {
     res.redirect('/');
