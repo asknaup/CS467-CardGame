@@ -346,7 +346,7 @@ header {
     color: #4caf50;
 }
 
-#goToUserProfileBUtton{
+#goToUserProfileButton{
     display: inline-block;
 }
 
@@ -386,6 +386,33 @@ header {
 /* Trading Page */
 #noteToProgrammers{
     padding: 2vh;
+}
+
+#tradingForms{
+    display: flex;
+    justify-content: space-between;
+}
+
+#tradingGoToCollectionTitle{
+    display: inline-block;
+    position: relative;
+    top: 2vh;
+    color: #4caf50;
+}
+
+#tradingCollectId{
+    display: inline-block;
+    position: relative;
+    top: 2vh;
+}
+
+#tradingGoToUserProfileTitle{
+    display: inline-block;
+    color: #4caf50;
+}
+
+#tradingGoToUserProfileButton{
+    display: inline-block;
 }
 
 #tradePopUpForm{
