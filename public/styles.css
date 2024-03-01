@@ -388,6 +388,32 @@ header {
     padding: 2vh;
 }
 
+#marketForms{
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+}
+
+#marketGoToCollectionTitle{
+    display: inline-block;
+    position: relative;
+    top: 2vh;
+    color: purple;
+}
+
+#marketCollectId{
+    display: inline-block;
+    position: relative;
+    top: 2vh;
+}
+
+#otherPlayerDeck {
+    color: purple;
+    width: 100%;
+    text-align: center;
+    margin: 1vw;
+}
+
 #tradingForms{
     display: flex;
     justify-content: space-between;
@@ -546,12 +572,6 @@ header {
     color: #a7d393;
 }
 
-#otherPlayerDeck {
-    color: purple;
-    width: 100%;
-    text-align: center;
-    margin: 1vw;
-}
 
 #userDeck{
     color: #0ba710;

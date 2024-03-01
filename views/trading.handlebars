@@ -13,6 +13,16 @@
 
 <body>
     <div class="userRow">
+        <div id="marketForms">
+            <form action="/trading" method="get" id="marketCardForm">
+                <h3 id="marketGoToCollectionTitle" >Go to this Collection</h3>
+                <select name="collectId" id="marketCollectId">
+                    {{#each collect}}
+                    <option value="{{this.collectionId}}">{{this.collectionName}}</option>
+                    {{/each}}
+                </select>
+            </form>
+        </div>
         <h1 id="otherPlayerDeck">Cards In The Market</h1>
         <div id="otherScrollDeck">
             <button type="button" id="otherScrollLeft"> &lt; </button>
