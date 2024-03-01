@@ -131,7 +131,7 @@ function addStagedCardFunctionality(playerObj, primaryIndex) {
     if (playerObj.endIndex > playerObj.primaryKeyArr.length - 1) {
         playerObj.endIndex = playerObj.primaryKeyArr.length - 1
     }
-    displayScrollCards(playerObj);
+    displayCardCollectionForTrading(playerObj);
 }
 
 
@@ -161,7 +161,7 @@ function addScrollCardFunctionality(playerObj, primaryIndex, cardData, scrollCar
 };
 
 
-function displayScrollCards(playerObj) {
+function displayCardCollectionForTrading(playerObj) {
     // Clear out old card elements
     var cardSlots = document.getElementById(playerObj.cardSlots);
     while (cardSlots.firstChild) {
@@ -181,6 +181,19 @@ function displayScrollCards(playerObj) {
     }
 }
 
+function displayCardCollection(userObj){
+    // Clear out old card elements
+    var collectionContainer = document.getElementById(userObj.collectionContainer);
+    while(collectionContainer.firstChild){
+        collectionContainer.removeChild(collectionContainer.firstChild);
+    }
+    for (let index = userObj.startIndex; index <= userObj.endIndex; index++){
+        let primaryKey = userObj.primaryKeyArr[index];
+        let cardData = userObj.cardDict[primaryKey];
+        let collectionCard = createTradingCardWithId(primaryKey, cardData);
+        collectionContainer.appendChild(collectionCard);
+    }
+}
 
 // add green or purple border to card when selected
 function highlightCard(isHighlighted, isUser, scrollCard) {

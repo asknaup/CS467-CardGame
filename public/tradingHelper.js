@@ -107,7 +107,7 @@ function addLeftScroll(playerObj, scrollLeftButton){
             }
             console.log(playerObj.startIndex);
             console.log(playerObj.endIndex);
-            displayScrollCards(playerObj);
+            displayCardCollectionForTrading(playerObj);
         }
     });
 }
@@ -123,7 +123,7 @@ function addRightScroll(playerObj, scrollRightButton){
             }
             console.log(playerObj.startIndex);
             console.log(playerObj.endIndex);
-            displayScrollCards(playerObj);
+            displayCardCollectionForTrading(playerObj);
         }
     });
 }
@@ -168,8 +168,8 @@ async function setupTradingPage(){
     Object.keys(collection).forEach(key => {exampleCards.push(collection[key])})
     console.log(exampleCards)
     createCardsForBothPlayers(exampleCards)
-    displayScrollCards(otherPlayerObj);
-    displayScrollCards(userObj);
+    displayCardCollectionForTrading(otherPlayerObj);
+    displayCardCollectionForTrading(userObj);
     addRightScroll(otherPlayerObj, otherScrollRightButton)
     addRightScroll(userObj, userScrollRightButton)
     addLeftScroll(otherPlayerObj, otherScrollLeftButton)

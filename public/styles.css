@@ -330,13 +330,15 @@ header {
 
 #goToCollectionTitle{
     display: inline-block;
+    position: relative;
+    top: 2vh;
     color: #4caf50;
-    margin-top: 2vh;
 }
 
 #collectId{
     display: inline-block;
-    margin-top: 2vh;
+    position: relative;
+    top: 2vh;
 }
 
 #goToUserProfileTitle{
@@ -344,7 +346,7 @@ header {
     color: #4caf50;
 }
 
-#goToUserProfileBUtton{
+#goToUserProfileButton{
     display: inline-block;
 }
 
@@ -384,6 +386,59 @@ header {
 /* Trading Page */
 #noteToProgrammers{
     padding: 2vh;
+}
+
+#marketForms{
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+}
+
+#marketGoToCollectionTitle{
+    display: inline-block;
+    position: relative;
+    top: 2vh;
+    color: purple;
+}
+
+#marketCollectId{
+    display: inline-block;
+    position: relative;
+    top: 2vh;
+}
+
+#otherPlayerDeck {
+    color: purple;
+    width: 100%;
+    text-align: center;
+    margin: 1vw;
+}
+
+#tradingForms{
+    display: flex;
+    justify-content: space-between;
+}
+
+#tradingGoToCollectionTitle{
+    display: inline-block;
+    position: relative;
+    top: 2vh;
+    color: #4caf50;
+}
+
+#tradingCollectId{
+    display: inline-block;
+    position: relative;
+    top: 2vh;
+}
+
+#tradingGoToUserProfileTitle{
+    display: inline-block;
+    color: #4caf50;
+}
+
+#tradingGoToUserProfileButton{
+    display: inline-block;
 }
 
 #tradePopUpForm{
@@ -517,12 +572,6 @@ header {
     color: #a7d393;
 }
 
-#otherPlayerDeck {
-    color: purple;
-    width: 100%;
-    text-align: center;
-    margin: 1vw;
-}
 
 #userDeck{
     color: #0ba710;
