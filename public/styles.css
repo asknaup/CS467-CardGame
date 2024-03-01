@@ -998,7 +998,7 @@ header {
     background-color: rgb(177, 200, 204); 
     border: 2px solid black;
     border-radius: 15px;
-    z-index: 100;
+    z-index: 90000;
     padding: 1vw;
 }
 
