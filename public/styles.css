@@ -315,13 +315,6 @@ header {
     background-color: rgb(154, 87, 154);
 }
 
-#collection{
-    position: relative;
-    width: 100%;
-    height: 160vh;
-    background-color: #d8eece;
-    border-radius: 15px;
-}
 
 #collectionTitle{
     width: 100%;
@@ -330,16 +323,38 @@ header {
     font-size: 3em;
 }
 
-#collectionSelect {
-    width: 6vw;
-    height: 3vw;
-    margin: 1vw;
-    background-color: #4caf50; 
-    border-radius: 5px;
-    color: white;
-    z-index: 100;
+#collectionForms{
+    display: flex;
+    justify-content: space-between;
 }
 
+#goToCollectionTitle{
+    display: inline-block;
+    color: #4caf50;
+    margin-top: 2vh;
+}
+
+#collectId{
+    display: inline-block;
+    margin-top: 2vh;
+}
+
+#goToUserProfileTitle{
+    display: inline-block;
+    color: #4caf50;
+}
+
+#goToUserProfileBUtton{
+    display: inline-block;
+}
+
+#collection{
+    position: relative;
+    width: 100%;
+    height: 160vh;
+    background-color: #d8eece;
+    border-radius: 15px;
+}
 
 #collectionContainer {
     width: 100%;
