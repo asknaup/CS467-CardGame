@@ -330,13 +330,15 @@ header {
 
 #goToCollectionTitle{
     display: inline-block;
+    position: relative;
+    top: 2vh;
     color: #4caf50;
-    margin-top: 2vh;
 }
 
 #collectId{
     display: inline-block;
-    margin-top: 2vh;
+    position: relative;
+    top: 2vh;
 }
 
 #goToUserProfileTitle{
