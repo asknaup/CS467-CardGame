@@ -45,20 +45,6 @@ function addRightScroll(userObj, scrollRightButton){
 }
 
 
-function displayCardCollection(userObj){
-    // Clear out old card elements
-    var collectionContainer = document.getElementById(userObj.collectionContainer);
-    while(collectionContainer.firstChild){
-        collectionContainer.removeChild(collectionContainer.firstChild);
-    }
-    for (let index = userObj.startIndex; index <= userObj.endIndex; index++){
-        let primaryKey = userObj.primaryKeyArr[index];
-        let cardData = userObj.cardDict[primaryKey];
-        let collectionCard = createTradingCardWithId(primaryKey, cardData);
-        collectionContainer.appendChild(collectionCard);
-    }
-}
-
 async function collectionSelectHandler(collectionSelect){
         let collectionKey = parseInt(collectionSelect.value);
         console.log(collectionKey);
