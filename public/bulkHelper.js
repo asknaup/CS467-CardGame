@@ -1,6 +1,8 @@
 // Function to create a trading card
 function createTradingCard(cardData) {
-    
+
+    console.log("This is what's being passsed to createTradingCard:", cardData);
+
     // Card container
     var card = document.createElement('div');
     card.classList.add('card');
@@ -104,3 +106,36 @@ function createTradingCard(cardData) {
 
     return card;
 }
+
+// Example fetch request
+async function fetchCreateTradingCard() {
+    try {
+        // Move the declaration of cardData here
+        let cardData;
+
+        const response = await fetch('/cardViewPrintedPage', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: null
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        cardData = await response.json();
+
+        // Assuming cardData contains the data you want to pass to createTradingCard
+        const card = createTradingCard(cardData);
+
+        // Append the card to the document or do any other necessary operations
+        document.body.appendChild(card);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+// Call the fetchCreateTradingCard function
+fetchCreateTradingCard();

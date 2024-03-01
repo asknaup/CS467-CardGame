@@ -611,6 +611,7 @@ app.post('/cardViewEditPage', async (req, res) => {
 app.post('/cardViewPrintedPage', async (req, res) => {
   const user = req.session.user;
   let cardIdList = [];
+
   try {
     const stringCard = JSON.parse(req.body.cardstring);
     const cardId = await dbFunc.insertCard(stringCard.name, stringCard.cardType, user.userId, stringCard.rarity, stringCard.manaCost);
@@ -618,9 +619,9 @@ app.post('/cardViewPrintedPage', async (req, res) => {
     await dbFunc.insertCardUrl(cardId, stringCard.URL);
 
     if (req.body.cardType == "Creature") {
-      await dbFunc.insertCreatureCard(cardId, stringCard.creatureAttack, stringCard.creatureDefense, stringCard.creatureType);     // Hard coded
+      await dbFunc.insertCreatureCard(cardId, stringCard.creatureAttack, stringCard.creatureDefense, stringCard.creatureType);
     } else {
-      await dbFunc.insertSpellCard(cardId, stringCard.spellType, stringCard.ability, stringCard.attack, stringCard.defense, stringCard.utility); // Needs work
+      await dbFunc.insertSpellCard(cardId, stringCard.spellType, stringCard.ability, stringCard.attack, stringCard.defense, stringCard.utility);
     }
 
     // Update User Collection
@@ -644,16 +645,42 @@ app.post('/cardViewPrintedPage', async (req, res) => {
     } catch (error) {
       console.error("Error updating collection:", error);
     }
+
     const data = await dbFunc.getCardInfo(cardId);
-    res.render('cardViewPrintedPage', {
+    console.log("This is data in the /cardViewPrintedPage route:", data);
+
+    const cardData = {
+      cardId: cardId,
+      cardName: stringCard.name,
+      cardType: stringCard.type,
+      rarity: stringCard.rarity,
+      manaCost: stringCard.manaCost,
+      creatureAttack: stringCard.creatureAttack, 
+      creatureDefense: stringCard.creatureDefense, 
+      creatureType: stringCard.creatureType,
+      spellType: stringCard.spellType, 
+      ability: stringCard.ability, 
+      attack: stringCard.attack, 
+      defense: stringCard.defense, 
+      utility: stringCard.utility,
+      imagePath: gameName[0].imageLocation
+    };
+
+    console.log("This is cardData in the /cardViewPrintedPage route:", data);
+    
+    // Send JSON response
+    res.json({
       card: stringCard,
-      data: data
+      data: data,
+      cardData: cardData
     });
+
   } catch (err) {
-    // Handle errors that may occur during card generation, database interaction, or rendering
-    return res.send(`Something went wrong: ${err}`);
+    // Handle errors that may occur during card generation, database interaction, or JSON response
+    return res.status(500).json({ error: `Something went wrong: ${err}` });
   }
 });
+
 
 app.post('/cardViewPrintedBulkPage', async (req, res) => {
   const user = req.session.user;

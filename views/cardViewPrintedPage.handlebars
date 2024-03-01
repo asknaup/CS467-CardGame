@@ -30,41 +30,7 @@
   <script src="/bulkHelper.js"></script>
 
   <!-- Your client-side code -->
-  <script>
-    async function handleCardCreation() {
-      try {
-        // Make a fetch request to the server
-        const response = await fetch('/cardViewPrintedPage', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          // Include any necessary request data
-          body: JSON.stringify({ /* include any necessary request data */ }),
-        });
 
-        if (!response.ok) {
-          throw new Error(`Failed to fetch data: ${response.statusText}`);
-        }
-
-        // Parse the JSON response from the server
-        const responseData = await response.json();
-
-        // Extract the cardData from the response
-        const cardData = responseData.cardData;
-        console.log("CARD DATA CLIENT SIDE OUTPUT:", cardData);
-
-        // Call createTradingCard with the received cardData
-        const cardElement = await bulkHelper.createTradingCard(cardData);
-        document.getElementById('cardContainer').appendChild(cardElement);
-      } catch (error) {
-        console.error('Error creating trading card:', error);
-      }
-    }
-
-    // Call the function when needed
-    handleCardCreation();
-  </script>
   
 </body>
 

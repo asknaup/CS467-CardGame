@@ -2,17 +2,17 @@
 <html>
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, intial-scale=1.0">
-  <title>Card View Page</title>
-  <link rel="stylesheet" href="global.css">
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, intial-scale=1.0">
+    <title>Card View Page</title>
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-<h1>Bulk Card Generation Results</h1>
+    <h1>Bulk Card Generation Results</h1>
     <div id="cardContainer">
-        {{#each cards}}
+        {{!-- {{#each cards}}
         <div class="card">
             <img src="{{URL}}" alt="Card Image">
             <p>Name: {{name}}</p>
@@ -21,7 +21,10 @@
             <p>Mana Cost: {{manaCost}}</p>
             <p>Enter Effect: {{enter_effect}}</p>
         </div>
-        {{/each}}
+        {{/each}} --}}
+
     </div>
+    <script src="/bulkHelper.js"></script>
 </body>
+
 </html>
