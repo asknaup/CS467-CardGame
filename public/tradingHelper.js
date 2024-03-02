@@ -1,20 +1,15 @@
 class Card{
-    constructor(primaryKey, cardName, imagePath, cardType, 
-        spellType, spellAbility, spellAttack, spellDefense, attack, defense, manaCost){
-        this.cardId = primaryKey;
+    constructor(cardId, cardName, imagePath, description, type, rarity,
+         attack, defense, mana){
+        this.cardId = cardId;
         this.cardName = cardName;
         this.imagePath = imagePath;
-        this.cardType = cardType;
-        this.description = "";
-        this.rarity = 0;
-        this.spellType = spellType;
-        this.specialAbility = spellAbility;
-        this.spellAttack = spellAttack;
-        this.spellDefense = spellDefense;
+        this.type = type;
+        this.description = description;
+        this.rarity = rarity;
         this.attack = attack;
         this.defense = defense;
-        this.manaCost = manaCost;
-        this.isStaged = false;
+        this.mana = mana;
     }
 }
 
@@ -107,7 +102,7 @@ function addLeftScroll(playerObj, scrollLeftButton){
             }
             console.log(playerObj.startIndex);
             console.log(playerObj.endIndex);
-            displayScrollCards(playerObj);
+            displayCardCollectionForTrading(playerObj);
         }
     });
 }
@@ -123,36 +118,101 @@ function addRightScroll(playerObj, scrollRightButton){
             }
             console.log(playerObj.startIndex);
             console.log(playerObj.endIndex);
-            displayScrollCards(playerObj);
+            displayCardCollectionForTrading(playerObj);
         }
     });
 }
 
-function createCardsForBothPlayers(exampleCards){
-    for (let index = 0; index<=33; index++){
-        let numCards = exampleCards.length;
-        let randomIndex = Math.floor(Math.random() * numCards);
-        let cardData = exampleCards[randomIndex];
-        let uniquePrimaryKey = cardData.cardId + index.toString()
-        userObj.primaryKeyArr.push(uniquePrimaryKey);
-        userObj.cardDict[uniquePrimaryKey] = new Card(uniquePrimaryKey, cardData.cardName, cardData.imagePath, cardData.cardType, 
-            cardData.spellType, cardData.spellAbility, cardData.spellAttack, cardData.spellDefense, 
-            cardData.attack, cardData.defense, cardData.manaCost);
-        // now create other player's card set
-        let otherRandomIndex = (randomIndex + 1) %  exampleCards.length;
-        let otherCardData = exampleCards[otherRandomIndex];
-        let otherUniquePrimaryKey = otherCardData.cardId + index.toString()
-        otherPlayerObj.primaryKeyArr.push(otherUniquePrimaryKey);
-        otherPlayerObj.cardDict[otherUniquePrimaryKey]= new Card(otherUniquePrimaryKey, otherCardData.cardName, otherCardData.imagePath, 
-            otherCardData.cardType, otherCardData.spellType, otherCardData.spellAbility, otherCardData.spellAttack, otherCardData.spellDefense, 
-            otherCardData.attack, otherCardData.defense, otherCardData.manaCost);   
+
+async function collectionSelectHandler(collectionSelect){
+    let collectionKey = parseInt(collectionSelect.value);
+    console.log(collectionKey);
+    await switchToGivenCollection(collectionKey, userObj);
+    resetInitialStartAndEndIndex(userObj);
+    displayCardCollectionForTrading(userObj);
+}
+
+
+async function switchToGivenCollection(collectionKey, userObj){
+    if(!(collectionKey in userObj.collections)){
+        let cardList = userObj.cardListsFromDb[collectionKey];
+        let listOfCardObjs = cardList.cardList;
+        userObj.primaryKeysForCollections[collectionKey] = [];
+        userObj.collections[collectionKey] = {};
+        for(const cardId of  listOfCardObjs){
+            const cardDetailsResponse = await fetch('/getCardDetails?cardId=' + cardId);
+            await cardDetailsResponse.json()
+                .then((cardData) => {
+                        userObj.primaryKeysForCollections[collectionKey].push(cardData.id);
+                        //(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana)
+                        let cardObj = new Card(cardData.id, cardData.cardName, cardData.imagePath, 
+                            cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
+                        userObj.collections[collectionKey][cardData.id] = cardObj;
+                })
+                .catch((error) => {console.log(error)});  
+        }
+    }
+    userObj.primaryKeyArr = userObj.primaryKeysForCollections[collectionKey];
+    userObj.cardDict = userObj.collections[collectionKey];
+}
+
+
+function resetInitialStartAndEndIndex(userObj){
+    userObj.startIndex = 0;
+    userObj.endIndex = numScrollCards- 1;
+    if (userObj.endIndex > userObj.primaryKeyArr.length - 1){
+        userObj.endIndex = userObj.primaryKeyArr.length - 1
     }
 }
 
+
+async function getCollection(userObj){
+    const response= await fetch('/getCollection');
+    let collection = await response.json();
+    for(let index = 0; index < collection.length; index++){
+        let currCollectId = collection[index].collectionId
+        userObj.cardListsFromDb[currCollectId] = JSON.parse(collection[index].cardId);
+    }
+    let collectionId = null;
+    if(collection.length > 0){
+        collectionId = collection[0].collectionId
+        userObj.primaryKeysForCollections[collectionId] = [];
+        userObj.collections[collectionId] = {};
+        let cardList = userObj.cardListsFromDb[collectionId];
+        let listOfCardObjs = cardList.cardList;
+        for(const cardId of  listOfCardObjs){
+            const cardDetailsResponse = await fetch('/getCardDetails?cardId=' + cardId);
+            await cardDetailsResponse.json()
+                .then((cardData) => {
+                        userObj.primaryKeysForCollections[collectionId].push(cardData.id);
+                        //(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana)
+                        let cardObj = new Card(cardData.id, cardData.cardName, cardData.imagePath, 
+                            cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
+                        userObj.collections[collectionId][cardData.id] = cardObj;
+                })
+                .catch((error) => {console.log(error)});  
+        }
+    }
+    userObj.primaryKeyArr = userObj.primaryKeysForCollections[collectionId];
+    userObj.cardDict = userObj.collections[collectionId];
+}
+
+
+async function setupTradingPage(){
+    await getCollection(userObj);
+    resetInitialStartAndEndIndex(userObj);
+    displayCardCollectionForTrading(userObj);
+    addRightScroll(userObj, userScrollRightButton);
+    addLeftScroll(userObj, userScrollLeftButton);
+}
+
+
 /*main code for trading */
 var numScrollCards = 8;
-let userObj = {isUser: true, primaryKeyArr: [], cardDict: {}, stagedCardCount: 0, startIndex: 0, endIndex: 7, cardSlots: "userCardSlots", 
-            stageAreaId: "userStageAreaId", stageAreaClass: "userStageAreaClass", stagedCardName: "userStagedCard"};
+let userObj = {isUser: true,primaryKeysForCollections: {}, collections: {}, cardListsFromDb: {},  primaryKeyArr: [], cardDict: {}, 
+                stagedCardCount: 0, startIndex: 0, endIndex: 7, cardSlots: "userCardSlots", stageAreaId: "userStageAreaId", 
+                stageAreaClass: "userStageAreaClass", stagedCardName: "userStagedCard"};
+                 
 let otherPlayerObj = {isUser: false, primaryKeyArr: [], cardDict: {}, stagedCardCount: 0, startIndex: 0, endIndex: 7, cardSlots: "otherCardSlots", 
             stageAreaId: "otherStageAreaId", stageAreaClass: "otherStageAreaClass", stagedCardName: "otherStagedCard"};
 
@@ -160,23 +220,10 @@ var otherScrollLeftButton = document.getElementById("otherScrollLeft");
 var otherScrollRightButton = document.getElementById("otherScrollRight");
 var userScrollLeftButton = document.getElementById("userScrollLeft");
 var userScrollRightButton = document.getElementById("userScrollRight");
+setupTradingPage(); 
 
-async function setupTradingPage(){
-    let exampleCards = []
-    const response = await fetch('/cards');
-    let collection = await response.json()
-    Object.keys(collection).forEach(key => {exampleCards.push(collection[key])})
-    console.log(exampleCards)
-    createCardsForBothPlayers(exampleCards)
-    displayScrollCards(otherPlayerObj);
-    displayScrollCards(userObj);
-    addRightScroll(otherPlayerObj, otherScrollRightButton)
-    addRightScroll(userObj, userScrollRightButton)
-    addLeftScroll(otherPlayerObj, otherScrollLeftButton)
-    addLeftScroll(userObj, userScrollLeftButton)
-}
-setupTradingPage();
-
+var collectionSelect = document.getElementById("tradingCollectId");
+collectionSelect.addEventListener("change", () => { collectionSelectHandler(collectionSelect) });
 
 var startTradeButton = document.getElementById("startTradeButton");
 startTradeButton.addEventListener("click", () => {

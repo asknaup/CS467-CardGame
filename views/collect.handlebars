@@ -23,19 +23,20 @@
         <p> Will need to grab userName and gameName to create CollectionId Name </p>
     </div -->
     <h2 id="collectionTitle">Collections</h2>
-    <form action="/collect" method="get" id="cardForm">
-        <select name="collectId" id="collectId">
-            {{#each collect}}
-                <option value="{{this.collectionId}}">{{this.collectionName}}</option>
-            {{/each}}
-        </select>
-        <button type="submit">Go to this Collection</button>
-    </form>
-    <form action="/userProfile" method="get" id="new">
-        <p>Go to your User Profile</p>
-        <p>to create a collection</p>
-        <button type="submit">User Profile</button>
-    </form>
+    <div id="collectionForms">
+        <form action="/collect" method="get" id="cardForm">
+            <h3 id="goToCollectionTitle"> Go to this Collection </h3>
+            <select name="collectId" id="collectId">
+                {{#each collect}}
+                    <option value="{{this.collectionId}}">{{this.collectionName}}</option>
+                {{/each}}
+            </select>
+        </form>
+        <form action="/userProfile" method="get" id="new">
+            <h3 id="goToUserProfileTitle">Go To User Profile</h3>
+            <button type="submit" id="goToUserProfileButton">Create Collection</button>
+        </form>
+    </div>
     <a href></a>
     <div id="collection">
         <button type="button" id="collectionScrollLeft"> &lt; </button>

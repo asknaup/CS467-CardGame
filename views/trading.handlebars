@@ -13,6 +13,16 @@
 
 <body>
     <div class="userRow">
+        <div id="marketForms">
+            <form action="/trading" method="get" id="marketCardForm">
+                <h3 id="marketGoToCollectionTitle" >Go to this Collection</h3>
+                <select name="collectId" id="marketCollectId">
+                    {{#each collect}}
+                    <option value="{{this.collectionId}}">{{this.collectionName}}</option>
+                    {{/each}}
+                </select>
+            </form>
+        </div>
         <h1 id="otherPlayerDeck">Cards In The Market</h1>
         <div id="otherScrollDeck">
             <button type="button" id="otherScrollLeft"> &lt; </button>
@@ -43,18 +53,20 @@
             <div id="userCardSlots"></div>
         </div>
         <h1 id="userDeck">User's Collection</h1>
-        <form action="/trading" method="get" id="cardForm">
-            <select name="collectId" id="collectId">
-                {{#each collect}}
-                <option value="{{this.collectionId}}">{{this.collectionName}}</option>
-                {{/each}}
-            </select>
-            <button type="submit">Go to this Collection</button>
-        </form>
-        <form action="/collect" method="get" id="new">
-            <p>No collections appear? Go to the collect page to create collections</p>
-            <button type="submit">Collect</button>
-        </form>
+        <div id="tradingForms">
+            <form action="/trading" method="get" id="cardForm">
+                <h3 id="tradingGoToCollectionTitle" >Go to this Collection</h3>
+                <select name="collectId" id="tradingCollectId">
+                    {{#each collect}}
+                    <option value="{{this.collectionId}}">{{this.collectionName}}</option>
+                    {{/each}}
+                </select>
+            </form>
+            <form action="/collect" method="get" id="tradingNew">
+                <h3 id="tradingGoToUserProfileTitle">No collections appear? Go to the collect page to create collections</h3>
+                <button type="submit" id="tradingGoToUserProfileButton">Collect Page</button>
+            </form>
+        </div>
     </div>
 
     <div id="tradePopUpForm">

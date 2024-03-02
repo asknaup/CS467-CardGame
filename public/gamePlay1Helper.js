@@ -769,7 +769,7 @@ function updateOpponentStageUI(opponentStage) {
                 typeText = `${card.type} - ${card.ability}`;
 
                 // const spellType = document.createElement('p');
-                // spellType.innerHTML = `<strong>Spell Type:</strong> ${card.spellType}`;
+                // spellType.innerHTML = `<strong>Type:</strong> ${card.spellType}`;
 
                 const spellAttack = document.createElement('p');
                 spellAttack.innerHTML = `<strong>Spell Attack:</strong> ${card.attack}`;

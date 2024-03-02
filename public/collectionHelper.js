@@ -45,24 +45,11 @@ function addRightScroll(userObj, scrollRightButton){
 }
 
 
-function displayCardCollection(userObj){
-    // Clear out old card elements
-    var collectionContainer = document.getElementById(userObj.collectionContainer);
-    while(collectionContainer.firstChild){
-        collectionContainer.removeChild(collectionContainer.firstChild);
-    }
-    for (let index = userObj.startIndex; index <= userObj.endIndex; index++){
-        let primaryKey = userObj.primaryKeyArr[index];
-        let cardData = userObj.cardDict[primaryKey];
-        let collectionCard = createTradingCardWithId(primaryKey, cardData);
-        collectionContainer.appendChild(collectionCard);
-    }
-}
-
 async function collectionSelectHandler(collectionSelect){
         let collectionKey = parseInt(collectionSelect.value);
         console.log(collectionKey);
         await switchToGivenCollection(collectionKey, userObj);
+        resetInitialStartAndEndIndex(userObj);
         displayCardCollection(userObj);
 }
 
@@ -88,6 +75,9 @@ async function switchToGivenCollection(collectionKey, userObj){
     }
     userObj.primaryKeyArr = userObj.primaryKeysForCollections[collectionKey];
     userObj.cardDict = userObj.collections[collectionKey];
+}
+
+function resetInitialStartAndEndIndex(userObj){
     userObj.startIndex = 0;
     userObj.endIndex = numCardsInView - 1;
     if (userObj.endIndex > userObj.primaryKeyArr.length - 1){
@@ -95,11 +85,9 @@ async function switchToGivenCollection(collectionKey, userObj){
     }
 }
 
-
 async function getCollection(userObj){
     const response= await fetch('/getCollection');
     let collection = await response.json();
-    console.log(collection)
     for(let index = 0; index < collection.length; index++){
         let currCollectId = collection[index].collectionId
         userObj.cardListsFromDb[currCollectId] = JSON.parse(collection[index].cardId);
@@ -130,13 +118,10 @@ async function getCollection(userObj){
 
 async function setupCollectionPage(){
     await getCollection(userObj);
-    if (userObj.endIndex > userObj.primaryKeyArr.length - 1){
-        userObj.endIndex = userObj.primaryKeyArr.length - 1
-    }
+    resetInitialStartAndEndIndex(userObj);
     displayCardCollection(userObj);
-    addRightScroll(userObj, collectionScrollRightButton)
-    addLeftScroll(userObj, collectionScrollLeftButton)
-    
+    addRightScroll(userObj, collectionScrollRightButton);
+    addLeftScroll(userObj, collectionScrollLeftButton);
 }
 
 

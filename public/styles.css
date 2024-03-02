@@ -315,13 +315,6 @@ header {
     background-color: rgb(154, 87, 154);
 }
 
-#collection{
-    position: relative;
-    width: 100%;
-    height: 160vh;
-    background-color: #d8eece;
-    border-radius: 15px;
-}
 
 #collectionTitle{
     width: 100%;
@@ -330,16 +323,40 @@ header {
     font-size: 3em;
 }
 
-#collectionSelect {
-    width: 6vw;
-    height: 3vw;
-    margin: 1vw;
-    background-color: #4caf50; 
-    border-radius: 5px;
-    color: white;
-    z-index: 100;
+#collectionForms{
+    display: flex;
+    justify-content: space-between;
 }
 
+#goToCollectionTitle{
+    display: inline-block;
+    position: relative;
+    top: 2vh;
+    color: #4caf50;
+}
+
+#collectId{
+    display: inline-block;
+    position: relative;
+    top: 2vh;
+}
+
+#goToUserProfileTitle{
+    display: inline-block;
+    color: #4caf50;
+}
+
+#goToUserProfileButton{
+    display: inline-block;
+}
+
+#collection{
+    position: relative;
+    width: 100%;
+    height: 160vh;
+    background-color: #d8eece;
+    border-radius: 15px;
+}
 
 #collectionContainer {
     width: 100%;
@@ -369,6 +386,59 @@ header {
 /* Trading Page */
 #noteToProgrammers{
     padding: 2vh;
+}
+
+#marketForms{
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+}
+
+#marketGoToCollectionTitle{
+    display: inline-block;
+    position: relative;
+    top: 2vh;
+    color: purple;
+}
+
+#marketCollectId{
+    display: inline-block;
+    position: relative;
+    top: 2vh;
+}
+
+#otherPlayerDeck {
+    color: purple;
+    width: 100%;
+    text-align: center;
+    margin: 1vw;
+}
+
+#tradingForms{
+    display: flex;
+    justify-content: space-between;
+}
+
+#tradingGoToCollectionTitle{
+    display: inline-block;
+    position: relative;
+    top: 1.75vh;
+    color: #4caf50;
+}
+
+#tradingCollectId{
+    display: inline-block;
+    position: relative;
+    top: 1.75vh;
+}
+
+#tradingGoToUserProfileTitle{
+    display: inline-block;
+    color: #4caf50;
+}
+
+#tradingGoToUserProfileButton{
+    display: inline-block;
 }
 
 #tradePopUpForm{
@@ -502,12 +572,6 @@ header {
     color: #a7d393;
 }
 
-#otherPlayerDeck {
-    color: purple;
-    width: 100%;
-    text-align: center;
-    margin: 1vw;
-}
 
 #userDeck{
     color: #0ba710;
@@ -998,7 +1062,7 @@ header {
     background-color: rgb(177, 200, 204); 
     border: 2px solid black;
     border-radius: 15px;
-    z-index: 100;
+    z-index: 90000;
     padding: 1vw;
 }
 
