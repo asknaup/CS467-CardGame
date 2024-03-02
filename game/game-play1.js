@@ -60,6 +60,8 @@ class Opponent {
         this.health = health;  // total health 
         this.mana = mana;  // mana per turn
         this.player = player;
+        this.playerStage = []; // Initialize playerStage for staging creature cards
+        this.opponentStage = []; // Initialize opponentStage for staging computers's creature cards
     }
 
 
@@ -78,8 +80,6 @@ class Opponent {
 class ComputerOpponent extends Opponent {
     constructor(health = 100, mana = 10, player) {
         super(health, mana, player);
-        this.playerStage = []; // Initialize playerStage for staging creature cards
-        this.opponentStage = []; // Initialize opponentStage for staging computers's creature cards
     }
 
     selectRandomCard(cards) {

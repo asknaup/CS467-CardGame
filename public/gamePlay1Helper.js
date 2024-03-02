@@ -1,9 +1,10 @@
 // gamePlay1Helper.js
 // Game play for RuleSet 1
 // Client Side Javascript
+
 // Defined globally
 function dragStart(event) {
-    
+
     event.dataTransfer.setData('text/plain', event.target.id);
 }
 
@@ -14,28 +15,34 @@ function dragOver(event) {
 function drop(event) {
     event.preventDefault();
     const cardId = event.dataTransfer.getData('text/plain');
+    const cardElements = Array.from(document.querySelectorAll('.card-container.card.player'))
+    const cardElement = cardElements.find(card => parseInt(card.id) === parseInt(cardId))
     // const dropZone = event.target;
     const dropZone = event.target.closest('.drop-zone');
     const existingCard = dropZone.querySelector('.card');
-
     if (!existingCard) {
-        handleEmptyDropZone(cardId, dropZone);
+        // If the drop zone is empty, play the card in the drop zone
+        console.log("dropedCard", cardId, cardElement)
+        handleEmptyDropZone(cardId, cardElement, dropZone);
     } else {
-        handleExistingCardDrop(cardId, dropZone);
+        handleExistingCardDrop(cardElement, dropZone);
     }
 }
 
-function handleEmptyDropZone(cardId, dropZone) {
-    fetch(`/getCardDetails?cardId=${cardId}`)
+function handleEmptyDropZone(cardId, cardElement, dropZone) {
+    const owner = cardElement.classList.contains('player') ? 'player' : 'opponent';
+    fetch(`/getCardHandDetails?cardId=${parseInt(cardId)}&owner=${owner}`)
         .then(response => response.json())
         .then(cardData => {
+            console.log("cardData", cardData)
             if (cardData.type.toLowerCase() === 'creature') {
-                if (dropZone.parentElement.classList.contains('opponent')) {
+
+                if (cardElement.classList.contains('player') && dropZone.parentElement.classList.contains('opponent')) {
                     // Attack the opponent
-                    attackCardToOpponent(cardId, dropZone);
-                } else if (dropZone.parentElement.classList.contains('player')) {
+                    attackCardToOpponent(parseInt(cardId), dropZone);
+                } else if (cardElement.classList.contains('player') && dropZone.parentElement.classList.contains('player')) {
                     // Play the card in the player's drop zone
-                    playCard(cardId, dropZone);
+                    playCard(cardElement, dropZone);
                 }
             } else if (cardData.type.toLowerCase() === 'spell') {
                 handleSpellCardDrop(cardData, dropZone);  // TODO: Implement this function
@@ -48,12 +55,11 @@ function handleEmptyDropZone(cardId, dropZone) {
         });
 }
 
-function handleExistingCardDrop(cardId, dropZone) {
+function handleExistingCardDrop(cardElement, dropZone) {
     const dropZoneId = dropZone.id;
     const cardElement = dropZone.querySelector('.card');
-    
 
-    fetch(`/getCardDetails?cardId=${cardId}`)
+    fetch(`/getCardDetails?cardId=${parseInt(cardElement.id)}`)
         .then(response => response.json())
         .then(cardData => {
             if (cardData.type.toLowerCase() === 'spell') {
@@ -100,14 +106,14 @@ function attackCardToOpponent(cardId, dropZone) {
 }
 
 function handleSpellCardDrop(spellCard, dropZone) {
-    
+
     if (spellCard.ability.toLowerCase() === 'buff') {
         if (dropZone.parentElement.classList.contains('staging')) {
             displayErrorMessage('Error: Cannot play Spell card in staging area. Must be applied to player or Creature card', dropZone.id);
-        } else if(spellCard.ability.toLowerCase() === 'debuff') {
-            applySpellEffect(spellCard, dropZone); 
+        } else if (spellCard.ability.toLowerCase() === 'debuff') {
+            applySpellEffect(spellCard, dropZone);
             fetchAndRenderHand();
-            
+
         } else {
             applySpellEffect(spellCard, dropZone);  // TODO: Implement this function
             fetchAndRenderHand();
@@ -115,19 +121,18 @@ function handleSpellCardDrop(spellCard, dropZone) {
     }
 }
 
-function playCard(cardId, dropZone) {
+function playCard(cardElement, dropZone) {
     fetch('/playCard', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ cardId }),
+        body: JSON.stringify({ cardId: parseInt(cardElement.id)}),
     })
         .then(response => response.json())
         .then(data => {
             if (data.message === 'card played successfully') {
                 // Move the card from hand to the drop zone
-                const cardElement = document.getElementById(cardId);
                 cardElement.classList.add('greyed-out');
                 dropZone.appendChild(cardElement);
 
@@ -162,7 +167,7 @@ function fetchAndRenderOpponentStage() {
     fetch('/getOpponentStage')
         .then(response => response.json())
         .then(data => {
-            
+            console.log('opponentStage:', data.opponentStage[0])
             // Render the opponent's staging area data on the UI
             renderOpponentStage(data.opponentStage);
         })
@@ -189,177 +194,317 @@ function renderStagingArea(stagingAreaData) {
 }
 
 function renderOpponentStage(opponentStageData) {
-    const parentElement = document.getElementById('opponentStagingArea');
-    
-    // Get all child elements in the opponent's staging area
-    const childElements = parentElement.querySelectorAll('.card');
+    // Assuming opponentStage is an array of card IDs
+    const dropZones = document.querySelectorAll('.opponent .drop-zone');
+    const emptyDropZones = [];
+    const fullDropZones = [];
 
-    // Convert NodeList to Array for easier manipulation
-    const childElementArray = Array.from(childElements);
-
-    // Iterate over each child element
-    childElementArray.forEach(childElement => {
-        // Check if the child element has both .card and .player classes
-        const hasPlayerClass = childElement.classList.contains('player');
-        // If the child element has both .card and .player classes, skip it
-        if (hasPlayerClass) {
-            return;
-        }
-
-        // Get the card id of the child element
-        const cardId = childElement.id;
-        // Find the corresponding card data in opponentStageData
-        const cardData = opponentStageData.find(card => parseInt(card.id) === parseInt(cardId));
-
-        // If the card exists in opponentStageData, update its properties
-        if (cardData) {
-            const parentNode = childElement.parentNode;
-            parentNode.removeChild(childElement);
-            
-            
-            // Update the card element with the new card data
-            const cardContainer = document.createElement('div');
-            cardContainer.classList.add('card-container');
-            cardContainer.draggable = true; // Make the entire container draggable
-            cardContainer.id = cardData.id; // Set the outer div id as the cardId
-            cardContainer.classList.add('card');
-
-            // Create elements for card content
-            const cardId = document.createElement('p');
-            cardId.textContent = cardData.id;
-
-            const name = document.createElement('h1');
-            name.classList.add('name');
-            name.textContent = cardData.name;
-
-            const textOverlayBottom = document.createElement('div');
-            textOverlayBottom.classList.add('textOverlayBottom');
-
-            const textOverlayTop = document.createElement('div');
-            textOverlayTop.classList.add('textOverlayTop');
-
-            const cardImage = document.createElement('div');
-            cardImage.classList.add('cardImage');
-            cardImage.draggable = false;
-
-            const imageElement = document.createElement('img');
-            imageElement.src = cardData.imagePath;
-            imageElement.alt = 'Card Image';
-
-            cardImage.appendChild(imageElement);
-
-            const rarity = document.createElement('p');
-            rarity.textContent = cardData.rarity;
-
-            const mana = document.createElement('p');
-            mana.innerHTML = `<strong>Mana Cost:</strong> ${cardData.mana}`;
-
-            textOverlayBottom.appendChild(rarity);
-            textOverlayBottom.appendChild(mana);
-
-            let typeText = '';
-            if (cardData.type.toLowerCase() === "spell") {
-                typeText = `${cardData.type} - ${cardData.ability}`;
-
-                // const spellType = document.createElement('p');
-                // spellType.innerHTML = `<strong>Spell Type:</strong> ${cardData.spellType}`;
-
-                const spellAttack = document.createElement('p');
-                spellAttack.innerHTML = `<strong>Spell Attack:</strong> ${cardData.attack}`;
-
-                const spellDefense = document.createElement('p');
-                spellDefense.innerHTML = `<strong>Spell Defense:</strong> ${cardData.defense}`;
-
-                // textOverlayBottom.appendChild(spellType);
-                textOverlayBottom.appendChild(spellAttack);
-                textOverlayBottom.appendChild(spellDefense);
-            } else {
-                typeText = cardData.type;
-
-                const attack = document.createElement('p');
-                attack.innerHTML = `<strong>Attack:</strong> ${cardData.attack}`;
-
-                const defense = document.createElement('p');
-                defense.innerHTML = `<strong>Defense:</strong> ${cardData.defense}`;
-
-                textOverlayBottom.appendChild(attack);
-                textOverlayBottom.appendChild(defense);
-            }
-
-            const type = document.createElement('p');
-            type.classList.add('cardType');
-            type.textContent = typeText;
-
-            textOverlayTop.appendChild(name);
-            textOverlayTop.appendChild(type);
-
-            cardContainer.appendChild(textOverlayBottom);
-            cardContainer.appendChild(cardImage);
-            cardContainer.appendChild(textOverlayTop);
-
-            // Add event listener for the card container
-            cardContainer.addEventListener('dragstart', event => {
-                // Set the cardId as the data to be transferred during the drag operation
-                event.dataTransfer.setData('text/plain', cardContainer.id);
-            });
-
-            // Append the card container to the hand container
-            parentNode.appendChild(cardContainer);
-
-        } else if (parentElement.contains(childElement)) {
-            // If the card does not exist in opponentStageData and is a child of parentElement, remove the child element
-            // Check if the child element has a parent before attempting to remove it
-            if (childElement.parentNode) {
-                childElement.parentNode.removeChild(childElement);
-            } else {
-                console.log("Parent node not found for child element:", childElement);
-            }
+    dropZones.forEach(dropZone => {
+        const cardElement = dropZone.querySelector('.card');
+        if (!cardElement) {
+            emptyDropZones.push(dropZone.id); // Add drop zone ID to the emptyDropZones array if no card is found
+        } else {
+            fullDropZones.push(dropZone.id); // Add drop zone ID to the emptyDropZones array if no card is found
         }
     });
+
+    // Test if card in fullDropZone is in opponentStageData
+    // If not, remove card from dropZone 
+    // If so, update cardElement with corresponding cardData
+    fullDropZones.forEach(dropZone => {
+        const cardElement = document.getElementById(dropZone).querySelector('.card');
+        const cardId = cardElement ? parseInt(cardElement.id) : null;
+        const cardIndex = opponentStageData.findIndex(card => parseInt(card.id) === parseInt(cardId));
+
+        if (cardIndex !== -1) {
+            // If a card exists in the drop zone and it exists in opponentStageData,
+            // replace it with the corresponding data from opponentStageData
+            const correspondingCardData = opponentStageData[cardIndex];
+            updateCardElement(cardElement, correspondingCardData);
+            cardElement.classList.add('opponent');
+            opponentStageData.splice(cardIndex, 1); // Remove the card from opponentStageData
+        } else {
+            // If the drop zone contains a card that does not exist in opponentStageData, remove the card
+            cardElement.remove();
+        }
+    });
+
+    // Shuffle the emptyDropZones array
+    emptyDropZones.sort(() => Math.random() - 0.5);
+
+    if (opponentStageData.length > 0) {
+        // Test if card in opponentStageData is in fullDropZone
+        // If not, create new cardElement and append to dropZone
+        // If so, do nothing
+        emptyDropZones.forEach(dropZone => {
+            // Check if opponentStageData is empty before proceeding
+            if (opponentStageData.length === 0) {
+                return;
+            }
+            // randomly select an empty drop zone
+            const randomIndex = Math.floor(Math.random() * opponentStageData.length);
+            const cardData = opponentStageData[randomIndex];
+            // Create a new card element
+            const cardContainer = createCardElement(cardData);
+            cardContainer.classList.add('opponent');
+            const dropZoneElement = document.getElementById(dropZone);
+            dropZoneElement.appendChild(cardContainer);
+
+            opponentStageData.splice(randomIndex, 1); // Remove the card from opponentStageData
+        });
+    }
+}
+
+function createCardElement(cardData) {
+    console.log('cardData(createCardElement):', cardData)
+    const cardContainer = document.createElement('div');
+    cardContainer.classList.add('card-container');
+    cardContainer.draggable = true; // Make the entire container draggable
+    cardContainer.id = cardData.id; // Set the outer div id as the cardId
+    cardContainer.classList.add('card');
+
+    // Create elements for card content
+    const cardId = document.createElement('p');
+    cardId.textContent = cardData.id;
+
+    const name = document.createElement('h1');
+    name.classList.add('name');
+    name.textContent = cardData.name;
+
+    const textOverlayBottom = document.createElement('div');
+    textOverlayBottom.classList.add('textOverlayBottom');
+
+    const textOverlayTop = document.createElement('div');
+    textOverlayTop.classList.add('textOverlayTop');
+
+    const cardImage = document.createElement('div');
+    cardImage.classList.add('cardImage');
+    cardImage.draggable = false;
+
+    const imageElement = document.createElement('img');
+    imageElement.src = cardData.imagePath;
+    imageElement.alt = 'Card Image';
+
+    cardImage.appendChild(imageElement);
+
+    const rarity = document.createElement('p');
+    rarity.textContent = cardData.rarity;
+
+    const mana = document.createElement('p');
+    mana.innerHTML = `<strong>Mana Cost:</strong> ${cardData.mana}`;
+
+    textOverlayBottom.appendChild(rarity);
+    textOverlayBottom.appendChild(mana);
+
+    let typeText = '';
+    if (cardData.type.toLowerCase() === "spell") {
+        typeText = `${cardData.type} - ${cardData.ability}`;
+
+        // const spellType = document.createElement('p');
+        // spellType.innerHTML = `<strong>Spell Type:</strong> ${cardData.spellType}`;
+
+        const spellAttack = document.createElement('p');
+        spellAttack.innerHTML = `<strong>Spell Attack:</strong> ${cardData.attack}`;
+
+        const spellDefense = document.createElement('p');
+        spellDefense.innerHTML = `<strong>Spell Defense:</strong> ${cardData.defense}`;
+
+        // textOverlayBottom.appendChild(spellType);
+        textOverlayBottom.appendChild(spellAttack);
+        textOverlayBottom.appendChild(spellDefense);
+
+    } else {
+        typeText = cardData.type;
+
+        const attack = document.createElement('p');
+        attack.innerHTML = `<strong>Attack:</strong> ${cardData.attack}`;
+
+        const defense = document.createElement('p');
+        defense.innerHTML = `<strong>Defense:</strong> ${cardData.defense}`;
+
+        textOverlayBottom.appendChild(attack);
+        textOverlayBottom.appendChild(defense);
+
+    }
+
+    const type = document.createElement('p');
+    type.classList.add('cardType');
+    type.textContent = typeText;
+
+    textOverlayTop.appendChild(name);
+    textOverlayTop.appendChild(type);
+
+    cardContainer.appendChild(textOverlayBottom);
+    cardContainer.appendChild(cardImage);
+    cardContainer.appendChild(textOverlayTop);
+
+    // Add event listener for the card container
+    cardContainer.addEventListener('dragstart', event => {
+        // Set the cardId as the data to be transferred during the drag operation
+        event.dataTransfer.setData('text/plain', cardContainer.id);
+    });
+
+    return cardContainer;
 }
 
 
+function updateCardElement(cardElement, cardData) {
+    if (cardElement && cardData) {
+        const parentNode = cardElement.parentNode;
+        parentNode.removeChild(cardElement);
 
+        const cardContainer = document.createElement('div');
+        cardContainer.classList.add('card-container');
+        cardContainer.draggable = true; // Make the entire container draggable
+        cardContainer.id = cardData.id; // Set the outer div id as the cardId
+        cardContainer.classList.add('card');
 
+        // Create elements for card content
+        const cardId = document.createElement('p');
+        cardId.textContent = cardData.id;
 
+        const name = document.createElement('h1');
+        name.classList.add('name');
+        name.textContent = cardData.name;
 
+        const textOverlayBottom = document.createElement('div');
+        textOverlayBottom.classList.add('textOverlayBottom');
 
+        const textOverlayTop = document.createElement('div');
+        textOverlayTop.classList.add('textOverlayTop');
+
+        const cardImage = document.createElement('div');
+        cardImage.classList.add('cardImage');
+        cardImage.draggable = false;
+
+        const imageElement = document.createElement('img');
+        imageElement.src = cardData.imagePath;
+        imageElement.alt = 'Card Image';
+
+        cardImage.appendChild(imageElement);
+
+        const rarity = document.createElement('p');
+        rarity.textContent = cardData.rarity;
+
+        const mana = document.createElement('p');
+        mana.innerHTML = `<strong>Mana Cost:</strong> ${cardData.mana}`;
+
+        textOverlayBottom.appendChild(rarity);
+        textOverlayBottom.appendChild(mana);
+
+        let typeText = '';
+        if (cardData.type.toLowerCase() === "spell") {
+            typeText = `${cardData.type} - ${cardData.ability}`;
+
+            // const spellType = document.createElement('p');
+            // spellType.innerHTML = `<strong>Spell Type:</strong> ${cardData.spellType}`;
+
+            const spellAttack = document.createElement('p');
+            spellAttack.innerHTML = `<strong>Spell Attack:</strong> ${cardData.attack}`;
+
+            const spellDefense = document.createElement('p');
+            spellDefense.innerHTML = `<strong>Spell Defense:</strong> ${cardData.defense}`;
+
+            // textOverlayBottom.appendChild(spellType);
+            textOverlayBottom.appendChild(spellAttack);
+            textOverlayBottom.appendChild(spellDefense);
+        } else {
+            typeText = cardData.type;
+
+            const attack = document.createElement('p');
+            attack.innerHTML = `<strong>Attack:</strong> ${cardData.attack}`;
+
+            const defense = document.createElement('p');
+            defense.innerHTML = `<strong>Defense:</strong> ${cardData.defense}`;
+
+            textOverlayBottom.appendChild(attack);
+            textOverlayBottom.appendChild(defense);
+        }
+
+        const type = document.createElement('p');
+        type.classList.add('cardType');
+        type.textContent = typeText;
+
+        textOverlayTop.appendChild(name);
+        textOverlayTop.appendChild(type);
+
+        cardContainer.appendChild(textOverlayBottom);
+        cardContainer.appendChild(cardImage);
+        cardContainer.appendChild(textOverlayTop);
+
+        // Add event listener for the card container
+        cardContainer.addEventListener('dragstart', event => {
+            // Set the cardId as the data to be transferred during the drag operation
+            event.dataTransfer.setData('text/plain', cardContainer.id);
+        });
+
+        // Append the card container to the hand container
+        parentNode.appendChild(cardContainer);
+    }
+}
 
 // Function to handle dropping on the opponent's health orb
 function dropOnOpponentHealthOrb(event) {
     event.preventDefault();
     const cardId = event.dataTransfer.getData('text/plain');
+    const cardElements = Array.from(document.querySelectorAll('.card-container.card.player'))
+    const cardElement = cardElements.find(card => parseInt(card.id) === parseInt(cardId))
+    // const dropZone = event.target;
 
-    // Fetch card details
-    fetch(`/getCardDetails?cardId=${cardId}`)
+    console.log("parseInt(cardElement.id)", cardId)
+    console.log("cardElement", cardElement)
+    const owner = cardElement.classList.contains('player') ? 'player' : 'opponent';
+    console.log("owner", owner)
+
+    const parentNode = cardElement.parentNode;
+    console.log("parentNode", parentNode)
+
+    if (parentNode.id === 'hand') {
+        fetch(`/getCardHandDetails?cardId=${parseInt(cardId)}&owner=${owner}`)
+            .then(response => response.json())
+            .then(cardData => {
+                console.log("cardData", cardData)
+                // Check if the card type is "damage" spell
+                if (cardData.type.toLowerCase() === 'spell' && cardData.ability.toLowerCase() === 'damage') {
+                    // Apply the spell effect to damage the opponent's health
+                    applyDamageToOpponentHealth(cardElement);
+                    fetchAndRenderHand(); // Fetch and render the hand after the spell is played
+                } else {
+                    // Display an error message since only "damage" spells can be applied to opponent's health
+                    displayErrorMessage('Error: Only "damage" spells and playable creatures can be applied to opponent\'s health', 'opponentHealthOrb');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching card details:', error);
+            });
+        
+    } else {
+    fetch(`/getCardDeckDetails?cardId=${parseInt(cardId)}&owner=${owner}`)
         .then(response => response.json())
         .then(cardData => {
-            // Check if the card type is "damage" spell
-            if (cardData.type.toLowerCase() === 'spell' && cardData.ability.toLowerCase() === 'damage') {
-                // Apply the spell effect to damage the opponent's health
-                applyDamageToOpponentHealth(cardData.id);
-                fetchAndRenderHand(); // Fetch and render the hand after the spell is played
-            } else if (cardData.type.toLowerCase() === "creature") {
+            console.log("cardData", cardData)
+            if (cardData.type.toLowerCase() === "creature") {
                 // If cardData is in staging area, play card and remove from staging area
-                attackCardToHealth(cardData.id);
-
+                attackCardToHealth(cardElement);
+                fetchAndRenderStagingArea();
             } else {
                 // Display an error message since only "damage" spells can be applied to opponent's health
-                displayErrorMessage('Error: Only "damage" spells can be applied to opponent\'s health', 'opponentHealthOrb');
+                displayErrorMessage('Error: Only "damage" spells and playable creatures can be applied to opponent\'s health', 'opponentHealthOrb');
             }
         })
         .catch(error => {
             console.error('Error fetching card details:', error);
         });
+    }
 }
 
-function attackCardToHealth(id) {
+function attackCardToHealth(cardElement) {
     fetch('/attackCardToHealth', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id }),
+        body: JSON.stringify({ id : parseInt(cardElement.id)}),
     })
         .then(response => response.json())
         .then(data => {
@@ -372,14 +517,11 @@ function attackCardToHealth(id) {
                 document.getElementById('playerMana').textContent = `Player Mana: ${data.playerMana}`;
 
                 // Remove card from staging area
-                const cardElement = document.getElementById(id);
                 cardElement.remove();
 
                 // Update player's deck card count
                 document.getElementById('deck-count').textContent = `Remaining Deck Cards: ${data.playerDeckCount}`;
             }
-
-
         })
         .catch(error => {
             console.error('Error applying damage to opponent health:', error);
@@ -387,14 +529,14 @@ function attackCardToHealth(id) {
 }
 
 // Function to apply damage to opponent's health
-function applyDamageToOpponentHealth(id) {
+function applyDamageToOpponentHealth(cardElement) {
     // Send a request to the server to deduct 'damage' from the opponent's health
     fetch('/damageOpponent', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id }),
+        body: JSON.stringify({ id : parseInt(cardElement.id)}),
     })
         .then(response => response.json())
         .then(data => {
@@ -421,7 +563,7 @@ function applyDebuffToOpponentCard(id, targetId) {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id, targetId}),
+        body: JSON.stringify({ id, targetId }),
     })
         .then(response => response.json())
         .then(data => {
@@ -647,8 +789,8 @@ function endTurn() {
             });
 
             // Update the UI based on the opponent's move
-            if (data.opponentStage) {
-                updateOpponentStageUI(data.opponentStage);
+            if (data.opponentStage && data.round <= 1) {
+                initializeOpponentStageUI(data.opponentStage);
             }
 
             if (data.playerMana) {
@@ -689,7 +831,7 @@ function endTurn() {
     attachDragDropListeners();
 }
 
-function updateOpponentStageUI(opponentStage) {
+function initializeOpponentStageUI(opponentStage) {
     attachStagedCardListeners();
 
     // Assuming opponentStage is an array of card IDs
@@ -722,7 +864,7 @@ function updateOpponentStageUI(opponentStage) {
 
             // Select the drop zone container element
             const selectedDropZoneContainer = document.getElementById(selectedDropZone);
-            
+
             // Create a new card element
             const cardElement = document.createElement('div');
             cardElement.classList.add('card');
@@ -810,6 +952,8 @@ function updateOpponentStageUI(opponentStage) {
                 event.dataTransfer.setData('text/plain', cardElement.id);
             });
 
+            cardElement.classList.add('opponent');
+
             // Append the card element to the selected drop zone
             selectedDropZoneContainer.appendChild(cardElement);
 
@@ -849,12 +993,12 @@ async function applySpellEffect(spellCard, dropZone) {
         }
 
         const creatureCardData = await fetchCreatureCardDetails(cardId);
-        
+
         if (!creatureCardData) {
             console.error('Error: Creature card details not found');
             return;
         }
-        
+
         if (creatureCardData.type.toLowerCase() === 'creature') {
             if (spellCard.ability.toLowerCase() === 'debuff') {
                 applyDebuffToOpponentCard(spellCard.id, cardId);
@@ -879,7 +1023,7 @@ function handleNoCardFoundError(dropZone) {
 }
 
 async function applySpellToCreature(spellCard, dropZoneId, creatureCardData) {
-    
+
 
     if (!spellCard.ability) {
         console.error('Error: Spell effect not defined for the spell card');
