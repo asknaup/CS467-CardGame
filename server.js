@@ -739,11 +739,11 @@ app.get('/getPlayerStage', async (req, res) => {
 // Get Opponent Stage
 app.get('/getOpponentStage', async (req, res) => {
   const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
-  gameInst = gameInstance[game.gameId];
+  const gameInst = gameInstance[game.gameId];
 
   if (gameInst) {
-    const opponentStage = gameInst.opponentStage;
-
+    const opponentStage = gameInst.opponent.opponentStage;
+    // console.log("/opponentStage", opponentStage)
     res.status(200).json({ opponentStage: opponentStage });
   }
 })
@@ -789,6 +789,44 @@ app.post('/playCard', async (req, res) => {
     res.status(404).json({ error: "Game not found." });
   }
 });
+
+app.get('/getCardHandDetails', async (req, res) => {
+  const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
+  const gameInst = gameInstance[game.gameId];
+  const {cardId, owner} = req.query;
+
+  if (gameInst) {
+    if (owner === 'player') {
+      const card = gameInst.hand.find(card => card.id === parseInt(cardId));
+      console.log("card", card)
+      res.json(card);
+    } else if (owner === 'opponent') {
+      const card = gameInst.opponent.hand.find(card => card.id === parseInt(cardId));
+      res.json(card);
+    } else {
+      res.status(400).json({ error: 'Unknown card owner' });
+    }
+  }
+})
+
+app.get('/getCardDeckDetails', async (req, res) => {
+  const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
+  const gameInst = gameInstance[game.gameId];
+  const {cardId, owner} = req.query;
+
+
+  if (gameInst) {
+    if (owner === 'player') {
+      const card = gameInst.playerStage.find(card => card.id === parseInt(cardId));
+      res.json(card);
+    } else if (owner === 'opponent') {
+      const card = gameInst.opponent.opponentStage.find(card => card.id === parseInt(cardId));
+      res.json(card);
+    } else {
+      res.status(400).json({ error: 'Unknown card owner' });
+    }
+  }
+})
 
 // Get card details
 app.get('/getCardDetails', async (req, res) => {
@@ -849,8 +887,10 @@ app.post('/endTurn', async (req, res) => {
 
   if (gameInstance[game.gameId]) {
     try {
+      const gameInst = gameInstance[game.gameId];
+      console.log("opponentStage", gameInst.opponentStage.length)
       // Get the updated playerStage after ending the turn
-      await gameInstance[game.gameId].playNextTurn();
+      await gameInst.playNextTurn();
 
       let opponentStage = gameInstance[game.gameId].opponentStage; // Computers
       let updatedStage = gameInstance[game.gameId].playerStage;
@@ -858,6 +898,7 @@ app.post('/endTurn', async (req, res) => {
       const playerMana = gameInstance[game.gameId].user.mana;
       const opponentHand = gameInstance[game.gameId].opponentHand;
 
+      console.log("opponentStage", opponentStage.length)
       res.status(200).json({
         message: 'Computer opponent\'s turn completed',
         opponentStage,
@@ -867,7 +908,8 @@ app.post('/endTurn', async (req, res) => {
         playerDeckCount: gameInstance[game.gameId].deck.length,
         playerMana,
         opponentHand,
-        playerHealth: gameInstance[game.gameId].user.health
+        playerHealth: gameInstance[game.gameId].user.health,
+        round: gameInstance[game.gameId].round
       });
 
     } catch (error) {
