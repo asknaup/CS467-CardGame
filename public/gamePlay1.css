@@ -388,20 +388,6 @@ header {
     opacity: 1;
 }
 
-/* Stylish health orb */
-.health-orb {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: #ff6347;
-    color: #fff;
-    position: absolute;
-    text-align: center;
-    line-height: 50px;
-    font-weight: bold;
-    box-shadow: 0 0 10px rgba(255, 99, 71, 0.3);
-}
-
 /* Enhanced board container */
 #board-container {
     display: flex;
@@ -542,4 +528,77 @@ header {
 
 .opponent-mana::before {
     background-image: url('path/to/opponent-mana-icon.png');
+}
+
+body {
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+    /* Use a professional font */
+}
+
+.health-orbs {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#linkHere {
+    color: #007bff;
+    /* Blue color for the hyperlink */
+    text-decoration: none;
+    /* Remove default underline */
+    border-bottom: 2px solid #007bff;
+    /* Add a bottom border for emphasis */
+    transition: border-bottom 0.3s ease;
+    /* Add a smooth transition effect */
+}
+
+#linkHere:hover {
+    border-bottom: 2px solid #0056b3;
+    /* Darker border on hover */
+}
+
+.health-orb {
+    width: 80px;
+    /* Increased width for better centering */
+    height: 80px;
+    /* Increased height for better centering */
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    /* Stack items vertically */
+    align-items: center;
+    justify-content: center;
+    margin: 0 180px;
+    background-color: #f0f0f0;
+    /* Light background for a professional look */
+    border: 2px solid #ccc;
+    /* Add a border for better visibility */
+}
+
+#opponentHealth,
+#playerHealth {
+    color: #333;
+    /* Dark text color for better readability */
+    font-size: 18px;
+    /* Adjust font size for better visibility */
+}
+
+.opponent-health {
+    background-color: #ff9999;
+    /* Light red for opponent health */
+}
+
+.player-health {
+    background-color: #99ff99;
+    /* Light green for player health */
+}
+
+.label {
+    margin-top: 5px;
+    /* Add some space between the health value and label */
+    font-size: 14px;
+    /* Adjust font size for better visibility */
+    color: #555;
+    /* Dark gray color for the label */
 }
