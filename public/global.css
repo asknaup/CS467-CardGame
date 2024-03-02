@@ -201,7 +201,7 @@ footer {
 
 p {
   font-family: Arial, Helvetica, sans-serif;
-  text-align: left;
+  /* text-align: left; */
   font-size: larger;
 }
 

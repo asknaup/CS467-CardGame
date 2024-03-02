@@ -422,14 +422,14 @@ header {
 #tradingGoToCollectionTitle{
     display: inline-block;
     position: relative;
-    top: 2vh;
+    top: 1.75vh;
     color: #4caf50;
 }
 
 #tradingCollectId{
     display: inline-block;
     position: relative;
-    top: 2vh;
+    top: 1.75vh;
 }
 
 #tradingGoToUserProfileTitle{

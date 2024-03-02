@@ -46,6 +46,7 @@ function clearStagingArea() {
 // Updated function to create a trading card based on getCardInfo output
 function createTradingCardFromInfo(cardInfo) {
 
+    console.log(cardInfo);
     console.log('Creating Card Element (cardInfo[0]):', cardInfo[0]);
 
     var card = document.createElement('div');
@@ -466,46 +467,6 @@ async function getCardData(selectedDeck) {
         return null; // or return some default value
     }
 }
-
-// async function updateStagingAreaFromInfo() {
-//     try {
-//         // Fetch the deckId from the server (Replace this with your actual logic)
-//         const deckId = await fetchDeckIdFromServer();
-
-//         // Check if deckId is present
-//         if (!deckId) {
-//             console.error('Deck ID not found');
-//             return;
-//         }
-
-//         // Fetch cardIds associated with the deckId
-//         const cardIds = await fetchCardIdsFromServer(deckId);
-
-//         // Assuming you have a staging area container with an id of 'stagingArea'
-//         const stagingArea = document.getElementById('stagingArea');
-
-//         // Clear existing content
-//         stagingArea.innerHTML = '';
-
-//         // Update with new content based on deckId and cardIds
-//         // Add your logic to create and append elements as needed
-//         // For example, you might create divs for each card and append them to the staging area
-//         if (cardIds) {
-//             cardIds.forEach(async (cardId) => {
-//                 // Fetch card info for each cardId
-//                 const cardInfo = await getCardInfo(cardId);
-
-//                 // Create trading card element from cardInfo
-//                 const cardElement = createTradingCardFromInfo(cardInfo);
-
-//                 // Append cardElement to the staging area
-//                 stagingArea.appendChild(cardElement);
-//             });
-//         }
-//     } catch (error) {
-//         console.error('Error updating staging area:', error);
-//     }
-// }
 
 async function updateStagingAreaFromInfo() {
     try {
