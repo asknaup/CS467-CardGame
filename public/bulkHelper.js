@@ -1,5 +1,7 @@
 // Function to create a trading card
-function createTradingCard(cardData) {
+async function createTradingCard(cardInformation) {
+
+    cardData = cardInformation;
 
     console.log("This is what's being passsed to createTradingCard:", cardData);
 
@@ -8,8 +10,8 @@ function createTradingCard(cardData) {
     card.classList.add('card');
 
     // cardId
-    var cardId = document.createElement('p');
-    cardId.textContent = cardData.cardId;
+    // var cardId = document.createElement('p');
+    // cardId.textContent = cardData.cardId;
 
     // Tooltip for attributes
     // var toolTip = document.createElement('div');
@@ -21,7 +23,7 @@ function createTradingCard(cardData) {
     // Name
     var cardName = document.createElement('h1');
     cardName.classList.add('cardName');
-    cardName.textContent = cardData.cardName;
+    cardName.textContent = cardData.name;
 
     // Text overlays
     var textOverlayBottom = document.createElement('div');
@@ -35,7 +37,7 @@ function createTradingCard(cardData) {
     cardImage.classList.add('cardImage');
 
     var imageElement = document.createElement('img');
-    imageElement.src = cardData.imagePath;
+    imageElement.src = cardData.URL;
     imageElement.alt = 'Card Image';
 
     cardImage.appendChild(imageElement);
@@ -43,8 +45,8 @@ function createTradingCard(cardData) {
     // TODO: Replace with creature
     var cardType = document.createElement('p');
     cardType.classList.add('cardType');
-
     cardType.textContent = cardData.cardType;
+    
     var rarity = document.createElement('p');
     rarity.textContent = cardData.rarity;
 
@@ -104,38 +106,42 @@ function createTradingCard(cardData) {
 
     // card.appendChild(toolTip);
 
-    return card;
+    // return card;
+    const cardContainer = document.getElementById('cardContainer');
+
+    cardContainer.appendChild(card);
 }
 
 // Example fetch request
 async function fetchCreateTradingCard() {
-    try {
-        // Move the declaration of cardData here
-        let cardData;
+    // try {
+    // Get the query parameters from the URL
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    console.log("urlSearchParams:", urlSearchParams);
+    const params = Object.fromEntries(urlSearchParams.entries());
+    console.log("params:", params);
 
-        const response = await fetch('/cardViewPrintedPage', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: null
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        cardData = await response.json();
-
-        // Assuming cardData contains the data you want to pass to createTradingCard
-        const card = createTradingCard(cardData);
-
-        // Append the card to the document or do any other necessary operations
-        document.body.appendChild(card);
-    } catch (error) {
-        console.error('Error:', error);
-    }
+    fetch('/cardViewPrintedBulkPagePost', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(params),
+    })
+        .then(response => response.json())
+        .then(data => {
+            data.cards.forEach(element => {
+                console.log("element:", element);
+                createTradingCard(element);
+            });
+            console.log("Data from then fetch:", data);
+        })
+        .catch(error => {
+            console.error('Error fetching card details:', error);
+        })
 }
 
-// Call the fetchCreateTradingCard function
-fetchCreateTradingCard();
+document.addEventListener('DOMContentLoaded', function () {
+    // Call the fetchCreateTradingCard function
+    fetchCreateTradingCard();
+});

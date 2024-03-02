@@ -649,30 +649,9 @@ app.post('/cardViewPrintedPage', async (req, res) => {
     const data = await dbFunc.getCardInfo(cardId);
     console.log("This is data in the /cardViewPrintedPage route:", data);
 
-    const cardData = {
-      cardId: cardId,
-      cardName: stringCard.name,
-      cardType: stringCard.type,
-      rarity: stringCard.rarity,
-      manaCost: stringCard.manaCost,
-      creatureAttack: stringCard.creatureAttack, 
-      creatureDefense: stringCard.creatureDefense, 
-      creatureType: stringCard.creatureType,
-      spellType: stringCard.spellType, 
-      ability: stringCard.ability, 
-      attack: stringCard.attack, 
-      defense: stringCard.defense, 
-      utility: stringCard.utility,
-      imagePath: gameName[0].imageLocation
-    };
-
-    console.log("This is cardData in the /cardViewPrintedPage route:", data);
-    
-    // Send JSON response
-    res.json({
+    res.render('cardViewPrintedPage', {
       card: stringCard,
-      data: data,
-      cardData: cardData
+      data: data
     });
 
   } catch (err) {
@@ -681,8 +660,16 @@ app.post('/cardViewPrintedPage', async (req, res) => {
   }
 });
 
+app.get('/cardViewPrintedBulkPage', (req, res) => {
+  const user = req.session.user;
+  if (user) {
+    res.render('cardViewPrintedBulkPage')
+  } else {
+    res.redirect('/');
+  }
+});
 
-app.post('/cardViewPrintedBulkPage', async (req, res) => {
+app.post('/cardViewPrintedBulkPagePost', async (req, res) => {
   const user = req.session.user;
   async function delay(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
 
@@ -748,7 +735,9 @@ app.post('/cardViewPrintedBulkPage', async (req, res) => {
     } catch (error) {
       console.error("Error updating collection:", error);
     }
-    res.render('cardViewPrintedBulkPage', { cards: generatedCards });
+    res.json({ cards: generatedCards });
+    console.log("This is cards in /cardViewPrintedBulkPage:", generatedCards);
+
   } catch (err) {
     // Handle errors
     console.error(err);
