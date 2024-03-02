@@ -334,17 +334,18 @@ app.get('/trading', async (req, res) => {
 
   if (user) {
     const collect = await dbFunc.getAllCollectionsByUser(user.userId);
-    /*
+    
       if (c) {
       listCards = await dbFunc.grabListOfCardsFromCollection(req.query.collectId);
       gameId = await dbFunc.grabGameIdFromCollection(req.query.collectId)
       adminList = await dbFunc.grabAdminListCards(gameId); 
       } else {
+        console.log("else");
       listCards = await dbFunc.grabListOfCardsFromCollection(collect[0].collectionId);
-      gameId = await dbFunc.grabGameIdFromCollection(req.query.collectId)
+      gameId = await dbFunc.grabGameIdFromCollection(collect[0].collectionId)
       adminList = await dbFunc.grabAdminListCards(gameId); 
       }
-    */
+    
     res.render('trading', {
       collect: collect //,
       //listCards: listCards,
