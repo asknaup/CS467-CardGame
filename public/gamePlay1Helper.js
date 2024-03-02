@@ -57,7 +57,7 @@ function handleEmptyDropZone(cardId, cardElement, dropZone) {
 
 function handleExistingCardDrop(cardElement, dropZone) {
     const dropZoneId = dropZone.id;
-    const cardElement = dropZone.querySelector('.card');
+    // const cardElement = dropZone.querySelector('.card');
 
     fetch(`/getCardDetails?cardId=${parseInt(cardElement.id)}`)
         .then(response => response.json())
