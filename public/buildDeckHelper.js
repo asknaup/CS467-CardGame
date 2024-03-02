@@ -58,7 +58,10 @@ function createTradingCardFromInfo(cardInfo) {
     // card.innerHTML = cardElement.outerHTML;
 
     var cardId = document.createElement('p');
-    cardId.textContent = cardInfo[0].cardId;
+
+    if (cardInfo[0]) {
+        cardId.textContent = cardInfo[0].cardId;
+    }
 
     var cardName = document.createElement('h1');
     cardName.classList.add('cardName');
@@ -363,6 +366,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const deckName = prompt('Enter a name for the deck:');
 
         if (deckName) {
+            console.log('Request Payload:', JSON.stringify({ deckName: deckName, deckList: deckData }));
+
             // Create a JSON representation of the deck data
             const jsonDeck = JSON.stringify({ deckName, cards: deckData });
 
@@ -372,6 +377,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ deckName: deckName, deckList: deckData })
+
             })
 
                 .then(response => {

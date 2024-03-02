@@ -246,6 +246,19 @@ app.post('/getCardInfo', async (req, res) => {
   }
 });
 
+app.post('/decksubmitted', async (req, res) => {
+  const user = req.session.user;
+
+  try {
+    const receivedData = req.body;
+    console.log(receivedData);
+    dbFunc.insertNewDeck(user.userId, receivedData.deckName, JSON.stringify({ 'cardList': receivedData.deckList }));
+  } catch (error) {
+    console.error("Error - Deck Not Saved", error);
+  }
+
+});
+
 // Deck pull from db and editing endpoints
 // Endpoint to get deck names for the current user
 // TODO: Why does deleting this break the dropdown? 
@@ -355,23 +368,23 @@ app.get('/trading', async (req, res) => {
 
   if (user) {
     const collect = await dbFunc.getAllCollectionsByUser(user.userId);
-    
-      if (c) {
+
+    if (c) {
       listCards = await dbFunc.grabListOfCardsFromCollection(req.query.collectId);
       gameId = await dbFunc.grabGameIdFromCollection(req.query.collectId)
-      adminList = await dbFunc.grabAdminListCards(gameId); 
-      } else {
-        console.log("else");
+      adminList = await dbFunc.grabAdminListCards(gameId);
+    } else {
+      console.log("else");
       listCards = await dbFunc.grabListOfCardsFromCollection(collect[0].collectionId);
       gameId = await dbFunc.grabGameIdFromCollection(collect[0].collectionId)
-      adminList = await dbFunc.grabAdminListCards(gameId); 
-      }
-    
+      adminList = await dbFunc.grabAdminListCards(gameId);
+    }
+
     res.render('trading', {
       collect: collect //,
       //listCards: listCards,
       //adminList: adminList
-     })
+    })
   } else {
     res.redirect('/');
   }
@@ -407,12 +420,12 @@ app.post('/trading', async (req, res) => {
   }
 });
 
-app.get('/getCollection', async(req, res) => {
+app.get('/getCollection', async (req, res) => {
   const user = req.session.user;
-  if(user){
+  if (user) {
     let collection = await dbFunc.getAllCollectionsByUser(user.userId);
     res.json(collection);
-  }else{
+  } else {
     res.redirect('/');
   }
 });
@@ -937,7 +950,7 @@ app.post('/playCard', async (req, res) => {
 app.get('/getCardHandDetails', async (req, res) => {
   const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
   const gameInst = gameInstance[game.gameId];
-  const {cardId, owner} = req.query;
+  const { cardId, owner } = req.query;
 
   if (gameInst) {
     if (owner === 'player') {
@@ -956,7 +969,7 @@ app.get('/getCardHandDetails', async (req, res) => {
 app.get('/getCardDeckDetails', async (req, res) => {
   const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
   const gameInst = gameInstance[game.gameId];
-  const {cardId, owner} = req.query;
+  const { cardId, owner } = req.query;
 
 
   if (gameInst) {
