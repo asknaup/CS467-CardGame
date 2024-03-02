@@ -355,6 +355,7 @@ header {
 .card-container {
     display: flex;
     justify-content: center;
+    z-index: 1;
 }
 
 /* Stylish player error message */

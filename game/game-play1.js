@@ -705,6 +705,39 @@ class Game {
         }
     }
 
+    attackCardToOpponent(playerCardId, opponentCardId) {
+        console.log("ATTACKING OPPONENT CARD", playerCardId, opponentCardId)
+        let tempStage = [...this.playerStage];
+        let tempOpponentStage = [...this.opponentStage];
+
+        const playerCardIndex = tempStage.findIndex(card => card.id === playerCardId);
+        const opponentCardIndex = tempOpponentStage.findIndex(card => card.id === opponentCardId);
+        let damage = 0;
+        if (playerCardIndex !== -1 && opponentCardIndex !== -1) {
+            console.log("PLAYER CARD", tempStage[playerCardIndex])
+            console.log("OPPONENT CARD", tempOpponentStage[opponentCardIndex])
+            // Attack the opponent's creature card
+            damage = tempStage[playerCardIndex].attack;
+            console.log("DAMAGE", damage)   
+            tempOpponentStage[opponentCardIndex].defense -= damage;
+            // Remove the card from the opponent's stage if its defense is 0 or less
+            if (tempOpponentStage[opponentCardIndex].defense <= 0) {
+                tempOpponentStage.splice(opponentCardIndex, 1);
+            }
+            // Removed the played card from the player's stage
+            tempStage = tempStage.filter(card => card.id !== playerCardId);
+            this.playerStage = tempStage;
+            this.opponentStage = tempOpponentStage;
+            this.opponent.opponentStage = tempOpponentStage;
+            
+            console.log("PLAYER STAGE", this.playerStage)
+            return { success: true, message: 'card played successfully'};
+
+        } else {
+            return { error: "Player card or opponent card not found." };
+        }
+};
+
     // Method to check if game is over
     isGameOver() {
         return this.user.hasLost();

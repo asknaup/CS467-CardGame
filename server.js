@@ -847,6 +847,7 @@ app.get('/getHand', async (req, res) => {
   gameInst = gameInstance[game.gameId];
 
   if (gameInstance[game.gameId]) {
+    console.log("gameInstance[game.gameId].hand", gameInstance[game.gameId].hand)
     const handData = gameInstance[game.gameId].hand.map(card => {
       // console.log(card);
       return {
@@ -1164,13 +1165,13 @@ app.post('/updatePlayerCreatureCard', async (req, res) => {
 // });
 
 app.post('/attackCardToOpponent', async (req, res) => {
-  const { cardId, opponentCardId } = req.body;
+  const { playerCardId, opponentCardId } = req.body;
   const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
 
   if (gameInstance[game.gameId]) {
     try {
-      const attackResult = await gameInstance[game.gameId].attackCardToOpponent(parseInt(cardId), parseInt(opponentCardId));
-
+      const attackResult = await gameInstance[game.gameId].attackCardToOpponent(parseInt(playerCardId), parseInt(opponentCardId));
+      console.log("ATTACK RESULT", attackResult)
       if (attackResult.success) {
         // Optionally, you can send back updated opponent health or other relevant data
         res.status(200).json({ message: attackResult.message, opponentHealth: gameInstance[game.gameId].opponent.health, playerMana: gameInstance[game.gameId].user.mana });
