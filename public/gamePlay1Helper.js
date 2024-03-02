@@ -541,8 +541,8 @@ function renderHand(handData) {
         if (cardData.type.toLowerCase() === "spell") {
             typeText = `${cardData.type} - ${cardData.ability}`;
 
-            const spellType = document.createElement('p');
-            spellType.innerHTML = `<strong>Type:</strong> ${cardData.spellType}`;
+            // const spellType = document.createElement('p');
+            // spellType.innerHTML = `<strong>Type:</strong> ${cardData.spellType}`;
 
             const spellAttack = document.createElement('p');
             spellAttack.innerHTML = `<strong>ATK:</strong> ${cardData.attack}`;
@@ -550,7 +550,7 @@ function renderHand(handData) {
             const spellDefense = document.createElement('p');
             spellDefense.innerHTML = `<strong>DEF:</strong> ${cardData.spellDefense}`;
 
-            textOverlayBottom.appendChild(spellType);
+            // textOverlayBottom.appendChild(spellType);
             textOverlayBottom.appendChild(spellAttack);
             textOverlayBottom.appendChild(spellDefense);
         } else {
@@ -756,8 +756,8 @@ function updateOpponentStageUI(opponentStage) {
             if (card.type.toLowerCase() === "spell") {
                 typeText = `${card.type} - ${card.ability}`;
 
-                const spellType = document.createElement('p');
-                spellType.innerHTML = `<strong>Type:</strong> ${card.spellType}`;
+                // const spellType = document.createElement('p');
+                // spellType.innerHTML = `<strong>Type:</strong> ${card.spellType}`;
 
                 const spellAttack = document.createElement('p');
                 spellAttack.innerHTML = `<strong>ATK:</strong> ${card.attack}`;
@@ -765,7 +765,7 @@ function updateOpponentStageUI(opponentStage) {
                 const spellDefense = document.createElement('p');
                 spellDefense.innerHTML = `<strong>DEF:</strong> ${card.spellDefense}`;
 
-                textOverlayBottom.appendChild(spellType);
+                // textOverlayBottom.appendChild(spellType);
                 textOverlayBottom.appendChild(spellAttack);
                 textOverlayBottom.appendChild(spellDefense);
             } else {
