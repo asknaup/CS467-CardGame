@@ -226,6 +226,31 @@ app.get('/currentDeck', async (req, res) => {
   }
 });
 
+// Update Deck route
+app.post('/updateDeck', async (req, res) => {
+  const { deckId, cards } = req.body;
+
+  try {
+    // Fetch the existing deck from the database
+    const existingDeck = await Deck.findById(deckId);
+
+    if (!existingDeck) {
+      return res.status(404).json({ error: 'Deck not found' });
+    }
+
+    // Update the cards in the existing deck
+    existingDeck.cards = cards;
+
+    // Save the updated deck
+    await existingDeck.save();
+
+    return res.status(200).json({ message: 'Deck updated successfully' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // DO NOT DELETE - USED FOR DECK
 app.post('/getCardInfo', async (req, res) => {
   try {

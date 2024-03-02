@@ -233,6 +233,26 @@ label,
     display: flex;
 }
 
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#saveDeckButton,
+#updateDeckButton {
+    margin-top: 10px; /* Adjust as needed */
+}
+
+#buttonContainer {
+    display: flex;
+    margin-top: 10px; /* Adjust as needed */
+}
+
+#updateDeckButton {
+    margin-left: 20px;
+}
+
 button {
     padding: 10px;
     margin: 40px 5px;

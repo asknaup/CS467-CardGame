@@ -3,8 +3,6 @@
 
 <head>
     <meta charset="utf-8" />
-    {{!--
-    <meta name="viewport" content="width=device-width, intial-scale=1.0"> --}}
     <title>Build Deck</title>
     <link rel="stylesheet" type="text/css" href="/global.css">
     <link rel="stylesheet" type="text/css" href="/buildDeck.css">
@@ -22,8 +20,6 @@
         </select>
     </div>
 
-    {{!-- <p>Maybe from which game?</p> --}}
-
     <br>
     <div class="instructions">
         <p>Here you can view the cards in your existing decks or build new decks.</p>
@@ -35,12 +31,17 @@
             area. This is the default dropdown selection for when the page is loaded so if you didn't view any decks,
             you can start building without any selections.You can then stage owned cards that are displayed below the
             staging area to build your new deck. Once
-            you're done, remember to click the Save Deck button so that you can view or play with your new deck later.
+            you're done, remember to click the Save Deck or Update Deck button so that you can view or play with your
+            new deck later.
         </p><br>
     </div>
     <button id="resetButton" onclick="confirmReset()">Reset Staging Area</button>
 
-    <button id="saveDeckButton">Save Deck</button>
+
+    <div id="buttonContainer">
+        <button id="saveDeckButton">Save Deck</button>
+        <button id="updateDeckButton">Update Deck</button>
+    </div>
 
     <h1>Build Your Deck</h1>
     <div class="stagingArea" id="stagingArea">
@@ -53,5 +54,6 @@
 
     <!-- Scripts and styles -->
     <script src="/buildDeckHelper.js"></script>
-
 </body>
+
+</html>

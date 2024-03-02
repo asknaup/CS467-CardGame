@@ -272,60 +272,25 @@ let selectedCards = [];
 
 function selectCard(cardId) {
     const cardElement = document.querySelector(`[data-card-id="${cardId}"]`);
+    const stagingArea = document.getElementById('stagingArea');
+    const cardContainer = document.getElementById('cardContainer');
 
     if (selectedCards.includes(cardId)) {
         // Card is already selected, remove it from the selected cards array
         const selectedCardIndex = selectedCards.indexOf(cardId);
         selectedCards.splice(selectedCardIndex, 1);
 
-        // Check if the card is in the staging area
-        const stagingRows = document.querySelectorAll('.staging-row');
-        stagingRows.forEach(row => {
-            const stagedCardElement = row.querySelector(`[data-card-id="${cardId}"]`);
-            if (stagedCardElement) {
-                row.removeChild(stagedCardElement);
-                // Ensure only 6 cards are displayed in each row in the staging area horizontally
-                const carouselRow = document.querySelectorAll('.carouselRow');
-                let lastRow = carouselRow[carouselRow.length - 1];
-
-                if (!lastRow || lastRow.childElementCount >= cardsPerRow) {
-                    // Create a new row if the last one is full or doesn't exist
-                    lastRow = document.createElement('div');
-                    lastRow.classList.add('carouselRow');
-                    cardContainer.appendChild(lastRow);
-                }
-
-                lastRow.appendChild(cardElement);
-            }
-        });
+        // Move the card back to the cardContainer
+        cardContainer.appendChild(cardElement);
     } else {
         // Card is not selected, add it to the selected cards array
         selectedCards.push(cardId);
 
-        // Check if the card is in the carousel
-        const carouselRows = document.querySelectorAll('.carouselRow');
-        carouselRows.forEach(row => {
-            const carouselCardElement = row.querySelector(`[data-card-id="${cardId}"]`);
-            if (carouselCardElement) {
-                // Remove the card from the carousel
-                row.removeChild(carouselCardElement);
-
-                // Ensure only 6 cards are displayed in each row in the staging area horizontally
-                const stagingRows = document.querySelectorAll('.staging-row');
-                let lastRow = stagingRows[stagingRows.length - 1];
-
-                if (!lastRow || lastRow.childElementCount >= cardsPerRow) {
-                    // Create a new row if the last one is full or doesn't exist
-                    lastRow = document.createElement('div');
-                    lastRow.classList.add('staging-row');
-                    stagingArea.appendChild(lastRow);
-                }
-
-                lastRow.appendChild(cardElement);
-            }
-        });
+        // Move the card to the staging area
+        stagingArea.appendChild(cardElement);
     }
 }
+
 
 document.addEventListener('DOMContentLoaded', function () {
     const stagingArea = document.getElementById('stagingArea');
@@ -346,19 +311,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
         });
 
-    // Function to save the deck
-    function saveDeck(selectedCards) {
+    function saveDeck() {
+        // Get all card elements in the staging area
+        const stagingCards = document.querySelectorAll('.stagingArea .card');
+
         // Create an array to store card data
         const deckData = [];
 
-        // Iterate over each selected card and extract relevant data
-        selectedCards.forEach(cardId => {
-            const cardData = {};
-
-            // Extract cardId from selectedCards array
-            // cardData.cardId = cardId;
-
-            // Add card data to the array
+        // Iterate over each card in the staging area and extract relevant data
+        stagingCards.forEach(cardElement => {
+            const cardId = cardElement.dataset.cardId;
             deckData.push(parseInt(cardId));
         });
 
@@ -366,8 +328,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const deckName = prompt('Enter a name for the deck:');
 
         if (deckName) {
-            console.log('Request Payload:', JSON.stringify({ deckName: deckName, deckList: deckData }));
-
             // Create a JSON representation of the deck data
             const jsonDeck = JSON.stringify({ deckName, cards: deckData });
 
@@ -377,9 +337,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ deckName: deckName, deckList: deckData })
-
             })
-
                 .then(response => {
                     if (response.ok) {
                         return response.json();
@@ -398,11 +356,20 @@ document.addEventListener('DOMContentLoaded', function () {
         alert('Your deck has been saved!');
     }
 
+    // Function to clear the staging area
+    function clearStagingArea() {
+        const stagingArea = document.getElementById('stagingArea');
+        stagingArea.innerHTML = ''; // Clear existing content
+        // Additional logic to reset any other related variables or states
+    }
+
     // Attach the saveDeck function to the button click event
     const saveDeckButton = document.getElementById('saveDeckButton');
     if (saveDeckButton) {
         saveDeckButton.addEventListener('click', () => saveDeck(selectedCards));
     }
+
+    clearStagingArea();
 });
 
 function confirmReset() {
@@ -565,14 +532,72 @@ async function updateStagingArea() {
             initialCardIds.forEach(async cardId => {
                 // Fetch card information using getCardInfo
                 const cardInfo = await getCardInfo(cardId);
+
                 // Create card element using createTradingCardFromInfo
                 const cardElement = createTradingCardFromInfo(cardInfo);
+
+                // Set data-card-id attribute
+                cardElement.setAttribute('data-card-id', cardId);
+
+                // Append cardElement to the staging area
                 stagingArea.appendChild(cardElement);
+
+                // Attach the selectCard function to the card element
+                cardElement.addEventListener('click', () => selectCard(cardId));
             });
         }
     } catch (error) {
         console.error('Error updating staging area:', error);
     }
 }
+
+function updateDeck(selectedCards, deckId) {
+    // Create an array to store card data
+    const deckData = [];
+
+    // Iterate over each selected card and extract relevant data
+    selectedCards.forEach(cardId => {
+        const cardData = {};
+        deckData.push(parseInt(cardId));
+    });
+
+    // Create a JSON representation of the updated deck data
+    const jsonDeck = JSON.stringify({ deckId, cards: deckData });
+
+    // Send a request to update the existing deck in the database
+    fetch('/updateDeck', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: jsonDeck
+    })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Network response was not ok.');
+        })
+        .then(data => {
+            // Handle the response from the server if needed
+            console.log('Server response:', data);
+        })
+        .catch(error => {
+            // Handle errors that may occur during the request
+            console.error('Error:', error);
+        });
+
+    alert('Your deck has been updated!');
+}
+
+// Attach the updateDeck function to the button click event
+const updateDeckButton = document.getElementById('updateDeckButton');
+if (updateDeckButton) {
+    updateDeckButton.addEventListener('click', () => {
+        const deckDropdown = document.getElementById('deckDropdown');
+        const selectedDeckId = deckDropdown.value;
+        updateDeck(selectedCards, selectedDeckId);
+    });
+}
+
+
 
 updateStagingArea();
