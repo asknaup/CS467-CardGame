@@ -94,8 +94,8 @@ main {
 }
 
 .card {
-    width: 180px;
-    height: 270px;
+    width: 150px;
+    height: 210px;
     border: 2px solid #000;
     border-radius: 24px;
     overflow: hidden;
@@ -107,6 +107,7 @@ main {
     overflow: hidden;
     animation: pulse 2s infinite;
     /* Adjust duration as needed */
+    z-index: 1;
 }
 
 
@@ -151,6 +152,7 @@ p,
 label,
 .instructions {
     text-align: center;
+    font-size: small;
 }
 
 .cardFrame {
@@ -175,7 +177,7 @@ label,
 }
 
 .cardName {
-    font-size: 1.2em;
+    font-size: small;
     font-family: fancy;
     font-weight: 600;
     margin: 0;
@@ -231,7 +233,7 @@ label,
     list-style: none;
     padding: 0;
     margin: 0;
-    font-size: 14px;
+    font-size: small;
 }
 
 .navigation {
