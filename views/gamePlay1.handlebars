@@ -12,12 +12,25 @@
 
 <body>
     <h1>Card Game</h1>
-    <!-- Health Orbs -->
-    <div class="opponent-container">
+    <p>Drag cards into player slots to play them. Drag them on top of the red opponent health orb to attack the opponent
+        directly. Click End Turn to allow for the opponent to play their hand.
+        For more detailed explanation of the rules, please visit the rulesets located <a id="linkHere"
+            href="http://localhost:3000/gamePlayPage">here</a>.</p>
+    <br>
 
+    <div class="health-orbs">
         <div class="health-orb opponent-health">
             <span id="opponentHealth">100</span> <!-- Placeholder for opponent health -->
+            <label>Opponent</label>
         </div>
+
+        <div class="health-orb player-health">
+            <span id="playerHealth">100</span> <!-- Placeholder for player health -->
+            <label>Player</label>
+        </div>
+    </div>
+    <!-- Health Orbs -->
+    <div class="opponent-container">
     </div>
     <br>
     <br>
@@ -40,6 +53,7 @@
                     <p>Computer Slot 5</p>
                 </div>
             </div>
+            <br><br>
             <div id="stagingArea" class="player">
                 <div id='pCard1Error' class="playerError"></div>
                 <div id='pCard1' class="drop-zone">
@@ -78,12 +92,8 @@
     </div>
 
     <div class="player-container">
-        <div class="health-orb player-health">
-            <span id="playerHealth">100</span> <!-- Placeholder for player health -->
-        </div>
         <br>
         <div id="hand" class="card-container"></div>
-
     </div>
     {{!-- TODO : reformat game location variables below --}}
     <div class="game-stats">
