@@ -419,17 +419,21 @@ header {
     justify-content: space-between;
 }
 
+#startTradeButton {
+    display: inline-block;
+    position: relative;
+    background-color: purple;
+}
+
 #tradingGoToCollectionTitle{
     display: inline-block;
     position: relative;
-    top: 1.75vh;
-    color: #4caf50;
+    color: purple;
 }
 
 #tradingCollectId{
     display: inline-block;
     position: relative;
-    top: 1.75vh;
 }
 
 #tradingGoToUserProfileTitle{
@@ -572,7 +576,6 @@ header {
     color: #a7d393;
 }
 
-
 #userDeck{
     color: #0ba710;
     width: 100%;
@@ -580,14 +583,9 @@ header {
     margin: 1vw;
 }
 
-#startTradeButton {
-    position: absolute;
-    left: -6vw;
-    top: -12vw;
-}
-
 #userScrollDeck, #otherScrollDeck{
     position: relative;
+    height: 19vw;
     padding: 1%;
 }
 
@@ -618,7 +616,6 @@ header {
     display: flex;
     flex-direction: row;
 }
-
 
 /* userProfile */
 .userBrowsing {
@@ -780,191 +777,6 @@ header {
     margin-bottom: 10px;
     /* Add margin to separate image and ruleset button */
 }
-
-/* TradeAndCollect Page */
-#noteToProgrammers{
-    padding: 2vh;
-}
-
-#tradePopUpForm{
-    display: none;
-    position: absolute;
-    top: 33%;
-    left: 6%;
-    width: 88%;
-    height: 40%;
-    padding: 1vh;
-    margin: 0vh;
-    background-color: rgb(177, 200, 204);
-    border: 2px solid black;
-    border-radius: 10px;
-    z-index: 100;
-}
-
-#tradeRequest{
-    padding: 1vw;
-    margin: 0vw;
-}
-
-#tradeButtonSection {
-    position: absolute;
-    bottom: 1vh;
-}
-
-#otherPlayerTradeSection, #userTradeSection{
-    display: inline-block;
-    width: 49%;
-}
-
-#otherPlayerTradeSlots, #userTradeSlots{
-    position: relative;
-    display: flex;
-    flex-direction: row;
-}
-
-.tradeButtons{
-    display: inline-block;
-    background-color: #4caf50;
-}
-
-#declineTradeButton{
-    background-color: rgb(196, 63, 63);
-}
-
-#otherTradedCardsTitle, #userTradedCardsTitle{
-    font-size: 1em;
-    padding-bottom: .5em;
-    color: black;
-}
-
-#stageArea{
-    display: flex;
-    flex-direction: row;
-    position: relative;
-}
-
-.otherStageAreaClass, .userStageAreaClass {
-    display: flex;
-    flex-direction: row;
-    width: 50%;
-    position: relative;
-    height: 20vw;
-    color: grey;
-    z-index:  10;
-    margin: 1vh 0vh;
-}
-
-.otherStageAreaClass {
-    border:  5px dashed grey;
-}
-
-.userStageAreaClass {
-    border-width: 5px 5px 5px 0px;
-    border-style: dashed;
-    border-color: grey;
-}
-
-.otherTopStageText {
-    position: absolute;
-    top: 2vw;
-    width: 50%;
-    text-align: center;
-}
-
-.userTopStageText {
-    position: absolute;
-    top: 2vw;
-    right: 0vw;
-    width: 50%;
-    text-align: center;
-}
-
-.otherBottomStageText {
-    position: absolute;
-    bottom: 2vw;
-    width: 50%;
-    text-align: center;
-}
-
-.userBottomStageText {
-    position: absolute;
-    bottom: 2vw;
-    right: 0vw;
-    width: 50%;
-    text-align: center;
-}
-
-#otherPlayerTitle{
-    position: absolute;
-    top: 9vw;
-    width: 50%;
-    text-align: center;
-}
-
-#userTitle{
-    position: absolute;
-    top: 9vw;
-    right: 0vw;
-    width: 50%;
-    text-align: center;
-}
-
-#otherPlayerTitle h2{
-    color: rgb(173, 124, 173);
-}
-
-#userTitle h2{
-    color: #a7d393;
-}
-
-#otherPlayerDeck {
-    color: purple;
-    width: 100%;
-    text-align: center;
-    margin: 1vw;
-}
-
-#userDeck{
-    color: #0ba710;
-    width: 100%;
-    text-align: center;
-    margin: 1vw;
-}
-
-#startTradeButton {
-    position: absolute;
-    left: -6vw;
-    top: -12vw;
-}
-
-#userScrollDeck, #otherScrollDeck{
-    position: relative;
-}
-
-#userScrollLeft, #otherScrollLeft{
-    position: absolute;
-    left: -3vw;
-}
-
-#userScrollRight, #otherScrollRight{
-    position: absolute;
-    right: -3vw;
-}
-
-#userScrollLeft, #userScrollRight{
-    top: 9vw;
-}
-
-#otherScrollLeft, #otherScrollRight{
-    background-color: purple;
-    top: 7vw;
-}
-
-#userCardSlots, #otherCardSlots{
-    display: flex;
-    flex-direction: row;
-}
-
 
 /* userProfile */
 .userBrowsing {
