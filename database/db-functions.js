@@ -127,7 +127,7 @@ function getUserProfile(userId) {
     });
 }
 
-function insertNewGameIntoGames() {
+function insertNewGameIntoGames(userId, deckId) {
     // Initialize a new game -> winner has not been decided
     return new Promise((resolve, reject) => {
         db.pool.query('START TRANSACTION', (beginTransactionErr) => {
@@ -136,8 +136,9 @@ function insertNewGameIntoGames() {
                 return;
             }
 
-            const insertQuery = 'INSERT INTO game (startTime, endTime, winnerID) VALUES (CURRENT_TIMESTAMP, NULL, NULL)';
-            const selectQuery = 'SELECT LAST_INSERT_ID() as newGameId';
+            const insertQuery = 'INSERT INTO gameInstance (startTime, endTime, winnerID) VALUES (CURRENT_TIMESTAMP, NULL, NULL)';
+            // const selectQuery = 'SELECT LAST_INSERT_ID() as newGameId';
+            const insertGameTable = 'INSERT INTO game (gameId, playerId, deckId) VALUES (?, ?, ?)';
 
             db.pool.query(insertQuery, (insertErr, insertResult) => {
                 if (insertErr) {
@@ -146,8 +147,10 @@ function insertNewGameIntoGames() {
                     });
                     return;
                 }
+                
+                const lastInsertedId = insertResult.insertId;
 
-                db.pool.query(selectQuery, (selectErr, selectResult) => {
+                db.pool.query(insertGameTable, [parseInt(lastInsertedId), parseInt(userId), parseInt(deckId)], (selectErr, selectResult) => {
                     if (selectErr) {
                         db.pool.query('ROLLBACK', () => {
                             reject(selectErr);
@@ -161,7 +164,7 @@ function insertNewGameIntoGames() {
                                 reject(commitErr);
                             });
                         } else {
-                            resolve(selectResult[0].newGameId);
+                            resolve(lastInsertedId);
                         }
                     });
                 });

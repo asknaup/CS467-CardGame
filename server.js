@@ -129,12 +129,29 @@ app.get('/userDeck/:username', (req, res) => {
   }
 });
 
-app.get('/gamePlayPage', (req, res) => {
+// Route handler for rendering the game play page
+app.get('/gamePlayPage', async (req, res) => {
+  // const user = { userId: 1001, username: 'admin' }; 
   const user = req.session.user;
   if (user) {
-    res.render('gamePlayPage');
+    const userDecks = await dbFunc.gatherUserDecks(user.userId);
+    res.render('gamePlayPage', { decks: userDecks });
   } else {
     res.redirect('/');
+  }
+});
+
+// Route handler for handling form submission and generating the game
+app.post('/game', async (req, res) => {
+  const user = req.session.user;
+  // Handle form submission, generate game, and redirect
+  if(user) {
+    const deckId = req.body.userDeckSelect;
+    console.log(deckId);
+    req.session.deck = { deckId: deckId }; // Save the deck ID in the session
+    const gameId = await dbFunc.insertNewGameIntoGames(user.userId, deckId); // Generate a new game ID, or fetch it from where it's stored
+    req.session.game = { gameId: gameId, ruleSet: req.body.ruleSet }; // Save the game ID and rule set in the session
+    res.redirect(`/game/${gameId}`); // Redirect to the generated game
   }
 });
 
@@ -862,15 +879,14 @@ app.post('/collect', async (req, res) => {
 const gameInstance = {};
 
 // Game get - Initialize the game
-// FIXME change to '/game/:gameId'
-app.get('/game/', async (req, res) => {
-  // FIXME replace
-  // const user = req.session.user;
-  // const deck = req.session.deck;
-  // const game = req.session.game;
-  const user = { userId: 1005, username: 'admin' }
-  const deck = { deckId: 7000 }
-  const game = { ruleSet: 'ruleSet1', gameId: 1001 }
+// app.get('/game/', async (req, res) => {  // Keep for testing
+app.get('/game/:gameId', async (req, res) => {
+  const user = req.session.user;
+  const deck = req.session.deck;
+  const game = req.session.game;
+  // const user = { userId: 1005, username: 'admin' }
+  // const deck = { deckId: 7000 }
+  // const game = { ruleSet: 'ruleSet1', gameId: 1001 }
 
   // If user we can intialize a game
   if (user) {
@@ -891,11 +907,11 @@ app.get('/game/', async (req, res) => {
 
 // Get Hand
 app.get('/getHand', async (req, res) => {
-  const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
+  // const game = { ruleSet: 'ruleSet1', gameId: 1001 } 
+  const game = req.session.game; 
   gameInst = gameInstance[game.gameId];
 
   if (gameInstance[game.gameId]) {
-    console.log("gameInstance[game.gameId].hand", gameInstance[game.gameId].hand)
     const handData = gameInstance[game.gameId].hand.map(card => {
       // console.log(card);
       return {
@@ -919,7 +935,8 @@ app.get('/getHand', async (req, res) => {
 
 // Get Player Stage
 app.get('/getPlayerStage', async (req, res) => {
-  const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
+  // const game = { ruleSet: 'ruleSet1', gameId: 1001 } 
+  const game = req.session.game; 
   let gameInst = gameInstance[game.gameId];
 
   if (gameInst) {
@@ -930,7 +947,8 @@ app.get('/getPlayerStage', async (req, res) => {
 
 // Get Opponent Stage
 app.get('/getOpponentStage', async (req, res) => {
-  const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
+  // const game = { ruleSet: 'ruleSet1', gameId: 1001 } 
+  const game = req.session.game; 
   const gameInst = gameInstance[game.gameId];
 
   if (gameInst) {
@@ -943,7 +961,8 @@ app.get('/getOpponentStage', async (req, res) => {
 // Play Card
 app.post('/playCard', async (req, res) => {
   const cardId = req.body.cardId;
-  const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
+  // const game = { ruleSet: 'ruleSet1', gameId: 1001 } 
+  const game = req.session.game; 
 
   if (gameInstance[game.gameId]) {
     try {
@@ -983,7 +1002,8 @@ app.post('/playCard', async (req, res) => {
 });
 
 app.get('/getCardHandDetails', async (req, res) => {
-  const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
+  // const game = { ruleSet: 'ruleSet1', gameId: 1001 } 
+  const game = req.session.game; 
   const gameInst = gameInstance[game.gameId];
   const { cardId, owner } = req.query;
 
@@ -1002,7 +1022,8 @@ app.get('/getCardHandDetails', async (req, res) => {
 })
 
 app.get('/getCardDeckDetails', async (req, res) => {
-  const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
+  // const game = { ruleSet: 'ruleSet1', gameId: 1001 } 
+  const game = req.session.game; 
   const gameInst = gameInstance[game.gameId];
   const { cardId, owner } = req.query;
 
@@ -1022,6 +1043,8 @@ app.get('/getCardDeckDetails', async (req, res) => {
 
 // Get card details
 app.get('/getCardDetails', async (req, res) => {
+  // const game = { ruleSet: 'ruleSet1', gameId: 1001 } 
+  const game = req.session.game; 
   const cardId = req.query.cardId;
 
   try {
@@ -1075,7 +1098,8 @@ app.get('/getCardDetails', async (req, res) => {
 
 // End turn
 app.post('/endTurn', async (req, res) => {
-  const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
+  // const game = { ruleSet: 'ruleSet1', gameId: 1001 } 
+  const game = req.session.game; 
 
   if (gameInstance[game.gameId]) {
     try {
@@ -1114,7 +1138,8 @@ app.post('/endTurn', async (req, res) => {
 })
 
 app.post('/damageOpponent', (req, res) => {
-  const game = { ruleSet: 'ruleSet1', gameId: 1001 }; //FIXME
+  // const game = { ruleSet: 'ruleSet1', gameId: 1001 } 
+  const game = req.session.game; 
   const { id } = req.body;
 
   // Get the game instance
@@ -1140,8 +1165,8 @@ app.post('/damageOpponent', (req, res) => {
 
 app.post('/updatePlayerCreatureCard', async (req, res) => {
   const { cardId, updatedCardData, spellCardId } = req.body;
-  const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
-
+  // const game = { ruleSet: 'ruleSet1', gameId: 1001 } 
+  const game = req.session.game; 
   if (gameInstance[game.gameId]) {
     try {
       const result = await gameInstance[game.gameId].playSpellCard(parseInt(spellCardId), updatedCardData, parseInt(cardId));
@@ -1176,45 +1201,10 @@ app.post('/updatePlayerCreatureCard', async (req, res) => {
   }
 });
 
-// // Opponent's Turn Endpoint
-// app.post('/opponentTurn', async (req, res) => {
-//   const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
-
-//   if (gameInstance[game.gameId]) {
-//     try {
-//       const opponent = gameInstance[game.gameId].opponent;
-//       await opponent.playTurn(gameInstance[game.gameId].opponentHand);
-
-//       // Update game state after opponent's turn
-//       const playerStage = gameInstance[game.gameId].playerStage;
-//       const opponentStage = gameInstance[game.gameId].opponent.playerStage;
-//       const playerMana = gameInstance[game.gameId].user.mana;
-//       const opponentMana = gameInstance[game.gameId].opponent.mana;
-//       const updatedHand = gameInstance[game.gameId].hand;
-//       const opponentHand = gameInstance[game.gameId].opponentHand;
-
-//       res.status(200).json({
-//         message: 'Opponent\'s turn completed',
-//         playerStage,
-//         opponentStage,
-//         playerMana,
-//         opponentMana,
-//         updatedHand,
-//         opponentHand
-//       });
-//     } catch (error) {
-//       console.log("Error in opponent's turn: ", error);
-//       res.status(500).json({ error: "Internal server error" });
-//     }
-//   } else {
-//     // Send a 404 status code if the game instance is not found
-//     res.status(404).json({ error: "Game not found." });
-//   }
-// });
-
 app.post('/attackCardToOpponent', async (req, res) => {
   const { playerCardId, opponentCardId } = req.body;
-  const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
+  // const game = { ruleSet: 'ruleSet1', gameId: 1001 } 
+  const game = req.session.game; 
 
   if (gameInstance[game.gameId]) {
     try {
@@ -1239,7 +1229,8 @@ app.post('/attackCardToOpponent', async (req, res) => {
 
 app.post('/attackCardToHealth', async (req, res) => {
   const { id } = req.body;
-  const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
+  // const game = { ruleSet: 'ruleSet1', gameId: 1001 } 
+  const game = req.session.game; 
   console.log("ATTACK CARD TO HEALTH", id)
   if (gameInstance[game.gameId]) {
     try {
@@ -1275,7 +1266,8 @@ app.post('/attackCardToHealth', async (req, res) => {
 app.post('/debuffOpponent', async (req, res) => {
   // Update the attacked Card with the debuff
   const { id, targetId } = req.body;
-  const game = { ruleSet: 'ruleSet1', gameId: 1001 } //FIXME
+  // const game = { ruleSet: 'ruleSet1', gameId: 1001 } 
+  const game = req.session.game; 
 
   console.log("DEBUFF OPPONENT", id, targetId)
 
