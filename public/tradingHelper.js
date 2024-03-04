@@ -135,6 +135,8 @@ async function collectionSelectHandler(collectionSelect){
     await switchToGivenCollection(collectionKey, userObj);
     resetInitialStartAndEndIndex(userObj);
     displayCardCollectionForTrading(userObj);
+    resetInitialStartAndEndIndex(otherPlayerObj);
+    displayCardCollectionForTrading(otherPlayerObj);
     userLoadingTitle.style.display = "none";
     otherLoadingTitle.style.display = "none";
 }
@@ -180,28 +182,50 @@ async function getCollection(userObj){
         let currCollectId = collection[index].collectionId
         userObj.cardListsFromDb[currCollectId] = JSON.parse(collection[index].cardId);
     }
-    let collectionId = null;
+    let firstCollectionId = null;
     if(collection.length > 0){
-        collectionId = collection[0].collectionId
-        userObj.primaryKeysForCollections[collectionId] = [];
-        userObj.collections[collectionId] = {};
-        let cardList = userObj.cardListsFromDb[collectionId];
+        firstCollectionId = collection[0].collectionId
+        userObj.primaryKeysForCollections[firstCollectionId] = [];
+        userObj.collections[firstCollectionId] = {};
+        let cardList = userObj.cardListsFromDb[firstCollectionId];
         let listOfCardObjs = cardList.cardList;
         for(const cardId of  listOfCardObjs){
             const cardDetailsResponse = await fetch('/getCardDetails?cardId=' + cardId);
             await cardDetailsResponse.json()
                 .then((cardData) => {
-                        userObj.primaryKeysForCollections[collectionId].push(cardData.id);
+                        userObj.primaryKeysForCollections[firstCollectionId].push(cardData.id);
                         //(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana)
                         let cardObj = new Card(cardData.id, cardData.cardName, cardData.imagePath, 
                             cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
-                        userObj.collections[collectionId][cardData.id] = cardObj;
+                        userObj.collections[firstCollectionId][cardData.id] = cardObj;
                 })
                 .catch((error) => {console.log(error)});  
         }
+        otherPlayerObj.primaryKeysForCollections[firstCollectionId] = [];
+        otherPlayerObj.collections[firstCollectionId] = {};
+        const adminCardsResponse = await fetch('/getAdminCardsForTrading?collectId=' + firstCollectionId);
+        let adminCardList = await adminCardsResponse.json()
+        for(const cardId of  adminCardList){
+            const cardDetailsResponse = await fetch('/getCardDetails?cardId=' + cardId);
+            await cardDetailsResponse.json()
+                .then((cardData) => {
+                        //console.log("admin card data")
+                        //console.log(cardData)
+                        otherPlayerObj.primaryKeysForCollections[firstCollectionId].push(cardData.id);
+                        //(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana)
+                        let cardObj = new Card(cardData.id, cardData.cardName, cardData.imagePath, 
+                            cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
+                        otherPlayerObj.collections[firstCollectionId][cardData.id] = cardObj;
+                        
+                })
+                .catch((error) => {console.log(error)});  
+        }
+        
     }
-    userObj.primaryKeyArr = userObj.primaryKeysForCollections[collectionId];
-    userObj.cardDict = userObj.collections[collectionId];
+    userObj.primaryKeyArr = userObj.primaryKeysForCollections[firstCollectionId];
+    userObj.cardDict = userObj.collections[firstCollectionId];
+    otherPlayerObj.primaryKeyArr = userObj.primaryKeysForCollections[firstCollectionId];
+    otherPlayerObj.cardDict = userObj.collections[firstCollectionId];
 }
 
 
@@ -215,6 +239,9 @@ async function setupTradingPage(){
     displayCardCollectionForTrading(userObj);
     addRightScroll(userObj, userScrollRightButton);
     addLeftScroll(userObj, userScrollLeftButton);
+    displayCardCollectionForTrading(otherPlayerObj);
+    addRightScroll(otherPlayerObj, otherScrollRightButton);
+    addLeftScroll(otherPlayerObj, otherScrollLeftButton);
     userLoadingTitle.style.display = "none";
     otherLoadingTitle.style.display = "none";
 }
@@ -226,8 +253,9 @@ let userObj = {isUser: true,primaryKeysForCollections: {}, collections: {}, card
                 stagedCardCount: 0, startIndex: 0, endIndex: 7, cardSlots: "userCardSlots", stageAreaId: "userStageAreaId", 
                 stageAreaClass: "userStageAreaClass", stagedCardName: "userStagedCard"};
                  
-let otherPlayerObj = {isUser: false, primaryKeyArr: [], cardDict: {}, stagedCardCount: 0, startIndex: 0, endIndex: 7, cardSlots: "otherCardSlots", 
-            stageAreaId: "otherStageAreaId", stageAreaClass: "otherStageAreaClass", stagedCardName: "otherStagedCard"};
+let otherPlayerObj = {isUser: false,primaryKeysForCollections: {}, collections: {}, cardListsFromDb: {},  primaryKeyArr: [], cardDict: {}, 
+                stagedCardCount: 0, startIndex: 0, endIndex: 7, cardSlots: "otherCardSlots", stageAreaId: "otherStageAreaId", 
+                stageAreaClass: "otherStageAreaClass", stagedCardName: "otherStagedCard"};
 
 var otherScrollLeftButton = document.getElementById("otherScrollLeft");
 var otherScrollRightButton = document.getElementById("otherScrollRight");

@@ -401,42 +401,54 @@ app.get('/help', async (req, res) => {
 });
 
 // Add database logic
-app.get('/trading', async (req, res) => {
+app.get('/getAdminCardsForTrading', async (req, res) => {
   const user = req.session.user;
-  const c = req.query.collectId;
-  let listCards;
+  const userCollectId = req.query.collectId;
+  //let listCards;
   let gameIdArr;
   let gameId;
   let adminListArr;
   let adminList;
 
   if (user) {
-    const collectIndex = 0;
     const collect = await dbFunc.getAllCollectionsByUser(user.userId);
-    listCards = await dbFunc.grabListOfCardsFromCollection(collect[collectIndex].collectionId);
-    gameIdArr = await dbFunc.grabGameIdFromCollection(collect[collectIndex].collectionId)
+    //listCards = await dbFunc.grabListOfCardsFromCollection(userCollectId);
+    gameIdArr = await dbFunc.grabGameIdFromCollection(userCollectId);
     gameId = gameIdArr[0].gameId;
     adminListArr = await dbFunc.grabAdminListCards(gameId);
     adminList = JSON.parse(adminListArr[0].listCards)["cardList"];
-    console.log(adminList);
+    //console.log(adminList);
+    res.json(adminList);
+  }
+});
 
-    /*
-    if (c) {
-      listCards = await dbFunc.grabListOfCardsFromCollection(req.query.collectId);
-      gameId = await dbFunc.grabGameIdFromCollection(req.query.collectId)
-      adminList = await dbFunc.grabAdminListCards(gameId);
-    } else {
-      console.log("else");
+
+// Add database logic
+app.get('/trading', async (req, res) => {
+  const user = req.session.user;
+  const c = req.query.collectId;
+  let listCards;
+  let gameId;
+  let adminList; 
+
+  if (user) {
+    const collect = await dbFunc.getAllCollectionsByUser(user.userId);
+    
+      //if (c) {
+      //listCards = await dbFunc.grabListOfCardsFromCollection(req.query.collectId);
+      //gameId = await dbFunc.grabGameIdFromCollection(req.query.collectId)
+      //adminList = await dbFunc.grabAdminListCards(gameId); 
+      //} else {
       listCards = await dbFunc.grabListOfCardsFromCollection(collect[0].collectionId);
       gameId = await dbFunc.grabGameIdFromCollection(collect[0].collectionId)
-      adminList = await dbFunc.grabAdminListCards(gameId);
-    } */
-
+      adminList = await dbFunc.grabAdminListCards(gameId); 
+      //}
+    
     res.render('trading', {
       collect: collect //,
       //listCards: listCards,
       //adminList: adminList
-    })
+     })
   } else {
     res.redirect('/');
   }
