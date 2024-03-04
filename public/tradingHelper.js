@@ -10,6 +10,7 @@ class Card{
         this.attack = attack;
         this.defense = defense;
         this.mana = mana;
+        this.isStaged = false;
     }
 }
 
@@ -125,11 +126,17 @@ function addRightScroll(playerObj, scrollRightButton){
 
 
 async function collectionSelectHandler(collectionSelect){
+    var userLoadingTitle = document.getElementById("userLoadingTitle");
+    userLoadingTitle.style.display = "block";
+    var otherLoadingTitle = document.getElementById("otherLoadingTitle");
+    otherLoadingTitle.style.display = "block";
     let collectionKey = parseInt(collectionSelect.value);
     console.log(collectionKey);
     await switchToGivenCollection(collectionKey, userObj);
     resetInitialStartAndEndIndex(userObj);
     displayCardCollectionForTrading(userObj);
+    userLoadingTitle.style.display = "none";
+    otherLoadingTitle.style.display = "none";
 }
 
 
@@ -199,11 +206,17 @@ async function getCollection(userObj){
 
 
 async function setupTradingPage(){
+    var userLoadingTitle = document.getElementById("userLoadingTitle");
+    userLoadingTitle.style.display = "block";
+    var otherLoadingTitle = document.getElementById("otherLoadingTitle");
+    otherLoadingTitle.style.display = "block";
     await getCollection(userObj);
     resetInitialStartAndEndIndex(userObj);
     displayCardCollectionForTrading(userObj);
     addRightScroll(userObj, userScrollRightButton);
     addLeftScroll(userObj, userScrollLeftButton);
+    userLoadingTitle.style.display = "none";
+    otherLoadingTitle.style.display = "none";
 }
 
 

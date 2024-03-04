@@ -576,6 +576,22 @@ header {
     color: #a7d393;
 }
 
+#otherLoadingTitle{
+    position: absolute;
+    width: 100%;
+    top: 40%;
+    text-align: center;
+    color: grey;
+}
+
+#userLoadingTitle{
+    position: absolute;
+    width: 100%;
+    top: 40%;
+    text-align: center;
+    color: grey;
+}
+
 #userDeck{
     color: #0ba710;
     width: 100%;
