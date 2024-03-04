@@ -62,6 +62,7 @@ class Opponent {
         this.player = player;
         this.playerStage = []; // Initialize playerStage for staging creature cards
         this.opponentStage = []; // Initialize opponentStage for staging computers's creature cards
+        this.opponentDiscardPile = []; // Initalize discard pile for opponent (Computer)
     }
 
 
@@ -87,48 +88,86 @@ class ComputerOpponent extends Opponent {
     }
 
     async playTurn(hand, isFirstTurn) {
+        let newHand = [...hand];
         // Check if it's the first turn
         if (isFirstTurn) {
             console.log("FIRST TURN")
             // If it's the first turn, play creature cards only
-            for (let i = 0; i < hand.length; i++) {
-                const card = hand[i];
-                if (card instanceof CreatureCard && card.mana <= this.mana && this.opponentStage.length < 5) {
-                    this.opponentStage.push(card);
-                    this.mana -= card.mana;
-                    hand.splice(i, 1);
-                    i--;
+            hand.forEach(element => {
+                if (element instanceof CreatureCard && element.mana <= this.mana && this.opponentStage.length < 5) {
+                    this.opponentStage.push(element);
+                    this.mana -= element.mana;
+                    hand = hand.filter(card => card.id !== element.id);
                 }
-            }
+            });
         } else {
-            console.log("NOT FIRST TURN")
-            // If it's not the first turn, play either creature or spell cards
-            for (let i = 0; i < hand.length; i++) {
-                const card = hand[i];
-                if ((card instanceof CreatureCard || card instanceof SpellCard) && card.mana <= this.mana) {
-                    if (card instanceof CreatureCard && this.opponentStage.length < 5) {
-                        this.opponentStage.push(card);
+            if (hand.length === 0 && this.opponentStage.length > 0) {
+                // If hand is empty but stage is not, prioritize attacking the player health
+                const cardToAttackIndex = Math.floor(Math.random() * this.opponentStage.length);
+                const cardToAttack = this.opponentStage[cardToAttackIndex];
+                console.log("ATTACKING PLAYER HEALTH", cardToAttackIndex, cardToAttack);
+                // Attack the player's health
+                const damage = cardToAttack.attack;
+                this.player.decreaseHealth(damage);
+                // Remove the card from the opponent's stage
+                this.opponentStage.splice(cardToAttackIndex, 1);
 
-                        const cardToAttackIndex = Math.floor(Math.random() * this.playerStage.length);
-                        const cardToAttack = this.playerStage[cardToAttackIndex];
 
-                        // Attack the player's creature card
-                        const damage = card.attack;
-                        cardToAttack.defense -= damage;
-                        // Remove the card from the player's stage if its defense is 0 or less
-                        if (cardToAttack.defense <= 0) {
-                            this.playerStage.splice(cardToAttackIndex, 1);
-                        }
+            } else {
+                console.log("NOT FIRST TURN")
+                // If cards are on the stage, prioritize attacking player health and higher attack cards
+                if (this.opponentStage.length > 0) {
+                    const cardToAttackIndex = Math.floor(Math.random() * this.opponentStage.length);
+                    const cardToAttack = this.opponentStage[cardToAttackIndex];
+                    console.log("ATTACKING PLAYER HEALTH", cardToAttackIndex, cardToAttack);
+                    // Attack the player's health
+                    const damage = cardToAttack.attack;
+                    this.player.decreaseHealth(damage);
+                    // Remove the card from the opponent's stage
+                    this.opponentStage.splice(cardToAttackIndex, 1);
 
-                    } else if (card instanceof SpellCard) {
-                        this.applySpellCardEffects(card);
-                    }
-                    this.mana -= card.mana;
-                    hand.splice(i, 1);
-                    i--;
+                    // Add card to discard pile
+                    this.opponentDiscardPile.push(cardToAttack);
                 }
+                
+                // If it's not the first turn, play either creature or spell cards
+                newHand = hand.filter(element => {
+                    // Prioritize playing creature cards if the opponent's stage is not full
+                    if ((element instanceof CreatureCard || element instanceof SpellCard) && element.mana <= this.mana) {
+                        console.log("ELEMENT", element)
+                        if (element instanceof CreatureCard && this.opponentStage.length < 5) {
+                            this.opponentStage.push(element);
+
+                            const cardToAttackIndex = Math.floor(Math.random() * this.playerStage.length);
+                            const cardToAttack = this.playerStage[cardToAttackIndex];
+                            console.log("ATTACKING PLAYER CARD", cardToAttackIndex, cardToAttack);
+                            // Attack the player's creature card
+
+                            const damage = element.attack;
+                            cardToAttack.defense -= damage;
+                            // Remove the card from the player's stage if its defense is 0 or less
+                            if (cardToAttack.defense <= 0) {
+                                this.playerStage.splice(cardToAttackIndex, 1);
+                            } else {
+                                // Update player stage with new card data
+                                this.playerStage[cardToAttackIndex] = cardToAttack;
+                            }
+                            return false; // Filter out the played card
+                        } else if (element instanceof SpellCard) {
+                            this.applySpellCardEffects(hand, element);
+
+                            // add card to discard pile
+                            this.opponentDiscardPile.push(element);
+                            
+                            return false; // Filter out the played card
+                        }
+                        this.mana -= element.mana;
+                    }
+                    return true; // Keep the card
+                });
             }
         }
+        return newHand;
     }
 
     evaluateBoardState(opponentStage) {
@@ -214,100 +253,89 @@ class ComputerOpponent extends Opponent {
             selectedCards.push(...creatureCards.slice(0, 5 - strategy.targetCardIds.length)); // Play up to 5 cards
         }
 
-        // Add more logic for other strategies...
-
         return selectedCards;
     }
 
-    async playSelectedCards(selectedCards) {
-        for (const card of selectedCards) {
-            // Deduct mana cost
-            this.mana -= card.mana;
+    applySpellCardEffects(hand, spellCard, targetCreatureCard = null) {
+        console.log("APPLYING SPELL CARD EFFECTS", spellCard);
+        let newHand = [...hand];
 
-            if (card instanceof CreatureCard) {
-                // Apply effects of creature cards (if any)
-                // This might involve adding the card to the player's stage or triggering any related effects
-                // Example: this.playerStage.push(card);
-
-                // Update game state (if necessary)
-                // Example: this.updateGameStateAfterCreatureCardPlayed(card);
-            } else if (card instanceof SpellCard) {
-                // Apply effects of spell cards (if any)
-                // This might involve modifying the stats of creature cards, damaging opponents, etc.
-                // Example: this.applySpellCardEffects(card);
-
-                // Update game state (if necessary)
-                // Example: this.updateGameStateAfterSpellCardPlayed(card);
-            }
-
-            // Other actions specific to the played card (if needed)
-
-            // You may also need to await any asynchronous actions here, depending on your game mechanics
-        }
-    }
-
-    // Example method to apply effects of a spell card
-    applySpellCardEffects(spellCard, targetCreatureCard = null) {
         // Apply effects based on the type of spell card
         switch (spellCard.ability.toLowerCase()) {
             case "damage":
-                console.log("DAMAGE")
-                // Example: Deal damage to opponent's creatures or player
-                this.player.decreaseHealth(spellCard.attack); // Adjust based on your game mechanics
+                console.log("DAMAGE");
+                // Deal damage to opponent
+                this.player.decreaseHealth(spellCard.attack);
+                // Move played card to discard pile
+                this.opponentDiscardPile.push(spellCard);
+                // Remove spell card from hand
+                newHand = newHand.filter(card => card.id !== spellCard.id);
+                break;
 
-                break;
             case "buff":
-                console.log("BUFF")
-                // Example: Increase attack or defense of creatures
-                this.buffCreatures(spellCard); // Implement this method
+                console.log("BUFF");
+                newHand = this.buffCreatures(newHand, spellCard);
                 break;
+
             case "debuff":
-                console.log("DEBUFF")
-                // Example: Decrease attack or defense of opponent's creatures
-                this.debuffOpponentCreatures(spellCard, targetCreatureCard); // Implement this method
+                console.log("DEBUFF");
+                // Randomly select a creature card from the player's stage to debuff
+                const randomIndex = Math.floor(Math.random() * this.playerStage.length);
+                const targetCreatureCard = this.playerStage[randomIndex];
+
+                newHand = this.debuffOpponentCreatures(newHand, spellCard, targetCreatureCard);
                 break;
-            // Add more cases for different types of spell cards...
+
             default:
                 // Handle unknown spell card types
-                console.error("Unknown spell card type:", spellCard.type);
+                console.error("Unknown spell card type:", spellCard.ability);
+                break;
         }
+
+        return newHand;
     }
 
-    buffCreatures(spellCard) {
+    buffCreatures(hand, spellCard) {
         console.log("Buffing creature on opponent's stage");
+        let newHand = [];
         // Apply the buff to a random creature on the opponent's stage
         if (this.opponentStage.length > 0) {
             const randomIndex = Math.floor(Math.random() * this.opponentStage.length);
             const creature = this.opponentStage[randomIndex];
-            creature.attack += spellCard.attack; // Adjust based on your game mechanics
-            creature.defense += spellCard.defense; // Adjust based on your game mechanics
+            creature.attack += spellCard.attack;
+            creature.defense += spellCard.defense;
+
+            // Move played card to discard pile
+            this.opponentDiscardPile.push(spellCard);
+            // Remove the spell card from the player's hand
+            newHand = hand.filter(handCard => handCard.id !== spellCard.id);
+            return newHand;
+        } else {
+            console.error("No creatures on the opponent's stage to buff.");
         }
     }
 
-    debuffOpponentCreatures(spellCard, targetCreatureCard) {
+    debuffOpponentCreatures(hand, spellCard, targetCreatureCard) {
         console.log("Debuffing creature on player's stage");
         // Apply the debuff to the target creature card
         if (targetCreatureCard) {
-            targetCreatureCard.attack -= spellCard.attack; // Adjust based on your game mechanics
-            targetCreatureCard.defense -= spellCard.defense; // Adjust based on your game mechanics
+            targetCreatureCard.attack -= spellCard.attack;
+            targetCreatureCard.defense -= spellCard.defense;
+
+            if (targetCreatureCard.defense <= 0) {
+                let tempStage = this.playerStage.filter(card => card.defense > 0);
+                this.playerStage = tempStage;
+                this.player.playerStage = tempStage;
+            }
+
+            // Move played card to discard pile
+            this.opponentDiscardPile.push(spellCard);
+            // Remove the spell card from the player's hand
+            const newHand = hand.filter(handCard => handCard.id !== spellCard.id);
+            return newHand;
         }
     }
 
-    updateGameStateAfterCreatureCardPlayed(creatureCard) {
-        // Add the creature to the player's stage
-        this.playerStage.push(creatureCard);
-
-        // Possible: Apply any immediate effects associated with the creature
-        // Example: Trigger abilities, buffs, or debuffs
-    }
-
-    updateGameStateAfterSpellCardPlayed(spellCard) {
-        // Apply spell effects
-        this.applySpellCardEffects(spellCard);
-
-        // Check for any game state changes resulting from the spell card
-        // Example: If a creature's stats were modified, update the corresponding creature card
-    }
 }
 
 
@@ -336,12 +364,13 @@ class Game {
         this.playerStage = [];
         this.opponentStage = [];
         this.round = 0;
+        this.playerDiscardPile = [];
+        this.opponentDiscardPile = [];
     }
 
     // Initialize the game
     async initialize(computer = true, opponentId, opponentUsn) {
         this.deck = await this.getDeck();
-        this.drawInitialHand();
 
         if (computer) {
             // if computer is opponent
@@ -352,6 +381,7 @@ class Game {
             this.drawInitialOpponentHand();
         }
 
+        this.drawInitialHand();
     }
 
     async getDeck() {
@@ -430,21 +460,27 @@ class Game {
     async playNextTurn() {
         // Draw cards for the next turn for user
         this.drawCardsPerTurn();
-
+        let newHand = [...this.hand];
         // Execute the computer opponent's turn
         if (this.opponent instanceof ComputerOpponent) {
             this.drawOpponentsCardsPerTurn();
             console.log("ROUND", this.round)
+            console.log("PLAYER STAGE", this.opponentHand.length)
             if (this.round === 0) {
                 this.opponent.playerStage = this.playerStage;
-                await this.opponent.playTurn(this.opponentHand, true);
+                console.log("comp hand", this.opponentHand.length)
+                newHand = await this.opponent.playTurn(this.opponentHand, true);
+                console.log("NEW HAND", newHand.length)
             } else {
                 this.opponent.playerStage = this.playerStage;
-                await this.opponent.playTurn(this.opponentHand, false);
+                console.log("comp hand", this.opponentHand.length)
+                newHand = await this.opponent.playTurn(this.opponentHand, false);
             }
 
             this.playerStage = this.opponent.playerStage;
             this.opponentStage = this.opponent.opponentStage;
+            this.opponentHand = newHand;
+            console.log("NEW HAND", newHand.length)
         }
 
         // Reset players mana to 10
@@ -484,7 +520,7 @@ class Game {
         const card = this.hand.find(card => card.id === cardId);
         let updatedStage = [...this.playerStage];
         let updatedOpponentStage = [...this.opponentStage];
-        console.log("CARD:", card)
+
         if (!card) {
             return { error: "Card is not in hand." };
         }
@@ -506,13 +542,15 @@ class Game {
                 // Check if the target creature's defense is below 0 and remove it if necessary
                 if (updatedOpponentStage[targetCreatureIndex].defense <= 0) {
                     let tempStage = updatedOpponentStage.filter(card => card.defense > 0);
-                    
+
                     updatedOpponentStage = tempStage;
                     this.opponentStage = updatedOpponentStage;
                     this.opponent.opponentStage = updatedOpponentStage;
                 }
                 this.opponentStage = updatedOpponentStage;
                 this.opponent.opponentStage = updatedOpponentStage;
+
+                this.opponentDiscardPile.push(card);
 
                 // Remove the spell card from the player's hand
                 this.hand = this.hand.filter(handCard => handCard.id !== cardId);
@@ -527,7 +565,7 @@ class Game {
             } else {
                 return { error: "Target creature card not found." };
             }
-        
+
         } else {
             if (card instanceof CreatureCard) {
                 if (updatedStage.length < 5) {
@@ -543,6 +581,8 @@ class Game {
                     if (targetCreatureIndex !== -1) {
                         // Apply the spell card effects to the target creature
                         this.applySpellCardEffects(card, updatedStage[targetCreatureIndex]);
+                        // Add the spell card to the discard pile
+                        this.playerDiscardPile.push(card);
                         // Remove the spell card from the player's hand
                         this.hand = this.hand.filter(handCard => handCard.id !== cardId);
                         // Deduct mana cost from player's mana
@@ -657,7 +697,7 @@ class Game {
         }
     }
 
-    
+
     // Example method to apply effects of a spell card
     applySpellCardEffects(spellCard, targetCreatureCard = null) {
         // Apply effects based on the type of spell card
@@ -704,39 +744,101 @@ class Game {
             targetCreatureCard.defense -= spellCard.defense; // Adjust based on your game mechanics
         }
     }
-
     attackCardToOpponent(playerCardId, opponentCardId) {
-        console.log("ATTACKING OPPONENT CARD", playerCardId, opponentCardId)
+        console.log("ATTACKING OPPONENT CARD", playerCardId, opponentCardId);
+
+        // Create copies of the player's stage and opponent's stage
         let tempStage = [...this.playerStage];
         let tempOpponentStage = [...this.opponentStage];
 
-        const playerCardIndex = tempStage.findIndex(card => card.id === playerCardId);
-        const opponentCardIndex = tempOpponentStage.findIndex(card => card.id === opponentCardId);
-        let damage = 0;
+        // Find the index of the player's card and opponent's card
+        const playerCardIndex = tempStage.findIndex(card => parseInt(card.id) === playerCardId);
+        const opponentCardIndex = tempOpponentStage.findIndex(card => parseInt(card.id) === opponentCardId);
+
+        // Find player card in hand
+        const playerCardInHand = this.hand.find(card => parseInt(card.id) === playerCardId);
+
+        // Check if both cards exist
         if (playerCardIndex !== -1 && opponentCardIndex !== -1) {
-            console.log("PLAYER CARD", tempStage[playerCardIndex])
-            console.log("OPPONENT CARD", tempOpponentStage[opponentCardIndex])
-            // Attack the opponent's creature card
-            damage = tempStage[playerCardIndex].attack;
-            console.log("DAMAGE", damage)   
+            // Log the details of the player's card and opponent's card
+            console.log("PLAYER CARD", tempStage[playerCardIndex]);
+            console.log("OPPONENT CARD", tempOpponentStage[opponentCardIndex]);
+
+            // Calculate the damage based on the player's card attack
+            const damage = tempStage[playerCardIndex].attack;
+
+            // Reduce opponent's card defense by the damage
             tempOpponentStage[opponentCardIndex].defense -= damage;
-            // Remove the card from the opponent's stage if its defense is 0 or less
+
+            // If opponent's card defense is zero or less, remove it from the stage
             if (tempOpponentStage[opponentCardIndex].defense <= 0) {
                 tempOpponentStage.splice(opponentCardIndex, 1);
             }
-            // Removed the played card from the player's stage
+
+            // Remove the player's card from the stage
             tempStage = tempStage.filter(card => card.id !== playerCardId);
+
+            // Update the player's stage and opponent's stage
             this.playerStage = tempStage;
             this.opponentStage = tempOpponentStage;
             this.opponent.opponentStage = tempOpponentStage;
-            
-            console.log("PLAYER STAGE", this.playerStage)
-            return { success: true, message: 'card played successfully'};
 
+            // Log the updated player's stage
+            console.log("PLAYER STAGE", this.playerStage);
+
+            // Return a success message
+            return { success: true, message: 'Card played successfully' };
+        } else if (playerCardInHand !== -1 && opponentCardIndex !== -1) {
+            // If the player's card is in hand, attack the opponent's card
+            const damage = playerCardInHand.attack;
+            tempOpponentStage[opponentCardIndex].defense -= damage;
+            // If opponent's card defense is zero or less, remove it from the stage
+            if (tempOpponentStage[opponentCardIndex].defense <= 0) {
+                tempOpponentStage.splice(opponentCardIndex, 1);
+            }
+            // Remove the player's card from the hand
+            this.hand = this.hand.filter(card => card.id !== playerCardId);
+            this.opponentStage = tempOpponentStage;
+            this.opponent.opponentStage = tempOpponentStage;
+            return { success: true, message: 'card played successfully' };
         } else {
+            // Return an error message if player's card or opponent's card is not found
             return { error: "Player card or opponent card not found." };
         }
-};
+    }
+
+    //     attackCardToOpponent(playerCardId, opponentCardId) {
+    //         console.log("ATTACKING OPPONENT CARD", playerCardId, opponentCardId)
+    //         let tempStage = [...this.playerStage];
+    //         let tempOpponentStage = [...this.opponentStage];
+
+    //         const playerCardIndex = tempStage.findIndex(card => card.id === playerCardId);
+    //         const opponentCardIndex = tempOpponentStage.findIndex(card => card.id === opponentCardId);
+    //         let damage = 0;
+    //         if (playerCardIndex !== -1 && opponentCardIndex !== -1) {
+    //             console.log("PLAYER CARD", tempStage[playerCardIndex])
+    //             console.log("OPPONENT CARD", tempOpponentStage[opponentCardIndex])
+    //             // Attack the opponent's creature card
+    //             damage = tempStage[playerCardIndex].attack;
+    //             console.log("DAMAGE", damage)   
+    //             tempOpponentStage[opponentCardIndex].defense -= damage;
+    //             // Remove the card from the opponent's stage if its defense is 0 or less
+    //             if (tempOpponentStage[opponentCardIndex].defense <= 0) {
+    //                 tempOpponentStage.splice(opponentCardIndex, 1);
+    //             }
+    //             // Removed the played card from the player's stage
+    //             tempStage = tempStage.filter(card => card.id !== playerCardId);
+    //             this.playerStage = tempStage;
+    //             this.opponentStage = tempOpponentStage;
+    //             this.opponent.opponentStage = tempOpponentStage;
+
+    //             console.log("PLAYER STAGE", this.playerStage)
+    //             return { success: true, message: 'card played successfully'};
+
+    //         } else {
+    //             return { error: "Player card or opponent card not found." };
+    //         }
+    // };
 
     // Method to check if game is over
     isGameOver() {

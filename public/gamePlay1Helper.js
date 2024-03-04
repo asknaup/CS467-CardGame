@@ -103,9 +103,9 @@ function attackCardToOpponent(cardElement, dropZone) {
                 console.log("data", data)
                 if (data.message === 'card played successfully') {
                     // Move the card from hand to the drop zone
-                    // fetchAndRenderPage();
-                    fetchAndRenderOpponentStage()
-                    fetchAndRenderStagingArea()
+                    // // fetchAndRenderPage();
+                    // fetchAndRenderOpponentStage()
+                    // fetchAndRenderStagingArea()
 
                     // Update player's mana UI
                     document.getElementById('playerMana').textContent = `Player Mana: ${data.playerMana}`;
@@ -253,66 +253,114 @@ function renderStagingArea(stagingAreaData) {
 }
 
 function renderOpponentStage(opponentStageData) {
-    // Assuming opponentStage is an array of card IDs
+    console.log("opponentStageData", opponentStageData);
+    // Get all drop zones
     const dropZones = document.querySelectorAll('.opponent .drop-zone');
-    const emptyDropZones = [];
-    const fullDropZones = [];
 
+    // Iterate over each drop zone
     dropZones.forEach(dropZone => {
+        // Get the card element within the drop zone
         const cardElement = dropZone.querySelector('.card');
-        if (!cardElement) {
-            emptyDropZones.push(dropZone.id); // Add drop zone ID to the emptyDropZones array if no card is found
-        } else {
-            fullDropZones.push(dropZone.id); // Add drop zone ID to the emptyDropZones array if no card is found
-        }
-    });
-
-    // Test if card in fullDropZone is in opponentStageData
-    // If not, remove card from dropZone 
-    // If so, update cardElement with corresponding cardData
-    fullDropZones.forEach(dropZone => {
-        const cardElement = document.getElementById(dropZone).querySelector('.card');
-        const cardId = cardElement ? parseInt(cardElement.id) : null;
-        const cardIndex = opponentStageData.findIndex(card => parseInt(card.id) === parseInt(cardId));
-
-        if (cardIndex !== -1) {
-            // If a card exists in the drop zone and it exists in opponentStageData,
-            // replace it with the corresponding data from opponentStageData
-            const correspondingCardData = opponentStageData[cardIndex];
-            updateCardElement(cardElement, correspondingCardData, 'opponent');
-            // cardElement.classList.add('opponent');
-            opponentStageData.splice(cardIndex, 1); // Remove the card from opponentStageData
-        } else {
-            // If the drop zone contains a card that does not exist in opponentStageData, remove the card
-            cardElement.remove();
-        }
-    });
-
-    // Shuffle the emptyDropZones array
-    emptyDropZones.sort(() => Math.random() - 0.5);
-
-    if (opponentStageData.length > 0) {
-        // Test if card in opponentStageData is in fullDropZone
-        // If not, create new cardElement and append to dropZone
-        // If so, do nothing
-        emptyDropZones.forEach(dropZone => {
-            // Check if opponentStageData is empty before proceeding
-            if (opponentStageData.length === 0) {
-                return;
+        if (cardElement) {
+            // Get the card ID from the card element
+            const cardId = parseInt(cardElement.id);
+            // Find the corresponding card data in opponentStageData
+            const correspondingCardData = opponentStageData.find(card => parseInt(card.id) === cardId);
+            if (correspondingCardData) {
+                // If the card exists in opponentStageData, update the card element with the corresponding data
+                updateCardElement(cardElement, correspondingCardData, 'opponent');
+            } else {
+                // If the card does not exist in opponentStageData, remove the card element from the drop zone
+                cardElement.remove();
             }
-            // randomly select an empty drop zone
-            const randomIndex = Math.floor(Math.random() * opponentStageData.length);
-            const cardData = opponentStageData[randomIndex];
-            // Create a new card element
+        }
+    });
+
+    // Filter out cards that are already present in the drop zones
+    opponentStageData = opponentStageData.filter(cardData => {
+        const cardId = parseInt(cardData.id);
+        const existingCardElement = document.querySelector(`.opponent .drop-zone .card[id='${cardId}']`);
+        return !existingCardElement;
+    });
+
+    // Iterate over the remaining cards in opponentStageData and append them to empty drop zones
+    opponentStageData.forEach(cardData => {
+        // Get all empty drop zones
+        const emptyDropZones = document.querySelectorAll('.opponent .drop-zone:empty');
+        if (emptyDropZones.length > 0) {
+            // Choose a random empty drop zone
+            const randomDropZone = emptyDropZones[Math.floor(Math.random() * emptyDropZones.length)];
+            // Create a new card element with the corresponding data
             const cardContainer = createCardElement(cardData);
             cardContainer.classList.add('opponent');
-            const dropZoneElement = document.getElementById(dropZone);
-            dropZoneElement.appendChild(cardContainer);
-
-            opponentStageData.splice(randomIndex, 1); // Remove the card from opponentStageData
-        });
-    }
+            // Append the new card element to the chosen drop zone
+            randomDropZone.appendChild(cardContainer);
+        }
+    });
 }
+
+
+// function renderOpponentStage(opponentStageData) {
+//     // Assuming opponentStage is an array of card IDs
+//     const dropZones = document.querySelectorAll('.opponent .drop-zone');
+//     const emptyDropZones = [];
+//     const fullDropZones = [];
+
+//     dropZones.forEach(dropZone => {
+//         const cardElement = dropZone.querySelector('.card');
+//         if (!cardElement) {
+//             emptyDropZones.push(dropZone.id); // Add drop zone ID to the emptyDropZones array if no card is found
+//         } else {
+//             fullDropZones.push(dropZone.id); // Add drop zone ID to the emptyDropZones array if no card is found
+//         }
+//     });
+
+//     // Test if card in fullDropZone is in opponentStageData
+//     // If not, remove card from dropZone 
+//     // If so, update cardElement with corresponding cardData
+//     fullDropZones.forEach(dropZone => {
+//         const cardElement = document.getElementById(dropZone).querySelector('.card');
+//         const cardId = cardElement ? parseInt(cardElement.id) : null;
+//         const cardIndex = opponentStageData.findIndex(card => parseInt(card.id) === parseInt(cardId));
+
+//         if (cardIndex !== -1) {
+//             // If a card exists in the drop zone and it exists in opponentStageData,
+//             // replace it with the corresponding data from opponentStageData
+//             const correspondingCardData = opponentStageData[cardIndex];
+//             updateCardElement(cardElement, correspondingCardData, 'opponent');
+//             // cardElement.classList.add('opponent');
+//             opponentStageData.splice(cardIndex, 1); // Remove the card from opponentStageData
+//         } else {
+//             // If the drop zone contains a card that does not exist in opponentStageData, remove the card
+//             cardElement.remove();
+//         }
+//     });
+
+//     // Shuffle the emptyDropZones array
+//     emptyDropZones.sort(() => Math.random() - 0.5);
+
+//     if (opponentStageData.length > 0) {
+//         // Test if card in opponentStageData is in fullDropZone
+//         // If not, create new cardElement and append to dropZone
+//         // If so, do nothing
+//         emptyDropZones.forEach(dropZone => {
+//             // Check if opponentStageData is empty before proceeding
+//             if (opponentStageData.length === 0) {
+//                 return;
+//             }
+//             // randomly select an empty drop zone
+//             const randomIndex = Math.floor(Math.random() * opponentStageData.length);
+//             const cardData = opponentStageData[randomIndex];
+//             // Create a new card element
+//             const cardContainer = createCardElement(cardData);
+//             cardContainer.classList.add('opponent');
+//             const dropZoneElement = document.getElementById(dropZone);
+//             dropZoneElement.appendChild(cardContainer);
+
+//             opponentStageData.splice(randomIndex, 1); // Remove the card from opponentStageData
+//         });
+//     }
+// }
 
 function createCardElement(cardData) {
     const cardContainer = document.createElement('div');
@@ -1059,12 +1107,13 @@ async function applySpellEffect(spellCard, dropZone) {
             displayErrorMessage('Error: Only creature cards can be affected by spells', 1);
         }
 
-        fetchAndRenderHand();
-        fetchAndRenderStagingArea();
-        fetchAndRenderOpponentStage();
+        // fetchAndRenderHand();
+        // fetchAndRenderStagingArea();
+        // fetchAndRenderOpponentStage();
     } catch (error) {
         console.error('Error applying spell effect:', error);
     }
+    fetchAndRenderPage();
 }
 
 function handleNoCardFoundError(dropZone) {
