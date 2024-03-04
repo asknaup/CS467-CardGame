@@ -350,6 +350,14 @@ header {
     display: inline-block;
 }
 
+#collectionLoadingTitle{
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    text-align: center;
+    color:#449a3c;
+}
+
 #collection{
     position: relative;
     width: 100%;
