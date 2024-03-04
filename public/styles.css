@@ -392,10 +392,6 @@ header {
 }
 
 /* Trading Page */
-#noteToProgrammers{
-    padding: 2vh;
-}
-
 #marketForms{
     display: flex;
     justify-content: space-between;
@@ -474,7 +470,10 @@ header {
 
 #tradeButtonSection {
     position: absolute;
-    bottom: 1vh;
+    bottom: 0vh;
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
 }
 
 #otherPlayerTradeSection, #userTradeSection{
@@ -489,11 +488,11 @@ header {
 }
 
 .tradeButtons{
-    display: inline-block;
     background-color: #4caf50;
+    margin-right: 2vw;
 }
 
-#declineTradeButton{
+#stopTradeButton{
     background-color: rgb(196, 63, 63);
 }
 
