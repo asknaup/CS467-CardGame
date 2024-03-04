@@ -243,20 +243,14 @@ startTradeButton.addEventListener("click", () => {
     simulateTrade(userObj, otherPlayerObj);
 });
 
-var acceptTradeButton= document.getElementById("acceptTradeButton");
-acceptTradeButton.addEventListener("click", () => {
+var confirmTradeButton= document.getElementById("confirmTradeButton");
+confirmTradeButton.addEventListener("click", () => {
     let tradePopUpForm = document.getElementById("tradePopUpForm");
     tradePopUpForm.style.display = "none";
 });
 
-var declineTradeButton= document.getElementById("declineTradeButton");
-declineTradeButton.addEventListener("click", () => {
-    let tradePopUpForm = document.getElementById("tradePopUpForm");
-    tradePopUpForm.style.display = "none";
-});
-
-var counterOfferTradeButton= document.getElementById("counterOfferTradeButton");
-counterOfferTradeButton.addEventListener("click", () => {
+var stopTradeButton= document.getElementById("stopTradeButton");
+stopTradeButton.addEventListener("click", () => {
     let tradePopUpForm = document.getElementById("tradePopUpForm");
     tradePopUpForm.style.display = "none";
 });
