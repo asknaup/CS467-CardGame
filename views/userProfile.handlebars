@@ -5,6 +5,41 @@
   <title>{{username}}'s Profile</title>
   <link rel="stylesheet" type="text/css" href="/global.css">
   <link rel="stylesheet" type="text/css" href="/styles.css">
+  <style>
+    .dropdown-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .dropdown-form {
+      width: 200px;
+      padding: 10px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .dropdown-button {
+      width: 100%;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    .dropdown-select {
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 5px;
+      margin-top: 5px;
+      display: none;
+      /* Hide dropdown initially */
+    }
+  </style>
   <base href="http://localhost:3000">
 </head>
 {{!-- #TODO add number of decks --}}
@@ -28,7 +63,30 @@
 
   <br>
 
-  <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+  <div style="display: flex; flex-direction: row; align-items: center; justify-content: center;">
+
+    <div class="dropdown-container">
+      <form class="dropdown-form" action="/collect" method="POST" onmouseover="showDropdown('dropdownSelect1')"
+        onmouseout="hideDropdown('dropdownSelect1')">
+        <button type="submit" class="dropdown-button">Create or Browse your collection for</button>
+        <select name="gameId" id="dropdownSelect1" class="dropdown-select">
+          {{#each vals}}
+          <option value="{{ this.gameId }}">{{ this.imageLocation }}</option>
+          {{/each}}
+        </select>
+      </form>
+
+      <form class="dropdown-form" action="/buildDeck" method="get" onmouseover="showDropdown('dropdownSelect2')"
+        onmouseout="hideDropdown('dropdownSelect2')">
+        <button type="submit" class="dropdown-button">Edit your Deck from this Collection</button>
+        <select name="gameId" id="dropdownSelect2" class="dropdown-select">
+          {{#each vals}}
+          <option value="{{ this.gameId }}">{{ this.imageLocation }}</option>
+          {{/each}}
+        </select>
+      </form>
+    </div>
+
     <form action="/gameGenPage" method="get">
       <div style="width: 200px; padding: 10px; text-align: center;">
         <button type="submit"
@@ -37,55 +95,30 @@
       </div>
     </form>
 
-    <form action="/collect" method="POST">
-      <div style="width: 200px; padding: 10px; text-align: center;">
-        <button type="submit"
-          style="width: 100%; cursor: pointer; background-color: #4CAF50; color: white; border: none; border-radius: 5px; font-size: 16px;">Create
-          or Browse your collection for
-        </button>
-      </div>
-      <div style="width: 200px; padding: 10px; text-align: center;">
-        <select name="gameId" style="width: 100%; border: 1px solid #ccc; border-radius: 5px; padding: 5px;">
-          {{#each vals}}
-          <option value="{{ this.gameId }}">{{ this.imageLocation }}</option>
-          {{/each}}
-        </select>
-      </div>
-    </form>
-
-    <form action="/buildDeck" method="get">
-      <div style="width: 200px; padding: 10px; text-align: center;">
-        <button type="submit"
-          style="width: 100%; cursor: pointer; background-color: #4CAF50; color: white; border: none; border-radius: 5px; font-size: 16px;">Edit
-          your Deck from this Collection</button>
-      </div>
-      <div style="width: 200px; padding: 10px; text-align: center;">
-        <select name="gameId" style="width: 100%; border: 1px solid #ccc; border-radius: 5px; padding: 5px;">
-          {{#each vals}}
-          <option value="{{ this.gameId }}">{{ this.imageLocation }}</option>
-          {{/each}}
-        </select>
-      </div>
-    </form>
-
     <form action="/help" method="get">
       <div style="width: 200px; padding: 10px; text-align: center;">
         <button type="submit"
-          style="width: 100%; cursor: pointer; background-color: #4CAF50; color: white; border: none; border-radius: 5px; font-size: 16px;">Help!
-          I'm Lost</button>
+          style="width: 100%; cursor: pointer; background-color: #4CAF50; color: white; border: none; border-radius: 5px; font-size: 16px;">Help</button>
       </div>
     </form>
 
     <form action="/logout" method="post">
       <div style="width: 200px; padding: 10px; text-align: center;">
         <button type="submit"
-          style="width: 100%; cursor: pointer; background-color: #4CAF50; color: white; border: none; border-radius: 5px; font-size: 16px;">LOGOUT!
-          NEEDS WORK</button>
+          style="width: 100%; cursor: pointer; background-color: #4CAF50; color: white; border: none; border-radius: 5px; font-size: 16px;">Logout</button>
       </div>
     </form>
   </div>
 
+  <script>
+    function showDropdown(selectId) {
+      document.getElementById(selectId).style.display = "block";
+    }
 
+    function hideDropdown(selectId) {
+      document.getElementById(selectId).style.display = "none";
+    }
+  </script>
 
 </body>
 

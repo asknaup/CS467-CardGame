@@ -179,8 +179,8 @@ app.get('/generatedGameView', async (req, res) => {
 
 app.get('/buildDeck', async (req, res) => {
   // Needs collection and game info
-  // const user = req.session.user;
-  const user = { userId: 1001, username: 'admin' };
+  const user = req.session.user;
+  // const user = { userId: 1001, username: 'admin' };
   // FIXME: Switch back to const user = req.session.user; once buildDeck complete
   try {
     if (user) {
@@ -339,8 +339,8 @@ app.get('/getDeckId', (req, res) => {
 
 // TODO: NEEDS WORK and direction
 app.get('/browseGames', (req, res) => {
-  // const user = req.session.user;
-  const user = { userId: 1001, username: 'admin' };
+  const user = req.session.user;
+  // const user = { userId: 1001, username: 'admin' };
   if (user) {
     res.render('browseGames')
   } else {
