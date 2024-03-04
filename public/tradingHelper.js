@@ -131,8 +131,10 @@ async function collectionSelectHandler(collectionSelect){
     var otherLoadingTitle = document.getElementById("otherLoadingTitle");
     otherLoadingTitle.style.display = "block";
     let collectionKey = parseInt(collectionSelect.value);
-    console.log(collectionKey);
-    await switchToGivenCollection(collectionKey, userObj);
+    userObj.currCollectId = collectionKey;
+    otherPlayerObj.currCollectId = collectionKey;
+    await switchToGivenUserCollection(collectionKey, userObj);
+    await getCurrentAdminCollection(otherPlayerObj);
     resetInitialStartAndEndIndex(userObj);
     displayCardCollectionForTrading(userObj);
     resetInitialStartAndEndIndex(otherPlayerObj);
@@ -142,27 +144,27 @@ async function collectionSelectHandler(collectionSelect){
 }
 
 
-async function switchToGivenCollection(collectionKey, userObj){
-    if(!(collectionKey in userObj.collections)){
-        let cardList = userObj.cardListsFromDb[collectionKey];
+async function switchToGivenUserCollection(userObj){
+    if(!(userObj.currCollectId in userObj.collections)){
+        let cardList = userObj.cardListsFromDb[userObj.currCollectId];
         let listOfCardObjs = cardList.cardList;
-        userObj.primaryKeysForCollections[collectionKey] = [];
-        userObj.collections[collectionKey] = {};
+        userObj.primaryKeysForCollections[userObj.currCollectId] = [];
+        userObj.collections[userObj.currCollectId] = {};
         for(const cardId of  listOfCardObjs){
             const cardDetailsResponse = await fetch('/getCardDetails?cardId=' + cardId);
             await cardDetailsResponse.json()
                 .then((cardData) => {
-                        userObj.primaryKeysForCollections[collectionKey].push(cardData.id);
+                        userObj.primaryKeysForCollections[userObj.currCollectId].push(cardData.id);
                         //(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana)
                         let cardObj = new Card(cardData.id, cardData.cardName, cardData.imagePath, 
                             cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
-                        userObj.collections[collectionKey][cardData.id] = cardObj;
+                        userObj.collections[userObj.currCollectId][cardData.id] = cardObj;
                 })
                 .catch((error) => {console.log(error)});  
         }
     }
-    userObj.primaryKeyArr = userObj.primaryKeysForCollections[collectionKey];
-    userObj.cardDict = userObj.collections[collectionKey];
+    userObj.primaryKeyArr = userObj.primaryKeysForCollections[userObj.currCollectId];
+    userObj.cardDict = userObj.collections[userObj.currCollectId];
 }
 
 
@@ -174,58 +176,55 @@ function resetInitialStartAndEndIndex(userObj){
     }
 }
 
+async function getCurrentAdminCollection(otherPlayerObj){
+    otherPlayerObj.primaryKeysForCollections[otherPlayerObj.currCollectId] = [];
+    otherPlayerObj.collections[otherPlayerObj.currCollectId] = {};
+    const adminCardsResponse = await fetch('/getAdminCardsForTrading?collectId=' + otherPlayerObj.currCollectId);
+    let adminCardList = await adminCardsResponse.json()
+    for(const cardId of  adminCardList){
+        const cardDetailsResponse = await fetch('/getCardDetails?cardId=' + cardId);
+        await cardDetailsResponse.json()
+            .then((cardData) => {
+                    //console.log("admin card data")
+                    //console.log(cardData)
+                    otherPlayerObj.primaryKeysForCollections[otherPlayerObj.currCollectId].push(cardData.id);
+                    //(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana)
+                    let cardObj = new Card(cardData.id, cardData.cardName, cardData.imagePath, 
+                        cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
+                    otherPlayerObj.collections[otherPlayerObj.currCollectId][cardData.id] = cardObj;
+                    
+            })
+            .catch((error) => {console.log(error)});  
+    }
+    otherPlayerObj.primaryKeyArr = otherPlayerObj.primaryKeysForCollections[otherPlayerObj.currCollectId];
+    otherPlayerObj.cardDict = otherPlayerObj.collections[otherPlayerObj.currCollectId];
+}
 
-async function getCollection(userObj){
-    const response= await fetch('/getCollection');
-    let collection = await response.json();
+async function getInitialUserCollection(collection, userObj){
     for(let index = 0; index < collection.length; index++){
         let currCollectId = collection[index].collectionId
         userObj.cardListsFromDb[currCollectId] = JSON.parse(collection[index].cardId);
     }
-    let firstCollectionId = null;
     if(collection.length > 0){
-        firstCollectionId = collection[0].collectionId
-        userObj.primaryKeysForCollections[firstCollectionId] = [];
-        userObj.collections[firstCollectionId] = {};
-        let cardList = userObj.cardListsFromDb[firstCollectionId];
+        userObj.primaryKeysForCollections[userObj.currCollectId] = [];
+        userObj.collections[userObj.currCollectId] = {};
+        let cardList = userObj.cardListsFromDb[userObj.currCollectId];
         let listOfCardObjs = cardList.cardList;
         for(const cardId of  listOfCardObjs){
             const cardDetailsResponse = await fetch('/getCardDetails?cardId=' + cardId);
             await cardDetailsResponse.json()
                 .then((cardData) => {
-                        userObj.primaryKeysForCollections[firstCollectionId].push(cardData.id);
+                        userObj.primaryKeysForCollections[userObj.currCollectId].push(cardData.id);
                         //(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana)
                         let cardObj = new Card(cardData.id, cardData.cardName, cardData.imagePath, 
                             cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
-                        userObj.collections[firstCollectionId][cardData.id] = cardObj;
+                        userObj.collections[userObj.currCollectId][cardData.id] = cardObj;
                 })
                 .catch((error) => {console.log(error)});  
         }
-        otherPlayerObj.primaryKeysForCollections[firstCollectionId] = [];
-        otherPlayerObj.collections[firstCollectionId] = {};
-        const adminCardsResponse = await fetch('/getAdminCardsForTrading?collectId=' + firstCollectionId);
-        let adminCardList = await adminCardsResponse.json()
-        for(const cardId of  adminCardList){
-            const cardDetailsResponse = await fetch('/getCardDetails?cardId=' + cardId);
-            await cardDetailsResponse.json()
-                .then((cardData) => {
-                        //console.log("admin card data")
-                        //console.log(cardData)
-                        otherPlayerObj.primaryKeysForCollections[firstCollectionId].push(cardData.id);
-                        //(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana)
-                        let cardObj = new Card(cardData.id, cardData.cardName, cardData.imagePath, 
-                            cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
-                        otherPlayerObj.collections[firstCollectionId][cardData.id] = cardObj;
-                        
-                })
-                .catch((error) => {console.log(error)});  
-        }
-        
     }
-    userObj.primaryKeyArr = userObj.primaryKeysForCollections[firstCollectionId];
-    userObj.cardDict = userObj.collections[firstCollectionId];
-    otherPlayerObj.primaryKeyArr = userObj.primaryKeysForCollections[firstCollectionId];
-    otherPlayerObj.cardDict = userObj.collections[firstCollectionId];
+    userObj.primaryKeyArr = userObj.primaryKeysForCollections[userObj.currCollectId];
+    userObj.cardDict = userObj.collections[userObj.currCollectId];
 }
 
 
@@ -234,7 +233,14 @@ async function setupTradingPage(){
     userLoadingTitle.style.display = "block";
     var otherLoadingTitle = document.getElementById("otherLoadingTitle");
     otherLoadingTitle.style.display = "block";
-    await getCollection(userObj);
+    const response= await fetch('/getCollection');
+    let collection = await response.json();
+    if(collection.length > 0){ 
+        userObj.currCollectId = collection[0].collectionId;
+        otherPlayerObj.currCollectId = collection[0].collectionId;
+    };
+    await getInitialUserCollection(collection, userObj);
+    await getCurrentAdminCollection(otherPlayerObj)
     resetInitialStartAndEndIndex(userObj);
     displayCardCollectionForTrading(userObj);
     addRightScroll(userObj, userScrollRightButton);
@@ -249,13 +255,13 @@ async function setupTradingPage(){
 
 /*main code for trading */
 var numScrollCards = 8;
-let userObj = {isUser: true,primaryKeysForCollections: {}, collections: {}, cardListsFromDb: {},  primaryKeyArr: [], cardDict: {}, 
+let userObj = {isUser: true, primaryKeysForCollections: {}, collections: {}, cardListsFromDb: {},  primaryKeyArr: [], cardDict: {}, 
                 stagedCardCount: 0, startIndex: 0, endIndex: 7, cardSlots: "userCardSlots", stageAreaId: "userStageAreaId", 
-                stageAreaClass: "userStageAreaClass", stagedCardName: "userStagedCard"};
+                stageAreaClass: "userStageAreaClass", stagedCardName: "userStagedCard", currCollectId: null};
                  
-let otherPlayerObj = {isUser: false,primaryKeysForCollections: {}, collections: {}, cardListsFromDb: {},  primaryKeyArr: [], cardDict: {}, 
+let otherPlayerObj = {isUser: false, primaryKeysForCollections: {}, collections: {}, cardListsFromDb: {},  primaryKeyArr: [], cardDict: {}, 
                 stagedCardCount: 0, startIndex: 0, endIndex: 7, cardSlots: "otherCardSlots", stageAreaId: "otherStageAreaId", 
-                stageAreaClass: "otherStageAreaClass", stagedCardName: "otherStagedCard"};
+                stageAreaClass: "otherStageAreaClass", stagedCardName: "otherStagedCard", currCollectId: null};
 
 var otherScrollLeftButton = document.getElementById("otherScrollLeft");
 var otherScrollRightButton = document.getElementById("otherScrollRight");
