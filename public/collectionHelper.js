@@ -46,11 +46,14 @@ function addRightScroll(userObj, scrollRightButton){
 
 
 async function collectionSelectHandler(collectionSelect){
+        var collectionLoadingTitle = document.getElementById("collectionLoadingTitle");
+        collectionLoadingTitle.style.display = "block";
         let collectionKey = parseInt(collectionSelect.value);
         console.log(collectionKey);
         await switchToGivenCollection(collectionKey, userObj);
         resetInitialStartAndEndIndex(userObj);
         displayCardCollection(userObj);
+        collectionLoadingTitle.style.display = "none";
 }
 
 
@@ -117,11 +120,14 @@ async function getCollection(userObj){
 }
 
 async function setupCollectionPage(){
+    var collectionLoadingTitle = document.getElementById("collectionLoadingTitle");
+    collectionLoadingTitle.style.display = "block";
     await getCollection(userObj);
     resetInitialStartAndEndIndex(userObj);
     displayCardCollection(userObj);
     addRightScroll(userObj, collectionScrollRightButton);
     addLeftScroll(userObj, collectionScrollLeftButton);
+    collectionLoadingTitle.style.display = "none";
 }
 
 
