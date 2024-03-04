@@ -133,7 +133,7 @@ async function collectionSelectHandler(collectionSelect){
     let collectionKey = parseInt(collectionSelect.value);
     userObj.currCollectId = collectionKey;
     otherPlayerObj.currCollectId = collectionKey;
-    await switchToGivenUserCollection(collectionKey, userObj);
+    await switchToGivenUserCollection(userObj);
     await getCurrentAdminCollection(otherPlayerObj);
     resetInitialStartAndEndIndex(userObj);
     displayCardCollectionForTrading(userObj);
@@ -177,24 +177,26 @@ function resetInitialStartAndEndIndex(userObj){
 }
 
 async function getCurrentAdminCollection(otherPlayerObj){
-    otherPlayerObj.primaryKeysForCollections[otherPlayerObj.currCollectId] = [];
-    otherPlayerObj.collections[otherPlayerObj.currCollectId] = {};
-    const adminCardsResponse = await fetch('/getAdminCardsForTrading?collectId=' + otherPlayerObj.currCollectId);
-    let adminCardList = await adminCardsResponse.json()
-    for(const cardId of  adminCardList){
-        const cardDetailsResponse = await fetch('/getCardDetails?cardId=' + cardId);
-        await cardDetailsResponse.json()
-            .then((cardData) => {
-                    //console.log("admin card data")
-                    //console.log(cardData)
-                    otherPlayerObj.primaryKeysForCollections[otherPlayerObj.currCollectId].push(cardData.id);
-                    //(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana)
-                    let cardObj = new Card(cardData.id, cardData.cardName, cardData.imagePath, 
-                        cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
-                    otherPlayerObj.collections[otherPlayerObj.currCollectId][cardData.id] = cardObj;
-                    
-            })
-            .catch((error) => {console.log(error)});  
+    if(!(otherPlayerObj.currCollectId in otherPlayerObj.collections)){
+        otherPlayerObj.primaryKeysForCollections[otherPlayerObj.currCollectId] = [];
+        otherPlayerObj.collections[otherPlayerObj.currCollectId] = {};
+        const adminCardsResponse = await fetch('/getAdminCardsForTrading?collectId=' + otherPlayerObj.currCollectId);
+        let adminCardList = await adminCardsResponse.json()
+        for(const cardId of  adminCardList){
+            const cardDetailsResponse = await fetch('/getCardDetails?cardId=' + cardId);
+            await cardDetailsResponse.json()
+                .then((cardData) => {
+                        //console.log("admin card data")
+                        //console.log(cardData)
+                        otherPlayerObj.primaryKeysForCollections[otherPlayerObj.currCollectId].push(cardData.id);
+                        //(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana)
+                        let cardObj = new Card(cardData.id, cardData.cardName, cardData.imagePath, 
+                            cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
+                        otherPlayerObj.collections[otherPlayerObj.currCollectId][cardData.id] = cardObj;
+                        
+                })
+                .catch((error) => {console.log(error)});  
+        }
     }
     otherPlayerObj.primaryKeyArr = otherPlayerObj.primaryKeysForCollections[otherPlayerObj.currCollectId];
     otherPlayerObj.cardDict = otherPlayerObj.collections[otherPlayerObj.currCollectId];

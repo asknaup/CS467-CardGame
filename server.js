@@ -411,7 +411,6 @@ app.get('/getAdminCardsForTrading', async (req, res) => {
   let adminList;
 
   if (user) {
-    const collect = await dbFunc.getAllCollectionsByUser(user.userId);
     //listCards = await dbFunc.grabListOfCardsFromCollection(userCollectId);
     gameIdArr = await dbFunc.grabGameIdFromCollection(userCollectId);
     gameId = gameIdArr[0].gameId;
