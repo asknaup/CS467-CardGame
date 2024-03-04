@@ -229,10 +229,11 @@ app.get('/currentDeck', async (req, res) => {
 // Update Deck route
 app.post('/updateDeck', async (req, res) => {
   const { deckId, cards } = req.body;
+  console.log("/updateDeck cards obj:", cards);
 
   try {
     // Fetch the existing deck from the database
-    const existingDeck = await Deck.findById(deckId);
+    const existingDeck = await dbFunc.updateDeckById(JSON.stringify({ 'cardList': cards }), deckId);
 
     if (!existingDeck) {
       return res.status(404).json({ error: 'Deck not found' });

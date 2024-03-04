@@ -758,6 +758,21 @@ async function grabGameIdFromCollection(collectId) {
     });
 }
 
+async function updateDeckById(cardList, deckId) {
+    return new Promise((resolve, reject) => {
+        const query = 'UPDATE decks SET cardId = ? WHERE deckId = ?';
+        // Pass an array of values as the second parameter to the query function
+        db.pool.query(query, [cardList, deckId], (error, results) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+}
+
+
 // function updateGameWinner({ params }) {
 //     // Initialize a new game -> winner has not been decided
 //     return new Promise((resolve, reject) => {
@@ -796,8 +811,8 @@ module.exports.insertNewGeneratedGame = insertNewGeneratedGame;
 module.exports.getGeneratedGameStats = getGeneratedGameStats;
 module.exports.getAllGeneratedGames = getAllGeneratedGames;
 module.exports.getAllGeneratedGamesByUser = getAllGeneratedGamesByUser;
-module.exports.getAllCollectionsByUser =getAllCollectionsByUser;
-module.exports.getOneGeneratedGame = getOneGeneratedGame; 
+module.exports.getAllCollectionsByUser = getAllCollectionsByUser;
+module.exports.getOneGeneratedGame = getOneGeneratedGame;
 module.exports.getAllDecksByUser = getAllDecksByUser;
 module.exports.insertOrSelectCollectionByUserIdandGameId = insertOrSelectCollectionByUserIdandGameId;
 module.exports.grabListOfCardsFromCollection = grabListOfCardsFromCollection;
@@ -808,3 +823,4 @@ module.exports.grabGameName = grabGameName;
 module.exports.grabAdminListCards = grabAdminListCards;
 module.exports.updateAdminListCards = updateAdminListCards;
 module.exports.grabGameIdFromCollection = grabGameIdFromCollection;
+module.exports.updateDeckById = updateDeckById;

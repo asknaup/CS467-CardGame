@@ -132,6 +132,9 @@ function createTradingCardFromInfo(cardInfo) {
     card.appendChild(cardImage);
     card.appendChild(textOverlayTop);
 
+    const uniqueIdentifier = generateUniqueIdentifier();
+    card.dataset.uniqueIdentifier = uniqueIdentifier;
+
     return card;
 }
 
@@ -265,26 +268,56 @@ function createTradingCard(cardData) {
 
     // card.appendChild(toolTip);
 
+    const uniqueIdentifier = generateUniqueIdentifier();
+    cardElement.dataset.uniqueIdentifier = uniqueIdentifier;
+
     return card;
+}
+
+// Function to generate a unique identifier
+function generateUniqueIdentifier() {
+    return 'card_' + Math.random().toString(36).substr(2, 9);
 }
 
 let selectedCards = [];
 
+// function selectCard(cardId) {
+//     const cardElement = document.querySelector(`[data-card-id="${cardId}"]`);
+//     const stagingArea = document.getElementById('stagingArea');
+//     const cardContainer = document.getElementById('cardContainer');
+
+//     if (selectedCards.includes(cardId)) {
+//         // Card is already selected, remove it from the selected cards array
+//         const selectedCardIndex = selectedCards.indexOf(cardId);
+//         selectedCards.splice(selectedCardIndex, 1);
+
+//         // Move the card back to the cardContainer
+//         cardContainer.appendChild(cardElement);
+//     } else {
+//         // Card is not selected, add it to the selected cards array
+//         selectedCards.push(cardId);
+
+//         // Move the card to the staging area
+//         stagingArea.appendChild(cardElement);
+//     }
+// }
+
 function selectCard(cardId) {
     const cardElement = document.querySelector(`[data-card-id="${cardId}"]`);
+    const uniqueIdentifier = cardElement.dataset.uniqueIdentifier;
     const stagingArea = document.getElementById('stagingArea');
     const cardContainer = document.getElementById('cardContainer');
 
-    if (selectedCards.includes(cardId)) {
+    if (selectedCards.includes(uniqueIdentifier)) {
         // Card is already selected, remove it from the selected cards array
-        const selectedCardIndex = selectedCards.indexOf(cardId);
+        const selectedCardIndex = selectedCards.indexOf(uniqueIdentifier);
         selectedCards.splice(selectedCardIndex, 1);
 
         // Move the card back to the cardContainer
         cardContainer.appendChild(cardElement);
     } else {
         // Card is not selected, add it to the selected cards array
-        selectedCards.push(cardId);
+        selectedCards.push(uniqueIdentifier);
 
         // Move the card to the staging area
         stagingArea.appendChild(cardElement);
@@ -556,13 +589,14 @@ function updateDeck(selectedCards, deckId) {
     const deckData = [];
 
     // Iterate over each selected card and extract relevant data
-    selectedCards.forEach(cardId => {
-        const cardData = {};
+    selectedCards.forEach(uniqueIdentifier => {
+        const cardId = document.querySelector(`[data-unique-identifier="${uniqueIdentifier}"]`).dataset.cardId;
         deckData.push(parseInt(cardId));
     });
 
     // Create a JSON representation of the updated deck data
     const jsonDeck = JSON.stringify({ deckId, cards: deckData });
+
 
     // Send a request to update the existing deck in the database
     fetch('/updateDeck', {
