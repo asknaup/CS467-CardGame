@@ -38,21 +38,21 @@ function createTradingCard(cardData) {
     cardImage.appendChild(imageElement);
 
     // TODO: Replace with creature
-    var type = document.createElement('p');
-    type.classList.add('cardType');
-    type.textContent = cardData.type;
+    var cardType = document.createElement('p');
+    cardType.classList.add('cardType');
+    cardType.textContent = cardData.cardType;
 
     var rarity = document.createElement('p');
     rarity.textContent = cardData.rarity;
 
-    var mana = document.createElement('p');
-    mana.innerHTML = `<strong>Mana:</strong> ${cardData.mana}`;
+    var manaCost = document.createElement('p');
+    manaCost.innerHTML = `<strong>Mana:</strong> ${cardData.manaCost}`;
 
     // toolTipText.appendChild(rarity);
     // toolTipText.appendChild(manaCost);
-    textOverlayBottom.appendChild(mana);
+    textOverlayBottom.appendChild(manaCost);
 
-    if (cardData.type == "Spell") {
+    if (cardData.cardType == "Spell") {
         var spellType = document.createElement('p');
         spellType.innerHTML = `<strong>Type:</strong> ${cardData.spellType}`;
 
@@ -91,7 +91,7 @@ function createTradingCard(cardData) {
     // textOverlayBottom.appendChild(cardName);
     // textOverlayBottom.appendChild(cardType);
     textOverlayTop.appendChild(cardName);
-    textOverlayTop.appendChild(type);
+    textOverlayTop.appendChild(cardType);
     textOverlayTop.appendChild(rarity);
 
     card.appendChild(textOverlayBottom);
