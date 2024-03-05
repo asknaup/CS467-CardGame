@@ -70,8 +70,8 @@
 }
 
 .card {
-    width: 10.5vw;
-    height: 18.5vw;
+    width: 10vw;
+    height: 16.5vw;
     /* Card container height */
     border: 2px solid #000;
     border-radius: 24px;
