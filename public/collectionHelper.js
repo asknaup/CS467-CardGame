@@ -52,41 +52,45 @@ function addRightScroll(userObj, scrollRightButton){
     });
 }
 
+async function createCollectionFromCardIdList(listOfCardObjs, userObj){
+    for(const cardId of  listOfCardObjs){
+        const cardDetailsResponse = await fetch('/getCardDetails?cardId=' + cardId);
+        await cardDetailsResponse.json()
+            .then((cardData) => {
+                    userObj.primaryKeysForCollections[userObj.currCollectId].push(cardData.id);
+                    //(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana)
+                    let cardObj = new Card(cardData.id, cardData.cardName, cardData.imagePath, 
+                        cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
+                    userObj.collections[userObj.currCollectId][cardData.id] = cardObj;
+            })
+            .catch((error) => {console.log(error)});  
+    }
+}
 
 async function collectionSelectHandler(collectionSelect){
         var collectionLoadingTitle = document.getElementById("collectionLoadingTitle");
         collectionLoadingTitle.style.display = "block";
         let collectionKey = parseInt(collectionSelect.value);
-        console.log(collectionKey);
-        await switchToGivenCollection(collectionKey, userObj);
+        userObj.currCollectId = collectionKey;
+        await switchToGivenCollection(userObj);
         resetInitialStartAndEndIndex(userObj);
         displayCardCollection(userObj);
         collectionLoadingTitle.style.display = "none";
 }
 
 
-async function switchToGivenCollection(collectionKey, userObj){
-    if(!(collectionKey in userObj.collections)){
-        let cardList = userObj.cardListsFromDb[collectionKey];
+async function switchToGivenCollection(userObj){
+    if(!(userObj.currCollectId in userObj.collections)){
+        let cardList = userObj.cardListsFromDb[userObj.currCollectId];
         let listOfCardObjs = cardList.cardList;
-        userObj.primaryKeysForCollections[collectionKey] = [];
-        userObj.collections[collectionKey] = {};
-        for(const cardId of  listOfCardObjs){
-            const cardDetailsResponse = await fetch('/getCardDetails?cardId=' + cardId);
-            await cardDetailsResponse.json()
-                .then((cardData) => {
-                        userObj.primaryKeysForCollections[collectionKey].push(cardData.id);
-                        //(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana)
-                        let cardObj = new Card(cardData.id, cardData.name, cardData.imagePath, 
-                            cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
-                        userObj.collections[collectionKey][cardData.id] = cardObj;
-                })
-                .catch((error) => {console.log(error)});  
-        }
+        userObj.primaryKeysForCollections[userObj.currCollectId] = [];
+        userObj.collections[userObj.currCollectId] = {};
+        await createCollectionFromCardIdList(listOfCardObjs, userObj);
     }
-    userObj.primaryKeyArr = userObj.primaryKeysForCollections[collectionKey];
-    userObj.cardDict = userObj.collections[collectionKey];
+    userObj.primaryKeyArr = userObj.primaryKeysForCollections[userObj.currCollectId];
+    userObj.cardDict = userObj.collections[userObj.currCollectId];
 }
+
 
 function resetInitialStartAndEndIndex(userObj){
     userObj.startIndex = 0;
@@ -96,45 +100,33 @@ function resetInitialStartAndEndIndex(userObj){
     }
 }
 
-async function getCollection(collection, userObj){
+
+async function getInitialUserCollection(collection, userObj){
     for(let index = 0; index < collection.length; index++){
         let currCollectId = collection[index].collectionId
         userObj.cardListsFromDb[currCollectId] = JSON.parse(collection[index].cardId);
     }
-    let collectionId = null;
     if(collection.length > 0){
-        collectionId = collection[0].collectionId
-        userObj.primaryKeysForCollections[collectionId] = [];
-        userObj.collections[collectionId] = {};
-        let cardList = userObj.cardListsFromDb[collectionId];
+        userObj.primaryKeysForCollections[userObj.currCollectId] = [];
+        userObj.collections[userObj.currCollectId] = {};
+        let cardList = userObj.cardListsFromDb[userObj.currCollectId];
         let listOfCardObjs = cardList.cardList;
-        for(const cardId of  listOfCardObjs){
-            const cardDetailsResponse = await fetch('/getCardDetails?cardId=' + cardId);
-            await cardDetailsResponse.json()
-                .then((cardData) => {
-                        console.log("cardData: ");
-                        console.log(cardData);
-                        userObj.primaryKeysForCollections[collectionId].push(cardData.id);
-                        //(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana)
-                        let cardObj = new Card(cardData.id, cardData.name, cardData.imagePath, 
-                            cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
-                        userObj.collections[collectionId][cardData.id] = cardObj;
-                        console.log("cardObj: ");
-                        console.log(cardObj)
-                })
-                .catch((error) => {console.log(error)});  
-        }
+        await createCollectionFromCardIdList(listOfCardObjs, userObj);
     }
-    userObj.primaryKeyArr = userObj.primaryKeysForCollections[collectionId];
-    userObj.cardDict = userObj.collections[collectionId];
+    userObj.primaryKeyArr = userObj.primaryKeysForCollections[userObj.currCollectId];
+    userObj.cardDict = userObj.collections[userObj.currCollectId];
 }
+
 
 async function setupCollectionPage(){
     var collectionLoadingTitle = document.getElementById("collectionLoadingTitle");
     collectionLoadingTitle.style.display = "block";
     const response= await fetch('/getCollection');
     let collection = await response.json();
-    await getCollection(collection, userObj);
+    if(collection.length > 0){ 
+        userObj.currCollectId = collection[0].collectionId;
+    };
+    await getInitialUserCollection(collection, userObj);
     resetInitialStartAndEndIndex(userObj);
     displayCardCollection(userObj);
     collectionLoadingTitle.style.display = "none";
