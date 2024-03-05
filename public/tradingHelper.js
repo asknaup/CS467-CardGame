@@ -248,10 +248,20 @@ async function setupTradingPage(){
     addRightScroll(userObj, userScrollRightButton);
     addLeftScroll(userObj, userScrollLeftButton);
     displayCardCollectionForTrading(otherPlayerObj);
-    addRightScroll(otherPlayerObj, otherScrollRightButton);
-    addLeftScroll(otherPlayerObj, otherScrollLeftButton);
     userLoadingTitle.style.display = "none";
     otherLoadingTitle.style.display = "none";
+    addRightScroll(otherPlayerObj, otherScrollRightButton);
+    addLeftScroll(otherPlayerObj, otherScrollLeftButton);
+    collectionSelect.addEventListener("change", () => { collectionSelectHandler(collectionSelect) });
+    startTradeButton.addEventListener("click", () => {simulateTrade(userObj, otherPlayerObj);});
+    confirmTradeButton.addEventListener("click", () => {
+        let tradePopUpForm = document.getElementById("tradePopUpForm");
+        tradePopUpForm.style.display = "none";
+    });
+    stopTradeButton.addEventListener("click", () => {
+        let tradePopUpForm = document.getElementById("tradePopUpForm");
+        tradePopUpForm.style.display = "none";
+    });
 }
 
 
@@ -269,24 +279,9 @@ var otherScrollLeftButton = document.getElementById("otherScrollLeft");
 var otherScrollRightButton = document.getElementById("otherScrollRight");
 var userScrollLeftButton = document.getElementById("userScrollLeft");
 var userScrollRightButton = document.getElementById("userScrollRight");
-setupTradingPage(); 
-
 var collectionSelect = document.getElementById("tradingCollectId");
-collectionSelect.addEventListener("change", () => { collectionSelectHandler(collectionSelect) });
-
 var startTradeButton = document.getElementById("startTradeButton");
-startTradeButton.addEventListener("click", () => {
-    simulateTrade(userObj, otherPlayerObj);
-});
-
 var confirmTradeButton= document.getElementById("confirmTradeButton");
-confirmTradeButton.addEventListener("click", () => {
-    let tradePopUpForm = document.getElementById("tradePopUpForm");
-    tradePopUpForm.style.display = "none";
-});
-
 var stopTradeButton= document.getElementById("stopTradeButton");
-stopTradeButton.addEventListener("click", () => {
-    let tradePopUpForm = document.getElementById("tradePopUpForm");
-    tradePopUpForm.style.display = "none";
-});
+
+setupTradingPage(); 

@@ -88,9 +88,7 @@ function resetInitialStartAndEndIndex(userObj){
     }
 }
 
-async function getCollection(userObj){
-    const response= await fetch('/getCollection');
-    let collection = await response.json();
+async function getCollection(collection, userObj){
     for(let index = 0; index < collection.length; index++){
         let currCollectId = collection[index].collectionId
         userObj.cardListsFromDb[currCollectId] = JSON.parse(collection[index].cardId);
@@ -122,12 +120,15 @@ async function getCollection(userObj){
 async function setupCollectionPage(){
     var collectionLoadingTitle = document.getElementById("collectionLoadingTitle");
     collectionLoadingTitle.style.display = "block";
-    await getCollection(userObj);
+    const response= await fetch('/getCollection');
+    let collection = await response.json();
+    await getCollection(collection, userObj);
     resetInitialStartAndEndIndex(userObj);
     displayCardCollection(userObj);
+    collectionLoadingTitle.style.display = "none";
     addRightScroll(userObj, collectionScrollRightButton);
     addLeftScroll(userObj, collectionScrollLeftButton);
-    collectionLoadingTitle.style.display = "none";
+    collectionSelect.addEventListener("change", () => { collectionSelectHandler(collectionSelect) });
 }
 
 
@@ -138,8 +139,6 @@ let userObj = {isUser: true, primaryKeyArr: [], cardDict: {}, primaryKeysForColl
 
 var collectionScrollLeftButton = document.getElementById("collectionScrollLeft");
 var collectionScrollRightButton = document.getElementById("collectionScrollRight");
-setupCollectionPage();
-
-
 var collectionSelect = document.getElementById("collectId");
-collectionSelect.addEventListener("change", () => { collectionSelectHandler(collectionSelect) });
+
+setupCollectionPage();
