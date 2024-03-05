@@ -224,6 +224,8 @@ async function getInitialUserCollection(collection, userObj){
             const cardDetailsResponse = await fetch('/getCardDetails?cardId=' + cardId);
             await cardDetailsResponse.json()
                 .then((cardData) => {
+                        console.log("cardData");
+                        console.log(cardData);
                         userObj.primaryKeysForCollections[userObj.currCollectId].push(cardData.id);
                         //(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana)
                         let cardObj = new Card(cardData.id, cardData.cardName, cardData.imagePath, 
