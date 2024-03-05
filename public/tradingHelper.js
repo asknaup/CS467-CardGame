@@ -22,19 +22,6 @@ class SpellCard extends Card {
     }
 }
 
-function getStagedCards(userObj, otherPlayerObj){
-    let stagedCardsDict = {"otherStagedCardsArr": [], "userStagedCardsArr": []};
-    var otherStageArea= document.getElementById(otherPlayerObj.stageAreaId);
-    for(const otherStagedCard of otherStageArea.children){
-        stagedCardsDict["otherStagedCardsArr"].push(otherStagedCard);
-    }
-    var userStageArea= document.getElementById(userObj.stageAreaId);
-    for(const userStagedCard of userStageArea.children){
-        stagedCardsDict["userStagedCardsArr"].push(userStagedCard);
-    }
-    return stagedCardsDict;
-}
-
 
 function removeOldCardsFromPopUpForm(){
     // Clear out old card elements
@@ -73,31 +60,60 @@ function createPopUpForm(stagedCardsDict){
 }
 
 
+function getStagedCards(userObj, otherPlayerObj){
+    let stagedCardsDict = {"otherStagedCardsArr": [], "userStagedCardsArr": []};
+    var otherStageArea= document.getElementById(otherPlayerObj.stageAreaId);
+    for(const otherStagedCard of otherStageArea.children){
+        stagedCardsDict["otherStagedCardsArr"].push(otherStagedCard);
+    }
+    var userStageArea= document.getElementById(userObj.stageAreaId);
+    for(const userStagedCard of userStageArea.children){
+        stagedCardsDict["userStagedCardsArr"].push(userStagedCard);
+    }
+    return stagedCardsDict;
+}
+
 function removeIsStagedStatusAndItsEffects(playerObj, index, stagedCardsArr){
     // remove isStaged status from cardObj and unhighlight its html card element
     let stagedCardId = stagedCardsArr[index].id;
     // now with primary key we can access both the stagedCardObj and stagedCard document element
     let primaryKey = stagedCardId.substring(0, stagedCardId.length - playerObj.stagedCardName.length);
-    console.log(stagedCardsArr);
-    let scrollCardObj = playerObj.cardDict[primaryKey];
-    scrollCardObj.isStaged = false;
+    let cardObj = playerObj.cardDict[primaryKey];
+    cardObj.isStaged = false;
     playerObj.stagedCardCount -= 1;
     var scrollCard = document.getElementById(primaryKey);
     highlightCard(false, playerObj.isUser, scrollCard);
 }
 
 
-function simulateTrade(userObj, otherPlayerObj){
+function removeStagedStatusFromStagedCards(userObj, otherPlayerObj){
     let stagedCardsDict = getStagedCards(userObj, otherPlayerObj);
-    let otherStagedCardsArr = stagedCardsDict["otherStagedCardsArr"];
+
+    otherStagedCardsArr = stagedCardsDict["otherStagedCardsArr"];
     for (let index = 0; index < otherStagedCardsArr.length; index++) {
         removeIsStagedStatusAndItsEffects(otherPlayerObj, index, otherStagedCardsArr);
     }
-    let userStagedCardsArr = stagedCardsDict["userStagedCardsArr"];
+    userStagedCardsArr = stagedCardsDict["userStagedCardsArr"];
     for (let index = 0; index < userStagedCardsArr.length; index++) {
         removeIsStagedStatusAndItsEffects(userObj, index, userStagedCardsArr);
     }
-    createPopUpForm(stagedCardsDict);
+    
+}
+
+
+function removeStagedCards(userObj, otherPlayerObj){
+    removeStagedStatusFromStagedCards(userObj, otherPlayerObj)
+
+    var otherStageArea= document.getElementById(otherPlayerObj.stageAreaId);
+    while(otherStageArea.firstChild){
+        console.log(otherStageArea.firstChild)
+        otherStageArea.removeChild(otherStageArea.firstChild);
+    }
+    var userStageArea= document.getElementById(userObj.stageAreaId);
+    while(userStageArea.firstChild){
+        console.log(userStageArea.firstChild)
+        userStageArea.removeChild(userStageArea.firstChild);
+    }
 }
 
 
@@ -148,7 +164,8 @@ async function createCollectionFromCardIdList(listOfCardObjs, playerObj){
 }
 
 
-async function collectionSelectHandler(collectionSelect){
+async function collectionSelectHandler(collectionSelect, userObj, otherPlayerObj){
+    removeStagedCards(userObj, otherPlayerObj);
     var userLoadingTitle = document.getElementById("userLoadingTitle");
     userLoadingTitle.style.display = "block";
     var otherLoadingTitle = document.getElementById("otherLoadingTitle");
@@ -241,8 +258,8 @@ async function setupTradingPage(){
     otherLoadingTitle.style.display = "none";
     addRightScroll(otherPlayerObj, otherScrollRightButton);
     addLeftScroll(otherPlayerObj, otherScrollLeftButton);
-    collectionSelect.addEventListener("change", () => { collectionSelectHandler(collectionSelect) });
-    startTradeButton.addEventListener("click", () => {simulateTrade(userObj, otherPlayerObj);});
+    collectionSelect.addEventListener("change", () => { collectionSelectHandler(collectionSelect, userObj, otherPlayerObj) });
+    //startTradeButton.addEventListener("click", () => { });
     confirmTradeButton.addEventListener("click", () => {
         let tradePopUpForm = document.getElementById("tradePopUpForm");
         tradePopUpForm.style.display = "none";
