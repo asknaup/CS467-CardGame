@@ -511,9 +511,9 @@ header {
 .otherStageAreaClass, .userStageAreaClass {
     display: flex;
     flex-direction: row;
-    width: 50%;
     position: relative;
-    height: 24vw;
+    width: 50%;
+    height: 18vw;
     color: grey;
     padding: 0vh 1vh 1vh 1vh;
     z-index:  10;
@@ -562,15 +562,15 @@ header {
 
 #otherPlayerTitle{
     position: absolute;
-    top: 9vw;
+    top: 40%;
     width: 50%;
     text-align: center;
 }
 
 #userTitle{
     position: absolute;
-    top: 9vw;
     right: 0vw;
+    top: 40%;
     width: 50%;
     text-align: center;
 }
