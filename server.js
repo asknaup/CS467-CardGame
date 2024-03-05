@@ -704,34 +704,25 @@ app.post('/cardViewPrintedPagePost', async (req, res) => {
   const user = req.session.user;
   let cardIdList = [];
   let generatedCards = [];
-  console.log('here1');
 
   try {
-    console.log("body", req.body);
     const stringCard = req.body;
     console.log(stringCard);
     const cardId = await dbFunc.insertCard(stringCard.name, stringCard.cardType, user.userId, stringCard.rarity, stringCard.manaCost);
     cardIdList.push(cardId);
     await dbFunc.insertCardUrl(cardId, stringCard.URL);
-    console.log("here");
 
-    if (stringCard.cardType == "Creature") {
-      console.log("here1");
+
+    if (stringCard.cardType == "Creature") {;
       let newCard = await dbFunc.insertCreatureCard(cardId, stringCard.attack, stringCard.defense, stringCard.creatureType);
-      console.log("here2");
       newCard.URL = stringCard.URL;
-      console.log("here3");
       generatedCards.push(newCard);
     } else {
-      console.log("here2");
       let newCard = await dbFunc.insertSpellCard(cardId, stringCard.spellType, stringCard.ability, stringCard.attack, stringCard.defense, stringCard.utility);
-      console.log("here3");
       newCard.URL = stringCard.URL;
-      console.log("here4");
       generatedCards.push(newCard);
     }
 
-    console.log("there");
     // Update User Collection
     const gameName = await dbFunc.grabGameName(stringCard.whichgame);
     const userName = await dbFunc.grabUsername(user.userId);
@@ -757,7 +748,7 @@ app.post('/cardViewPrintedPagePost', async (req, res) => {
     const data = await dbFunc.getCardInfo(cardId);
     console.log("This is data in the /cardViewPrintedPage route:", data);
 
-    res.json({ cards: generatedCards });
+    res.json({ cards: [stringCard] });
 
   } catch (err) {
     // Handle errors that may occur during card generation, database interaction, or JSON response
