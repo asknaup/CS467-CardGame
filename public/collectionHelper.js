@@ -141,7 +141,7 @@ async function setupCollectionPage(){
 
 
 /*main code for collection */
-var numCardsInView = 21;
+var numCardsInView = 28;
 let userObj = {isUser: true, primaryKeyArr: [], cardDict: {}, primaryKeysForCollections: {}, collections: {}, cardListsFromDb: {},
                 startIndex: 0, endIndex: 20, cardSlots: "userCardSlots", collectionContainer: "collectionContainer"};
 
