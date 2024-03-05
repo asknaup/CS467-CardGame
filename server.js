@@ -432,7 +432,6 @@ app.get('/trading', async (req, res) => {
 
   if (user) {
     const collect = await dbFunc.getAllCollectionsByUser(user.userId);
-    
       //if (c) {
       //listCards = await dbFunc.grabListOfCardsFromCollection(req.query.collectId);
       //gameId = await dbFunc.grabGameIdFromCollection(req.query.collectId)
@@ -644,7 +643,7 @@ app.post('/cardViewEditPage', async (req, res) => {
       if (req.body.cardType == "Creature") {
         // Generate for Creature
 
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 1; i++) {
           let values = [];
           let newCreature = await card.createDataStructCreature(req.body.color, req.body.creatureType, req.body.theme, req.body.cardType);
           newCreature.manaCost = req.body.manaCost;
@@ -660,6 +659,7 @@ app.post('/cardViewEditPage', async (req, res) => {
           }
           console.log(values);
           newCreature.URL = values[0].url;
+          newCreature.whichgame = req.body.whichgame;
           let stringed = JSON.stringify(newCreature);
           newCreature.stringed = stringed;
           generatedCards.push(newCreature);
@@ -675,7 +675,7 @@ app.post('/cardViewEditPage', async (req, res) => {
           newSpell.rarity = req.body.rarity
           newSpell.name = req.body.cardName
 
-          const aiCard = await card.createAICard("abstract spell", newSpell.place, newSpell.color, newSpell.rarity, 1);
+          const aiCard = await card.createAICard("abstract spell", newSpell.places, newSpell.color, newSpell.rarity, 1);
 
           while (!values || values.length === 0) {
             values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId);
@@ -683,13 +683,14 @@ app.post('/cardViewEditPage', async (req, res) => {
           }
 
           newSpell.URL = values[0].url;
+          newSpell.whichgame = req.body.whichgame;
           let stringed = JSON.stringify(newSpell);
           newSpell.stringed = stringed;
           generatedCards.push(newSpell);
         }
       }
       res.render('cardViewEditPage', {
-        card: generatedCards
+        card: generatedCards,
       });
     } else {
       res.render('cardGenPage', { error: "Sorry! You cannot create a card without having an account" })
@@ -699,39 +700,46 @@ app.post('/cardViewEditPage', async (req, res) => {
   }
 });
 
-app.post('/cardViewPrintedPage', async (req, res) => {
+app.post('/cardViewPrintedPagePost', async (req, res) => {
   const user = req.session.user;
   let cardIdList = [];
+  let generatedCards = [];
 
   try {
-    const stringCard = JSON.parse(req.body.cardstring);
+    const stringCard = req.body;
+    console.log(stringCard);
     const cardId = await dbFunc.insertCard(stringCard.name, stringCard.cardType, user.userId, stringCard.rarity, stringCard.manaCost);
     cardIdList.push(cardId);
     await dbFunc.insertCardUrl(cardId, stringCard.URL);
 
-    if (req.body.cardType == "Creature") {
-      await dbFunc.insertCreatureCard(cardId, stringCard.creatureAttack, stringCard.creatureDefense, stringCard.creatureType);
+
+    if (stringCard.cardType == "Creature") {;
+      let newCard = await dbFunc.insertCreatureCard(cardId, stringCard.attack, stringCard.defense, stringCard.creatureType);
+      newCard.URL = stringCard.URL;
+      generatedCards.push(newCard);
     } else {
-      await dbFunc.insertSpellCard(cardId, stringCard.spellType, stringCard.ability, stringCard.attack, stringCard.defense, stringCard.utility);
+      let newCard = await dbFunc.insertSpellCard(cardId, stringCard.spellType, stringCard.ability, stringCard.attack, stringCard.defense, stringCard.utility);
+      newCard.URL = stringCard.URL;
+      generatedCards.push(newCard);
     }
 
     // Update User Collection
-    const gameName = await dbFunc.grabGameName(req.session.gameId);
+    const gameName = await dbFunc.grabGameName(stringCard.whichgame);
     const userName = await dbFunc.grabUsername(user.userId);
     const nameTime = `${userName[0].username}'s collection for ${gameName[0].imageLocation}`;
     console.log(nameTime);
 
     try {
-      const collId = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, req.session.gameId, nameTime);
+      const collId = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, stringCard.whichgame, nameTime);
       let returnList = await dbFunc.grabListOfCardsFromCollection(collId);
       let x = JSON.parse(returnList[0].cardId);
       let y = x.cardList.concat(cardIdList);
       await dbFunc.updateListOfCollection(collId, JSON.stringify({ "cardList": y }));
 
-      let adminList = await dbFunc.grabAdminListCards(req.session.gameId);
+      let adminList = await dbFunc.grabAdminListCards(stringCard.whichgame);
       let admin = JSON.parse(adminList[0].listCards);
       let newAdminList = admin.cardList.concat(cardIdList);
-      await dbFunc.updateAdminListCards(JSON.stringify({ "cardList": newAdminList }), req.session.gameId);
+      await dbFunc.updateAdminListCards(JSON.stringify({ "cardList": newAdminList }), stringCard.whichgame);
 
     } catch (error) {
       console.error("Error updating collection:", error);
@@ -740,10 +748,7 @@ app.post('/cardViewPrintedPage', async (req, res) => {
     const data = await dbFunc.getCardInfo(cardId);
     console.log("This is data in the /cardViewPrintedPage route:", data);
 
-    res.render('cardViewPrintedPage', {
-      card: stringCard,
-      data: data
-    });
+    res.json({ cards: [stringCard] });
 
   } catch (err) {
     // Handle errors that may occur during card generation, database interaction, or JSON response
@@ -760,6 +765,16 @@ app.get('/cardViewPrintedBulkPage', (req, res) => {
   }
 });
 
+app.get('/cardViewPrintedPage', (req, res) => {
+  const user = req.session.user;
+  if (user) {
+    res.render('cardViewPrintedPage')
+  } else {
+    res.redirect('/');
+  }
+});
+
+
 app.post('/cardViewPrintedBulkPagePost', async (req, res) => {
   const user = req.session.user;
   async function delay(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
@@ -773,6 +788,7 @@ app.post('/cardViewPrintedBulkPagePost', async (req, res) => {
     for (let i = 0; i < num; i++) {
       if (req.body.cardType == "Creature") {
         let newCreature = await card.createDataStructCreature(req.body.colors, req.body.creatures, req.body.theme, req.body.cardType);
+        console.log(newCreature);
         const aiCard = await card.createAICard(newCreature.creature, newCreature.place, newCreature.color, newCreature.rarity, 1);
         let values = [];
         while (!values || values.length === 0) {
