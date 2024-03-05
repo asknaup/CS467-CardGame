@@ -77,7 +77,7 @@ async function switchToGivenCollection(collectionKey, userObj){
                 .then((cardData) => {
                         userObj.primaryKeysForCollections[collectionKey].push(cardData.id);
                         //(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana)
-                        let cardObj = new Card(cardData.id, cardData.cardName, cardData.imagePath, 
+                        let cardObj = new Card(cardData.id, cardData.name, cardData.imagePath, 
                             cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
                         userObj.collections[collectionKey][cardData.id] = cardObj;
                 })
@@ -112,11 +112,15 @@ async function getCollection(collection, userObj){
             const cardDetailsResponse = await fetch('/getCardDetails?cardId=' + cardId);
             await cardDetailsResponse.json()
                 .then((cardData) => {
+                        console.log("cardData: ");
+                        console.log(cardData);
                         userObj.primaryKeysForCollections[collectionId].push(cardData.id);
                         //(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana)
-                        let cardObj = new Card(cardData.id, cardData.cardName, cardData.imagePath, 
+                        let cardObj = new Card(cardData.id, cardData.name, cardData.imagePath, 
                             cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
                         userObj.collections[collectionId][cardData.id] = cardObj;
+                        console.log("cardObj: ");
+                        console.log(cardObj)
                 })
                 .catch((error) => {console.log(error)});  
         }
