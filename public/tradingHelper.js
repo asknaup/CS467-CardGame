@@ -14,6 +14,14 @@ class Card{
     }
 }
 
+class SpellCard extends Card {
+    constructor(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana, ability, utility) {
+        super(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana);
+        this.ability = ability;
+        this.utility = utility;
+    }
+}
+
 function getStagedCards(userObj, otherPlayerObj){
     let stagedCardsDict = {"otherStagedCardsArr": [], "userStagedCardsArr": []};
     var otherStageArea= document.getElementById(otherPlayerObj.stageAreaId);

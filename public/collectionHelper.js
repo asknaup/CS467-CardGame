@@ -13,6 +13,14 @@ class Card{
     }
 }
 
+class SpellCard extends Card {
+    constructor(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana, ability, utility) {
+        super(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana);
+        this.ability = ability;
+        this.utility = utility;
+    }
+}
+
 function addLeftScroll(userObj, scrollLeftButton){
     scrollLeftButton.addEventListener("click", () => {
         if (userObj.startIndex > 0){
