@@ -164,7 +164,7 @@ async function switchToGivenUserCollection(userObj){
                 .then((cardData) => {
                         userObj.primaryKeysForCollections[userObj.currCollectId].push(cardData.id);
                         //(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana)
-                        let cardObj = new Card(cardData.id, cardData.cardName, cardData.imagePath, 
+                        let cardObj = new Card(cardData.id, cardData.name, cardData.imagePath, 
                             cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
                         userObj.collections[userObj.currCollectId][cardData.id] = cardObj;
                 })
@@ -198,7 +198,7 @@ async function getCurrentAdminCollection(otherPlayerObj){
                         //console.log(cardData)
                         otherPlayerObj.primaryKeysForCollections[otherPlayerObj.currCollectId].push(cardData.id);
                         //(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana)
-                        let cardObj = new Card(cardData.id, cardData.cardName, cardData.imagePath, 
+                        let cardObj = new Card(cardData.id, cardData.name, cardData.imagePath, 
                             cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
                         otherPlayerObj.collections[otherPlayerObj.currCollectId][cardData.id] = cardObj;
                         
