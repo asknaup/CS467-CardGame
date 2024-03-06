@@ -61,9 +61,6 @@ async function createTradingCard(cardInformation) {
         var spellType = document.createElement('p');
         spellType.innerHTML = `<strong>Type:</strong> ${cardData.spellType}`;
 
-        var spellAbility = document.createElement('p');
-        spellAbility.innerHTML = `<strong>Ability:</strong> ${cardData.spellAbility}`;
-
         var spellAttack = document.createElement('p');
         spellAttack.innerHTML = `<strong>ATK:</strong> ${cardData.attack}`;
 
@@ -118,29 +115,31 @@ async function fetchCreateTradingCard() {
     const urlSearchParams = new URLSearchParams(window.location.search);
     console.log("urlSearchParams:", urlSearchParams);
     const params = Object.fromEntries(urlSearchParams.entries());
-    console.log("params:", params);
+    let newParams = params.cardstring;
+    console.log("newParams:", newParams);
 
-    fetch('/cardViewPrintedBulkPagePost', {
+    fetch('/cardViewPrintedPagePost', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(params),
+        body: newParams,
     })
-        .then(response => response.json())
-        .then(data => {
-            data.cards.forEach(element => {
-                console.log("element:", element);
-                createTradingCard(element);
-            });
-            console.log("Data from then fetch:", data);
-        })
-        .catch(error => {
-            console.error('Error fetching card details:', error);
-        })
+    .then(response => response.json())
+    .then(data => {
+        data.cards.forEach(element => {
+            console.log("element:", element);
+            createTradingCard(element);
+        });
+        console.log("Data from then fetch:", data);
+    })
+    .catch(error => {
+        console.error('Error fetching card details:', error);
+    });
 }
 
 document.addEventListener('DOMContentLoaded', function () {
     // Call the fetchCreateTradingCard function
+    console.log("what");
     fetchCreateTradingCard();
 });

@@ -132,6 +132,21 @@ function addRightScroll(playerObj, scrollRightButton){
     });
 }
 
+async function createCollectionFromCardIdList(listOfCardObjs, playerObj){
+    for(const cardId of  listOfCardObjs){
+        const cardDetailsResponse = await fetch('/getCardDetails?cardId=' + cardId);
+        await cardDetailsResponse.json()
+            .then((cardData) => {
+                    playerObj.primaryKeysForCollections[playerObj.currCollectId].push(cardData.id);
+                    //(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana)
+                    let cardObj = new Card(cardData.id, cardData.cardName, cardData.imagePath, 
+                        cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
+                    playerObj.collections[playerObj.currCollectId][cardData.id] = cardObj;
+            })
+            .catch((error) => {console.log(error)});  
+    }
+}
+
 
 async function collectionSelectHandler(collectionSelect){
     var userLoadingTitle = document.getElementById("userLoadingTitle");
@@ -154,22 +169,11 @@ async function collectionSelectHandler(collectionSelect){
 
 async function switchToGivenUserCollection(userObj){
     if(!(userObj.currCollectId in userObj.collections)){
-        let cardList = userObj.cardListsFromDb[userObj.currCollectId];
-        let listOfCardObjs = cardList.cardList;
         userObj.primaryKeysForCollections[userObj.currCollectId] = [];
         userObj.collections[userObj.currCollectId] = {};
-        for(const cardId of  listOfCardObjs){
-            const cardDetailsResponse = await fetch('/getCardDetails?cardId=' + cardId);
-            await cardDetailsResponse.json()
-                .then((cardData) => {
-                        userObj.primaryKeysForCollections[userObj.currCollectId].push(cardData.id);
-                        //(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana)
-                        let cardObj = new Card(cardData.id, cardData.cardName, cardData.imagePath, 
-                            cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
-                        userObj.collections[userObj.currCollectId][cardData.id] = cardObj;
-                })
-                .catch((error) => {console.log(error)});  
-        }
+        let cardList = userObj.cardListsFromDb[userObj.currCollectId];
+        let listOfCardObjs = cardList.cardList;
+        await createCollectionFromCardIdList(listOfCardObjs, userObj);
     }
     userObj.primaryKeyArr = userObj.primaryKeysForCollections[userObj.currCollectId];
     userObj.cardDict = userObj.collections[userObj.currCollectId];
@@ -184,31 +188,19 @@ function resetInitialStartAndEndIndex(userObj){
     }
 }
 
+
 async function getCurrentAdminCollection(otherPlayerObj){
     if(!(otherPlayerObj.currCollectId in otherPlayerObj.collections)){
         otherPlayerObj.primaryKeysForCollections[otherPlayerObj.currCollectId] = [];
         otherPlayerObj.collections[otherPlayerObj.currCollectId] = {};
         const adminCardsResponse = await fetch('/getAdminCardsForTrading?collectId=' + otherPlayerObj.currCollectId);
         let adminCardList = await adminCardsResponse.json()
-        for(const cardId of  adminCardList){
-            const cardDetailsResponse = await fetch('/getCardDetails?cardId=' + cardId);
-            await cardDetailsResponse.json()
-                .then((cardData) => {
-                        //console.log("admin card data")
-                        //console.log(cardData)
-                        otherPlayerObj.primaryKeysForCollections[otherPlayerObj.currCollectId].push(cardData.id);
-                        //(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana)
-                        let cardObj = new Card(cardData.id, cardData.cardName, cardData.imagePath, 
-                            cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
-                        otherPlayerObj.collections[otherPlayerObj.currCollectId][cardData.id] = cardObj;
-                        
-                })
-                .catch((error) => {console.log(error)});  
-        }
+        await createCollectionFromCardIdList(adminCardList, otherPlayerObj);
     }
     otherPlayerObj.primaryKeyArr = otherPlayerObj.primaryKeysForCollections[otherPlayerObj.currCollectId];
     otherPlayerObj.cardDict = otherPlayerObj.collections[otherPlayerObj.currCollectId];
 }
+
 
 async function getInitialUserCollection(collection, userObj){
     for(let index = 0; index < collection.length; index++){
@@ -220,20 +212,7 @@ async function getInitialUserCollection(collection, userObj){
         userObj.collections[userObj.currCollectId] = {};
         let cardList = userObj.cardListsFromDb[userObj.currCollectId];
         let listOfCardObjs = cardList.cardList;
-        for(const cardId of  listOfCardObjs){
-            const cardDetailsResponse = await fetch('/getCardDetails?cardId=' + cardId);
-            await cardDetailsResponse.json()
-                .then((cardData) => {
-                        console.log("cardData");
-                        console.log(cardData);
-                        userObj.primaryKeysForCollections[userObj.currCollectId].push(cardData.id);
-                        //(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana)
-                        let cardObj = new Card(cardData.id, cardData.cardName, cardData.imagePath, 
-                            cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
-                        userObj.collections[userObj.currCollectId][cardData.id] = cardObj;
-                })
-                .catch((error) => {console.log(error)});  
-        }
+        await createCollectionFromCardIdList(listOfCardObjs, userObj);
     }
     userObj.primaryKeyArr = userObj.primaryKeysForCollections[userObj.currCollectId];
     userObj.cardDict = userObj.collections[userObj.currCollectId];

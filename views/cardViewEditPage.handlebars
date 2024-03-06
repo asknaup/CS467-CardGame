@@ -15,14 +15,12 @@
 <h4>The others will disappear</h4>
     <div id="cardContainer">
         {{#each card}}
-        <form action="/cardViewPrintedPage" method="post">
+        <form action="/cardViewPrintedPage" id="cardForm">
         <div class="card">
             <img src="{{URL}}" alt="Card Image">
-            <p>Name: {{name}}</p>
-            <p>Creature: {{rarity}}</p>
         </div>
         <input type="hidden" name="cardstring" value="{{stringed}}">
-        <button id="printCard" type="submit">Save this one only!</button>
+        <button id="printCard" type="submit">Use This Image</button>
         </form>
         {{/each}}
     </div>
