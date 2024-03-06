@@ -126,8 +126,8 @@ function createBackOfCardWithId(id) {
 }
 
 function addStagedCardFunctionality(playerObj, primaryIndex) {
-    playerObj.startIndex = Math.floor(primaryIndex / numScrollCards) * numScrollCards;
-    playerObj.endIndex = playerObj.startIndex + (numScrollCards - 1);
+    playerObj.startIndex = Math.floor(primaryIndex / playerObj.numCardsInView) * playerObj.numCardsInView;
+    playerObj.endIndex = playerObj.startIndex + (playerObj.numCardsInView - 1);
     if (playerObj.endIndex > playerObj.primaryKeyArr.length - 1) {
         playerObj.endIndex = playerObj.primaryKeyArr.length - 1
     }
@@ -205,5 +205,44 @@ function highlightCard(isHighlighted, isUser, scrollCard) {
         }
     } else {
         scrollCard.style.border = "3px solid black";
+    }
+}
+
+
+function addLeftScroll(playerObj, scrollLeftButton, displayFunc){
+    scrollLeftButton.addEventListener("click", () => {
+        if (playerObj.startIndex > 0){
+            playerObj.endIndex = playerObj.startIndex - 1;
+            playerObj.startIndex -= playerObj.numCardsInView;
+            if(playerObj.startIndex < 0){
+                playerObj.startIndex = 0;
+            }
+            console.log(playerObj.startIndex);
+            console.log(playerObj.endIndex);
+            displayFunc(playerObj);
+        }
+    });
+}
+
+
+function addRightScroll(playerObj, scrollRightButton, displayFunc){
+    scrollRightButton.addEventListener("click", () => {
+        if (playerObj.endIndex < playerObj.primaryKeyArr.length - 1){
+            playerObj.startIndex = playerObj.endIndex + 1;
+            playerObj.endIndex += userObj.numCardsInView;
+            if (playerObj.endIndex > playerObj.primaryKeyArr.length - 1){
+                playerObj.endIndex = playerObj.primaryKeyArr.length - 1
+            }
+            displayFunc(playerObj);
+        }
+    });
+}
+
+
+function resetInitialStartAndEndIndex(playerObj){
+    playerObj.startIndex = 0;
+    playerObj.endIndex = playerObj.numCardsInView - 1;
+    if (playerObj.endIndex > playerObj.primaryKeyArr.length - 1){
+        playerObj.endIndex = playerObj.primaryKeyArr.length - 1
     }
 }

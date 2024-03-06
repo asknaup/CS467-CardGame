@@ -21,36 +21,7 @@ class SpellCard extends Card {
     }
 }
 
-function addLeftScroll(userObj, scrollLeftButton){
-    scrollLeftButton.addEventListener("click", () => {
-        if (userObj.startIndex > 0){
-            userObj.endIndex = userObj.startIndex - 1;
-            userObj.startIndex -= numCardsInView;
-            if(userObj.startIndex < 0){
-                userObj.startIndex = 0;
-            }
-            console.log(userObj.startIndex);
-            console.log(userObj.endIndex);
-            displayCardCollection(userObj);
-        }
-    });
-}
 
-
-function addRightScroll(userObj, scrollRightButton){
-    scrollRightButton.addEventListener("click", () => {
-        if (userObj.endIndex < userObj.primaryKeyArr.length - 1){
-            userObj.startIndex = userObj.endIndex + 1;
-            userObj.endIndex += numCardsInView;
-            if (userObj.endIndex > userObj.primaryKeyArr.length - 1){
-                userObj.endIndex = userObj.primaryKeyArr.length - 1
-            }
-            console.log(userObj.startIndex);
-            console.log(userObj.endIndex);
-            displayCardCollection(userObj);
-        }
-    });
-}
 
 async function createCollectionFromCardIdList(listOfCardObjs, userObj){
     for(const cardId of  listOfCardObjs){
@@ -92,15 +63,6 @@ async function switchToGivenCollection(userObj){
 }
 
 
-function resetInitialStartAndEndIndex(userObj){
-    userObj.startIndex = 0;
-    userObj.endIndex = numCardsInView - 1;
-    if (userObj.endIndex > userObj.primaryKeyArr.length - 1){
-        userObj.endIndex = userObj.primaryKeyArr.length - 1
-    }
-}
-
-
 async function getInitialUserCollection(collection, userObj){
     for(let index = 0; index < collection.length; index++){
         let currCollectId = collection[index].collectionId
@@ -130,16 +92,15 @@ async function setupCollectionPage(){
     resetInitialStartAndEndIndex(userObj);
     displayCardCollection(userObj);
     collectionLoadingTitle.style.display = "none";
-    addRightScroll(userObj, collectionScrollRightButton);
-    addLeftScroll(userObj, collectionScrollLeftButton);
+    addRightScroll(userObj, collectionScrollRightButton, displayCardCollection);
+    addLeftScroll(userObj, collectionScrollLeftButton, displayCardCollection);
     collectionSelect.addEventListener("change", () => { collectionSelectHandler(collectionSelect) });
 }
 
 
 /*main code for collection */
-var numCardsInView = 28;
 let userObj = {isUser: true, primaryKeyArr: [], cardDict: {}, primaryKeysForCollections: {}, collections: {}, cardListsFromDb: {},
-                startIndex: 0, endIndex: 20, cardSlots: "userCardSlots", collectionContainer: "collectionContainer"};
+            numCardsInView: 28, startIndex: 0, endIndex: 20, cardSlots: "userCardSlots", collectionContainer: "collectionContainer"};
 
 var collectionScrollLeftButton = document.getElementById("collectionScrollLeft");
 var collectionScrollRightButton = document.getElementById("collectionScrollRight");

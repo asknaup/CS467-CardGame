@@ -92,36 +92,6 @@ function removeStagedCards(userObj, otherPlayerObj){
 }
 
 
-function addLeftScroll(playerObj, scrollLeftButton){
-    scrollLeftButton.addEventListener("click", () => {
-        if (playerObj.startIndex > 0){
-            playerObj.endIndex = playerObj.startIndex - 1;
-            playerObj.startIndex -= numScrollCards;
-            if(playerObj.startIndex < 0){
-                playerObj.startIndex = 0;
-            }
-            console.log(playerObj.startIndex);
-            console.log(playerObj.endIndex);
-            displayCardCollectionForTrading(playerObj);
-        }
-    });
-}
-
-
-function addRightScroll(playerObj, scrollRightButton){
-    scrollRightButton.addEventListener("click", () => {
-        if (playerObj.endIndex < playerObj.primaryKeyArr.length - 1){
-            playerObj.startIndex = playerObj.endIndex + 1;
-            playerObj.endIndex += numScrollCards;
-            if (playerObj.endIndex > playerObj.primaryKeyArr.length - 1){
-                playerObj.endIndex = playerObj.primaryKeyArr.length - 1
-            }
-            console.log(playerObj.startIndex);
-            console.log(playerObj.endIndex);
-            displayCardCollectionForTrading(playerObj);
-        }
-    });
-}
 
 async function createCollectionFromCardIdList(listOfCardObjs, playerObj){
     for(const cardId of  listOfCardObjs){
@@ -173,14 +143,6 @@ async function switchToGivenUserCollection(userObj){
     userObj.cardDict = userObj.collections[userObj.currCollectId];
 }
 
-
-function resetInitialStartAndEndIndex(userObj){
-    userObj.startIndex = 0;
-    userObj.endIndex = numScrollCards- 1;
-    if (userObj.endIndex > userObj.primaryKeyArr.length - 1){
-        userObj.endIndex = userObj.primaryKeyArr.length - 1
-    }
-}
 
 
 async function getCurrentAdminCollection(otherPlayerObj){
@@ -290,13 +252,14 @@ async function setupTradingPage(){
     await getCurrentAdminCollection(otherPlayerObj)
     resetInitialStartAndEndIndex(userObj);
     displayCardCollectionForTrading(userObj);
-    addRightScroll(userObj, userScrollRightButton);
-    addLeftScroll(userObj, userScrollLeftButton);
+    addRightScroll(userObj, userScrollRightButton, displayCardCollectionForTrading);
+    addLeftScroll(userObj, userScrollLeftButton, displayCardCollectionForTrading);
+    resetInitialStartAndEndIndex(otherPlayerObj);
     displayCardCollectionForTrading(otherPlayerObj);
+    addRightScroll(otherPlayerObj, otherScrollRightButton, displayCardCollectionForTrading);
+    addLeftScroll(otherPlayerObj, otherScrollLeftButton, displayCardCollectionForTrading);
     userLoadingTitle.style.display = "none";
     otherLoadingTitle.style.display = "none";
-    addRightScroll(otherPlayerObj, otherScrollRightButton);
-    addLeftScroll(otherPlayerObj, otherScrollLeftButton);
     collectionSelect.addEventListener("change", () => { collectionSelectHandler(collectionSelect, userObj, otherPlayerObj) });
     startTradeButton.addEventListener("click", () => { tradeButtonActions(userObj, otherPlayerObj);});
     confirmTradeButton.addEventListener("click", () => {
@@ -312,15 +275,14 @@ async function setupTradingPage(){
 
 
 /*main code for trading */
-var numScrollCards = 8;
 let cardsToBeTraded = {otherPlayerCollectId: null, otherPlayerCardsToBeTraded: [], userCollectId: null, userCardsToBeTraded: []};
 let userObj = {isUser: true, primaryKeysForCollections: {}, collections: {}, cardListsFromDb: {},  primaryKeyArr: [], cardDict: {}, stagedCardCount: 0, 
-                startIndex: 0, endIndex: 7, cardSlots: "userCardSlots", stageAreaId: "userStageAreaId", stageAreaClass: "userStageAreaClass",
-                stagedCardName: "userStagedCard", currLocationStagedCards: "userStageAreaId", currCollectId: null};
+        numCardsInView: 8, startIndex: 0, endIndex: 7, cardSlots: "userCardSlots", stageAreaId: "userStageAreaId", stageAreaClass: "userStageAreaClass",
+        stagedCardName: "userStagedCard", currLocationStagedCards: "userStageAreaId", currCollectId: null};
                  
 let otherPlayerObj = {isUser: false, primaryKeysForCollections: {}, collections: {}, cardListsFromDb: {},  primaryKeyArr: [], cardDict: {}, stagedCardCount: 0, 
-                startIndex: 0, endIndex: 7, cardSlots: "otherCardSlots", stageAreaId: "otherStageAreaId", stageAreaClass: "otherStageAreaClass", 
-                stagedCardName: "otherStagedCard", currLocationStagedCards: "otherStageAreaId", currCollectId: null};
+        numCardsInView: 8, startIndex: 0, endIndex: 7, cardSlots: "otherCardSlots", stageAreaId: "otherStageAreaId", stageAreaClass: "otherStageAreaClass", 
+        stagedCardName: "otherStagedCard", currLocationStagedCards: "otherStageAreaId", currCollectId: null};
 
 var otherScrollLeftButton = document.getElementById("otherScrollLeft");
 var otherScrollRightButton = document.getElementById("otherScrollRight");
