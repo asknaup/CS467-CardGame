@@ -92,23 +92,6 @@ function removeStagedCards(userObj, otherPlayerObj){
 }
 
 
-
-async function createCollectionFromCardIdList(listOfCardObjs, playerObj){
-    for(const cardId of  listOfCardObjs){
-        const cardDetailsResponse = await fetch('/getCardDetails?cardId=' + cardId);
-        await cardDetailsResponse.json()
-            .then((cardData) => {
-                    playerObj.primaryKeysForCollections[playerObj.currCollectId].push(cardData.id);
-                    //(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana)
-                    let cardObj = new Card(cardData.id, cardData.cardName, cardData.imagePath, 
-                        cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
-                    playerObj.collections[playerObj.currCollectId][cardData.id] = cardObj;
-            })
-            .catch((error) => {console.log(error)});  
-    }
-}
-
-
 async function collectionSelectHandler(collectionSelect, userObj, otherPlayerObj){
     removeStagedCards(userObj, otherPlayerObj);
     var userLoadingTitle = document.getElementById("userLoadingTitle");
@@ -131,20 +114,6 @@ async function collectionSelectHandler(collectionSelect, userObj, otherPlayerObj
 }
 
 
-async function switchToGivenUserCollection(userObj){
-    if(!(userObj.currCollectId in userObj.collections)){
-        userObj.primaryKeysForCollections[userObj.currCollectId] = [];
-        userObj.collections[userObj.currCollectId] = {};
-        let cardList = userObj.cardListsFromDb[userObj.currCollectId];
-        let listOfCardObjs = cardList.cardList;
-        await createCollectionFromCardIdList(listOfCardObjs, userObj);
-    }
-    userObj.primaryKeyArr = userObj.primaryKeysForCollections[userObj.currCollectId];
-    userObj.cardDict = userObj.collections[userObj.currCollectId];
-}
-
-
-
 async function getCurrentAdminCollection(otherPlayerObj){
     if(!(otherPlayerObj.currCollectId in otherPlayerObj.collections)){
         otherPlayerObj.primaryKeysForCollections[otherPlayerObj.currCollectId] = [];
@@ -157,22 +126,6 @@ async function getCurrentAdminCollection(otherPlayerObj){
     otherPlayerObj.cardDict = otherPlayerObj.collections[otherPlayerObj.currCollectId];
 }
 
-
-async function getInitialUserCollection(collection, userObj){
-    for(let index = 0; index < collection.length; index++){
-        let currCollectId = collection[index].collectionId
-        userObj.cardListsFromDb[currCollectId] = JSON.parse(collection[index].cardId);
-    }
-    if(collection.length > 0){
-        userObj.primaryKeysForCollections[userObj.currCollectId] = [];
-        userObj.collections[userObj.currCollectId] = {};
-        let cardList = userObj.cardListsFromDb[userObj.currCollectId];
-        let listOfCardObjs = cardList.cardList;
-        await createCollectionFromCardIdList(listOfCardObjs, userObj);
-    }
-    userObj.primaryKeyArr = userObj.primaryKeysForCollections[userObj.currCollectId];
-    userObj.cardDict = userObj.collections[userObj.currCollectId];
-}
 
 function getCardsToBeTraded(userObj, otherPlayerObj){
     cardsToBeTraded.otherPlayerCardsToBeTraded = [];

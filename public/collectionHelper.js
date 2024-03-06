@@ -22,61 +22,15 @@ class SpellCard extends Card {
 }
 
 
-
-async function createCollectionFromCardIdList(listOfCardObjs, userObj){
-    for(const cardId of  listOfCardObjs){
-        const cardDetailsResponse = await fetch('/getCardDetails?cardId=' + cardId);
-        await cardDetailsResponse.json()
-            .then((cardData) => {
-                    userObj.primaryKeysForCollections[userObj.currCollectId].push(cardData.id);
-                    //(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana)
-                    let cardObj = new Card(cardData.id, cardData.cardName, cardData.imagePath, 
-                        cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
-                    userObj.collections[userObj.currCollectId][cardData.id] = cardObj;
-            })
-            .catch((error) => {console.log(error)});  
-    }
-}
-
 async function collectionSelectHandler(collectionSelect){
         var collectionLoadingTitle = document.getElementById("collectionLoadingTitle");
         collectionLoadingTitle.style.display = "block";
         let collectionKey = parseInt(collectionSelect.value);
         userObj.currCollectId = collectionKey;
-        await switchToGivenCollection(userObj);
+        await switchToGivenUserCollection(userObj);
         resetInitialStartAndEndIndex(userObj);
         displayCardCollection(userObj);
         collectionLoadingTitle.style.display = "none";
-}
-
-
-async function switchToGivenCollection(userObj){
-    if(!(userObj.currCollectId in userObj.collections)){
-        let cardList = userObj.cardListsFromDb[userObj.currCollectId];
-        let listOfCardObjs = cardList.cardList;
-        userObj.primaryKeysForCollections[userObj.currCollectId] = [];
-        userObj.collections[userObj.currCollectId] = {};
-        await createCollectionFromCardIdList(listOfCardObjs, userObj);
-    }
-    userObj.primaryKeyArr = userObj.primaryKeysForCollections[userObj.currCollectId];
-    userObj.cardDict = userObj.collections[userObj.currCollectId];
-}
-
-
-async function getInitialUserCollection(collection, userObj){
-    for(let index = 0; index < collection.length; index++){
-        let currCollectId = collection[index].collectionId
-        userObj.cardListsFromDb[currCollectId] = JSON.parse(collection[index].cardId);
-    }
-    if(collection.length > 0){
-        userObj.primaryKeysForCollections[userObj.currCollectId] = [];
-        userObj.collections[userObj.currCollectId] = {};
-        let cardList = userObj.cardListsFromDb[userObj.currCollectId];
-        let listOfCardObjs = cardList.cardList;
-        await createCollectionFromCardIdList(listOfCardObjs, userObj);
-    }
-    userObj.primaryKeyArr = userObj.primaryKeysForCollections[userObj.currCollectId];
-    userObj.cardDict = userObj.collections[userObj.currCollectId];
 }
 
 
