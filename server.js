@@ -354,17 +354,6 @@ app.get('/getDeckId', (req, res) => {
   }
 });
 
-// TODO: NEEDS WORK and direction
-app.get('/browseGames', (req, res) => {
-  const user = req.session.user;
-  // const user = { userId: 1001, username: 'admin' };
-  if (user) {
-    res.render('browseGames')
-  } else {
-    res.redirect('/');
-  }
-});
-
 app.get('/newUser', (req, res) => {
   // Show user logged in user profile
   res.render('newUser', { showLogoutButton: true })
@@ -392,12 +381,7 @@ app.get('/cardGenPage', async (req, res) => {
 
 // Add stuff
 app.get('/help', async (req, res) => {
-  const user = req.session.user;
-  if (user) {
     res.render('help')
-  } else {
-    res.redirect('/');
-  }
 });
 
 // Add database logic

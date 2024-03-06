@@ -9,16 +9,20 @@
 </head>
 
 <body>
-  <div class="container">
+  <div class="container1">
+    <br>
       <h1> Create a new Trading Card Game Below </h1>
       <div id="input-form">
         <form action="/generatedGameView" method="post">
-          <input name="name" type="text" placeholder="What's the Game's Name?"> 
-          <label for="ruleSet">What's the rule set?</label>
+          <label for="name"><b>What's the game name?</b></label>
+          <input name="name" type="text" placeholder="Game Name">
+          <br><br>
+          <label for="ruleSet"><b>What's the rule set?</b></label>
           <select id="ruleSet" name="ruleSet">
             <option value="ruleSet1">Rule Set #1 (Creatures and Spells)</option>
-            <option value="ruleSet2">Rule Set #2 (Combat Mechanics)</option>
+            <!-- <option value="ruleSet2">Rule Set #2 (Combat Mechanics)</option> -->
           </select>
+          <br><br><br>
           <button id="generateGame" type="submit">Generate New Game</button>
         </form>
     </div>

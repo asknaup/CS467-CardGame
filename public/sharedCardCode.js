@@ -76,7 +76,7 @@ function createTradingCard(cardData) {
     // toolTipText.classList.add('toolTipText');
 
     // Name
-    var cardName = document.createElement('h1');
+    var cardName = document.createElement('h1');                                                                                                                                                                                                                                                                        
     cardName.classList.add('cardName');
     cardName.textContent = cardData.cardName;
 
