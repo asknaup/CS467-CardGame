@@ -501,18 +501,12 @@ app.get('/collect', async (req, res) => {
 
   if (user) {
     const collect = await dbFunc.getAllCollectionsByUser(user.userId);
-    /*
-    if (c) {
-      listCards = await dbFunc.grabListOfCardsFromCollection(req.query.collectId);
-    } else {
-      listCards = await dbFunc.grabListOfCardsFromCollection(collect[0].collectionId);
-    }
+    const valList = await dbFunc.getAllGeneratedGames();
+    const genLen = valList ? valList.length : 0;
     
-    console.log(listCards);
-    */
     res.render('collect', {
-      collect: collect //,
-      //listCards: listCards,
+      collect: collect,
+      vals: valList 
     })
   } else {
     res.redirect('/');
@@ -534,13 +528,33 @@ app.get('/collectAdmin', async (req, res) => {
 });
 
 // Needs Work!
-app.get('/openPack', async (req, res) => {
+app.post('/openPack', async (req, res) => {
   const user = req.session.user;
+  let randomFive;
+  function getRandomElements(arr, maxElements) {
+    const shuffled = arr.sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, Math.min(maxElements, arr.length));
+    }
+
   if (user) {
-    //const collect = await dbFunc.getAllCollectionsByUser(user.userId);
-    // console.log(collect);
-    //const something = await dbFunc.getOneGeneratedGame(collect.gameId)   // Need to build collections
+    try {
+    const gameName = await dbFunc.grabGameName(req.body.gameId);
+    const userName = await dbFunc.grabUsername(user.userId);
+    const nameTime = `${userName[0].username}'s collection for ${gameName[0].imageLocation}`;
+    const collect = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, req.body.gameId, nameTime);
+
+    let returnList = await dbFunc.grabListOfCardsFromCollection(collect);
+    let adminList = await dbFunc.grabAdminListCards(req.body.gameId);
+    let admin = JSON.parse(adminList[0].listCards);
+    randomFive = getRandomElements(admin.cardList, 5);
+    let x = JSON.parse(returnList[0].cardId);
+    let y = x.cardList.concat(randomFive);
+    await dbFunc.updateListOfCollection(collect, JSON.stringify({ "cardList": y }));
+    } catch (error) {
+      console.error("Error updating collection:", error);
+    }
     res.render('openPack', {
+      cards: randomFive,
     })
   } else {
     res.redirect('/');
@@ -886,11 +900,14 @@ app.post('/collect', async (req, res) => {
     const collect = await dbFunc.getAllCollectionsByUser(user.userId);
     const listCards = await dbFunc.grabListOfCardsFromCollection(thisCollectId);
     console.log(thisCollectId, collect, listCards);
+    const valList = await dbFunc.getAllGeneratedGames();
+    const genLen = valList ? valList.length : 0;
 
     res.render('collect', {
       collect: collect,
       listCards: listCards,
-      name: nameTime
+      name: nameTime,
+      vals: valList
     })
   } else {
     // Authentication failed, render 'welcomePagePortal' with an error message

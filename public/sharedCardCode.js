@@ -4,6 +4,7 @@ function createTradingCard(cardData) {
     var card = document.createElement('div');
     card.classList.add('card');
 
+
     // cardId
     var cardId = document.createElement('p');
     cardId.textContent = cardData.cardId;
