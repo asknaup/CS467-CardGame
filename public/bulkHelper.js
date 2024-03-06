@@ -65,13 +65,12 @@ async function createTradingCard(cardInformation) {
         spellAbility.innerHTML = `<strong>Ability:</strong> ${cardData.spellAbility}`;
 
         var spellAttack = document.createElement('p');
-        spellAttack.innerHTML = `<strong>ATK:</strong> ${cardData.spellAttack}`;
+        spellAttack.innerHTML = `<strong>ATK:</strong> ${cardData.attack}`;
 
         var spellDefense = document.createElement('p');
-        spellDefense.innerHTML = `<strong>DEF:</strong> ${cardData.spellDefense}`;
+        spellDefense.innerHTML = `<strong>DEF:</strong> ${cardData.defense}`;
 
         textOverlayBottom.appendChild(spellType);
-        textOverlayBottom.appendChild(spellAbility);
         textOverlayBottom.appendChild(spellAttack);
         textOverlayBottom.appendChild(spellDefense);
         // toolTipText.appendChild(spellType);
