@@ -1,17 +1,3 @@
-function removeOldCardsFromPopUpForm(){
-    // Clear out old card elements
-    var otherPlayerTradeCardSlots = document.getElementById("otherPlayerTradeSlots");
-    while(otherPlayerTradeCardSlots.firstChild){
-        otherPlayerTradeCardSlots.removeChild(otherPlayerTradeCardSlots.firstChild);
-    }
-    // Clear out old card elements
-    var userTradeCardSlots = document.getElementById("userTradeSlots");
-    while(userTradeCardSlots.firstChild){
-        userTradeCardSlots.removeChild(userTradeCardSlots.firstChild);
-    }
-}
-
-
 function getStagedCards(userObj, otherPlayerObj){
     let stagedCardsDict = {"otherStagedCardsArr": [], "userStagedCardsArr": []};
     var otherStageArea= document.getElementById(otherPlayerObj.stageAreaId);
@@ -67,22 +53,22 @@ function removeStagedCards(userObj, otherPlayerObj){
 
 async function collectionSelectHandler(collectionSelect, userObj, otherPlayerObj){
     removeStagedCards(userObj, otherPlayerObj);
-    var userLoadingTitle = document.getElementById("userLoadingTitle");
-    userLoadingTitle.style.display = "block";
-    var otherLoadingTitle = document.getElementById("otherLoadingTitle");
-    otherLoadingTitle.style.display = "block";
     let collectionKey = parseInt(collectionSelect.value);
     userObj.currCollectId = collectionKey;
     cardsToBeTraded.userCollectId = collectionKey;
-    otherPlayerObj.currCollectId = collectionKey;
-    cardsToBeTraded.otherPlayerCollectId = collectionKey;
+    var userLoadingTitle = document.getElementById("userLoadingTitle");
+    userLoadingTitle.style.display = "block";
     await switchToGivenUserCollection(userObj);
-    await getCurrentAdminCollection(otherPlayerObj);
     resetInitialStartAndEndIndex(userObj);
     displayCardCollectionForTrading(userObj);
+    userLoadingTitle.style.display = "none";
+    otherPlayerObj.currCollectId = collectionKey;
+    cardsToBeTraded.otherPlayerCollectId = collectionKey;
+    var otherLoadingTitle = document.getElementById("otherLoadingTitle");
+    otherLoadingTitle.style.display = "block";
+    await getCurrentAdminCollection(otherPlayerObj);
     resetInitialStartAndEndIndex(otherPlayerObj);
     displayCardCollectionForTrading(otherPlayerObj);
-    userLoadingTitle.style.display = "none";
     otherLoadingTitle.style.display = "none";
 }
 
@@ -97,6 +83,39 @@ async function getCurrentAdminCollection(otherPlayerObj){
     }
     otherPlayerObj.primaryKeyArr = otherPlayerObj.primaryKeysForCollections[otherPlayerObj.currCollectId];
     otherPlayerObj.cardDict = otherPlayerObj.collections[otherPlayerObj.currCollectId];
+}
+
+
+function removeOldCardsFromPopUpForm(){
+    // Clear out old card elements
+    var otherPlayerTradeCardSlots = document.getElementById("otherPlayerTradeSlots");
+    while(otherPlayerTradeCardSlots.firstChild){
+        otherPlayerTradeCardSlots.removeChild(otherPlayerTradeCardSlots.firstChild);
+    }
+    // Clear out old card elements
+    var userTradeCardSlots = document.getElementById("userTradeSlots");
+    while(userTradeCardSlots.firstChild){
+        userTradeCardSlots.removeChild(userTradeCardSlots.firstChild);
+    }
+}
+
+
+function createPopUpForm(stagedCardsDict){
+    let tradePopUpForm = document.getElementById("tradePopUpForm");
+    tradePopUpForm.style.display = "block";
+    removeOldCardsFromPopUpForm();
+    let otherPlayerTradeSlots = document.getElementById("otherPlayerTradeSlots");
+    let otherStagedCardsArr = stagedCardsDict["otherStagedCardsArr"];
+    for (let index = 0; index < otherStagedCardsArr.length; index++) {
+        otherPlayerTradeSlots.appendChild(otherStagedCardsArr[index]);
+    }
+    let userTradeSlots = document.getElementById("userTradeSlots");
+    let userStagedCardsArr = stagedCardsDict["userStagedCardsArr"];
+    for(let index = 0; index < userStagedCardsArr.length; index++){
+        userTradeSlots.appendChild(userStagedCardsArr[index]);
+    }
+    otherPlayerObj.currLocationStagedCards = "otherPlayerTradeSlots";
+    userObj.currLocationStagedCards = "userTradeSlots";
 }
 
 
@@ -118,22 +137,10 @@ function getCardsToBeTraded(userObj, otherPlayerObj){
     console.log(cardsToBeTraded)
 }
 
-function createPopUpForm(stagedCardsDict){
-    let tradePopUpForm = document.getElementById("tradePopUpForm");
-    tradePopUpForm.style.display = "block";
-    removeOldCardsFromPopUpForm();
-    let otherPlayerTradeSlots = document.getElementById("otherPlayerTradeSlots");
-    let otherStagedCardsArr = stagedCardsDict["otherStagedCardsArr"];
-    for (let index = 0; index < otherStagedCardsArr.length; index++) {
-        otherPlayerTradeSlots.appendChild(otherStagedCardsArr[index]);
-    }
-    let userTradeSlots = document.getElementById("userTradeSlots");
-    let userStagedCardsArr = stagedCardsDict["userStagedCardsArr"];
-    for(let index = 0; index < userStagedCardsArr.length; index++){
-        userTradeSlots.appendChild(userStagedCardsArr[index]);
-    }
-    otherPlayerObj.currLocationStagedCards = "otherPlayerTradeSlots";
-    userObj.currLocationStagedCards = "userTradeSlots";
+function tradeButtonActions(userObj, otherPlayerObj){
+    getCardsToBeTraded(userObj, otherPlayerObj)
+    let stagedCardsDict = getStagedCards(userObj, otherPlayerObj);
+    createPopUpForm(stagedCardsDict);
 }
 
 function stopTradeButtonActions(userObj, otherPlayerObj){
@@ -151,15 +158,11 @@ function stopTradeButtonActions(userObj, otherPlayerObj){
     userObj.currLocationStagedCards = userObj.stageAreaId;
 }
 
-function tradeButtonActions(userObj, otherPlayerObj){
-    getCardsToBeTraded(userObj, otherPlayerObj)
-    let stagedCardsDict = getStagedCards(userObj, otherPlayerObj);
-    createPopUpForm(stagedCardsDict);
-}
 
 function confirmTradeButtonActions(){
     removeStagedCards(userObj, otherPlayerObj);
 }
+
 
 async function setupTradingPage(){
     const response= await fetch('/getCollection');

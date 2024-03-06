@@ -1,8 +1,8 @@
 async function collectionSelectHandler(collectionSelect){
-    var collectionLoadingTitle = document.getElementById("collectionLoadingTitle");
-    collectionLoadingTitle.style.display = "block";
     let collectionKey = parseInt(collectionSelect.value);
     userObj.currCollectId = collectionKey;
+    var collectionLoadingTitle = document.getElementById("collectionLoadingTitle");
+    collectionLoadingTitle.style.display = "block";
     await switchToGivenUserCollection(userObj);
     resetInitialStartAndEndIndex(userObj);
     displayCardCollection(userObj);
