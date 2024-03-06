@@ -1,34 +1,3 @@
-class Card{
-    constructor(cardId, cardName, imagePath, description, type, rarity,
-         attack, defense, mana){
-        this.cardId = cardId;
-        this.cardName = cardName;
-        this.imagePath = imagePath;
-        this.type = type;
-        this.description = description;
-        this.rarity = rarity;
-        this.attack = attack;
-        this.defense = defense;
-        this.mana = mana;
-        this.isStaged = false;
-    }
-}
-
-class CreatureCard extends Card {
-    constructor(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana) {
-        super(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana);
-    }
-}
-
-class SpellCard extends Card {
-    constructor(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana, ability, utility) {
-        super(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana);
-        this.ability = ability;
-        this.utility = utility;
-    }
-}
-
-
 function removeOldCardsFromPopUpForm(){
     // Clear out old card elements
     var otherPlayerTradeCardSlots = document.getElementById("otherPlayerTradeSlots");
@@ -193,10 +162,6 @@ function confirmTradeButtonActions(){
 }
 
 async function setupTradingPage(){
-    var userLoadingTitle = document.getElementById("userLoadingTitle");
-    userLoadingTitle.style.display = "block";
-    var otherLoadingTitle = document.getElementById("otherLoadingTitle");
-    otherLoadingTitle.style.display = "block";
     const response= await fetch('/getCollection');
     let collection = await response.json();
     if(collection.length > 0){ 
@@ -205,17 +170,21 @@ async function setupTradingPage(){
         otherPlayerObj.currCollectId = collection[0].collectionId;
         cardsToBeTraded.otherPlayerCollectId = collection[0].collectionId;;
     };
+    var userLoadingTitle = document.getElementById("userLoadingTitle");
+    userLoadingTitle.style.display = "block";
     await getInitialUserCollection(collection, userObj);
-    await getCurrentAdminCollection(otherPlayerObj)
     resetInitialStartAndEndIndex(userObj);
     displayCardCollectionForTrading(userObj);
     addRightScroll(userObj, userScrollRightButton, displayCardCollectionForTrading);
     addLeftScroll(userObj, userScrollLeftButton, displayCardCollectionForTrading);
+    userLoadingTitle.style.display = "none";
+    var otherLoadingTitle = document.getElementById("otherLoadingTitle");
+    otherLoadingTitle.style.display = "block";
+    await getCurrentAdminCollection(otherPlayerObj)
     resetInitialStartAndEndIndex(otherPlayerObj);
     displayCardCollectionForTrading(otherPlayerObj);
     addRightScroll(otherPlayerObj, otherScrollRightButton, displayCardCollectionForTrading);
     addLeftScroll(otherPlayerObj, otherScrollLeftButton, displayCardCollectionForTrading);
-    userLoadingTitle.style.display = "none";
     otherLoadingTitle.style.display = "none";
     collectionSelect.addEventListener("change", () => { collectionSelectHandler(collectionSelect, userObj, otherPlayerObj) });
     startTradeButton.addEventListener("click", () => { tradeButtonActions(userObj, otherPlayerObj);});
@@ -233,13 +202,13 @@ async function setupTradingPage(){
 
 /*main code for trading */
 let cardsToBeTraded = {otherPlayerCollectId: null, otherPlayerCardsToBeTraded: [], userCollectId: null, userCardsToBeTraded: []};
-let userObj = {isUser: true, primaryKeysForCollections: {}, collections: {}, cardListsFromDb: {},  primaryKeyArr: [], cardDict: {}, stagedCardCount: 0, 
-        numCardsInView: 8, startIndex: 0, endIndex: 7, cardSlots: "userCardSlots", stageAreaId: "userStageAreaId", stageAreaClass: "userStageAreaClass",
-        stagedCardName: "userStagedCard", currLocationStagedCards: "userStageAreaId", currCollectId: null};
+let userObj = {fileName: "tradingHelper", isUser: true, primaryKeysForCollections: {}, collections: {}, cardListsFromDb: {},  primaryKeyArr: [], 
+    cardDict: {}, stagedCardCount: 0, numCardsInView: 8, startIndex: 0, endIndex: 7, cardSlots: "userCardSlots", stageAreaId: "userStageAreaId", 
+    stageAreaClass: "userStageAreaClass", stagedCardName: "userStagedCard", currLocationStagedCards: "userStageAreaId", currCollectId: null};
                  
-let otherPlayerObj = {isUser: false, primaryKeysForCollections: {}, collections: {}, cardListsFromDb: {},  primaryKeyArr: [], cardDict: {}, stagedCardCount: 0, 
-        numCardsInView: 8, startIndex: 0, endIndex: 7, cardSlots: "otherCardSlots", stageAreaId: "otherStageAreaId", stageAreaClass: "otherStageAreaClass", 
-        stagedCardName: "otherStagedCard", currLocationStagedCards: "otherStageAreaId", currCollectId: null};
+let otherPlayerObj = {fileName: "tradingHelper", isUser: false, primaryKeysForCollections: {}, collections: {}, cardListsFromDb: {},  primaryKeyArr: [], 
+    cardDict: {}, stagedCardCount: 0, numCardsInView: 8, startIndex: 0, endIndex: 7, cardSlots: "otherCardSlots", stageAreaId: "otherStageAreaId", 
+    stageAreaClass: "otherStageAreaClass", stagedCardName: "otherStagedCard", currLocationStagedCards: "otherStageAreaId", currCollectId: null};
 
 var otherScrollLeftButton = document.getElementById("otherScrollLeft");
 var otherScrollRightButton = document.getElementById("otherScrollRight");
