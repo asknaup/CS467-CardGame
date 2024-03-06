@@ -41,7 +41,7 @@ function createTradingCard(cardData) {
     // TODO: Replace with creature
     var cardType = document.createElement('p');
     cardType.classList.add('cardType');
-    cardType.textContent = cardData.cardType;
+    cardType.textContent = cardData.type;
 
     var rarity = document.createElement('p');
     rarity.textContent = cardData.rarity;
@@ -106,12 +106,12 @@ function createTradingCard(cardData) {
 }
 
 
-
 function createTradingCardWithId(id, cardData) {
     let cardContainer = createTradingCard(cardData);
     cardContainer.setAttribute('id', id);
     return cardContainer;
 }
+
 
 function createBackOfCard() {
     // Card container
@@ -119,6 +119,7 @@ function createBackOfCard() {
     cardContainer.classList.add('card');
     return cardContainer;
 }
+
 
 function createBackOfCardWithId(id) {
     let cardContainer = createBackOfCard();
@@ -218,8 +219,6 @@ function addLeftScroll(playerObj, scrollLeftButton, displayFunc){
             if(playerObj.startIndex < 0){
                 playerObj.startIndex = 0;
             }
-            console.log(playerObj.startIndex);
-            console.log(playerObj.endIndex);
             displayFunc(playerObj);
         }
     });
@@ -266,22 +265,6 @@ async function getInitialUserCollection(collection, userObj){
 }
 
 
-async function createCollectionFromCardIdList(listOfCardObjs, playerObj){
-    for(const cardId of  listOfCardObjs){
-        const cardDetailsResponse = await fetch('/getCardDetails?cardId=' + cardId);
-        await cardDetailsResponse.json()
-            .then((cardData) => {
-                    playerObj.primaryKeysForCollections[playerObj.currCollectId].push(cardData.id);
-                    //(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana)
-                    let cardObj = new Card(cardData.id, cardData.cardName, cardData.imagePath, 
-                        cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
-                    playerObj.collections[playerObj.currCollectId][cardData.id] = cardObj;
-            })
-            .catch((error) => {console.log(error)});  
-    }
-}
-
-
 async function switchToGivenUserCollection(userObj){
     if(!(userObj.currCollectId in userObj.collections)){
         userObj.primaryKeysForCollections[userObj.currCollectId] = [];
@@ -292,4 +275,26 @@ async function switchToGivenUserCollection(userObj){
     }
     userObj.primaryKeyArr = userObj.primaryKeysForCollections[userObj.currCollectId];
     userObj.cardDict = userObj.collections[userObj.currCollectId];
+}
+
+
+async function createCollectionFromCardIdList(listOfCardObjs, playerObj){
+    for(const cardId of  listOfCardObjs){
+        const cardDetailsResponse = await fetch('/getCardDetails?cardId=' + cardId);
+        await cardDetailsResponse.json()
+            .then((cardData) => {
+                    console.log(cardData)
+                    playerObj.primaryKeysForCollections[playerObj.currCollectId].push(cardData.id);
+                    let cardObj = null;
+                    if (cardData.type == "Creature"){
+                        cardObj = new CreatureCard(cardData.id, cardData.name, cardData.imagePath, 
+                            cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
+                    }else{
+                        cardObj = new SpellCard(cardData.id, cardData.name, cardData.imagePath, 
+                            cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
+                    }
+                    playerObj.collections[playerObj.currCollectId][cardData.id] = cardObj;
+            })
+            .catch((error) => {console.log(error)});  
+    }
 }
