@@ -11,25 +11,15 @@
 
 <body>
   <div class="container1">
-  <h1>
-    Inspect the Game
-  </h1>
-  <div>
-    <p> Game name: {{ game.[0].gameName }} </p>
-    <p> Game Owner{{ game.[0].ownerId }}</p>
-    <p> List of Cards: {{ game.[0].cardList }} </p>
-    <p>{{ game.gameId }}</p>
-  </div>
- <!-- 
-  <form action="/collect" method="POST">
-    <button>View the Collection for this Game</button>
-    <input type="hidden" name="gameId" value="{{ genGameId }}">
-  </form>
-  -->
+  <h1> Inspect the Game </h1>
+  <div id="input-form"><br>
+    <h3>Game Name: {{ game.[0].gameName }} </h3><br>
+    <h3>Game Owner: {{ user.[0].username }} </h3><br>
   <form action="/cardGenPage" method="get">
     <button>Build Cards for this Game</button>
     <input type="hidden" name="gameId" value="{{ gameId }}">
   </form>
+  </div>
   </div>
 </body>
 </html>
