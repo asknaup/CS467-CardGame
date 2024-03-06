@@ -1,3 +1,62 @@
+class collectionCard{
+    constructor(cardId, cardName, imagePath, description, type, rarity,
+         attack, defense, mana){
+        this.cardId = cardId;
+        this.cardName = cardName;
+        this.imagePath = imagePath;
+        this.type = type;
+        this.description = description;
+        this.rarity = rarity;
+        this.attack = attack;
+        this.defense = defense;
+        this.mana = mana;
+    }
+}
+
+class collectionCreatureCard extends collectionCard {
+    constructor(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana) {
+        super(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana);
+    }
+}
+
+class collectionSpellCard extends collectionCard {
+    constructor(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana, ability, utility) {
+        super(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana);
+        this.ability = ability;
+        this.utility = utility;
+    }
+}
+
+class tradingCard{
+    constructor(cardId, cardName, imagePath, description, type, rarity,
+         attack, defense, mana){
+        this.cardId = cardId;
+        this.cardName = cardName;
+        this.imagePath = imagePath;
+        this.type = type;
+        this.description = description;
+        this.rarity = rarity;
+        this.attack = attack;
+        this.defense = defense;
+        this.mana = mana;
+        this.isStaged = false;
+    }
+}
+
+class tradingCreatureCard extends tradingCard {
+    constructor(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana) {
+        super(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana);
+    }
+}
+
+class tradingSpellCard extends tradingCard {
+    constructor(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana, ability, utility) {
+        super(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana);
+        this.ability = ability;
+        this.utility = utility;
+    }
+}
+
 // Function to create a trading card
 function createTradingCard(cardData) {
     // Card container
@@ -283,15 +342,24 @@ async function createCollectionFromCardIdList(listOfCardObjs, playerObj){
         const cardDetailsResponse = await fetch('/getCardDetails?cardId=' + cardId);
         await cardDetailsResponse.json()
             .then((cardData) => {
-                    console.log(cardData)
                     playerObj.primaryKeysForCollections[playerObj.currCollectId].push(cardData.id);
                     let cardObj = null;
-                    if (cardData.type == "Creature"){
-                        cardObj = new CreatureCard(cardData.id, cardData.name, cardData.imagePath, 
-                            cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
+                    if(playerObj.fileName === "collectionHelper"){
+                        if (cardData.type == "Creature"){
+                            cardObj = new collectionCreatureCard(cardData.id, cardData.name, cardData.imagePath, 
+                                cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
+                        }else{
+                            cardObj = new collectionSpellCard(cardData.id, cardData.name, cardData.imagePath, 
+                                cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
+                        }
                     }else{
-                        cardObj = new SpellCard(cardData.id, cardData.name, cardData.imagePath, 
-                            cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
+                        if (cardData.type == "Creature"){
+                            cardObj = new tradingCreatureCard(cardData.id, cardData.name, cardData.imagePath, 
+                                cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
+                        }else{
+                            cardObj = new tradingSpellCard(cardData.id, cardData.name, cardData.imagePath, 
+                                cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
+                        }
                     }
                     playerObj.collections[playerObj.currCollectId][cardData.id] = cardObj;
             })
