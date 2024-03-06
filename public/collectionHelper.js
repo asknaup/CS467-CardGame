@@ -13,6 +13,12 @@ class Card{
     }
 }
 
+class CreatureCard extends Card {
+    constructor(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana) {
+        super(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana);
+    }
+}
+
 class SpellCard extends Card {
     constructor(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana, ability, utility) {
         super(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana);

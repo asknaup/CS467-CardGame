@@ -14,6 +14,12 @@ class Card{
     }
 }
 
+class CreatureCard extends Card {
+    constructor(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana) {
+        super(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana);
+    }
+}
+
 class SpellCard extends Card {
     constructor(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana, ability, utility) {
         super(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana);
@@ -81,12 +87,10 @@ function removeStagedCards(userObj, otherPlayerObj){
     removeStagedStatusFromStagedCards(userObj, otherPlayerObj)
     var otherStageArea= document.getElementById(otherPlayerObj.currLocationStagedCards);
     while(otherStageArea.firstChild){
-        console.log(otherStageArea.firstChild)
         otherStageArea.removeChild(otherStageArea.firstChild);
     }
     var userStageArea= document.getElementById(userObj.currLocationStagedCards);
     while(userStageArea.firstChild){
-        console.log(userStageArea.firstChild)
         userStageArea.removeChild(userStageArea.firstChild);
     }
 }
