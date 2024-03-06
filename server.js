@@ -639,9 +639,9 @@ app.post('/cardViewEditPage', async (req, res) => {
       req.session.gameId = req.body.whichgame;
 
       if (req.body.cardType == "Creature") {
-        // Generate for Creature
+        // Generate for Creaturef
 
-        for (let i = 0; i < 1; i++) {
+        for (let i = 0; i < 3; i++) {
           let values = [];
           let newCreature = await card.createDataStructCreature(req.body.color, req.body.creatureType, req.body.theme, req.body.cardType);
           newCreature.manaCost = req.body.manaCost;
@@ -691,7 +691,7 @@ app.post('/cardViewEditPage', async (req, res) => {
         card: generatedCards,
       });
     } else {
-      res.render('cardGenPage', { error: "Sorry! You cannot create a card without having an account" })
+      res.render('/', { error: "Sorry! You cannot create a card without having an account" })
     }
   } catch (err) {
     return res.send(`Something went wrong: ${err}`);
@@ -709,7 +709,6 @@ app.post('/cardViewPrintedPagePost', async (req, res) => {
     const cardId = await dbFunc.insertCard(stringCard.name, stringCard.cardType, user.userId, stringCard.rarity, stringCard.manaCost);
     cardIdList.push(cardId);
     await dbFunc.insertCardUrl(cardId, stringCard.URL);
-
 
     if (stringCard.cardType == "Creature") {;
       let newCard = await dbFunc.insertCreatureCard(cardId, stringCard.attack, stringCard.defense, stringCard.creatureType);
@@ -744,9 +743,13 @@ app.post('/cardViewPrintedPagePost', async (req, res) => {
     }
 
     const data = await dbFunc.getCardInfo(cardId);
-    console.log("This is data in the /cardViewPrintedPage route:", data);
+    console.log("This is data in the /cardViewPrintedPage route:", stringCard);
 
-    res.json({ cards: [stringCard] });
+    res.json({ 
+      cards: [stringCard], 
+      name: stringCard.cardName,
+      type: stringCard.cardType
+    });
 
   } catch (err) {
     // Handle errors that may occur during card generation, database interaction, or JSON response
@@ -857,10 +860,12 @@ app.post('/generatedGameView', async (req, res) => {
       const genGameId = await dbFunc.insertNewGeneratedGame(user.userId, req.body.ruleSet, '{"cardList": []}', req.body.name);
       req.session.gameId = genGameId;
       const gameStats = await dbFunc.getGeneratedGameStats(genGameId);
-      console.log(genGameId, gameStats);
+      const userName = await dbFunc.grabUsername(user.userId);
+      console.log(genGameId, gameStats, userName);
       res.render('generatedGameView', {
         game: gameStats,
-        genGameId: genGameId
+        genGameId: genGameId,
+        user: userName
       });
     } catch (err) {
       console.error(err);
