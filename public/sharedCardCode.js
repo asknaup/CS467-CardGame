@@ -127,8 +127,8 @@ function createBackOfCardWithId(id) {
 }
 
 function addStagedCardFunctionality(playerObj, primaryIndex) {
-    playerObj.startIndex = Math.floor(primaryIndex / numScrollCards) * numScrollCards;
-    playerObj.endIndex = playerObj.startIndex + (numScrollCards - 1);
+    playerObj.startIndex = Math.floor(primaryIndex / playerObj.numCardsInView) * playerObj.numCardsInView;
+    playerObj.endIndex = playerObj.startIndex + (playerObj.numCardsInView - 1);
     if (playerObj.endIndex > playerObj.primaryKeyArr.length - 1) {
         playerObj.endIndex = playerObj.primaryKeyArr.length - 1
     }
@@ -207,4 +207,89 @@ function highlightCard(isHighlighted, isUser, scrollCard) {
     } else {
         scrollCard.style.border = "3px solid black";
     }
+}
+
+
+function addLeftScroll(playerObj, scrollLeftButton, displayFunc){
+    scrollLeftButton.addEventListener("click", () => {
+        if (playerObj.startIndex > 0){
+            playerObj.endIndex = playerObj.startIndex - 1;
+            playerObj.startIndex -= playerObj.numCardsInView;
+            if(playerObj.startIndex < 0){
+                playerObj.startIndex = 0;
+            }
+            console.log(playerObj.startIndex);
+            console.log(playerObj.endIndex);
+            displayFunc(playerObj);
+        }
+    });
+}
+
+
+function addRightScroll(playerObj, scrollRightButton, displayFunc){
+    scrollRightButton.addEventListener("click", () => {
+        if (playerObj.endIndex < playerObj.primaryKeyArr.length - 1){
+            playerObj.startIndex = playerObj.endIndex + 1;
+            playerObj.endIndex += userObj.numCardsInView;
+            if (playerObj.endIndex > playerObj.primaryKeyArr.length - 1){
+                playerObj.endIndex = playerObj.primaryKeyArr.length - 1
+            }
+            displayFunc(playerObj);
+        }
+    });
+}
+
+
+function resetInitialStartAndEndIndex(playerObj){
+    playerObj.startIndex = 0;
+    playerObj.endIndex = playerObj.numCardsInView - 1;
+    if (playerObj.endIndex > playerObj.primaryKeyArr.length - 1){
+        playerObj.endIndex = playerObj.primaryKeyArr.length - 1
+    }
+}
+
+
+async function getInitialUserCollection(collection, userObj){
+    for(let index = 0; index < collection.length; index++){
+        let currCollectId = collection[index].collectionId
+        userObj.cardListsFromDb[currCollectId] = JSON.parse(collection[index].cardId);
+    }
+    if(collection.length > 0){
+        userObj.primaryKeysForCollections[userObj.currCollectId] = [];
+        userObj.collections[userObj.currCollectId] = {};
+        let cardList = userObj.cardListsFromDb[userObj.currCollectId];
+        let listOfCardObjs = cardList.cardList;
+        await createCollectionFromCardIdList(listOfCardObjs, userObj);
+    }
+    userObj.primaryKeyArr = userObj.primaryKeysForCollections[userObj.currCollectId];
+    userObj.cardDict = userObj.collections[userObj.currCollectId];
+}
+
+
+async function createCollectionFromCardIdList(listOfCardObjs, playerObj){
+    for(const cardId of  listOfCardObjs){
+        const cardDetailsResponse = await fetch('/getCardDetails?cardId=' + cardId);
+        await cardDetailsResponse.json()
+            .then((cardData) => {
+                    playerObj.primaryKeysForCollections[playerObj.currCollectId].push(cardData.id);
+                    //(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana)
+                    let cardObj = new Card(cardData.id, cardData.cardName, cardData.imagePath, 
+                        cardData.description, cardData.type, cardData.rarity, cardData.attack, cardData.defense, cardData.mana); 
+                    playerObj.collections[playerObj.currCollectId][cardData.id] = cardObj;
+            })
+            .catch((error) => {console.log(error)});  
+    }
+}
+
+
+async function switchToGivenUserCollection(userObj){
+    if(!(userObj.currCollectId in userObj.collections)){
+        userObj.primaryKeysForCollections[userObj.currCollectId] = [];
+        userObj.collections[userObj.currCollectId] = {};
+        let cardList = userObj.cardListsFromDb[userObj.currCollectId];
+        let listOfCardObjs = cardList.cardList;
+        await createCollectionFromCardIdList(listOfCardObjs, userObj);
+    }
+    userObj.primaryKeyArr = userObj.primaryKeysForCollections[userObj.currCollectId];
+    userObj.cardDict = userObj.collections[userObj.currCollectId];
 }
