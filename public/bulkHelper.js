@@ -96,7 +96,7 @@ async function createTradingCard(cardInformation) {
     // textOverlayBottom.appendChild(cardType);
     textOverlayTop.appendChild(cardName);
     textOverlayTop.appendChild(cardType);
-    textOverlayTop.appendChild(rarity);
+    // textOverlayTop.appendChild(rarity);
 
     card.appendChild(textOverlayBottom);
     card.appendChild(cardImage);

@@ -10,19 +10,20 @@
 </head>
 
 <body>
-<h1>Card Generation Results</h1>
-<h2>Pick your favorite card to save to your collection and the master list collection</h2>
-<h4>The others will disappear</h4>
-    <div id="cardContainer">
-        {{#each card}}
-        <form action="/cardViewPrintedPage" id="cardForm">
-        <div class="card">
-            <img src="{{URL}}" alt="Card Image">
+<div id="container">
+    <h1>Card Generation Results</h1>
+</div>
+        <div id="cardContainer">
+            {{#each card}}
+            <form action="/cardViewPrintedPage" id="cardForm">
+            <div class="card">
+                <img src="{{URL}}" alt="Card Image">
+            </div>
+            <input type="hidden" name="cardstring" value="{{stringed}}">
+            <button id="printCard" type="submit">Use This Image</button>
+            </form>
+            {{/each}}
         </div>
-        <input type="hidden" name="cardstring" value="{{stringed}}">
-        <button id="printCard" type="submit">Use This Image</button>
-        </form>
-        {{/each}}
-    </div>
+
 </body>
 </html>

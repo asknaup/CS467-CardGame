@@ -11,21 +11,52 @@
 {{!-- #TODO add option to brows between collections and decks --}}
   <body >
     <h1 id="helpPageTitle">Welcome to the Help Page</h1>
-
-
-    
     <div id="helpPage">
-      
       <div id="leftColumn">
         <h3 id="FAQTitle">Frequently Asked Questions: </h3>
         <ul id="FAQ">
-          <li><div class="question"> How do I play this game? How do I start? </div>
+          <li><div class="question"> Do I need to create an account and sign in to navigate the site? </div>
             <p class="answer"> 
-            First you will need to open a pack of cards. You can then also generate your own cards. Then
-            you will need to build your deck of cards. Here are the steps to follow to do that:
+            Yes, you do. 
             </p>
           </li>
-
+          <li><div class="question"> How do I create a game? </div>
+            <p class="answer"> 
+            Go to the link on the right that says create a new Trading Card Game and follow the instructions.
+            Afterwards generate cards for the specific game, trade for cards, and build a deck.
+            </p>
+          </li>
+          
+          <li><div class="question"> How do I play a game?</div>
+            <p class="answer"> 
+            You will need to build a deck of cards. Go to the build deck page and create a new deck.
+            After the deck has a good amount of cards, you can play the computer with the deck. 
+            </p>
+          </li>
+          <li><div class="question"> What is a collection? </div>
+            <p class="answer"> 
+            A collection is your list of cards that you own for a particular game. 
+            </p>
+          </li>
+          <li><div class="question"> What is a deck? </div>
+            <p class="answer"> 
+            A deck is a list of cards that you add from your user collection in order to play a game. 
+            </p>
+          </li>
+          <li><div class="question"> What kind of cards can I generate? </div>
+            <p class="answer"> 
+            You can either generate single cards with all user inputs, or bulk generated cards with 
+            random computer generated values.
+            There are two mains types of cards you can generate, creatures and Spells.
+            Spells have three types; buff, debuff, and damage.  
+            </p>
+          </li>
+          <li><div class="question"> Why does it take so long to generate a card? </div>
+            <p class="answer"> 
+            We are calling the Leonardo.ai API with a prompt of inputs. The value of the image location
+            takes a few seconds to return per card.
+            </p>
+          </li>
           <li> <div class="question"> How much does this game cost? Is it free? </div>
             <p class="answer">
             This game is free! It does cost a few cents per image to generate through the ai image generator but 
@@ -39,11 +70,12 @@
     <div id="rightColumn">
         <h3 id="helpfulLinksTitle">Helpful Links: </h3>
         <ul id="ulHelpColumn">
-          <li class="helpLinks"><a href="/gameGenPage">Create A New Trading Card Game</a> </li>
-          <li class="helpLinks"><a href="/collect">Browse Your collections </a></li>
-          <li class="helpLinks"><a href="/buildDeck">Edit A Play Deck From One Of Your Collections</a></li>
-          <li class="helpLinks"><a href="/gamePlayPage">Play With Your Created Deck Against An Opponent</a></li>
-          <li class="helpLinks"><a href="/gamePlayPage"> Help! I'm Lost</a> </li>
+          <li class="helpLinks"><a href="/gameGenPage">Create A Trading Card Game</a> </li>
+          <li class="helpLinks"><a href="/collect">Browse Your Collection </a></li>
+          <li class="helpLinks"><a href="/buildDeck">Create a Deck</a></li>
+          <li class="helpLinks"><a href="/gamePlayPage">Play Against An Opponent</a></li>
+          <li class="helpLinks"><a href="/help"> Help! I'm Lost</a> </li>
+          <li class="helpLinks"><a href="/logout">Logout</a> </li>
         </ul>
       </div>
     </div> <!-- closing div tag for id="helpPage" -->
