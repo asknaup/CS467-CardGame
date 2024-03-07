@@ -285,6 +285,7 @@ function highlightCard(isHighlighted, isUser, scrollCard) {
     } else {
         scrollCard.style.border = "3px solid black";
     }
+    console.log("running highlightCard()")
 }
 
 
