@@ -1,3 +1,21 @@
+class miniGameCard{
+    constructor(id, name, imagePath, description, type, rarity,
+         attack, defense, mana, matchIdentifier){
+        this.id = id;
+        this.name = name;
+        this.imagePath = imagePath;
+        this.description = description;
+        this.type = type;
+        this.rarity = rarity;
+        this.attack = attack;
+        this.defense = defense;
+        this.mana = mana;
+        this.matchIdentifier = matchIdentifier;
+        this.isFaceUp = false;
+        this.hasBeenMatched = false;
+    }
+}
+
 class collectionCard{
     constructor(cardId, cardName, imagePath, description, type, rarity,
          attack, defense, mana){
@@ -66,7 +84,7 @@ function createTradingCard(cardData) {
 
     // cardId
     var cardId = document.createElement('p');
-    cardId.textContent = cardData.cardId;
+    cardId.textContent = cardData.id;
 
     // Tooltip for attributes
     // var toolTip = document.createElement('div');
@@ -78,7 +96,7 @@ function createTradingCard(cardData) {
     // Name
     var cardName = document.createElement('h1');
     cardName.classList.add('cardName');
-    cardName.textContent = cardData.cardName;
+    cardName.textContent = cardData.name;
 
     // Text overlays
     var textOverlayBottom = document.createElement('div');

@@ -1,74 +1,55 @@
-class Card{
-    constructor(cardId, cardName, imagePath, description, type, rarity,
-         attack, defense, mana, matchIdentifier){
-        this.cardId = cardId;
-        this.cardName = cardName;
-        this.imagePath = imagePath;
-        this.type = type;
-        this.description = description;
-        this.rarity = rarity;
-        this.attack = attack;
-        this.defense = defense;
-        this.mana = mana;
-        this.matchIdentifier = matchIdentifier;
-        this.isFaceUp = false;
-        this.hasBeenMatched = false;
-    }
-}
-
-/*      cardId, cardName, imagePath, cardType, rarity, spellType, spAbility, spAtk, spDef, atk, def, manaCost) */
-let cardTemplates = [{cardId: "10", cardName: "Joe", imagePath: "/images/goblinGuy.jpg", description: "", type: "Creature", 
+let cardTemplates = [{id: "10", name: "Joe", imagePath: "/images/goblinGuy.jpg", description: "", type: "Creature", 
     rarity: "Common", attack: null, defnese: null, mana: "2"},
 
-    {cardId:"47", cardName: "Chain Lightning", imagePath: "/images/chainLightening.jpg", description: "", type: "Spell", 
+    {id:"47", name: "Chain Lightning", imagePath: "/images/chainLightening.jpg", description: "", type: "Spell", 
     rarity: "Common", attack: null, defense: null, mana: "1"},
 
-    {cardId:"49", cardName: "Ronan", imagePath: "/images/building.jpg", description: "", type: "Creature", 
+    {id:"49", name: "Ronan", imagePath: "/images/building.jpg", description: "", type: "Creature", 
     rarity: "Common", attack: "3", defense: "1", mana: "2"},
 
-    {cardId:"48", cardName:"lotus", imagePath: "/images/bear.jpg", description: "", type: "Creature", 
+    {id:"48", name:"lotus", imagePath: "/images/bear.jpg", description: "", type: "Creature", 
     rarity: "Common", attack: null, defense: null, mana: "2"},
 
-    {cardId:"50", cardName: "Uilliam", imagePath: "/images/madMaxLookingGuy.jpg", description: "", type: "Creature", 
+    {id:"50", name: "Uilliam", imagePath: "/images/madMaxLookingGuy.jpg", description: "", type: "Creature", 
     rarity: "Common", attack: "0", defense: "1", mana: "3"},
 
-    {cardId:"5115", cardName: "Ivaylo", imagePath: "/images/pirate.jpg", description: "", type: "Creature", 
+    {id:"5115", name: "Ivaylo", imagePath: "/images/pirate.jpg", description: "", type: "Creature", 
     rarity: "common", attack: "9", defense: "7", mana: "8"},
 
-    {cardId:"312", cardName:"_", imagePath: "/images/hoodedGuy.jpg", description: "", type: "Spell", 
+    {id:"312", name:"_", imagePath: "/images/hoodedGuy.jpg", description: "", type: "Spell", 
     rarity: "common", attack: null, defense: null, mana: "0"},
 
-    {cardId:"1510",cardName: "joe", imagePath: "/images/boxer.jpg", description: "", type: "Creature", 
+    {id:"1510", name: "joe", imagePath: "/images/boxer.jpg", description: "", type: "Creature", 
     rarity: "common", attack: "4", defense:"8", mana: "2"},
 
-    {cardId:"154", cardName:"joe", imagePath: "/images/aragornIsThatYou.jpg", description: "", type: "Creature", 
+    {id:"154", name:"joe", imagePath: "/images/aragornIsThatYou.jpg", description: "", type: "Creature", 
     rarity: "common", attack: "4", defense: "8", mana: "2"},
 
-    {cardId:"207", cardName:"joe", imagePath: "/images/werewolf.jpg", description: "", type: "Creature", 
+    {id:"207", name:"joe", imagePath: "/images/werewolf.jpg", description: "", type: "Creature", 
     rarity: "common", attack: null, defense: null, mana: "2"},
 
-    {cardId:"332", cardName:"_", imagePath: "/images/orbThing.jpg", description: "", type: "Spell",
+    {id:"332", name:"_", imagePath: "/images/orbThing.jpg", description: "", type: "Spell",
      rarity: "common", attack: null, defense: null, mana: "0"},
 
-    {cardId:"4632", cardName: "Invisibility", imagePath: "/images/noIdeaWhatThisIs.jpg", description: "", type:"Spell", 
+    {id:"4632", name: "Invisibility", imagePath: "/images/noIdeaWhatThisIs.jpg", description: "", type:"Spell", 
     rarity: "common" , attack: null, defense: null, mana: "2"},
 
-    {cardId: "172", cardName: "jay", imagePath: "devilGuy", description: "", type: "Creature", 
+    {id: "172", name: "jay", imagePath: "devilGuy", description: "", type: "Creature", 
     rarity: "common",  attack: 4, defense: 3, mana: 2},
 
-    {cardId: "1062", cardName: "Ronan", imagePath: "scaryArmoredGuy", description: "", type: "Creature", 
+    {id: "1062", name: "Ronan", imagePath: "scaryArmoredGuy", description: "", type: "Creature", 
     rarity: "common", attack: 4, defense: 3, mana: 3},
 
-    {cardId: "1014", cardName: "Lirael", imagePath: "desert", description: "", type: "Creature", 
+    {id: "1014", name: "Lirael", imagePath: "desert", description: "", type: "Creature", 
     rarity: "common", attack: 4, defense: 5, mana: 4},
 
-    {cardId: "10923", cardName: "Gareth", imagePath: "space", description: "", type: "Creature", 
+    {id: "10923", name: "Gareth", imagePath: "space", description: "", type: "Creature", 
     rarity: "common", attack: 5, defense: 4, mana: 4},
 
-    {cardId: "10335", cardName: "Brigid", imagePath: "pinkGuy", description: "", type: "Creature", 
+    {id: "10335", name: "Brigid", imagePath: "pinkGuy", description: "", type: "Creature", 
     rarity: "common", attack: 2, defense: 2, mana: 3},
 
-    {cardId: "10739", cardName: "Séimíne", imagePath: "paradise", description: "", type: "Creature", 
+    {id: "10739", name: "Séimíne", imagePath: "paradise", description: "", type: "Creature", 
     rarity: "common", attack: 1, defense: 1, mana: 2}];
 
 
@@ -156,15 +137,15 @@ function setupCardObjs(){
     for(let index = 0; index < (userObj.numCardSlots / 2); index++){
         let cardObj = cardTemplates[index];
 
-        let cardA = new Card (cardObj.cardId + "A", cardObj.cardName, cardObj.imagePath, cardObj.description, cardObj.type, 
-                    cardObj.rarity, cardObj.attack, cardObj.defense, cardObj.mana, cardObj.cardId);
+        let cardA = new miniGameCard (cardObj.id + "A", cardObj.name, cardObj.imagePath, cardObj.description, cardObj.type, 
+                    cardObj.rarity, cardObj.attack, cardObj.defense, cardObj.mana, cardObj.id);
         userObj.cardObjs.push(cardA);
-        userObj.cardsDict[cardA.cardId] = cardA;
+        userObj.cardsDict[cardA.id] = cardA;
     
-        let cardB = new Card (cardObj.cardId + "B", cardObj.cardName, cardObj.imagePath, cardObj.description, cardObj.type, 
-                    cardObj.rarity, cardObj.attack, cardObj.defense, cardObj.mana, cardObj.cardId);
+        let cardB = new miniGameCard (cardObj.id + "B", cardObj.name, cardObj.imagePath, cardObj.description, cardObj.type, 
+                    cardObj.rarity, cardObj.attack, cardObj.defense, cardObj.mana, cardObj.id);
         userObj.cardObjs.push(cardB);
-        userObj.cardsDict[cardB.cardId] = cardB; 
+        userObj.cardsDict[cardB.id] = cardB; 
     }
 }
 
@@ -183,13 +164,14 @@ function populateCardSlots(){
     for(let index = 0; index < userObj.cardObjs.length; index++){
         var cardObj = userObj.cardObjs[index];
         // create back of trading car
-        var backMiniGameCard = createBackOfCardWithId(cardObj.cardId + "Back");
+        var backMiniGameCard = createBackOfCardWithId(cardObj.id + "Back");
         backMiniGameCard.classList.add("miniGameCard")
         backMiniGameCard.classList.add("miniGameCardBack")
         backMiniGameCard.style.position = "absolute";
         backMiniGameCard.style.zIndex = 10;
         // create trading card
-        var miniGameCard = createTradingCardWithId(cardObj.cardId, cardObj);
+        console.log(cardObj.name)
+        var miniGameCard = createTradingCardWithId(cardObj.id, cardObj);
         miniGameCard.classList.add("miniGameCard")
         miniGameCard.style.position = "absolute";
         miniGameCard.style.zIndex = 2;

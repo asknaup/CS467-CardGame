@@ -931,14 +931,17 @@ header {
     display: flex;
     flex-direction: row;
     height: 24vw;
-    justify-content: space-between;
-    padding: 2vw 2vw 0vw 2vw;
+    justify-content: space-evenly;
+    padding: 1vw 1vw 0vw 1vw;
 }
 
 .miniGameCard {
-    margin: 0px;
+    width: 10.5vw;
+    height: 16.75vw;
+    margin: 0vw;
     position: relative;
 }
+
 
 .miniGameCard:hover {
     transform: scale(1.00);
