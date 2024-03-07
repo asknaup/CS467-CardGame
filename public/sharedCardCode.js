@@ -17,10 +17,10 @@ class miniGameCard{
 }
 
 class collectionCard{
-    constructor(cardId, cardName, imagePath, description, type, rarity,
+    constructor(id, name, imagePath, description, type, rarity,
          attack, defense, mana){
-        this.cardId = cardId;
-        this.cardName = cardName;
+        this.id = id;
+        this.name = name;
         this.imagePath = imagePath;
         this.type = type;
         this.description = description;
@@ -32,24 +32,24 @@ class collectionCard{
 }
 
 class collectionCreatureCard extends collectionCard {
-    constructor(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana) {
-        super(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana);
+    constructor(id, name, imagePath, description, type, rarity, attack, defense, mana) {
+        super(id, name, imagePath, description, type, rarity, attack, defense, mana);
     }
 }
 
 class collectionSpellCard extends collectionCard {
-    constructor(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana, ability, utility) {
-        super(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana);
+    constructor(id, name, imagePath, description, type, rarity, attack, defense, mana, ability, utility) {
+        super(id, name, imagePath, description, type, rarity, attack, defense, mana);
         this.ability = ability;
         this.utility = utility;
     }
 }
 
 class tradingCard{
-    constructor(cardId, cardName, imagePath, description, type, rarity,
+    constructor(id, name, imagePath, description, type, rarity,
          attack, defense, mana){
-        this.cardId = cardId;
-        this.cardName = cardName;
+        this.id = id;
+        this.name = name;
         this.imagePath = imagePath;
         this.type = type;
         this.description = description;
@@ -62,14 +62,14 @@ class tradingCard{
 }
 
 class tradingCreatureCard extends tradingCard {
-    constructor(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana) {
-        super(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana);
+    constructor(id, name, imagePath, description, type, rarity, attack, defense, mana) {
+        super(id, name, imagePath, description, type, rarity, attack, defense, mana);
     }
 }
 
 class tradingSpellCard extends tradingCard {
-    constructor(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana, ability, utility) {
-        super(cardId, cardName, imagePath, description, type, rarity, attack, defense, mana);
+    constructor(id, name, imagePath, description, type, rarity, attack, defense, mana, ability, utility) {
+        super(id, name, imagePath, description, type, rarity, attack, defense, mana);
         this.ability = ability;
         this.utility = utility;
     }
