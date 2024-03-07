@@ -438,8 +438,13 @@ app.get('/trading', async (req, res) => {
 
 // Add database logic
 app.post('/trading', async (req, res) => {
-  console.log(req.body)
-  console.log("hey yall!!!!")
+  const user = req.session.user;
+  if(user){
+    console.log(req.body)
+  }else{
+    res.redirect('/');
+  }
+  
 });
 
 app.get('/getCollection', async (req, res) => {
