@@ -438,32 +438,8 @@ app.get('/trading', async (req, res) => {
 
 // Add database logic
 app.post('/trading', async (req, res) => {
-  const user = req.session.user;
-  const c = req.query.collectId;
-  let listCards;
-  let gameId;
-  let adminList;
-
-  if (user) {
-    const collect = await dbFunc.getAllCollectionsByUser(user.userId);
-    if (c) {
-      listCards = await dbFunc.grabListOfCardsFromCollection(req.query.collectId);
-      gameId = await dbFunc.grabGameIdFromCollection(req.query.collectId)
-      adminList = await dbFunc.grabAdminListCards(gameId);
-    } else {
-      listCards = await dbFunc.grabListOfCardsFromCollection(collect[0].collectionId);
-      gameId = await dbFunc.grabGameIdFromCollection(req.query.collectId)
-      adminList = await dbFunc.grabAdminListCards(gameId);
-    }
-
-    res.render('trading', {
-      collect: collect,
-      listCards: listCards,
-      adminList: adminList
-    })
-  } else {
-    res.redirect('/');
-  }
+  console.log(req.body)
+  console.log("hey yall!!!!")
 });
 
 app.get('/getCollection', async (req, res) => {

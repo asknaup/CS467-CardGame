@@ -130,7 +130,7 @@ function createTradingCard(cardData) {
     // toolTipText.appendChild(manaCost);
     textOverlayBottom.appendChild(manaCost);
 
-    if (cardData.cardType == "Spell") {
+    if (cardData.type == "Spell") {
         var spellType = document.createElement('p');
         spellType.innerHTML = `<strong>Type:</strong> ${cardData.spellType}`;
 
@@ -216,7 +216,7 @@ function addStagedCardFunctionality(playerObj, primaryIndex) {
 
 function createAndAppendStagedCard(playerObj, primaryIndex, cardData) {
     var stageArea = document.getElementById(playerObj.stageAreaId);
-    let stagedCard = createTradingCardWithId(cardData.cardId + playerObj.stagedCardName, cardData);
+    let stagedCard = createTradingCardWithId(cardData.id + playerObj.stagedCardName, cardData);
     stagedCard.onclick = function () { addStagedCardFunctionality(playerObj, primaryIndex) };
     stageArea.appendChild(stagedCard);
 }
@@ -232,7 +232,7 @@ function addScrollCardFunctionality(playerObj, primaryIndex, cardData, scrollCar
         }
     } else {
         highlightCard(false, playerObj.isUser, scrollCard);
-        var stagedCard = document.getElementById(cardData.cardId + playerObj.stagedCardName);
+        var stagedCard = document.getElementById(cardData.id + playerObj.stagedCardName);
         stagedCard.remove();
         cardData.isStaged = false;
         playerObj.stagedCardCount -= 1;

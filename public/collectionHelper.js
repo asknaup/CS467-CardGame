@@ -30,7 +30,7 @@ async function setupCollectionPage(){
 
 /*main code for collection */
 let userObj = {fileName: "collectionHelper", isUser: true, primaryKeyArr: [], cardDict: {}, primaryKeysForCollections: {}, collections: {}, 
-        cardListsFromDb: {}, numCardsInView: 28, startIndex: 0, endIndex: 20, cardSlots: "userCardSlots", collectionContainer: "collectionContainer"};
+        cardListsFromDb: {}, numCardsInView: 24, startIndex: 0, endIndex: 20, cardSlots: "userCardSlots", collectionContainer: "collectionContainer"};
 
 var collectionScrollLeftButton = document.getElementById("collectionScrollLeft");
 var collectionScrollRightButton = document.getElementById("collectionScrollRight");

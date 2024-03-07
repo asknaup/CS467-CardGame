@@ -134,11 +134,12 @@ function getCardsToBeTraded(userObj, otherPlayerObj){
         let userCardId = userStagedCardId.substring(0, userStagedCardId.length - userObj.stagedCardName.length);
         cardsToBeTraded.userCardsToBeTraded.push(userCardId)
     }
-    console.log(cardsToBeTraded)
 }
 
 function tradeButtonActions(userObj, otherPlayerObj){
     getCardsToBeTraded(userObj, otherPlayerObj)
+    console.log(cardsToBeTraded.userCardsToBeTraded)
+    console.log(cardsToBeTraded.otherPlayerCardsToBeTraded)
     let stagedCardsDict = getStagedCards(userObj, otherPlayerObj);
     createPopUpForm(stagedCardsDict);
 }
@@ -159,8 +160,20 @@ function stopTradeButtonActions(userObj, otherPlayerObj){
 }
 
 
-function confirmTradeButtonActions(){
+async function tradePostRequest(){
+    let data = {'hello': 'world'};
+    const options = {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+    }
+    await fetch('/trading', options);
+}
+
+async function confirmTradeButtonActions(){
     removeStagedCards(userObj, otherPlayerObj);
+
+    //await tradePostRequest();
 }
 
 
@@ -192,6 +205,8 @@ async function setupTradingPage(){
     collectionSelect.addEventListener("change", () => { collectionSelectHandler(collectionSelect, userObj, otherPlayerObj) });
     startTradeButton.addEventListener("click", () => { tradeButtonActions(userObj, otherPlayerObj);});
     confirmTradeButton.addEventListener("click", () => {
+        console.log("confirm trade button...")
+        confirmTradeButtonActions();
         let tradePopUpForm = document.getElementById("tradePopUpForm");
         tradePopUpForm.style.display = "none";
     });
