@@ -137,9 +137,22 @@ function getCardsToBeTraded(userObj, otherPlayerObj){
 }
 
 function tradeButtonActions(userObj, otherPlayerObj){
+    //console.log(userObj.primaryKeysForCollections[userObj.currCollectId])
     getCardsToBeTraded(userObj, otherPlayerObj)
-    console.log(cardsToBeTraded.userCardsToBeTraded)
-    console.log(cardsToBeTraded.otherPlayerCardsToBeTraded)
+    let updatedCollectionAfterTrading = []
+    let primaryKeysForCurrCollection = userObj.primaryKeysForCollections[userObj.currCollectId];
+    for(let index = 0; index < primaryKeysForCurrCollection.length; index++){
+        let currCardId = primaryKeysForCurrCollection[index]
+        if(!(cardsToBeTraded.userCardsToBeTraded.includes(currCardId))){
+            updatedCollectionAfterTrading.push(currCardId)
+        }
+    }
+    for(let index = 0; index < cardsToBeTraded.otherPlayerCardsToBeTraded.length; index++){
+        updatedCollectionAfterTrading.push(cardsToBeTraded.otherPlayerCardsToBeTraded[index])
+    }
+    objectForTradePostRequest = {};
+    objectForTradePostRequest[userObj.currCollectId] = updatedCollectionAfterTrading;
+    //console.log(objectForTradePostRequest)
     let stagedCardsDict = getStagedCards(userObj, otherPlayerObj);
     createPopUpForm(stagedCardsDict);
 }
@@ -219,6 +232,7 @@ async function setupTradingPage(){
 
 
 /*main code for trading */
+let objectForTradePostRequest = {}
 let cardsToBeTraded = {otherPlayerCollectId: null, otherPlayerCardsToBeTraded: [], userCollectId: null, userCardsToBeTraded: []};
 let userObj = {fileName: "tradingHelper", isUser: true, primaryKeysForCollections: {}, collections: {}, cardListsFromDb: {},  primaryKeyArr: [], 
     cardDict: {}, stagedCardCount: 0, numCardsInView: 8, startIndex: 0, endIndex: 7, cardSlots: "userCardSlots", stageAreaId: "userStageAreaId", 
