@@ -29,7 +29,7 @@ async function setupCollectionPage(){
 
 
 /*main code for collection */
-let userObj = {fileName: "collectionHelper", isUser: true, primaryKeyArr: [], cardDict: {}, primaryKeysForCollections: {}, collections: {}, 
+let userObj = {fileName: "collectionHelper", isUser: true,  primaryKeys: {}, collections: {}, currPrimaryKeysArr: [], currCollection: {},
         cardListsFromDb: {}, numCardsInView: 24, startIndex: 0, endIndex: 20, cardSlots: "userCardSlots", collectionContainer: "collectionContainer"};
 
 var collectionScrollLeftButton = document.getElementById("collectionScrollLeft");
