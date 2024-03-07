@@ -207,8 +207,8 @@ function createBackOfCardWithId(id) {
 function addStagedCardFunctionality(playerObj, primaryIndex) {
     playerObj.startIndex = Math.floor(primaryIndex / playerObj.numCardsInView) * playerObj.numCardsInView;
     playerObj.endIndex = playerObj.startIndex + (playerObj.numCardsInView - 1);
-    if (playerObj.endIndex > playerObj.primaryKeyArr.length - 1) {
-        playerObj.endIndex = playerObj.primaryKeyArr.length - 1
+    if (playerObj.endIndex > playerObj.currPrimaryKeysArr.length - 1) {
+        playerObj.endIndex = playerObj.currPrimaryKeysArr.length - 1
     }
     displayCardCollectionForTrading(playerObj);
 }
@@ -247,8 +247,8 @@ function displayCardCollectionForTrading(playerObj) {
         cardSlots.removeChild(cardSlots.firstChild);
     }
     for (let index = playerObj.startIndex; index <= playerObj.endIndex; index++) {
-        let primaryKey = playerObj.primaryKeyArr[index];
-        let cardData = playerObj.cardDict[primaryKey];
+        let primaryKey = playerObj.currPrimaryKeysArr[index];
+        let cardData = playerObj.currCollection[primaryKey];
         let scrollCard = createTradingCardWithId(primaryKey, cardData);
         scrollCard.onclick = function () { addScrollCardFunctionality(playerObj, index, cardData, scrollCard) };
         if (cardData.isStaged == true) {
@@ -267,8 +267,8 @@ function displayCardCollection(userObj){
         collectionContainer.removeChild(collectionContainer.firstChild);
     }
     for (let index = userObj.startIndex; index <= userObj.endIndex; index++){
-        let primaryKey = userObj.primaryKeyArr[index];
-        let cardData = userObj.cardDict[primaryKey];
+        let primaryKey = userObj.currPrimaryKeysArr[index];
+        let cardData = userObj.currCollection[primaryKey];
         let collectionCard = createTradingCardWithId(primaryKey, cardData);
         collectionContainer.appendChild(collectionCard);
     }
@@ -285,7 +285,6 @@ function highlightCard(isHighlighted, isUser, scrollCard) {
     } else {
         scrollCard.style.border = "3px solid black";
     }
-    console.log("running highlightCard()")
 }
 
 
@@ -305,11 +304,11 @@ function addLeftScroll(playerObj, scrollLeftButton, displayFunc){
 
 function addRightScroll(playerObj, scrollRightButton, displayFunc){
     scrollRightButton.addEventListener("click", () => {
-        if (playerObj.endIndex < playerObj.primaryKeyArr.length - 1){
+        if (playerObj.endIndex < playerObj.currPrimaryKeysArr.length - 1){
             playerObj.startIndex = playerObj.endIndex + 1;
             playerObj.endIndex += userObj.numCardsInView;
-            if (playerObj.endIndex > playerObj.primaryKeyArr.length - 1){
-                playerObj.endIndex = playerObj.primaryKeyArr.length - 1
+            if (playerObj.endIndex > playerObj.currPrimaryKeysArr.length - 1){
+                playerObj.endIndex = playerObj.currPrimaryKeysArr.length - 1
             }
             displayFunc(playerObj);
         }
@@ -320,8 +319,8 @@ function addRightScroll(playerObj, scrollRightButton, displayFunc){
 function resetInitialStartAndEndIndex(playerObj){
     playerObj.startIndex = 0;
     playerObj.endIndex = playerObj.numCardsInView - 1;
-    if (playerObj.endIndex > playerObj.primaryKeyArr.length - 1){
-        playerObj.endIndex = playerObj.primaryKeyArr.length - 1
+    if (playerObj.endIndex > playerObj.currPrimaryKeysArr.length - 1){
+        playerObj.endIndex = playerObj.currPrimaryKeysArr.length - 1
     }
 }
 
@@ -332,27 +331,27 @@ async function getInitialUserCollection(collection, userObj){
         userObj.cardListsFromDb[currCollectId] = JSON.parse(collection[index].cardId);
     }
     if(collection.length > 0){
-        userObj.primaryKeysForCollections[userObj.currCollectId] = [];
+        userObj.primaryKeys[userObj.currCollectId] = [];
         userObj.collections[userObj.currCollectId] = {};
         let cardList = userObj.cardListsFromDb[userObj.currCollectId];
         let listOfCardObjs = cardList.cardList;
         await createCollectionFromCardIdList(listOfCardObjs, userObj);
     }
-    userObj.primaryKeyArr = userObj.primaryKeysForCollections[userObj.currCollectId];
-    userObj.cardDict = userObj.collections[userObj.currCollectId];
+    userObj.currPrimaryKeysArr = userObj.primaryKeys[userObj.currCollectId];
+    userObj.currCollection = userObj.collections[userObj.currCollectId];
 }
 
 
 async function switchToGivenUserCollection(userObj){
     if(!(userObj.currCollectId in userObj.collections)){
-        userObj.primaryKeysForCollections[userObj.currCollectId] = [];
+        userObj.primaryKeys[userObj.currCollectId] = [];
         userObj.collections[userObj.currCollectId] = {};
         let cardList = userObj.cardListsFromDb[userObj.currCollectId];
         let listOfCardObjs = cardList.cardList;
         await createCollectionFromCardIdList(listOfCardObjs, userObj);
     }
-    userObj.primaryKeyArr = userObj.primaryKeysForCollections[userObj.currCollectId];
-    userObj.cardDict = userObj.collections[userObj.currCollectId];
+    userObj.currPrimaryKeysArr = userObj.primaryKeys[userObj.currCollectId];
+    userObj.currCollection = userObj.collections[userObj.currCollectId];
 }
 
 
@@ -361,7 +360,7 @@ async function createCollectionFromCardIdList(listOfCardObjs, playerObj){
         const cardDetailsResponse = await fetch('/getCardDetails?cardId=' + cardId);
         await cardDetailsResponse.json()
             .then((cardData) => {
-                    playerObj.primaryKeysForCollections[playerObj.currCollectId].push(cardData.id);
+                    playerObj.primaryKeys[playerObj.currCollectId].push(cardData.id);
                     let cardObj = null;
                     if(playerObj.fileName === "collectionHelper"){
                         if (cardData.type == "Creature"){

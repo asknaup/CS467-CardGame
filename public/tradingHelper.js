@@ -16,7 +16,7 @@ function removeIsStagedStatusAndItsEffects(playerObj, index, stagedCardsArr){
     let stagedCardId = stagedCardsArr[index].id;
     // now with primary key we can access both the stagedCardObj and stagedCard document element
     let primaryKey = stagedCardId.substring(0, stagedCardId.length - playerObj.stagedCardName.length);
-    let cardObj = playerObj.cardDict[primaryKey];
+    let cardObj = playerObj.currCollection[primaryKey];
     cardObj.isStaged = false;
     playerObj.stagedCardCount -= 1;
 }
@@ -70,14 +70,14 @@ async function collectionSelectHandler(collectionSelect, userObj, otherPlayerObj
 
 async function getCurrentAdminCollection(otherPlayerObj){
     if(!(otherPlayerObj.currCollectId in otherPlayerObj.collections)){
-        otherPlayerObj.primaryKeysForCollections[otherPlayerObj.currCollectId] = [];
+        otherPlayerObj.primaryKeys[otherPlayerObj.currCollectId] = [];
         otherPlayerObj.collections[otherPlayerObj.currCollectId] = {};
         const adminCardsResponse = await fetch('/getAdminCardsForTrading?collectId=' + otherPlayerObj.currCollectId);
         let adminCardList = await adminCardsResponse.json()
         await createCollectionFromCardIdList(adminCardList, otherPlayerObj);
     }
-    otherPlayerObj.primaryKeyArr = otherPlayerObj.primaryKeysForCollections[otherPlayerObj.currCollectId];
-    otherPlayerObj.cardDict = otherPlayerObj.collections[otherPlayerObj.currCollectId];
+    otherPlayerObj.currPrimaryKeysArr = otherPlayerObj.primaryKeys[otherPlayerObj.currCollectId];
+    otherPlayerObj.currCollection = otherPlayerObj.collections[otherPlayerObj.currCollectId];
 }
 
 
@@ -96,6 +96,8 @@ function removeOldCardsFromPopUpForm(){
 
 
 function tradeButtonActions(userObj, otherPlayerObj){
+    //console.log(userObj.stagedCardCount)
+    //console.log(otherPlayerObj.stagedCardCount)
     let tradePopUpForm = document.getElementById("tradePopUpForm");
     tradePopUpForm.style.display = "block";
     removeOldCardsFromPopUpForm();
@@ -118,6 +120,8 @@ function tradeButtonActions(userObj, otherPlayerObj){
 
 
 function stopTradeButtonActions(userObj, otherPlayerObj){
+    let tradePopUpForm = document.getElementById("tradePopUpForm");
+    tradePopUpForm.style.display = "none";
     // move other player's cards back to stage area from the popup form
     let otherPlayerTradeSlots = document.getElementById("otherPlayerTradeSlots");
     let otherPlayerStageArea = document.getElementById(otherPlayerObj.stageAreaId);
@@ -132,8 +136,6 @@ function stopTradeButtonActions(userObj, otherPlayerObj){
         userStageArea.appendChild(userTradeSlots.firstChild);
     }
     userObj.currLocationStagedCards = userObj.stageAreaId;
-    let tradePopUpForm = document.getElementById("tradePopUpForm");
-    tradePopUpForm.style.display = "none";
 }
 
 
@@ -173,7 +175,7 @@ async function confirmTradeButtonActions(){
     displayCardCollectionForTrading(userObj);
     displayCardCollectionForTrading(otherPlayerObj);
     let updatedCollectionAfterTrading = []
-    let primaryKeysForCurrCollection = userObj.primaryKeysForCollections[userObj.currCollectId];
+    let primaryKeysForCurrCollection = userObj.primaryKeys[userObj.currCollectId];
     for(let index = 0; index < primaryKeysForCurrCollection.length; index++){
         let currCardId = primaryKeysForCurrCollection[index]
         if(!(userObj.cardsToBeTraded.includes(currCardId))){
@@ -185,8 +187,10 @@ async function confirmTradeButtonActions(){
     }
     objectForTradePostRequest = {};
     objectForTradePostRequest[userObj.currCollectId] = updatedCollectionAfterTrading;
-    console.log(updatedCollectionAfterTrading)
+    //console.log(updatedCollectionAfterTrading)
     //await tradePostRequest();
+    //console.log(userObj.stagedCardCount)
+    //console.log(otherPlayerObj.stagedCardCount)
 }
 
 
@@ -223,14 +227,13 @@ async function setupTradingPage(){
 
 /*main code for trading */
 let objectForTradePostRequest = {}
-let userObj = {fileName: "tradingHelper", isUser: true, primaryKeysForCollections: {}, collections: {}, cardListsFromDb: {},  primaryKeyArr: [], 
-    cardDict: {}, stagedCardCount: 0, numCardsInView: 8, startIndex: 0, endIndex: 7, cardSlots: "userCardSlots", stageAreaId: "userStageAreaId", 
+let userObj = {fileName: "tradingHelper", isUser: true, cardListsFromDb: {}, primaryKeys: {}, collections: {}, currPrimaryKeysArr: [], 
+    currCollection: {}, stagedCardCount: 0, numCardsInView: 8, startIndex: 0, endIndex: 7, cardSlots: "userCardSlots", stageAreaId: "userStageAreaId", 
     stageAreaClass: "userStageAreaClass", stagedCardName: "userStagedCard", currLocationStagedCards: "userStageAreaId", currCollectId: null, 
     cardsToBeTraded: []
-};
-                 
-let otherPlayerObj = {fileName: "tradingHelper", isUser: false, primaryKeysForCollections: {}, collections: {}, cardListsFromDb: {},  primaryKeyArr: [], 
-    cardDict: {}, stagedCardCount: 0, numCardsInView: 8, startIndex: 0, endIndex: 7, cardSlots: "otherCardSlots", stageAreaId: "otherStageAreaId", 
+};        
+let otherPlayerObj = {fileName: "tradingHelper", isUser: false, cardListsFromDb: {}, primaryKeys: {}, collections: {}, currPrimaryKeysArr: [], 
+    currCollection: {}, stagedCardCount: 0, numCardsInView: 8, startIndex: 0, endIndex: 7, cardSlots: "otherCardSlots", stageAreaId: "otherStageAreaId", 
     stageAreaClass: "otherStageAreaClass", stagedCardName: "otherStagedCard", currLocationStagedCards: "otherStageAreaId", currCollectId: null, 
     cardsToBeTraded: []
 };
