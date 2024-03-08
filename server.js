@@ -21,7 +21,6 @@ const configFile = require('./database/config');
 
 // Import Game Classes
 const { Game, User, Card, CreatureCard, SpellCard } = require('./game/game-play1'); // Import the User class if not already imported
-const { consoleLog } = require('@ngrok/ngrok');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -178,7 +177,6 @@ app.get('/gameGenPage', async (req, res) => {
   }
 });
 
-// NEEDS WORK
 app.get('/generatedGameView', async (req, res) => {
   const user = req.session.user;
   try {
@@ -193,12 +191,8 @@ app.get('/generatedGameView', async (req, res) => {
   }
 });
 
-
 app.get('/buildDeck', async (req, res) => {
-  // Needs collection and game info
   const user = req.session.user;
-  // const user = { userId: 1001, username: 'admin' };
-  // FIXME: Switch back to const user = req.session.user; once buildDeck complete
   try {
     if (user) {
       const c = req.query.collectId;
@@ -230,9 +224,6 @@ app.get('/buildDeck', async (req, res) => {
 
 // Add to deck, delete, deck stats
 app.get('/currentDeck', async (req, res) => {
-  // Show user logged in user profile
-  // FIXME
-  // const user = { userId: 1001, username: 'admin' };
   const user = req.session.user;
   try {
     const receivedData = req.body;
@@ -246,21 +237,16 @@ app.get('/currentDeck', async (req, res) => {
 // Update Deck route
 app.post('/updateDeck', async (req, res) => {
   const { deckId, cards } = req.body;
-
   try {
     // Fetch the existing deck from the database
     const existingDeck = await Deck.findById(deckId);
-
     if (!existingDeck) {
       return res.status(404).json({ error: 'Deck not found' });
     }
-
     // Update the cards in the existing deck
     existingDeck.cards = cards;
-
     // Save the updated deck
     await existingDeck.save();
-
     return res.status(200).json({ message: 'Deck updated successfully' });
   } catch (error) {
     console.error(error);
@@ -272,15 +258,12 @@ app.post('/updateDeck', async (req, res) => {
 app.post('/getCardInfo', async (req, res) => {
   try {
     const cardId = req.body.cardId;
-
     // Use the cardId to fetch card information from the database using getCardByCardId
     const cardInfo = await dbFunc.getCardByCardId(parseInt(cardId));
-
     // Check if cardInfo is null or undefined, and handle accordingly
     if (!cardInfo) {
       return res.status(404).json({ error: 'Card not found' });
     }
-
     res.json(cardInfo);
   } catch (error) {
     console.error('Error fetching card info:', error);
@@ -290,7 +273,6 @@ app.post('/getCardInfo', async (req, res) => {
 
 app.post('/decksubmitted', async (req, res) => {
   const user = req.session.user;
-
   try {
     const receivedData = req.body;
     console.log(receivedData);
@@ -313,7 +295,6 @@ app.post('/deckCards', async (req, res) => {
   // Store the selected deckId in the session
   req.session.deck = { deckId: parseInt(selectedDeck) };
   console.log("selectedDeck post", selectedDeck);
-  console.log("session after post", req.session);
   res.json({ status: 'OK' }); // Send a JSON response
 });
 
@@ -405,7 +386,6 @@ app.get('/getAdminCardsForTrading', async (req, res) => {
   }
 });
 
-
 // Add database logic
 app.get('/trading', async (req, res) => {
   const user = req.session.user;
@@ -492,7 +472,6 @@ app.get('/collectAdmin', async (req, res) => {
   }
 });
 
-// Needs Work!
 app.post('/openPack', async (req, res) => {
   const user = req.session.user;
   let randomFive;
