@@ -96,8 +96,11 @@ app.get('/cards', async (req, res) => {
 app.get('/userProfile', async (req, res) => {
   const user = req.session.user;
   if (user) {
+    const listCards = await dbFunc.getCardIdByUser(user.userId);
+    const listLength = listCards.length;
+      
     const userProf = await dbFunc.getUserProfile(user.userId);
-    const valList = await dbFunc.getAllGeneratedGames();
+    const valList = await dbFunc.getAllGeneratedGamesByUser(user.userId);
     const genLen = valList ? valList.length : 0;
 
     const collect = await dbFunc.getAllCollectionsByUser(user.userId);
@@ -110,7 +113,7 @@ app.get('/userProfile', async (req, res) => {
       username: user.username, gameCount: userProf[0].gameCount,
       wins: userProf[0].wins, losses: userProf[0].losses,
       showLogoutButton: true, vals: valList, gameLen: genLen, collectLength: collectLen,
-      deckLen: deckLen
+      deckLen: deckLen, listLength: listLength
     })
   } else {
     res.redirect('/')
