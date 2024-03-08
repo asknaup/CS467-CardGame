@@ -1,12 +1,13 @@
 const cardsPerRow = 6;
 
+// Deck dropdown pull in 
 async function loadDeck() {
     const dropdown = document.getElementById('deckDropdown');
     const selectedDeckId = dropdown.value;
 
     // Check if the selected option is "new_deck"
     if (selectedDeckId === 'new_deck') {
-        // Clear the staging area and do any other necessary resets
+        // Clear the staging area
         clearStagingArea();
         return;
     }
@@ -35,27 +36,23 @@ async function loadDeck() {
     }
 }
 
-// Function to clear the staging area
+// Clears the staging area
 function clearStagingArea() {
     const stagingArea = document.getElementById('stagingArea');
     stagingArea.innerHTML = ''; // Clear existing content
     initialCardIds = []; // Clear the initial card ids
-    // Additional logic to reset any other related variables or states
 }
 
-// Updated function to create a trading card based on getCardInfo output
+// Create a trading card based on getCardInfo output
 function createTradingCardFromInfo(cardInfo) {
 
     console.log(cardInfo);
     console.log('Creating Card Element (cardInfo[0]):', cardInfo[0]);
 
+    // Create HTML elements and append in order
     var card = document.createElement('div');
     card.classList.add('card');
     card.draggable = true;
-
-    // const cardElement = row.querySelector(`[data-card-id="${cardId}"]`);
-
-    // card.innerHTML = cardElement.outerHTML;
 
     var cardId = document.createElement('p');
 
@@ -135,16 +132,17 @@ function createTradingCardFromInfo(cardInfo) {
     return card;
 }
 
+// Updatae the display of cardContainer
 function updateCardDisplay(userCards) {
     // Clear existing cards
     cardContainer.innerHTML = '';
 
-    // Display all cards in the carousel dynamically with no more than 7 cards per row
+    // Display all cards in the carousel dynamically 
     const cardIds = Object.keys(userCards);
-    const totalCards = cardIds.length;
 
     let currentRow;
 
+    // Create divs for each card
     cardIds.forEach((cardId, index) => {
         if (index % cardsPerRow === 0) {
             currentRow = document.createElement('div');
@@ -162,36 +160,25 @@ function updateCardDisplay(userCards) {
     });
 }
 
-// Function to create a trading card
+// Create a trading card HTML object
 function createTradingCard(cardData) {
-    // Card container
+    
     var card = document.createElement('div');
     card.classList.add('card');
 
-    // cardId
     var cardId = document.createElement('p');
     cardId.textContent = cardData.cardId;
 
-    // Tooltip for attributes
-    // var toolTip = document.createElement('div');
-    // toolTip.classList.add('toolTip');
-
-    // var toolTipText = document.createElement('span');
-    // toolTipText.classList.add('toolTipText');
-
-    // Name
     var cardName = document.createElement('h1');
     cardName.classList.add('cardName');
     cardName.textContent = cardData.cardName;
 
-    // Text overlays
     var textOverlayBottom = document.createElement('div');
     textOverlayBottom.classList.add('textOverlayBottom');
 
     var textOverlayTop = document.createElement('div');
     textOverlayTop.classList.add('textOverlayTop');
 
-    // Card image
     var cardImage = document.createElement('div');
     cardImage.classList.add('cardImage');
 
@@ -201,7 +188,6 @@ function createTradingCard(cardData) {
 
     cardImage.appendChild(imageElement);
 
-    // TODO: Replace with creature
     var cardType = document.createElement('p');
     cardType.classList.add('cardType');
     cardType.textContent = cardData.cardType;
@@ -212,8 +198,6 @@ function createTradingCard(cardData) {
     var manaCost = document.createElement('p');
     manaCost.innerHTML = `<strong>Mana:</strong> ${cardData.manaCost}`;
 
-    // toolTipText.appendChild(rarity);
-    // toolTipText.appendChild(manaCost);
     textOverlayBottom.appendChild(manaCost);
 
     if (cardData.cardType == "Spell") {
@@ -233,10 +217,6 @@ function createTradingCard(cardData) {
         textOverlayBottom.appendChild(spellAbility);
         textOverlayBottom.appendChild(spellAttack);
         textOverlayBottom.appendChild(spellDefense);
-        // toolTipText.appendChild(spellType);
-        // toolTipText.appendChild(spellAbility);
-        // toolTipText.appendChild(spellAttack);
-        // toolTipText.appendChild(spellDefense);
 
     } else {
         var attack = document.createElement('p');
@@ -247,29 +227,22 @@ function createTradingCard(cardData) {
 
         textOverlayBottom.appendChild(attack);
         textOverlayBottom.appendChild(defense);
-        // toolTipText.appendChild(attack);
-        // toolTipText.appendChild(defense);
     }
 
-    // toolTip.appendChild(toolTipText);
-    // textOverlayBottom.appendChild(cardName);
-    // textOverlayBottom.appendChild(cardType);
     textOverlayTop.appendChild(cardName);
     textOverlayTop.appendChild(cardType);
     textOverlayTop.appendChild(rarity);
 
     card.appendChild(textOverlayBottom);
     card.appendChild(cardImage);
-    // card.appendChild(textOverlayBottom);
     card.appendChild(textOverlayTop);
-
-    // card.appendChild(toolTip);
 
     return card;
 }
 
 let selectedCards = [];
 
+// User card selection action in either stagingArea or cardContainer
 function selectCard(cardId) {
     const cardElement = document.querySelector(`[data-card-id="${cardId}"]`);
     const stagingArea = document.getElementById('stagingArea');
@@ -293,10 +266,7 @@ function selectCard(cardId) {
 
 
 document.addEventListener('DOMContentLoaded', function () {
-    const stagingArea = document.getElementById('stagingArea');
-    const cardContainer = document.getElementById('cardContainer');
 
-    // Assuming you have an event listener for the change event on the dropdown
     document.getElementById('deckDropdown').addEventListener('change', loadDeck);
 
     loadDeck();
@@ -331,8 +301,6 @@ document.addEventListener('DOMContentLoaded', function () {
             // Create a JSON representation of the deck data
             const jsonDeck = JSON.stringify({ deckName, cards: deckData });
 
-            // Log or use the JSON deck data as needed
-            // console.log(jsonDeck);
             fetch('/decksubmitted', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -345,25 +313,21 @@ document.addEventListener('DOMContentLoaded', function () {
                     throw new Error('Network response was not ok.');
                 })
                 .then(data => {
-                    // Handle the response from the server if needed
                     console.log('Server response:', data);
                 })
                 .catch(error => {
-                    // Handle errors that may occur during the request
                     console.error('Error:', error);
                 });
         }
         alert('Your deck has been saved!');
     }
 
-    // Function to clear the staging area
     function clearStagingArea() {
         const stagingArea = document.getElementById('stagingArea');
         stagingArea.innerHTML = ''; // Clear existing content
-        // Additional logic to reset any other related variables or states
     }
 
-    // Attach the saveDeck function to the button click event
+    // Attach saveDeck function to button click event
     const saveDeckButton = document.getElementById('saveDeckButton');
     if (saveDeckButton) {
         saveDeckButton.addEventListener('click', () => saveDeck(selectedCards));
@@ -384,8 +348,6 @@ function confirmReset() {
     }
 }
 
-// Example function to fetch the deckId from the server
-
 async function fetchDeckIdFromServer() {
     try {
         const response = await fetch('/getDeckId');  // Replace with your actual endpoint
@@ -402,7 +364,7 @@ async function fetchCardIdsFromServer(deckId) {
         const response = await fetch(`/getCardsForDeck?deckId=${deckId}`);
         const dataText = await response.text();
 
-        // Try to parse the response as JSON
+        // Parse the response as JSON
         const data = JSON.parse(dataText);
         return data;
     } catch (error) {
@@ -411,7 +373,7 @@ async function fetchCardIdsFromServer(deckId) {
     }
 }
 
-// Updated getCardData function
+// Retrieves card parameters for saved deck selected from dropdown
 async function getCardData(selectedDeck) {
     try {
         // Use the initial cardIds when the page is loaded
@@ -421,13 +383,13 @@ async function getCardData(selectedDeck) {
         // Check if cardIds is defined before proceeding
         if (!cardIds || !Array.isArray(cardIds)) {
             console.error('CardIds is undefined, null, or not an array.');
-            return null;  // or return some default value
+            return null;  
         }
 
         // Use Promise.all to wait for all asynchronous calls to complete
         const cardPromises = cardIds.map(async (cardId) => {
-            const cardData = await getCardInfo(cardId, selectedDeck);  // Pass selectedDeck here
-            return cardData; // Assuming you only expect one result per cardId
+            const cardData = await getCardInfo(cardId, selectedDeck); 
+            return cardData; 
         });
 
         // Resolve all promises and get the card data
@@ -437,13 +399,14 @@ async function getCardData(selectedDeck) {
     } catch (error) {
         // Handle errors if any of the promises are rejected
         console.error("Error fetching card data:", error);
-        return null; // or return some default value
+        return null; 
     }
 }
 
+// Staging area dynamic visualization
 async function updateStagingAreaFromInfo() {
     try {
-        // Fetch the deckId from the server (Replace this with your actual logic)
+        // Fetch the deckId from the server
         const deckId = await fetchDeckIdFromServer();
 
         // Check if deckId is present
@@ -455,15 +418,12 @@ async function updateStagingAreaFromInfo() {
         // Fetch cardIds associated with the deckId
         const cardIds = await fetchCardIdsFromServer(deckId);
 
-        // Assuming you have a staging area container with an id of 'stagingArea'
         const stagingArea = document.getElementById('stagingArea');
 
-        // Clear existing content
+        // Clear existing cards
         stagingArea.innerHTML = '';
 
-        // Update with new content based on deckId and cardIds
-        // Add your logic to create and append elements as needed
-        // For example, you might create divs for each card and append them to the staging area
+        // Update with new cards based on deckId and cardIds
         if (cardIds) {
             cardIds.forEach(async (cardId) => {
                 // Fetch card info for each cardId
@@ -484,7 +444,7 @@ async function updateStagingAreaFromInfo() {
     }
 }
 
-
+// Retrieve card parameters based on card id and deck id
 async function getCardInfo(cardId, selectedDeck) {
     try {
         const response = await fetch('/getCardInfo', {
@@ -506,9 +466,10 @@ async function getCardInfo(cardId, selectedDeck) {
 
 let initialCardIds = [];
 
+// Handle updating staging area dynamically with multiple deck scenarios
 async function updateStagingArea() {
     try {
-        // Fetch the deckId from the server (Replace this with your actual logic)
+        // Fetch the deckId from the server
         const deckId = await fetchDeckIdFromServer();
 
         // Check if deckId is present
@@ -520,13 +481,12 @@ async function updateStagingArea() {
         // Fetch cardIds associated with the deckId
         initialCardIds = await fetchCardIdsFromServer(deckId);
 
-        // Assuming you have a staging area container with an id of 'stagingArea'
         const stagingArea = document.getElementById('stagingArea');
 
-        // Clear existing content
+        // Clear existing cards
         stagingArea.innerHTML = '';
 
-        // Update with new content based on deckId and cardIds
+        // Update with new cards based on deckId and cardIds
         // Create and append elements using createTradingCardFromInfo function
         if (initialCardIds) {
             initialCardIds.forEach(async cardId => {
@@ -551,13 +511,13 @@ async function updateStagingArea() {
     }
 }
 
+// Function to update existing deck with user selection edits
 function updateDeck(selectedCards, deckId) {
     // Create an array to store card data
     const deckData = [];
 
     // Iterate over each selected card and extract relevant data
     selectedCards.forEach(cardId => {
-        const cardData = {};
         deckData.push(parseInt(cardId));
     });
 
@@ -597,7 +557,5 @@ if (updateDeckButton) {
         updateDeck(selectedCards, selectedDeckId);
     });
 }
-
-
 
 updateStagingArea();

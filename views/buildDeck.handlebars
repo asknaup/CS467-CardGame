@@ -10,6 +10,8 @@
 
 <body>
     <h1>Instructions</h1>
+
+    {{!-- Dropdown deck selector --}}
     <div>
         <label for="deckDropdown">Select Deck:</label>
         <select id="deckDropdown">
@@ -35,8 +37,8 @@
             new deck later.
         </p><br>
     </div>
-    <button id="resetButton" onclick="confirmReset()">Reset Staging Area</button>
 
+    <button id="resetButton" onclick="confirmReset()">Reset Staging Area</button>
 
     <div id="buttonContainer">
         <button id="saveDeckButton">Save Deck</button>
@@ -52,7 +54,6 @@
     <div class="cardContainer" id="cardContainer">
     </div>
 
-    <!-- Scripts and styles -->
     <script src="/buildDeckHelper.js"></script>
 </body>
 
