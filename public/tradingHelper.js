@@ -181,6 +181,8 @@ function getUpdatedUserCollection(userObj, otherPlayerObj){
 
 
 async function tradePostRequest(updatedUserCollection, userObj){
+    removeStagedCards(userObj, otherPlayerObj);
+    refreshDisplays(userObj, otherPlayerObj);
     objectForTradePostRequest = {};
     objectForTradePostRequest[userObj.currCollectId] = updatedUserCollection;
     const options = {
@@ -195,11 +197,9 @@ async function confirmTradeButtonActions(){
     let tradePopUpForm = document.getElementById("tradePopUpForm");
     tradePopUpForm.style.display = "none";
     let updatedUserCollection = getUpdatedUserCollection(userObj, otherPlayerObj)
-    removeStagedCards(userObj, otherPlayerObj);
-    refreshDisplays(userObj, otherPlayerObj);
     //console.log(updatedCollectionAfterTrading)
     await tradePostRequest(updatedUserCollection, userObj);
-    updateAndDisplayUserCollection(userObj);
+    await updateAndDisplayUserCollection(userObj);
 }
 
 
