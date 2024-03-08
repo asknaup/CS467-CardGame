@@ -187,10 +187,16 @@ async function confirmTradeButtonActions(){
     console.log(otherPlayerObj.cardsToBeTraded)
     console.log(userObj.cardsToBeTraded)
     removeStagedCards(userObj, otherPlayerObj);
+    userObj.currLocationStagedCards = "userStageAreaId";
+    otherPlayerObj.currLocationStagedCards = "otherStageAreaId";
     displayCardCollectionForTrading(userObj);
     displayCardCollectionForTrading(otherPlayerObj);
     //console.log(updatedCollectionAfterTrading)
     await tradePostRequest(userObj, otherPlayerObj);
+    delete userObj.collections[userObj.currCollectId];
+    await switchToGivenUserCollection(userObj);
+    resetInitialStartAndEndIndex(userObj);
+    displayCardCollectionForTrading(userObj);
 }
 
 
