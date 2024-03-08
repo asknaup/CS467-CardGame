@@ -223,6 +223,7 @@ function createAndAppendStagedCard(playerObj, primaryIndex, cardData) {
 
 
 function addScrollCardFunctionality(playerObj, primaryIndex, cardData, scrollCard) {
+    console.log(scrollCard)
     if (cardData.isStaged == false) {
         if (playerObj.stagedCardCount < 4) {
             highlightCard(true, playerObj.isUser, scrollCard);
@@ -355,14 +356,17 @@ async function switchToGivenUserCollection(userObj){
 
 
 async function updateAndDisplayUserCollection(userObj){
-        userObj.primaryKeys[userObj.currCollectId] = [];
-        userObj.collections[userObj.currCollectId] = {};
-        let cardList = userObj.cardListsFromDb[userObj.currCollectId];
-        let listOfCardObjs = cardList.cardList;
-        await createCollectionFromCardIdList(listOfCardObjs, userObj);
-        userObj.currPrimaryKeysArr = userObj.primaryKeys[userObj.currCollectId];
-        userObj.currCollection = userObj.collections[userObj.currCollectId];
-        displayCardCollectionForTrading(userObj);
+    userObj.primaryKeys[userObj.currCollectId] = [];
+    userObj.collections[userObj.currCollectId] = {};
+    const response= await fetch('/getCollection');
+    let collection = await response.json();
+    userObj.cardListsFromDb[userObj.currCollectId] = JSON.parse(collection[userObj.currCollectId].cardId);
+    let cardList = userObj.cardListsFromDb[userObj.currCollectId];
+    let listOfCardObjs = cardList.cardList;
+    await createCollectionFromCardIdList(listOfCardObjs, userObj);
+    userObj.currPrimaryKeysArr = userObj.primaryKeys[userObj.currCollectId];
+    userObj.currCollection = userObj.collections[userObj.currCollectId];
+    displayCardCollectionForTrading(userObj);
 }
 
 async function createCollectionFromCardIdList(listOfCardObjs, playerObj){
