@@ -341,7 +341,6 @@ async function getInitialUserCollection(collection, userObj){
     userObj.currCollection = userObj.collections[userObj.currCollectId];
 }
 
-
 async function switchToGivenUserCollection(userObj){
     if(!(userObj.currCollectId in userObj.collections)){
         userObj.primaryKeys[userObj.currCollectId] = [];
@@ -354,6 +353,17 @@ async function switchToGivenUserCollection(userObj){
     userObj.currCollection = userObj.collections[userObj.currCollectId];
 }
 
+
+async function updateAndDisplayUserCollection(userObj){
+        userObj.primaryKeys[userObj.currCollectId] = [];
+        userObj.collections[userObj.currCollectId] = {};
+        let cardList = userObj.cardListsFromDb[userObj.currCollectId];
+        let listOfCardObjs = cardList.cardList;
+        await createCollectionFromCardIdList(listOfCardObjs, userObj);
+        userObj.currPrimaryKeysArr = userObj.primaryKeys[userObj.currCollectId];
+        userObj.currCollection = userObj.collections[userObj.currCollectId];
+        displayCardCollectionForTrading(userObj);
+}
 
 async function createCollectionFromCardIdList(listOfCardObjs, playerObj){
     for(const cardId of  listOfCardObjs){
@@ -383,4 +393,11 @@ async function createCollectionFromCardIdList(listOfCardObjs, playerObj){
             })
             .catch((error) => {console.log(error)});  
     }
+}
+
+function refreshDisplays(userObj, otherPlayerObj){
+    resetInitialStartAndEndIndex(userObj);
+    displayCardCollectionForTrading(userObj);
+    resetInitialStartAndEndIndex(otherPlayerObj);
+    displayCardCollectionForTrading(otherPlayerObj);
 }
