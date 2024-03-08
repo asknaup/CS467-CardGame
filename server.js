@@ -78,11 +78,9 @@ app.get('/', (req, res) => {
 
 app.get('/cards', async (req, res) => {
   try {
-    // Retrieve the user ID from the request query parameters
-    // const userId = req.query.userId;
-    // Needs collection and game info
-    // const user = req.session.user;
-    const user = { userId: 1001, username: 'admin' }; //FIXME
+    const user = req.session.user;
+    // const user = { userId: 1001, username: 'admin' }; //FIXME
+    
     // Call the database function to get card data based on userId
     const cardData = await dbFunc.getCardIdByUser(user.userId);
     const cardsDict = hf.convertListToDict(cardData);
@@ -198,7 +196,6 @@ app.get('/buildDeck', async (req, res) => {
       const c = req.query.collectId;
       let listCards;
       const collect = await dbFunc.getAllCollectionsByUser(user.userId);
-
       if (c) {
         listCards = await dbFunc.grabListOfCardsFromCollection(req.query.collectId);
       } else {
@@ -215,7 +212,7 @@ app.get('/buildDeck', async (req, res) => {
         collect: collect
       })
     } else {
-      res.render('builDeck', { showLogoutButton: false })
+      res.render('buildDeck', { showLogoutButton: false })
     }
   } catch (err) {
     console.log(err);
@@ -326,7 +323,6 @@ app.get('/getCardsForDeck', async (req, res) => {
 app.get('/getDeckId', (req, res) => {
   // For simplicity, let's just return the first deck's id
   const deck = req.session.deck;
-
   if (deck && deck.deckId) {
     res.json({ deckId: deck.deckId });
   } else {
@@ -419,12 +415,18 @@ app.get('/trading', async (req, res) => {
 // Add database logic
 app.post('/trading', async (req, res) => {
   const user = req.session.user;
-  if(user){
-    console.log(req.body)
-  }else{
+  if(user) {
+    console.log(req.body);
+    try {
+      const key = Object.keys(req.body)[0];
+      const cardIdList = Object.values(req.body)[0];
+      await dbFunc.updateListOfCollection(key, JSON.stringify({ "cardList": cardIdList }));
+    } catch(err) {
+      return res.send(`Something went wrong: ${err}`);
+    }
+  } else {
     res.redirect('/');
   }
-  
 });
 
 app.get('/getCollection', async (req, res) => {
@@ -452,20 +454,6 @@ app.get('/collect', async (req, res) => {
     res.render('collect', {
       collect: collect,
       vals: valList 
-    })
-  } else {
-    res.redirect('/');
-  }
-});
-
-// Get all Admin Collections
-app.get('/collectAdmin', async (req, res) => {
-  const user = req.session.user;
-  if (user) {
-    let genGames = await dbFunc.getAllGeneratedGames()
-
-    res.render('collect', {
-      collect: collect
     })
   } else {
     res.redirect('/');
@@ -748,9 +736,8 @@ app.post('/cardViewPrintedBulkPagePost', async (req, res) => {
 
     for (let i = 0; i < num; i++) {
       if (req.body.cardType == "Creature") {
-        let newCreature = await card.createDataStructCreature(req.body.colors, req.body.creatures, req.body.theme, req.body.cardType);
-        console.log(newCreature);
-        const aiCard = await card.createAICard(newCreature.creature, newCreature.place, newCreature.color, newCreature.rarity, 1);
+        let newCreature = await card.createDataStructCreature(req.body.colors, req.body.creatures, req.body.places, req.body.cardType);
+        const aiCard = await card.createAICard(newCreature.creatureType, newCreature.place, newCreature.color, newCreature.rarity, 1);
         let values = [];
         while (!values || values.length === 0) {
           values = await card.getImageUrlFromLeonardo(aiCard.sdGenerationJob.generationId);
@@ -783,10 +770,8 @@ app.post('/cardViewPrintedBulkPagePost', async (req, res) => {
     });
 
     const gameName = await dbFunc.grabGameName(req.body.whichgame);
-    console.log(gameName);
     const userName = await dbFunc.grabUsername(user.userId);
     const nameTime = `${userName[0].username}'s collection for ${gameName[0].imageLocation}`;
-    console.log(nameTime);
 
     try {
       const collId = await dbFunc.insertOrSelectCollectionByUserIdandGameId(user.userId, req.body.whichgame, nameTime);
@@ -804,7 +789,6 @@ app.post('/cardViewPrintedBulkPagePost', async (req, res) => {
       console.error("Error updating collection:", error);
     }
     res.json({ cards: generatedCards });
-    console.log("This is cards in /cardViewPrintedBulkPage:", generatedCards);
 
   } catch (err) {
     // Handle errors
