@@ -43,10 +43,12 @@ function removeStagedCards(userObj, otherPlayerObj){
     while(otherStageArea.firstChild){
         otherStageArea.removeChild(otherStageArea.firstChild);
     }
+    otherPlayerObj.currLocationStagedCards = otherPlayerObj.stageAreaId;
     var userStageArea= document.getElementById(userObj.currLocationStagedCards);
     while(userStageArea.firstChild){
         userStageArea.removeChild(userStageArea.firstChild);
     }
+    userObj.currLocationStagedCards = userObj.stageAreaId;
 }
 
 
@@ -140,22 +142,26 @@ function stopTradeButtonActions(userObj, otherPlayerObj){
 
 
 function getCardsToBeTraded(userObj, otherPlayerObj){
+    let otherCardsToBeTraded = [];
     var otherPlayerTradeSlots = document.getElementById("otherPlayerTradeSlots")
     for(const otherStagedCard of otherPlayerTradeSlots.children){
         let otherStagedCardId  = otherStagedCard.id
         let otherCardId = otherStagedCardId.substring(0, otherStagedCardId.length - otherPlayerObj.stagedCardName.length);
-        otherPlayerObj.cardsToBeTraded.push(parseInt(otherCardId));
+        otherCardsToBeTraded.push(parseInt(otherCardId));
     }
+    otherPlayerObj.cardsToBeTraded = otherCardsToBeTraded;
+    let userCardsToBeTraded = [];
     var userTradeSlots = document.getElementById("userTradeSlots");
     for(const userStagedCard of userTradeSlots.children){
         let userStagedCardId  = userStagedCard.id
         let userCardId = userStagedCardId.substring(0, userStagedCardId.length - userObj.stagedCardName.length);
-        userObj.cardsToBeTraded.push(parseInt(userCardId))
+        userCardsToBeTraded.push(parseInt(userCardId))
     }
+    userObj.cardsToBeTraded = userCardsToBeTraded;
 }
 
 
-async function tradePostRequest(userObj, otherPlayerObj){
+function getUpdatedUserCollection(userObj, otherPlayerObj){
     getCardsToBeTraded(userObj, otherPlayerObj)
     let updatedUserCollection = []
     let currPrimaryKeys = userObj.primaryKeys[userObj.currCollectId];
@@ -170,6 +176,11 @@ async function tradePostRequest(userObj, otherPlayerObj){
         let currCardId = otherPlayerObj.cardsToBeTraded[index]
         updatedUserCollection.push(currCardId);
     }
+    return updatedUserCollection
+}
+
+
+async function tradePostRequest(updatedUserCollection, userObj){
     objectForTradePostRequest = {};
     objectForTradePostRequest[userObj.currCollectId] = updatedUserCollection;
     const options = {
@@ -183,22 +194,12 @@ async function tradePostRequest(userObj, otherPlayerObj){
 async function confirmTradeButtonActions(){
     let tradePopUpForm = document.getElementById("tradePopUpForm");
     tradePopUpForm.style.display = "none";
-    getCardsToBeTraded(userObj, otherPlayerObj)
-    console.log("otherPlayerObj.cardsToBeTraded")
-    console.log(otherPlayerObj.cardsToBeTraded)
-    console.log("userObj.cardsToBeTraded")
-    console.log(userObj.cardsToBeTraded)
+    let updatedUserCollection = getUpdatedUserCollection(userObj, otherPlayerObj)
     removeStagedCards(userObj, otherPlayerObj);
-    userObj.currLocationStagedCards = "userStageAreaId";
-    otherPlayerObj.currLocationStagedCards = "otherStageAreaId";
-    displayCardCollectionForTrading(userObj);
-    displayCardCollectionForTrading(otherPlayerObj);
+    refreshDisplays(userObj, otherPlayerObj);
     //console.log(updatedCollectionAfterTrading)
-    await tradePostRequest(userObj, otherPlayerObj);
-    delete userObj.collections[userObj.currCollectId];
-    await switchToGivenUserCollection(userObj);
-    resetInitialStartAndEndIndex(userObj);
-    displayCardCollectionForTrading(userObj);
+    await tradePostRequest(updatedUserCollection, userObj);
+    updateAndDisplayUserCollection(userObj);
 }
 
 
@@ -229,11 +230,7 @@ async function setupTradingPage(){
     //setup event listeners
     collectionSelect.addEventListener("change", () => { collectionSelectHandler(collectionSelect, userObj, otherPlayerObj) });
     startTradeButton.addEventListener("click", () => { tradeButtonActions(userObj, otherPlayerObj); });
-    confirmTradeButton.addEventListener("click", () => { 
-        otherPlayerObj.cardsToBeTraded = [];
-        userObj.cardsToBeTraded = [];
-        confirmTradeButtonActions(); 
-    });
+    confirmTradeButton.addEventListener("click", () => { confirmTradeButtonActions(); });
     stopTradeButton.addEventListener("click", () => { stopTradeButtonActions(userObj, otherPlayerObj); });
 }
 
