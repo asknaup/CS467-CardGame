@@ -184,6 +184,8 @@ async function confirmTradeButtonActions(){
     let tradePopUpForm = document.getElementById("tradePopUpForm");
     tradePopUpForm.style.display = "none";
     getCardsToBeTraded(userObj, otherPlayerObj)
+    console.log(otherPlayerObj.cardsToBeTraded)
+    console.log(userObj.cardsToBeTraded)
     removeStagedCards(userObj, otherPlayerObj);
     displayCardCollectionForTrading(userObj);
     displayCardCollectionForTrading(otherPlayerObj);
