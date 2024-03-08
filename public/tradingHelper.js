@@ -144,13 +144,13 @@ function getCardsToBeTraded(userObj, otherPlayerObj){
     for(const otherStagedCard of otherPlayerTradeSlots.children){
         let otherStagedCardId  = otherStagedCard.id
         let otherCardId = otherStagedCardId.substring(0, otherStagedCardId.length - otherPlayerObj.stagedCardName.length);
-        otherPlayerObj.cardsToBeTraded.push(otherCardId);
+        otherPlayerObj.cardsToBeTraded.push(parseInt(otherCardId));
     }
     var userTradeSlots = document.getElementById("userTradeSlots");
     for(const userStagedCard of userTradeSlots.children){
         let userStagedCardId  = userStagedCard.id
         let userCardId = userStagedCardId.substring(0, userStagedCardId.length - userObj.stagedCardName.length);
-        userObj.cardsToBeTraded.push(userCardId)
+        userObj.cardsToBeTraded.push(parseInt(userCardId))
     }
 }
 
@@ -168,7 +168,7 @@ async function tradePostRequest(userObj, otherPlayerObj){
 
     for(let index = 0; index < otherPlayerObj.cardsToBeTraded.length; index++){
         let currCardId = otherPlayerObj.cardsToBeTraded[index]
-        updatedUserCollection.push(parseInt(currCardId));
+        updatedUserCollection.push(currCardId);
     }
     objectForTradePostRequest = {};
     objectForTradePostRequest[userObj.currCollectId] = updatedUserCollection;
@@ -184,7 +184,9 @@ async function confirmTradeButtonActions(){
     let tradePopUpForm = document.getElementById("tradePopUpForm");
     tradePopUpForm.style.display = "none";
     getCardsToBeTraded(userObj, otherPlayerObj)
+    console.log("otherPlayerObj.cardsToBeTraded")
     console.log(otherPlayerObj.cardsToBeTraded)
+    console.log("userObj.cardsToBeTraded")
     console.log(userObj.cardsToBeTraded)
     removeStagedCards(userObj, otherPlayerObj);
     userObj.currLocationStagedCards = "userStageAreaId";
@@ -206,7 +208,7 @@ async function setupTradingPage(){
     if(collection.length > 0){ 
         userObj.currCollectId = collection[0].collectionId;
         otherPlayerObj.currCollectId = collection[0].collectionId;
-        console.log(collection)
+        console.log(collection[0])
     };
     var userLoadingTitle = document.getElementById("userLoadingTitle");
     userLoadingTitle.style.display = "block";
