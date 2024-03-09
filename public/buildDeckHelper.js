@@ -97,9 +97,6 @@ function createTradingCardFromInfo(cardInfo) {
         var spellType = document.createElement('p');
         spellType.innerHTML = `<strong>Type:</strong> ${cardInfo[0].spellType}`;
 
-        var spellAbility = document.createElement('p');
-        spellAbility.innerHTML = `<strong>Ability:</strong> ${cardInfo[0].spellAbility}`;
-
         var spellAttack = document.createElement('p');
         spellAttack.innerHTML = `<strong>ATK:</strong> ${cardInfo[0].spellAttack}`;
 
@@ -107,7 +104,6 @@ function createTradingCardFromInfo(cardInfo) {
         spellDefense.innerHTML = `<strong>DEF:</strong> ${cardInfo[0].spellDefense}`;
 
         textOverlayBottom.appendChild(spellType);
-        textOverlayBottom.appendChild(spellAbility);
         textOverlayBottom.appendChild(spellAttack);
         textOverlayBottom.appendChild(spellDefense);
     } else {
@@ -204,9 +200,6 @@ function createTradingCard(cardData) {
         var spellType = document.createElement('p');
         spellType.innerHTML = `<strong>Type:</strong> ${cardData.spellType}`;
 
-        var spellAbility = document.createElement('p');
-        spellAbility.innerHTML = `<strong>Ability:</strong> ${cardData.spellAbility}`;
-
         var spellAttack = document.createElement('p');
         spellAttack.innerHTML = `<strong>ATK:</strong> ${cardData.spellAttack}`;
 
@@ -214,7 +207,6 @@ function createTradingCard(cardData) {
         spellDefense.innerHTML = `<strong>DEF:</strong> ${cardData.spellDefense}`;
 
         textOverlayBottom.appendChild(spellType);
-        textOverlayBottom.appendChild(spellAbility);
         textOverlayBottom.appendChild(spellAttack);
         textOverlayBottom.appendChild(spellDefense);
 
