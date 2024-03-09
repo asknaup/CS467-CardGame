@@ -424,6 +424,7 @@ app.post('/trading', async (req, res) => {
       const key = Object.keys(req.body)[0];
       const cardIdList = Object.values(req.body)[0];
       await dbFunc.updateListOfCollection(key, JSON.stringify({ "cardList": cardIdList }));
+      res.sendStatus(200);
     } catch(err) {
       return res.send(`Something went wrong: ${err}`);
     }

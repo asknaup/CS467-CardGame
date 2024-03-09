@@ -77,7 +77,7 @@ class tradingSpellCard extends tradingCard {
 
 // Function to create a trading card
 function createTradingCard(cardData) {
-    console.log("CardData in sharedcardcode createtrading card:", cardData);
+    //console.log("CardData in sharedcardcode createtrading card:", cardData);
     // Card container
     var card = document.createElement('div');
     card.classList.add('card');
@@ -327,18 +327,17 @@ async function switchToGivenUserCollection(userObj){
 }
 
 
-async function updateAndDisplayUserCollection(userObj){
-    userObj.primaryKeys[userObj.currCollectId] = [];
-    userObj.collections[userObj.currCollectId] = {};
-    const response= await fetch('/getCollection');
-    let collection = await response.json();
-    userObj.cardListsFromDb[userObj.currCollectId] = JSON.parse(collection[userObj.currCollectId].cardId);
-    let cardList = userObj.cardListsFromDb[userObj.currCollectId];
-    let listOfCardObjs = cardList.cardList;
-    await createCollectionFromCardIdList(listOfCardObjs, userObj);
-    userObj.currPrimaryKeysArr = userObj.primaryKeys[userObj.currCollectId];
-    userObj.currCollection = userObj.collections[userObj.currCollectId];
+async function updateAndDisplayUserCollection(collection, userObj, otherPlayerObj){
+    userObj.primaryKeys = {};
+    userObj.collections = {};
+    await getInitialUserCollection(collection, userObj);
+    resetInitialStartAndEndIndex(userObj);
     displayCardCollectionForTrading(userObj);
+    otherPlayerObj.primaryKeys = {};
+    otherPlayerObj.collections = {};
+    await getCurrentAdminCollection(otherPlayerObj)
+    resetInitialStartAndEndIndex(otherPlayerObj);
+    displayCardCollectionForTrading(otherPlayerObj);
 }
 
 async function createCollectionFromCardIdList(listOfCardObjs, playerObj){

@@ -257,7 +257,9 @@ async function makePostRequestAndRefresh(updatedUserCollection, userObj){
         body: JSON.stringify(objectForTradePostRequest)
     }
     await fetch('/trading', options);
-    await updateAndDisplayUserCollection(userObj);
+    const response = await fetch('/getCollection');
+    let collection = await response.json();
+    await updateAndDisplayUserCollection(collection, userObj, otherPlayerObj);
 }
 
 
