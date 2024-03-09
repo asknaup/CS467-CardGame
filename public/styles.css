@@ -356,6 +356,7 @@ header {
     top: 50%;
     text-align: center;
     color:#449a3c;
+    z-index: 99999;
 }
 
 #collection{
@@ -590,6 +591,7 @@ header {
     top: 40%;
     text-align: center;
     color: grey;
+    z-index: 99999;
 }
 
 #userLoadingTitle{
@@ -598,6 +600,7 @@ header {
     top: 40%;
     text-align: center;
     color: grey;
+    z-index: 99999;
 }
 
 #userDeck{
