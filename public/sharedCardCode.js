@@ -40,7 +40,7 @@ class collectionCreatureCard extends collectionCard {
 class collectionSpellCard extends collectionCard {
     constructor(id, name, imagePath, description, type, rarity, attack, defense, mana, ability, utility) {
         super(id, name, imagePath, description, type, rarity, attack, defense, mana);
-        this.ability = ability;
+        // this.ability = ability;
         this.utility = utility;
     }
 }
@@ -70,28 +70,21 @@ class tradingCreatureCard extends tradingCard {
 class tradingSpellCard extends tradingCard {
     constructor(id, name, imagePath, description, type, rarity, attack, defense, mana, ability, utility) {
         super(id, name, imagePath, description, type, rarity, attack, defense, mana);
-        this.ability = ability;
+        // this.ability = ability;
         this.utility = utility;
     }
 }
 
 // Function to create a trading card
 function createTradingCard(cardData) {
+    console.log("CardData in sharedcardcode createtrading card:", cardData);
     // Card container
     var card = document.createElement('div');
     card.classList.add('card');
 
-
     // cardId
     var cardId = document.createElement('p');
     cardId.textContent = cardData.id;
-
-    // Tooltip for attributes
-    // var toolTip = document.createElement('div');
-    // toolTip.classList.add('toolTip');
-
-    // var toolTipText = document.createElement('span');
-    // toolTipText.classList.add('toolTipText');
 
     // Name
     var cardName = document.createElement('h1');                                                                                                                                                                                                                                                                        
@@ -124,33 +117,20 @@ function createTradingCard(cardData) {
     rarity.textContent = cardData.rarity;
 
     var manaCost = document.createElement('p');
-    manaCost.innerHTML = `<strong>Mana:</strong> ${cardData.manaCost}`;
+    manaCost.innerHTML = `<strong>Mana:</strong> ${cardData.mana}`;
 
-    // toolTipText.appendChild(rarity);
-    // toolTipText.appendChild(manaCost);
     textOverlayBottom.appendChild(manaCost);
 
     if (cardData.type == "Spell") {
-        var spellType = document.createElement('p');
-        spellType.innerHTML = `<strong>Type:</strong> ${cardData.spellType}`;
-
-        var spellAbility = document.createElement('p');
-        spellAbility.innerHTML = `<strong>Ability:</strong> ${cardData.spellAbility}`;
 
         var spellAttack = document.createElement('p');
-        spellAttack.innerHTML = `<strong>ATK:</strong> ${cardData.spellAttack}`;
+        spellAttack.innerHTML = `<strong>ATK:</strong> ${cardData.attack}`;
 
         var spellDefense = document.createElement('p');
-        spellDefense.innerHTML = `<strong>DEF:</strong> ${cardData.spellDefense}`;
+        spellDefense.innerHTML = `<strong>DEF:</strong> ${cardData.defense}`;
 
-        textOverlayBottom.appendChild(spellType);
-        textOverlayBottom.appendChild(spellAbility);
         textOverlayBottom.appendChild(spellAttack);
         textOverlayBottom.appendChild(spellDefense);
-        // toolTipText.appendChild(spellType);
-        // toolTipText.appendChild(spellAbility);
-        // toolTipText.appendChild(spellAttack);
-        // toolTipText.appendChild(spellDefense);
 
     } else {
         var attack = document.createElement('p');
@@ -161,23 +141,15 @@ function createTradingCard(cardData) {
 
         textOverlayBottom.appendChild(attack);
         textOverlayBottom.appendChild(defense);
-        // toolTipText.appendChild(attack);
-        // toolTipText.appendChild(defense);
     }
 
-    // toolTip.appendChild(toolTipText);
-    // textOverlayBottom.appendChild(cardName);
-    // textOverlayBottom.appendChild(cardType);
     textOverlayTop.appendChild(cardName);
     textOverlayTop.appendChild(cardType);
     textOverlayTop.appendChild(rarity);
 
     card.appendChild(textOverlayBottom);
     card.appendChild(cardImage);
-    // card.appendChild(textOverlayBottom);
     card.appendChild(textOverlayTop);
-
-    // card.appendChild(toolTip);
 
     return card;
 }
