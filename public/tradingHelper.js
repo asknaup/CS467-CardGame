@@ -1,17 +1,34 @@
-function getStagedCards(userObj, otherPlayerObj){
+function getPopUpCards(){
+    let popUpCardsDict = {"otherPopUpCardsArr": [], "userPopUpCardsArr": []};
+    var otherPlayerTradeSlots= document.getElementById("otherPlayerTradeSlots");
+    for(const otherPopUpCard of otherPlayerTradeSlots.children){
+        //console.log(otherStagedCard)
+        popUpCardsDict["otherPopUpCardsArr"].push(otherPopUpCard);
+    }
+    var userTradeSlots = document.getElementById("userTradeSlots");
+    for(const userPopUpCard of userTradeSlots.children){
+        //console.log(userStagedCard)
+        popUpCardsDict["userPopUpCardsArr"].push(userPopUpCard);
+    }
+    return popUpCardsDict;
+}
+
+
+function getStagedCards(){
     let stagedCardsDict = {"otherStagedCardsArr": [], "userStagedCardsArr": []};
-    var otherStageArea= document.getElementById(otherPlayerObj.currLocationStagedCards);
+    var otherStageArea= document.getElementById("otherStageAreaId");
     for(const otherStagedCard of otherStageArea.children){
         //console.log(otherStagedCard)
         stagedCardsDict["otherStagedCardsArr"].push(otherStagedCard);
     }
-    var userStageArea= document.getElementById(userObj.currLocationStagedCards);
+    var userStageArea= document.getElementById("userStageAreaId");
     for(const userStagedCard of userStageArea.children){
         //console.log(userStagedCard)
         stagedCardsDict["userStagedCardsArr"].push(userStagedCard);
     }
     return stagedCardsDict;
 }
+
 
 function removeIsStagedStatusAndItsEffects(playerObj, index, stagedCardsArr){
     // remove isStaged status from cardObj and unhighlight its html card element
@@ -24,8 +41,21 @@ function removeIsStagedStatusAndItsEffects(playerObj, index, stagedCardsArr){
 }
 
 
+function removeStagedStatusFromPopUpCards(userObj, otherPlayerObj){
+    let popUpCardsDict = getPopUpCards();
+    otherPopUpCardsArr = popUpCardsDict["otherPopUpCardsArr"];
+    for (let index = 0; index < otherPopUpCardsArr.length; index++) {
+        removeIsStagedStatusAndItsEffects(otherPlayerObj, index, otherPopUpCardsArr);
+    }
+    userPopUpCardsArr = popUpCardsDict["userPopUpCardsArr"];
+    for (let index = 0; index < userPopUpCardsArr.length; index++) {
+        removeIsStagedStatusAndItsEffects(userObj, index, userPopUpCardsArr);
+    }
+}
+
+
 function removeStagedStatusFromStagedCards(userObj, otherPlayerObj){
-    let stagedCardsDict = getStagedCards(userObj, otherPlayerObj);
+    let stagedCardsDict = getStagedCards();
     otherStagedCardsArr = stagedCardsDict["otherStagedCardsArr"];
     for (let index = 0; index < otherStagedCardsArr.length; index++) {
         removeIsStagedStatusAndItsEffects(otherPlayerObj, index, otherStagedCardsArr);
@@ -37,18 +67,29 @@ function removeStagedStatusFromStagedCards(userObj, otherPlayerObj){
 }
 
 
+function removePopUpCards(userObj, otherPlayerObj){
+    removeStagedStatusFromPopUpCards(userObj, otherPlayerObj)
+    var otherPlayerTradeSlots= document.getElementById("otherPlayerTradeSlots");
+    while(otherPlayerTradeSlots.firstChild){
+        otherPlayerTradeSlots.removeChild(otherPlayerTradeSlots.firstChild);
+    }
+    var userTradeSlots= document.getElementById("userTradeSlots");
+    while(userTradeSlots.firstChild){
+        userTradeSlots.removeChild(userTradeSlots.firstChild);
+    }
+}
+
+
 function removeStagedCards(userObj, otherPlayerObj){
     removeStagedStatusFromStagedCards(userObj, otherPlayerObj)
-    var otherStageArea= document.getElementById(otherPlayerObj.currLocationStagedCards);
+    var otherStageArea= document.getElementById("otherStageAreaId");
     while(otherStageArea.firstChild){
         otherStageArea.removeChild(otherStageArea.firstChild);
     }
-    otherPlayerObj.currLocationStagedCards = otherPlayerObj.stageAreaId;
-    var userStageArea= document.getElementById(userObj.currLocationStagedCards);
+    var userStageArea= document.getElementById("userStageAreaId");
     while(userStageArea.firstChild){
         userStageArea.removeChild(userStageArea.firstChild);
     }
-    userObj.currLocationStagedCards = userObj.stageAreaId;
 }
 
 
@@ -99,45 +140,41 @@ function removeOldCardsFromPopUpForm(){
 }
 
 
-function tradeButtonActions(userObj, otherPlayerObj){
+function tradeButtonActions(){
     let tradePopUpForm = document.getElementById("tradePopUpForm");
     tradePopUpForm.style.display = "block";
     removeOldCardsFromPopUpForm();
     // move otherPlayer's cards from stage area to pop up forms
-    let stagedCardsDict = getStagedCards(userObj, otherPlayerObj);
+    let stagedCardsDict = getStagedCards();
     let otherStagedCardsArr = stagedCardsDict["otherStagedCardsArr"];
     let otherPlayerTradeSlots = document.getElementById("otherPlayerTradeSlots");
     for (let index = 0; index < otherStagedCardsArr.length; index++) {
         otherPlayerTradeSlots.appendChild(otherStagedCardsArr[index]);
     }
-    otherPlayerObj.currLocationStagedCards = "otherPlayerTradeSlots";
     // move user's cards from stage area to pop up forms
     let userStagedCardsArr = stagedCardsDict["userStagedCardsArr"];
     let userTradeSlots = document.getElementById("userTradeSlots");
     for(let index = 0; index < userStagedCardsArr.length; index++){
         userTradeSlots.appendChild(userStagedCardsArr[index]);
     }
-    userObj.currLocationStagedCards = "userTradeSlots";
 }
 
 
-function stopTradeButtonActions(userObj, otherPlayerObj){
+function stopTradeButtonActions(){
     let tradePopUpForm = document.getElementById("tradePopUpForm");
     tradePopUpForm.style.display = "none";
     // move other player's cards back to stage area from the popup form
     let otherPlayerTradeSlots = document.getElementById("otherPlayerTradeSlots");
-    let otherPlayerStageArea = document.getElementById(otherPlayerObj.stageAreaId);
+    let otherPlayerStageArea = document.getElementById("otherStageAreaId");
     while(otherPlayerTradeSlots.firstChild) {
         otherPlayerStageArea.appendChild(otherPlayerTradeSlots.firstChild);
     }
-    otherPlayerObj.currLocationStagedCards = otherPlayerObj.stageAreaId;
     // move user's cards back to stage area from the popup form
     let userTradeSlots = document.getElementById("userTradeSlots");
-    let userStageArea = document.getElementById(userObj.stageAreaId);
+    let userStageArea = document.getElementById("userStageAreaId");
     while(userTradeSlots.firstChild){
         userStageArea.appendChild(userTradeSlots.firstChild);
     }
-    userObj.currLocationStagedCards = userObj.stageAreaId;
 }
 
 
@@ -180,9 +217,7 @@ function getUpdatedUserCollection(userObj, otherPlayerObj){
 }
 
 
-async function tradePostRequest(updatedUserCollection, userObj){
-    removeStagedCards(userObj, otherPlayerObj);
-    refreshDisplays(userObj, otherPlayerObj);
+async function makePostRequestAndRefresh(updatedUserCollection, userObj){
     objectForTradePostRequest = {};
     objectForTradePostRequest[userObj.currCollectId] = updatedUserCollection;
     const options = {
@@ -191,15 +226,18 @@ async function tradePostRequest(updatedUserCollection, userObj){
         body: JSON.stringify(objectForTradePostRequest)
     }
     await fetch('/trading', options);
+    await updateAndDisplayUserCollection(userObj);
 }
+
 
 async function confirmTradeButtonActions(){
     let tradePopUpForm = document.getElementById("tradePopUpForm");
     tradePopUpForm.style.display = "none";
-    let updatedUserCollection = getUpdatedUserCollection(userObj, otherPlayerObj)
     //console.log(updatedCollectionAfterTrading)
-    await tradePostRequest(updatedUserCollection, userObj);
-    await updateAndDisplayUserCollection(userObj);
+    let updatedUserCollection = getUpdatedUserCollection(userObj, otherPlayerObj)
+    makePostRequestAndRefresh(updatedUserCollection, userObj);
+    removePopUpCards(userObj, otherPlayerObj);
+    refreshDisplays(userObj, otherPlayerObj);
 }
 
 
@@ -229,23 +267,21 @@ async function setupTradingPage(){
     otherLoadingTitle.style.display = "none";
     //setup event listeners
     collectionSelect.addEventListener("change", () => { collectionSelectHandler(collectionSelect, userObj, otherPlayerObj) });
-    startTradeButton.addEventListener("click", () => { tradeButtonActions(userObj, otherPlayerObj); });
+    startTradeButton.addEventListener("click", () => { tradeButtonActions(); });
     confirmTradeButton.addEventListener("click", () => { confirmTradeButtonActions(); });
-    stopTradeButton.addEventListener("click", () => { stopTradeButtonActions(userObj, otherPlayerObj); });
+    stopTradeButton.addEventListener("click", () => { stopTradeButtonActions(); });
 }
 
 
 /*main code for trading */
 let objectForTradePostRequest = {}
 let userObj = {fileName: "tradingHelper", isUser: true, cardListsFromDb: {}, primaryKeys: {}, collections: {}, currPrimaryKeysArr: [], 
-    currCollection: {}, stagedCardCount: 0, numCardsInView: 7, startIndex: 0, endIndex: 7, cardSlots: "userCardSlots", stageAreaId: "userStageAreaId", 
-    stageAreaClass: "userStageAreaClass", stagedCardName: "userStagedCard", currLocationStagedCards: "userStageAreaId", currCollectId: null, 
-    cardsToBeTraded: []
+    currCollection: {}, stagedCardCount: 0, numCardsInView: 7, startIndex: 0, endIndex: 7, cardSlots: "userCardSlots", stagedCardName: "userStagedCard", 
+    stageAreaId: "userStageAreaId", currCollectId: null, cardsToBeTraded: []
 };        
 let otherPlayerObj = {fileName: "tradingHelper", isUser: false, cardListsFromDb: {}, primaryKeys: {}, collections: {}, currPrimaryKeysArr: [], 
-    currCollection: {}, stagedCardCount: 0, numCardsInView: 7, startIndex: 0, endIndex: 7, cardSlots: "otherCardSlots", stageAreaId: "otherStageAreaId", 
-    stageAreaClass: "otherStageAreaClass", stagedCardName: "otherStagedCard", currLocationStagedCards: "otherStageAreaId", currCollectId: null, 
-    cardsToBeTraded: []
+    currCollection: {}, stagedCardCount: 0, numCardsInView: 7, startIndex: 0, endIndex: 7, cardSlots: "otherCardSlots", stagedCardName: "otherStagedCard", 
+    stageAreaId: "otherStageAreaId", currCollectId: null, cardsToBeTraded: []
 };
 
 var otherScrollLeftButton = document.getElementById("otherScrollLeft");
