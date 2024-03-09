@@ -443,7 +443,6 @@ app.get('/getCollection', async (req, res) => {
 });
 
 
-// Needs Work, collection db issue
 app.get('/collect', async (req, res) => {
   const user = req.session.user;
   const c = req.query.collectId;
@@ -485,6 +484,7 @@ app.post('/openPack', async (req, res) => {
     let x = JSON.parse(returnList[0].cardId);
     let y = x.cardList.concat(randomFive);
     await dbFunc.updateListOfCollection(collect, JSON.stringify({ "cardList": y }));
+    console.log(randomFive);
     } catch (error) {
       console.error("Error updating collection:", error);
     }
