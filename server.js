@@ -761,16 +761,22 @@ app.post('/cardViewPrintedBulkPagePost', async (req, res) => {
         generatedCards.push(newSpell);
       }
     };
-    generatedCards.forEach(async (card) => {
-      const cardId = await dbFunc.insertCard(card.name, card.cardType, user.userId, card.rarity, card.manaCost);
-      cardIdList.push(cardId);
-      await dbFunc.insertCardUrl(cardId, card.URL);
-      if (card.cardType == "Spell") {
-        await dbFunc.insertSpellCard(cardId, card.spellType, card.ability, card.attack, card.defense, card.utility);
-      } else if (card.cardType == "Creature") {
-        await dbFunc.insertCreatureCard(cardId, card.attack, card.defense, card.creature);
+
+    for (const card of generatedCards) {
+      try {
+          const cardId = await dbFunc.insertCard(card.name, card.cardType, user.userId, card.rarity, card.manaCost);
+          cardIdList.push(cardId);
+          await dbFunc.insertCardUrl(cardId, card.URL);
+          if (card.cardType === "Spell") {
+              await dbFunc.insertSpellCard(cardId, card.spellType, card.ability, card.attack, card.defense, card.utility);
+          } else if (card.cardType === "Creature") {
+              await dbFunc.insertCreatureCard(cardId, card.attack, card.defense, card.creature);
+          }
+      } catch (error) {
+          console.error("Error inserting card:", error);
+          // Handle error as needed
       }
-    });
+  }
 
     const gameName = await dbFunc.grabGameName(req.body.whichgame);
     const userName = await dbFunc.grabUsername(user.userId);
@@ -781,11 +787,13 @@ app.post('/cardViewPrintedBulkPagePost', async (req, res) => {
       let returnList = await dbFunc.grabListOfCardsFromCollection(collId);
       let x = JSON.parse(returnList[0].cardId);
       let y = x.cardList.concat(cardIdList);
+      console.log(y);
       await dbFunc.updateListOfCollection(collId, JSON.stringify({ "cardList": y }));
 
       let adminList = await dbFunc.grabAdminListCards(req.body.whichgame);
       let admin = JSON.parse(adminList[0].listCards);
       let newAdminList = admin.cardList.concat(cardIdList);
+      console.log(newAdminList);
       await dbFunc.updateAdminListCards(JSON.stringify({ "cardList": newAdminList }), req.body.whichgame);
 
     } catch (error) {
