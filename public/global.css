@@ -139,6 +139,15 @@ h1 {
   text-align: center;
 }
 
+h4 {
+  text-align: center;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+}
+
 .matrix {
   display: grid;
   grid-template-columns: repeat(5, 1fr);

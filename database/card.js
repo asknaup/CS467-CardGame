@@ -90,7 +90,7 @@ async function createDataStructCreature(colors, creatures, places, cardType) {
 
     if (colors == "Random") {
         newStruct.color = getRandomElement(colors1);
-    } else if (colors == "None") {
+    } else if (colors == "No Significant Color") {
         newStruct.color = "";
     } else { newStruct.color = colors;} 
     
