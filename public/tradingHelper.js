@@ -140,21 +140,53 @@ function removeOldCardsFromPopUpForm(){
 }
 
 
-function tradeButtonActions(){
-    let tradePopUpForm = document.getElementById("tradePopUpForm");
-    tradePopUpForm.style.display = "block";
-    removeOldCardsFromPopUpForm();
-    // move otherPlayer's cards from stage area to pop up forms
-    let otherPlayerStageArea = document.getElementById("otherStageAreaId");
-    let otherPlayerTradeSlots = document.getElementById("otherPlayerTradeSlots");
-    while(otherPlayerStageArea.firstChild) {
-        otherPlayerTradeSlots.appendChild(otherPlayerStageArea.firstChild);
+function usersCombinedManaIsLessThanMarkets(){
+    let stagedCardsDict = getStagedCards();
+    let otherStagedCards = stagedCardsDict["otherStagedCardsArr"]
+    let combinedMarketMana = 0;
+    for(const otherStagedCard of otherStagedCards){
+        let otherStagedCardId  = otherStagedCard.id
+        let otherCardId = otherStagedCardId.substring(0, otherStagedCardId.length - otherPlayerObj.stagedCardName.length);
+        let currCardObj = otherPlayerObj.currCollection[otherCardId]
+        if(currCardObj.mana !== undefined){
+            combinedMarketMana += currCardObj.mana
+        }
     }
-    // move user's cards from stage area to pop up forms
-    let userStageArea = document.getElementById("userStageAreaId");
-    let userTradeSlots = document.getElementById("userTradeSlots");
-    while(userStageArea.firstChild){
-        userTradeSlots.appendChild(userStageArea.firstChild);
+    let userStagedCards = stagedCardsDict["userStagedCardsArr"]
+    let combinedUserMana = 0;
+    for(const userStagedCard of userStagedCards){
+        let userStagedCardId  = userStagedCard.id
+        let userCardId = userStagedCardId.substring(0, userStagedCardId.length - userObj.stagedCardName.length);
+        let currCardObj = userObj.currCollection[userCardId]
+        if(currCardObj.mana !== undefined){
+            combinedUserMana += currCardObj.mana
+        }
+    }
+    return (combinedMarketMana > combinedUserMana);
+}
+
+
+function tradeButtonActions(){
+    if(userObj.stagedCardCount == 0 || otherPlayerObj.stagedCardCount == 0){
+        alert("Each staging area needs at least one card before you can make a trade");
+    }else if(usersCombinedManaIsLessThanMarkets()){
+        alert("The combined mana of the user's cards can't be less than the combined mana of the market's cards")
+    }else{
+        let tradePopUpForm = document.getElementById("tradePopUpForm");
+        tradePopUpForm.style.display = "block";
+        removeOldCardsFromPopUpForm();
+        // move otherPlayer's cards from stage area to pop up forms
+        let otherPlayerStageArea = document.getElementById("otherStageAreaId");
+        let otherPlayerTradeSlots = document.getElementById("otherPlayerTradeSlots");
+        while(otherPlayerStageArea.firstChild) {
+            otherPlayerTradeSlots.appendChild(otherPlayerStageArea.firstChild);
+        }
+        // move user's cards from stage area to pop up forms
+        let userStageArea = document.getElementById("userStageAreaId");
+        let userTradeSlots = document.getElementById("userTradeSlots");
+        while(userStageArea.firstChild){
+            userTradeSlots.appendChild(userStageArea.firstChild);
+        }
     }
 }
 
