@@ -145,17 +145,16 @@ function tradeButtonActions(){
     tradePopUpForm.style.display = "block";
     removeOldCardsFromPopUpForm();
     // move otherPlayer's cards from stage area to pop up forms
-    let stagedCardsDict = getStagedCards();
-    let otherStagedCardsArr = stagedCardsDict["otherStagedCardsArr"];
+    let otherPlayerStageArea = document.getElementById("otherStageAreaId");
     let otherPlayerTradeSlots = document.getElementById("otherPlayerTradeSlots");
-    for (let index = 0; index < otherStagedCardsArr.length; index++) {
-        otherPlayerTradeSlots.appendChild(otherStagedCardsArr[index]);
+    while(otherPlayerStageArea.firstChild) {
+        otherPlayerTradeSlots.appendChild(otherPlayerStageArea.firstChild);
     }
     // move user's cards from stage area to pop up forms
-    let userStagedCardsArr = stagedCardsDict["userStagedCardsArr"];
+    let userStageArea = document.getElementById("userStageAreaId");
     let userTradeSlots = document.getElementById("userTradeSlots");
-    for(let index = 0; index < userStagedCardsArr.length; index++){
-        userTradeSlots.appendChild(userStagedCardsArr[index]);
+    while(userStageArea.firstChild){
+        userTradeSlots.appendChild(userStageArea.firstChild);
     }
 }
 
