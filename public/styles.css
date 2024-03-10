@@ -217,7 +217,7 @@ header {
 
 #helpPageTitle{
     color: rebeccapurple;
-    margin: 1vw;
+    margin: 2vw;
 }
 
 #helpfulLinksTitle{
@@ -228,7 +228,8 @@ header {
 #leftColumn {
     display: flex;
     flex-direction: column;
-    width: 70%;
+    width: 60%;
+    font-size: 2em;
 }
 
 #rightColumn {
@@ -236,7 +237,7 @@ header {
     flex-direction: column;
     border-left: 2px solid rgb(173, 124, 173);
     border-style:ridge;
-    width: 30%;
+    width: 40%;
 }
 
 #FAQ {
@@ -247,7 +248,6 @@ header {
     width: 100%;
     text-align: left;
     color: #4caf50;
-    margin: 2vh;
 }
 
 .question{
