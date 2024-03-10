@@ -463,6 +463,19 @@ app.get('/collect', async (req, res) => {
   }
 });
 
+app.get('/openPack', async(req, res) => {
+  const user = req.session.user;
+  if(user){
+    const collect = await dbFunc.getAllCollectionsByUser(user.userId);
+    const valList = await dbFunc.getAllGeneratedGames();
+    const genLen = valList ? valList.length : 0;
+    res.render('openPack', {vals: valList})
+  }else{
+    res.redirect('/');
+  }
+
+})
+
 app.post('/openPack', async (req, res) => {
   const user = req.session.user;
   let randomFive;
@@ -489,9 +502,10 @@ app.post('/openPack', async (req, res) => {
     } catch (error) {
       console.error("Error updating collection:", error);
     }
-    res.render('openPack', {
+    /*res.render('openPack', {
       cards: randomFive,
-    })
+    }) */
+    res.json(randomFive);
   } else {
     res.redirect('/');
   }

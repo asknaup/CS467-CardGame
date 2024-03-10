@@ -325,7 +325,7 @@ header {
 
 #collectionForms{
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
 }
 
 #goToCollectionTitle{
@@ -975,4 +975,16 @@ header {
     top: 55%;
     right: 20%;
     z-index: 999;
+}
+
+#openPackCardDisplay {
+    display: flex;
+}
+
+#openPackForm{
+    margin: 2vw;
+}
+
+#openPackTitle1, #openPackTitle2 {
+    margin: 1vw
 }
