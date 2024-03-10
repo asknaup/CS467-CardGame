@@ -18,7 +18,6 @@ async function addCardsToOpenCardDisplay(listOfCardIds, openPackCardDisplay){
 }
 
 async function openPackButtonHandler(){
-    let dropdownSelect1 = document.getElementById("dropdownSelect1")
     let openPackCardDisplay = document.getElementById("openPackCardDisplay")
     while(openPackCardDisplay.firstChild){
         openPackCardDisplay.removeChild(openPackCardDisplay.firstChild);
