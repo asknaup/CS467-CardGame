@@ -10,20 +10,22 @@
 </head>
 
 <body>
-  <h1>
+  <h1 id="openPackTitle1">
     Here are your new Cards
   </h1>
-  <h2> They are automatically added to your collection</h2>
+  <h2 id="openPackTitle2"> They are automatically added to your collection</h2>
   <div>
-    <img src="{{ url }}" alt="Image">
-    <p>{{ cardName }}</p>
-    <p>{{ rarity }}</p>
-    <p>{{ manaCost }}</p>
-  </div>
-  <button id="gen-game-button-ggp" type="submit">Open a Pack of 5 New Cards</button>
-  <form class="dropdown-form" action="/collect" method="get">
-    <button id="gen-game-button-ggp" type="submit">Return to Collect</button>
-  </form>
+    <form id="openPackForm">
+      <button id="openPackButton" class="openPackButton" type="button">Open a Pack of 5 New Cards</button>
+        <select name="gameId" id="dropdownSelect1" class="dropdown-select">
+          {{#each vals}}
+          <option value="{{ this.gameId }}">{{ this.imageLocation }}</option>
+          {{/each}}
+        </select>
+    </form>
+    <div id="openPackCardDisplay"></div>
 
+    <script src="sharedCardCode.js"></script>
+    <script src="openPackHelper.js"></script>
 </body>
 </html>

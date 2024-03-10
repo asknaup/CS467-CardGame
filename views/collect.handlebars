@@ -12,13 +12,8 @@
     <br>
     <h1 id="openPackTitle">Open A Pack To Bolster Your Collection</h1>
     <br><br>
-    <form action="/openPack" method="post">
-    <button id="gen-game-button-ggp" class="openPackButton" type="submit">Open a Pack of 5 New Cards</button>
-        <select name="gameId" id="dropdownSelect1" class="dropdown-select">
-          {{#each vals}}
-          <option value="{{ this.gameId }}">{{ this.imageLocation }}</option>
-          {{/each}}
-        </select>
+    <form action="/openPack" method="get">
+    <button id="gen-game-button-ggp" class="openPackButton" type="submit">Go Open a Pack of 5 New Cards</button>
     </form>
     <!--div class="instructions">
         <p>Collection_Id: </p>
@@ -35,14 +30,6 @@
                 {{/each}}
             </select>
         </form>
-        <form class="dropdown-form" action="/collect" method="POST" onmouseover="showDropdown('dropdownSelect1')" onmouseout="hideDropdown('dropdownSelect1')">
-        <button type="submit" class="dropdown-button">Create or Browse your collection for</button>
-        <select name="gameId" id="dropdownSelect1" class="dropdown-select">
-          {{#each vals}}
-          <option value="{{ this.gameId }}">{{ this.imageLocation }}</option>
-          {{/each}}
-        </select>
-      </form>
     </div>
     <a href></a>
     <div id="collection">
