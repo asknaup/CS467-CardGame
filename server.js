@@ -1089,13 +1089,16 @@ app.get('/getCardDetails', async (req, res) => {
 app.post('/endTurn', async (req, res) => {
   // const game = { ruleSet: 'ruleSet1', gameId: 1001 } 
   const game = req.session.game; 
+  const user = req.session.user;
+
+  let gameResults;
 
   if (gameInstance[game.gameId]) {
     try {
       const gameInst = gameInstance[game.gameId];
       console.log("opponentStage", gameInst.opponentStage.length)
       // Get the updated playerStage after ending the turn
-      await gameInst.playNextTurn();
+      gameResults = await gameInst.playNextTurn();
 
       let opponentStage = gameInstance[game.gameId].opponentStage; // Computers
       let updatedStage = gameInstance[game.gameId].playerStage;
@@ -1103,19 +1106,35 @@ app.post('/endTurn', async (req, res) => {
       const playerMana = gameInstance[game.gameId].user.mana;
       const opponentHand = gameInstance[game.gameId].opponentHand;
 
-      console.log("opponentStage", opponentStage.length)
-      res.status(200).json({
-        message: 'Computer opponent\'s turn completed',
-        opponentStage,
-        updatedStage,
-        updatedHand,
-        opponentDeckCount: gameInstance[game.gameId].opponentDeck.length,
-        playerDeckCount: gameInstance[game.gameId].deck.length,
-        playerMana,
-        opponentHand,
-        playerHealth: gameInstance[game.gameId].user.health,
-        round: gameInstance[game.gameId].round
-      });
+      if (gameResults && gameResults.winner) {
+        // Send a 200 status code with the game results and winner
+        if(gameResults.winner === user.username) {
+          await dbFunc.updateGameWinner(game.gameId, parseInt(user.userId));
+          await dbFunc.updateUserProfile(parseInt(user.userId), true);
+          res.status(200).json({ message: 'Game over', winner: gameResults.winner });
+        } else {
+          // Admin set to base winner if computer wins
+          await dbFunc.updateGameWinner(game.gameId, 1001);
+          await dbFunc.updateUserProfile(parseInt(user.userId), false);
+          res.status(200).json({ message: 'Game over', winner: gameResults.winner });
+        }
+
+      } else {
+
+        res.status(200).json({
+          message: 'Computer opponent\'s turn completed',
+          opponentStage,
+          updatedStage,
+          updatedHand,
+          opponentDeckCount: gameInstance[game.gameId].opponentDeck.length,
+          playerDeckCount: gameInstance[game.gameId].deck.length,
+          playerMana,
+          opponentHand,
+          playerHealth: gameInstance[game.gameId].user.health,
+          round: gameInstance[game.gameId].round
+        });
+
+      }
 
     } catch (error) {
       console.log("error: ", error)
@@ -1125,6 +1144,7 @@ app.post('/endTurn', async (req, res) => {
     res.status(404).json({ error: "Game not found." });
   }
 })
+
 
 app.post('/damageOpponent', (req, res) => {
   // const game = { ruleSet: 'ruleSet1', gameId: 1001 } 

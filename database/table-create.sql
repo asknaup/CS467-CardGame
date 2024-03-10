@@ -8,7 +8,6 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- DROP TABLES
 -- -----------------------------------------------------
 -- Tables with no foreign keys
-DROP TABLE IF EXISTS moves;
 DROP TABLE IF EXISTS cardSpell;
 DROP TABLE IF EXISTS cardCreature;
 DROP TABLE IF EXISTS cardInstance;
@@ -230,24 +229,6 @@ CREATE TABLE IF NOT EXISTS decks (
 );
 
 ALTER TABLE decks AUTO_INCREMENT=7000;
--- -----------------------------------------------------
--- Create moves table
--- -----------------------------------------------------
-DROP TABLE IF EXISTS moves;
-
-CREATE TABLE IF NOT EXISTS moves (
-    moveId INT AUTO_INCREMENT,
-    gameId INT,
-    playerId INT,
-    roundNumber INT,
-    moveDetails VARCHAR(255),
-
-    PRIMARY KEY (moveId),
-    FOREIGN KEY (gameId) REFERENCES gameInstance(gameId),
-    FOREIGN KEY (playerId) REFERENCES userProfile(userId)
-);
-
-ALTER TABLE moves AUTO_INCREMENT=1;
 
 -- -----------------------------------------------------
 -- CREATE Game Table
@@ -292,9 +273,6 @@ CREATE INDEX idx_userId ON userProfile(userId);
 CREATE INDEX idx_gameId ON game(gameId);
 CREATE INDEX idx_cardId ON cardInstance(cardId);
 CREATE INDEX idx_playerId ON decks(playerId);
-CREATE INDEX idx_gameId ON moves(gameId);
-CREATE INDEX idx_playerId ON moves(playerId);
-
 -- -----------------------------------------------------
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

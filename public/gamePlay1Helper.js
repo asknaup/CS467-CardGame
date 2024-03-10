@@ -863,16 +863,56 @@ function fetchAndRenderHand() {
             console.error('Error fetching hand data:', error);
         });
 }
+// Assuming you have a function to display the winner popup
+function displayWinnerPopup(winner) {
+    // Display your popup with the winner's name
+    alert(`${winner} wins the game!`);
+    // After displaying the popup, redirect to the user profile page
+    window.location.href = '/userProfile';
+}
 
-function endTurn() {
-    console.log("END TURN")
-    fetch('/endTurn', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({}),  // Send an empty body since no additional data is needed
-    })
+document.addEventListener('DOMContentLoaded', function () {
+    // Add event listener for the end turn button
+    const endTurnButton = document.getElementById('endTurnButton');
+    endTurnButton.addEventListener('click', endTurn);
+
+    const opponentHealthOrb = document.getElementById('opponentHealth');
+    opponentHealthOrb.addEventListener('drop', dropOnOpponentHealthOrb);
+    opponentHealthOrb.addEventListener('dragover', dragOver);
+
+    // Fetch and render the player's hand
+    fetchAndRenderPage();
+
+    // const hand = document.getElementById('hand');
+    const handList = hand.querySelectorAll('.card');
+    const playerDropZones = document.querySelectorAll(".player .drop-zone");
+
+    handList.forEach(card => {
+        card.addEventListener('dragstart', dragStart);
+    });
+
+    playerDropZones.forEach(zone => {
+        zone.addEventListener('dragover', dragOver);
+        zone.addEventListener('drop', drop);
+    });
+
+    function dragStart(event) {
+        event.dataTransfer.setData('text/plain', event.target.id);
+    }
+
+    function dragOver(event) {
+        event.preventDefault();
+    }
+
+    // Function to handle end turn
+    function endTurn() {
+        fetch('/endTurn', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({}),  // Send an empty body since no additional data is needed
+        })
         .then(response => response.json())
         .then(data => {
             // Convert grayed-out cards back to their original state
@@ -890,44 +930,56 @@ function endTurn() {
                 initializeOpponentStageUI(data.opponentStage);
             }
 
-            if (data.playerMana) {
+            // Check if there's a winner
+            if (data.winner) {
+                // Display the winner popup
+                displayWinnerPopup(data.winner);
+
+                // Redirect to the user profile page after a delay (e.g., 3 seconds)
+                setTimeout(() => {
+                    window.location.href = '/userprofile'; // Replace '/userprofile' with the actual URL of the user profile page
+                }, 3000); // Redirect after 3 seconds
+            } else {
                 // Update player's mana UI
-                document.getElementById('playerMana').textContent = `Player Mana: ${data.playerMana}`;
-            }
+                if (data.playerMana) {
+                    document.getElementById('playerMana').textContent = `Player Mana: ${data.playerMana}`;
+                }
 
-            if (data.opponentMana) {
                 // Update opponent's mana UI
-                document.getElementById('opponentMana').textContent = `Opponent Mana: ${data.opponentMana}`;
-            }
+                if (data.opponentMana) {
+                    document.getElementById('opponentMana').textContent = `Opponent Mana: ${data.opponentMana}`;
+                }
 
-            if (data.opponentHealth) {
                 // Update opponent's health UI
-                document.getElementById('opponentHealth').textContent = data.opponentHealth;
-            }
+                if (data.opponentHealth) {
+                    document.getElementById('opponentHealth').textContent = data.opponentHealth;
+                }
 
-            if (data.playerHealth) {
                 // Update player's health UI
-                document.getElementById('playerHealth').textContent = data.playerHealth;
-            }
+                if (data.playerHealth) {
+                    document.getElementById('playerHealth').textContent = data.playerHealth;
+                }
 
-            if (data.opponentDeckCount) {
                 // Update opponent's deck card count
-                document.getElementById('opponentDeckCount').textContent = `Remaining Opponent Deck Cards: ${data.opponentDeckCount}`;
-            }
+                if (data.opponentDeckCount) {
+                    document.getElementById('opponentDeckCount').textContent = `Remaining Opponent Deck Cards: ${data.opponentDeckCount}`;
+                }
 
-            if (data.playerDeckCount) {
                 // Update player's deck card count
-                document.getElementById('deck-count').textContent = `Remaining Deck Cards: ${data.playerDeckCount}`;
+                if (data.playerDeckCount) {
+                    document.getElementById('deck-count').textContent = `Remaining Deck Cards: ${data.playerDeckCount}`;
+                }
             }
-
         })
         .catch(error => {
             console.error('Error ending turn:', error);
         });
 
+        // Fetch and render the player's hand after the turn
         fetchAndRenderPage();
+    }
+});
 
-}
 
 function initializeOpponentStageUI(opponentStage) {
     attachStagedCardListeners();

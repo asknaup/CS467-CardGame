@@ -97,40 +97,6 @@
   </div>
 
 
-  {{!--
-  <script>
-    document.getElementById('ruleSet1').addEventListener('change', function () {
-      var cardType = this.value;
-      var creatureFields = document.getElementById('creatureFields');
-      var spellFields = document.getElementById('spellFields');
-
-      if (cardType === 'ruleSet1') {
-        ruleSet1.style.display = 'block';
-        ruleSet2.style.display = 'none';
-      } else if (cardType === 'ruleSet2') {
-        ruleSet1.style.display = 'none';
-        ruleSet2.style.display = 'block';
-      }
-    });
-
-    // Select all range input elements
-    const sliders = document.querySelectorAll('#ruleSet1 input[type="range"]');
-
-    // Iterate over each slider
-    sliders.forEach(slider => {
-      // Get the corresponding span element by ID
-      const valueSpan = document.getElementById(`${slider.id}Value%`);
-
-      // Update the span element's text content with the current value of the slider
-      valueSpan.textContent = slider.value;
-
-      // Add an input event listener to each slider
-      slider.addEventListener('input', function () {
-        // Update the span element's text content with the updated value of the slider
-        valueSpan.textContent = this.value;
-      });
-    });
-  </script> --}}
   <script src="game-gen.js"></script>
 </body>
 

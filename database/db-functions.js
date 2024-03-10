@@ -127,6 +127,28 @@ function getUserProfile(userId) {
     });
 }
 
+async function updateUserProfile(userId, incrementWins) {
+    return new Promise((resolve, reject) => {
+        let sql;
+        let val;
+
+        if (incrementWins) {
+            sql = 'UPDATE userProfile SET gameCount = gameCount + 1, wins = wins + 1 WHERE userId = ?';
+            val = [userId];
+        } else {
+            sql = 'UPDATE userProfile SET gameCount = gameCount + 1, losses = losses + 1 WHERE userId = ?';
+            val = [userId];
+        } 
+        
+        db.pool.query(sql, val, (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+}
 function insertNewGameIntoGames(userId, deckId) {
     // Initialize a new game -> winner has not been decided
     return new Promise((resolve, reject) => {
@@ -761,21 +783,18 @@ async function grabGameIdFromCollection(collectId) {
     });
 }
 
-// function updateGameWinner({ params }) {
-//     // Initialize a new game -> winner has not been decided
-//     return new Promise((resolve, reject) => {
-//         const sql = 'INSERT INTO game (startTime, endTime, winnerID) VALUES (CURRENT_TIMESTAMP, NULL, NULL)'                                // Games Database
-//         const vals = params
-//         db.pool.query(sql, vals, (err, result) => {
-//             if (err) {
-//                 reject(err);
-//             } else {
-//                 resolve(result);
-//             }
-//         });
-//     });
-// }
-
+async function updateGameWinner(gameId, winnerId) {
+    return new Promise((resolve, reject) => {
+        const sql = 'UPDATE gameInstance SET endTime = CURRENT_TIMESTAMP, winnerID = ? WHERE gameId = ?';                           // Games Database
+        db.pool.query(sql, [winnerId, gameId], (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+}
 
 module.exports.insertNewUserIntoDB = insertNewUserIntoDB;
 module.exports.getUserProfile = getUserProfile;
@@ -811,3 +830,5 @@ module.exports.grabGameName = grabGameName;
 module.exports.grabAdminListCards = grabAdminListCards;
 module.exports.updateAdminListCards = updateAdminListCards;
 module.exports.grabGameIdFromCollection = grabGameIdFromCollection;
+module.exports.updateGameWinner = updateGameWinner;
+module.exports.updateUserProfile = updateUserProfile;
