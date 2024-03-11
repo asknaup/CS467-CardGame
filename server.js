@@ -10,7 +10,7 @@ const path = require('path');
 const fs = require('fs');
 
 const app = express();                          // Routing 
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 const db = require('./database/db-connector');
 const dbFunc = require('./database/db-functions')
