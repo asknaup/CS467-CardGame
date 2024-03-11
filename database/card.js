@@ -1,4 +1,4 @@
-const configFile = require('./config');
+const configFile = require('../config');
 
 const attributes = ['strong', 'weak', 'small', 'tall', 'fast', 'slow', 'clever', 'clumsy', 'brave', 'timid'];
 const colors = ["red", "orange", "yellow", "green", "blue", "indigo", "violet", "black", "white", "pink"];

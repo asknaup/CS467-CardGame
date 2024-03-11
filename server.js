@@ -17,7 +17,8 @@ const dbFunc = require('./database/db-functions')
 const gameGen = require('./game/game-gen');
 const hf = require('./database/helper-funcs');    // Could be moved
 const card = require('./database/card');
-const configFile = require('./database/config');
+const configFile = require('./config');
+// const vpn = require('./vpn');
 
 // Import Game Classes
 const { Game, User, Card, CreatureCard, SpellCard } = require('./game/game-play1'); // Import the User class if not already imported
